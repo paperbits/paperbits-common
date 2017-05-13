@@ -56,7 +56,6 @@ export interface IHtmlEditor {
     toggleUnderlined(): void;
     toggleUl(): void;
     toggleOl(): void;
-    toggleP(): void;
     toggleH1(): void;
     toggleH2(): void;
     toggleH3(): void;
@@ -69,7 +68,6 @@ export interface IHtmlEditor {
     toggleColor(intentionFn: string): void;
     toggleCategory(category: string, intentionFn: string, type: string): void;
     setIntention(intentionFn: string, type: string): void;
-    resetCategory(intentionFn: string, type: string): void;
     resetIntention(intentionFn: string, type: string): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition);
