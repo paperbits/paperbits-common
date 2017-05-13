@@ -1,5 +1,4 @@
 node_modules/
-public/
-src/**/*.js
+dist/
 .idea/
 .vscode/

@@ -1,0 +1,1 @@
+export var formattableNodes = ["P", "B", "OL", "UL", "H1", "H2", "H3", "H4", "A", "BLOCKQUOTE"];
