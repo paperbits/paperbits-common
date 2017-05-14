@@ -2,7 +2,6 @@ import { IPermalink } from "../permalinks/IPermalink";
 import { ILinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { INewsService } from "./INewsService";
-import { IHyperlink } from "../permalinks/IHyperlink";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 export class NewsPermalinkResolver implements ILinkResolver {

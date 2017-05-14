@@ -10,6 +10,8 @@ export class TextblockModelBinder implements IModelBinder {
     }
 
     public async nodeToModel(node: ContentConfig): Promise<TextblockModel> {
+        // TODO: Scan for unresolved hyperlink permalinks
+
         let textblockModel = new TextblockModel({ "nodes": node.nodes });
 
         return textblockModel;

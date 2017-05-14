@@ -2,7 +2,6 @@ import { IPermalink } from "../permalinks/IPermalink";
 import { ILinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { IMediaService } from "./IMediaService";
-import { IHyperlink } from "../permalinks/IHyperlink";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 const DefaultSourceUrl = "http://placehold.it/800x600";
