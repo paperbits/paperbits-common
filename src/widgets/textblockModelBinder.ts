@@ -28,7 +28,7 @@ export class TextblockModelBinder implements IModelBinder {
             readonly: readonly
         };
 
-        widgetModel.setupViewModel = (viewModel: IViewModelBinder) => {                
+        widgetModel.setupViewModel = (viewModel: IViewModelBinder) => {
             viewModel.attachToModel(widgetModel);
         };
 
@@ -44,10 +44,19 @@ export class TextblockModelBinder implements IModelBinder {
     }
 
     public getConfig(model: TextblockModel): ContentConfig {
+        let state;
+
+        if (model.htmlEditor) {
+            state = model.htmlEditor.getState();
+        }
+        else {
+            state = model.state;
+        }
+
         let textblockConfig: ContentConfig = {
             kind: "widget",
             type: "text",
-            nodes: model.state["nodes"]
+            nodes: state["nodes"]
         }
 
         return textblockConfig;
