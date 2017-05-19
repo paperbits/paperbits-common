@@ -9,8 +9,15 @@ export class HtmlEditorProvider implements IHtmlEditorProvider {
     private htmlEditor: IHtmlEditor;
 
     constructor(eventManager: IEventManager) {
-        eventManager.addEventListener("htmlEditorChanged", (htmlEditor) => { this.htmlEditor = htmlEditor; });
         this.getCurrentHtmlEditor = this.getCurrentHtmlEditor.bind(this);
+        this.setCurrentHtmlEditor = this.setCurrentHtmlEditor.bind(this);
+
+        eventManager.addEventListener("htmlEditorChanged", this.setCurrentHtmlEditor);
+        eventManager.addEventListener("enableHtmlEditor", this.setCurrentHtmlEditor);
+    }
+
+    private setCurrentHtmlEditor(htmlEditor: IHtmlEditor): void {
+        this.htmlEditor = htmlEditor;
     }
 
     public getCurrentHtmlEditor(): IHtmlEditor {

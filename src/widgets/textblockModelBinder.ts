@@ -3,14 +3,44 @@ import { IViewModelBinder } from "./IViewModelBinder";
 import { IModelBinder } from "./../editing/IModelBinder";
 import { ContentConfig } from "./../editing/contentNode";
 import { TextblockModel } from "./models/textblockModel";
+import { IHyperlink } from "../permalinks/IHyperlink";
+import { IPermalinkService } from "../permalinks/IPermalinkService";
+
 
 export class TextblockModelBinder implements IModelBinder {
-    constructor() {
+    private readonly permalinkService: IPermalinkService;
+
+    constructor(permalinkService: IPermalinkService) {
+        this.permalinkService = permalinkService;
+
         this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
+    }
+
+    private async resolveHyperlinks(nodes: ContentConfig[]): Promise<void> {
+        for (let i = 0; i < nodes.length; i++) {
+            let node = nodes[i];
+
+            if (node.type == "link") {
+                let hyperlink: IHyperlink = node["data"];
+
+                if (hyperlink.permalinkKey) {
+                    let permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
+                    hyperlink.href = permalink.uri;
+                }
+            }
+
+            if (node.nodes) {
+                await this.resolveHyperlinks(node.nodes);
+            }
+        }
     }
 
     public async nodeToModel(node: ContentConfig): Promise<TextblockModel> {
         // TODO: Scan for unresolved hyperlink permalinks
+
+        if (node.nodes) {
+            await this.resolveHyperlinks(node.nodes);
+        }
 
         let textblockModel = new TextblockModel({ "nodes": node.nodes });
 

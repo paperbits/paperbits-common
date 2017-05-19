@@ -28,6 +28,7 @@ export class GlobalEventHandler {
         ownerDocument.addEventListener("dragend", this.onDragEnd.bind(this), true);
         ownerDocument.addEventListener("paste", this.onPaste.bind(this), true);
         ownerDocument.addEventListener("mousemove", this.onPointerMove.bind(this), true);
+        ownerDocument.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
     }
 
     public onKeyDown(event: KeyboardEvent): void {
@@ -61,6 +62,10 @@ export class GlobalEventHandler {
 
     private onPointerMove(event: PointerEvent): void {
         this.eventManager.dispatchEvent("onPointerMove", event);
+    }
+
+    private onPointerDown(event: PointerEvent): void {
+        this.eventManager.dispatchEvent("onPointerDown", event);
     }
 
     private onDragStart(event: DragEvent): void {

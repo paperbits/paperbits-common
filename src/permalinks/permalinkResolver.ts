@@ -51,9 +51,6 @@ export class PermalinkResolver implements ILinkResolver {
         if (hyperlink.permalinkKey) {
             permalinkKey = hyperlink.permalinkKey;
         }
-        else if (hyperlink.href.startsWith("permalinks/")) {
-            permalinkKey = hyperlink.href;
-        }
 
         if (permalinkKey) {
             let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
@@ -83,6 +80,12 @@ export class PermalinkResolver implements ILinkResolver {
             return hyperlinkModel;
         }
 
-        throw `Hyperlink config doesn't contain neither "permalinkKey" nor "href" properties.`
+        hyperlinkModel = new HyperlinkModel();
+        hyperlinkModel.title = "Unset link";
+        hyperlinkModel.target = hyperlink.target || "_blank";
+        hyperlinkModel.permalinkKey = null;
+        hyperlinkModel.href = "#";
+
+        return hyperlinkModel;
     }
 }
