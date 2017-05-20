@@ -86,7 +86,9 @@ export interface IHtmlEditor {
     updateState(state: any): void;
     setInitialState(state: any): void;
     setSelection(selection: Selection): void;
+    expandSelection(): void;
 }
+
 export class HtmlEditorEvents {
     static onSelectionChange = "onSelectionChange";
     static onEditorDisabled = "onEditorDisabled";
