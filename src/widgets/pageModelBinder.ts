@@ -60,10 +60,6 @@ export class PageModelBinder implements IModelBinder {
                 type = "post"
             }
 
-            // if (pageKey.startsWith("news")) {
-            //     type = "news"
-            // }
-
             pageConfig = await this.pageService.getPageByKey(pageKey);
         }
 

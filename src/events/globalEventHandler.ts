@@ -27,7 +27,7 @@ export class GlobalEventHandler {
         ownerDocument.addEventListener("drop", this.onDragDrop.bind(this), true);
         ownerDocument.addEventListener("dragend", this.onDragEnd.bind(this), true);
         ownerDocument.addEventListener("paste", this.onPaste.bind(this), true);
-        ownerDocument.addEventListener("mousemove", this.onPointerMove.bind(this), true);
+        ownerDocument.addEventListener("pointermove", this.onPointerMove.bind(this), true);
         ownerDocument.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
     }
 

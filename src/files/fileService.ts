@@ -13,8 +13,8 @@ export class FileService implements IFileService {
         this.objectStorage = objectStorage;
     }
 
-    public getFileByKey(key: string): Promise<ContentConfig> {
-        return this.objectStorage.getObject<ContentConfig>(key);
+    public async getFileByKey(key: string): Promise<ContentConfig> {
+        return await this.objectStorage.getObject<ContentConfig>(key);
     }
 
     public async createFile(contentNode: ContentConfig): Promise<ContentConfig> {

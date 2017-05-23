@@ -7,6 +7,7 @@ import { IComponent } from '../ui/IComponent';
 export enum ViewManagerMode {
     edit,
     fold,
+    select,
     configure
 }
 
@@ -59,6 +60,8 @@ export interface IViewManager {
 
     setWidgetEditor(editorSession: IEditorSession);
 
+    getWidgetEditorSession(): IEditorSession;
+
     setContextualEditor(editorName: string, contextualEditor: IContextualEditor);
 
     removeContextualEditor(editorName: string): void;
@@ -68,6 +71,8 @@ export interface IViewManager {
     setHighlight(config: IHighlightConfig): void;
 
     setSelectedElement(config: IHighlightConfig): void;
+
+    getSelectedElement(): IHighlightConfig;
 
     closeWidgetEditor();
 

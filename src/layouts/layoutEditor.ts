@@ -102,13 +102,6 @@ export class LayoutEditor {
 
         this.sourceColumnModel = null;
         this.targetColumnModel = null;
-
-        this.clearSelection();
-    }
-
-    private clearSelection(): void {
-        this.selectedWidget = null;
-        this.viewManager.setSelectedElement(null);
     }
 
     private relayoutRows(rows: Array<HTMLElement>): void {
@@ -180,21 +173,20 @@ export class LayoutEditor {
     public onNewWidgetDragStart(widgetElement: HTMLElement, event: any): boolean {
         this.viewManager.foldEverything();
         this.createPlaceholder();
-        this.clearSelection();
 
         return true;
     }
 
     private selectWidget(widgetElement: HTMLElement): void {
-        this.clearSelection();
-        this.selectedWidget = widgetElement;
+        // this.clearSelection();
+        // this.selectedWidget = widgetElement;
 
-        let config: IHighlightConfig = {
-            element: widgetElement,
-            color: "red"
-        }
+        // let config: IHighlightConfig = {
+        //     element: widgetElement,
+        //     color: "red"
+        // }
 
-        this.viewManager.setSelectedElement(config);
+        // this.viewManager.setSelectedElement(config);
     }
 
     private adjustSizes(widgetElement: HTMLElement): void {
