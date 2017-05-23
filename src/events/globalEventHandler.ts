@@ -2,6 +2,7 @@ import { IEventManager } from '../events/IEventManager';
 
 export class GlobalEventHandler {
     private readonly eventManager: IEventManager;
+    private readonly documents: Document[]
 
     constructor(eventManager: IEventManager) {
         this.eventManager = eventManager;
@@ -16,19 +17,27 @@ export class GlobalEventHandler {
         this.addDragEndListener = this.addDragEndListener.bind(this);
         this.addDragLeaveListener = this.addDragLeaveListener.bind(this);
         this.addDragLeaveScreenListener = this.addDragLeaveScreenListener.bind(this);
+
+        this.documents = [];
     }
 
-    public appendDocument(ownerDocument: Document): void {
-        ownerDocument.addEventListener("keydown", this.onKeyDown);
-        ownerDocument.addEventListener("dragenter", this.onDragEnter.bind(this), true);
-        ownerDocument.addEventListener("dragstart", this.onDragStart.bind(this), true);
-        ownerDocument.addEventListener("dragover", this.onDragOver.bind(this), true);
-        ownerDocument.addEventListener("dragleave", this.onDragLeave.bind(this));
-        ownerDocument.addEventListener("drop", this.onDragDrop.bind(this), true);
-        ownerDocument.addEventListener("dragend", this.onDragEnd.bind(this), true);
-        ownerDocument.addEventListener("paste", this.onPaste.bind(this), true);
-        ownerDocument.addEventListener("pointermove", this.onPointerMove.bind(this), true);
-        ownerDocument.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
+    public appendDocument(doc: Document): void {
+        if (this.documents.indexOf(doc) > -1) {
+            return;
+        }
+
+        this.documents.push(doc);
+
+        doc.addEventListener("keydown", this.onKeyDown);
+        doc.addEventListener("dragenter", this.onDragEnter.bind(this), true);
+        doc.addEventListener("dragstart", this.onDragStart.bind(this), true);
+        doc.addEventListener("dragover", this.onDragOver.bind(this), true);
+        doc.addEventListener("dragleave", this.onDragLeave.bind(this));
+        doc.addEventListener("drop", this.onDragDrop.bind(this), true);
+        doc.addEventListener("dragend", this.onDragEnd.bind(this), true);
+        doc.addEventListener("paste", this.onPaste.bind(this), true);
+        doc.addEventListener("pointermove", this.onPointerMove.bind(this), true);
+        doc.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
     }
 
     public onKeyDown(event: KeyboardEvent): void {
