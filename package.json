@@ -17,7 +17,7 @@
   "homepage": "https://github.com/paperbits/paperbits#readme",
   "dependencies": {
     "es6-shim": "^0.35.3",
-    "firebase": "^3.9.0",
+    "firebase": "^4.0.0",
     "hasher": "^1.2.0",
     "inversify": "^4.1.0",
     "jquery": "^3.2.1",
@@ -28,13 +28,13 @@
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.33",
-    "@types/jquery": "^2.0.43",
+    "@types/jquery": "^2.0.45",
     "@types/knockout": "^3.4.40",
-    "@types/node": "^7.0.18",
+    "@types/node": "^7.0.22",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-typescript": "^3.1.6",
     "merge2": "^1.0.3",
-    "typescript": "^2.3.2"
+    "typescript": "^2.3.3"
   }
 }
