@@ -1,4 +1,4 @@
-import "firebase";
+import * as firebase from "firebase";
 import { ISettingsProvider } from '../configuration/ISettingsProvider';
 
 
