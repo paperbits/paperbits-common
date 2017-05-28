@@ -1,7 +1,9 @@
-﻿import { IHttpClient } from '../http/IHttpClient';
+﻿import * as XMLHttpRequest from "xhr2";
+import { IHttpClient } from '../http/IHttpClient';
 import { IHttpRequest } from '../http/IHttpRequest';
 import { ProgressPromise } from '../core/progressPromise';
 import { HttpClientReponse } from '../http/httpClientReponse';
+
 
 export class XmlHttpRequestClient implements IHttpClient {
     constructor() {

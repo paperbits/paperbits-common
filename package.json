@@ -1,10 +1,10 @@
 {
   "name": "@paperbits/common",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "description": "Paperbits core components.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paperbits/paperbits.git"
+    "url": "git+https://github.com/paperbits/paperbits-common.git"
   },
   "keywords": [
     "paperbits"
@@ -12,10 +12,11 @@
   "author": "Vienna LLC",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/paperbits/paperbits/issues"
+    "url": "https://github.com/paperbits/paperbits-common/issues"
   },
-  "homepage": "https://github.com/paperbits/paperbits#readme",
+  "homepage": "https://github.com/paperbits/paperbits-common#readme",
   "dependencies": {
+    "crossroads": "^0.12.2",
     "es6-shim": "^0.35.3",
     "firebase": "^4.0.0",
     "hasher": "^1.2.0",
@@ -24,7 +25,8 @@
     "lity": "^2.2.2",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "reflect-metadata": "^0.1.10"
+    "reflect-metadata": "^0.1.10",
+    "xhr2": "^0.1.4"
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.33",

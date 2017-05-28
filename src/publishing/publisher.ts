@@ -1,6 +1,6 @@
 import { IPublisher } from './IPublisher';
 
-export class SitePublisher {
+export class SitePublisher implements IPublisher {
     private readonly publishers: Array<IPublisher>;
     private readonly publishersInSequence: Array<IPublisher>;
 
@@ -22,10 +22,9 @@ export class SitePublisher {
 
         await Promise.all(publishPromises);
 
-        for (let i = 0; i < this.publishersInSequence.length; i++)
-        {
+        for (let i = 0; i < this.publishersInSequence.length; i++) {
             await this.publishersInSequence[i].publish();
-        }  
+        }
 
         console.info("Published successfully.");
     }

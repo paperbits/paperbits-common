@@ -1,7 +1,6 @@
-﻿import { IRouter } from '../routing/IRouter';
-//import { crossroads } from 'crossroads';
-import * as crossroads from 'crossroads';
-import * as hasher from 'hasher';
+﻿import { IRouter } from "../routing/IRouter";
+import * as crossroads from "crossroads";
+import * as hasher from "hasher";
 
 export class CrossroadsRouter implements IRouter {
     constructor() {
