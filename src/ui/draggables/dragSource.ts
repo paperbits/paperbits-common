@@ -1,5 +1,7 @@
-import { IDragSourceConfig } from '../../ui/draggables/IDragSourceConfig';
-import { DragManager } from '../../ui/draggables/dragManager';
+import * as $ from "jquery";
+import { IDragSourceConfig } from "../../ui/draggables/IDragSourceConfig";
+import { DragManager } from "../../ui/draggables/dragManager";
+
 
 export class DragSource {
     private dragManager: DragManager;
@@ -25,7 +27,6 @@ export class DragSource {
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
             return;
         }
-
 
         if (event.buttons !== 1 || event["handled"]) {
             return;

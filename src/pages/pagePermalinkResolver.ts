@@ -1,10 +1,10 @@
 import { IPermalink } from "../permalinks/IPermalink";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { IPageService } from "./IPageService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
-export class PagePermalinkResolver implements ILinkResolver {
+export class PagePermalinkResolver implements IPermalinkResolver {
     private readonly permalinkService: IPermalinkService;
     private readonly pageService: IPageService;
 

@@ -1,4 +1,6 @@
-import { TutorialStep } from '../tutorials/tutorialStep';
+import * as $ from "jquery";
+import { TutorialStep } from "../tutorials/tutorialStep";
+
 
 export class Tutorial {
     private currentStepNum = 0;
@@ -24,11 +26,11 @@ export class Tutorial {
         var elapsedTime = this.timestamp - (this.timestamp = new Date().getTime());
 
         // dataLayer.push({
-        //     'event': 'Tutorial',
-        //     'category': 'Tutorial',
-        //     'action': 'StepComplete',
-        //     'label': currentStepText,
-        //     'value': elapsedTime
+        //     "event": "Tutorial",
+        //     "category": "Tutorial",
+        //     "action": "StepComplete",
+        //     "label": currentStepText,
+        //     "value": elapsedTime
         // });
 
         $(this.arrowElement).remove();

@@ -9,7 +9,6 @@
 }
 
 interface Array<T> {
-    any(predicate: (item: T) => boolean): boolean;
     first(predicate?: (item: T) => boolean): T;
     where(predicate: (item: T) => boolean): Array<T>;
     remove(item: T): void;
@@ -72,17 +71,6 @@ String.prototype.hashCode = function(): number {
 
 String.prototype.replaceAll = function (search: string, replacement: string): string {
     return this.split(search).join(replacement);
-};
-
-Array.prototype.any = function <T>(predicate: (item: T) => boolean): boolean {
-    var result = false;
-
-    $.each(this, function () {
-        if (predicate(this)) {
-            result = true;
-        }
-    });
-    return result;
 };
 
 Array.prototype.first = function <T>(predicate: (item: T) => boolean): T {

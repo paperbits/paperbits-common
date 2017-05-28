@@ -4,12 +4,12 @@ import { PermalinkService } from "../permalinks/permalinkService";
 import { IModelBinder } from "../editing/IModelBinder";
 import { ButtonModel } from "./models/buttonModel";
 import { ContentConfig } from "../editing/contentNode";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 
 export class ButtonModelBinder implements IModelBinder {
-    private readonly permalinkResolver: ILinkResolver;
+    private readonly permalinkResolver: IPermalinkResolver;
 
-    constructor(permalinkResolver: ILinkResolver) {
+    constructor(permalinkResolver: IPermalinkResolver) {
         this.permalinkResolver = permalinkResolver;
     }
 

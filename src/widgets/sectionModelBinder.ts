@@ -6,7 +6,7 @@ import { RowModel } from "./models/rowModel";
 import { SectionModel } from "./models/sectionModel";
 import { RowModelBinder } from "./rowModelBinder";
 import { IWidgetModel } from "./../editing/IWidgetModel";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 
 export class SectionModelBinder implements IModelBinder {
     public canHandleWidgetType(widgetType: string): boolean {
@@ -17,9 +17,9 @@ export class SectionModelBinder implements IModelBinder {
     }
 
     private readonly rowModelBinder: RowModelBinder;
-    private readonly permalinkResolver: ILinkResolver;
+    private readonly permalinkResolver: IPermalinkResolver;
 
-    constructor(rowModelBinder: RowModelBinder, permalinkResolver: ILinkResolver) {
+    constructor(rowModelBinder: RowModelBinder, permalinkResolver: IPermalinkResolver) {
         this.rowModelBinder = rowModelBinder;
         this.permalinkResolver = permalinkResolver;
 

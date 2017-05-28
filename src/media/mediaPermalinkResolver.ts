@@ -1,12 +1,12 @@
 import { IPermalink } from "../permalinks/IPermalink";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { IMediaService } from "./IMediaService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 const DefaultSourceUrl = "http://placehold.it/800x600";
 
-export class MediaPermalinkResolver implements ILinkResolver {
+export class MediaPermalinkResolver implements IPermalinkResolver {
     private readonly permalinkService: IPermalinkService;
     private readonly mediaService: IMediaService;
 

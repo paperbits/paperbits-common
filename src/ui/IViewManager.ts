@@ -70,7 +70,7 @@ export interface IViewManager {
 
     setHighlight(config: IHighlightConfig): void;
 
-    setSelectedElement(config: IHighlightConfig): void;
+    setSelectedElement(config: IHighlightConfig, ce: IContextualEditor): void;
 
     getSelectedElement(): IHighlightConfig;
 
@@ -83,4 +83,6 @@ export interface IViewManager {
     setViewport(viewport: string);
 
     getViewport(): string;
+
+    switchToEditing(): void;
 }

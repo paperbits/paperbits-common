@@ -1,10 +1,10 @@
 import { IPermalink } from "../permalinks/IPermalink";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { INewsService } from "./INewsService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
-export class NewsPermalinkResolver implements ILinkResolver {
+export class NewsPermalinkResolver implements IPermalinkResolver {
     private readonly permalinkService: IPermalinkService;
     private readonly newsService: INewsService;
 

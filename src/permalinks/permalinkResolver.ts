@@ -1,25 +1,37 @@
 import { IPermalink } from "./IPermalink";
-import { ILinkResolver } from "./IPermalinkResolver";
+import { IPermalinkResolver } from "./IPermalinkResolver";
 import { IPermalinkService } from "./IPermalinkService";
 import { IHyperlink } from "./IHyperlink";
 import { HyperlinkModel } from "./hyperlinkModel";
 
-export class PermalinkResolver implements ILinkResolver {
+export class PermalinkResolver implements IPermalinkResolver {
     private readonly permalinkService: IPermalinkService;
-    private readonly permalinkResolvers: ILinkResolver[];
+    private readonly permalinkResolvers: IPermalinkResolver[];
 
-    constructor(permalinkService: IPermalinkService, permalinkResolvers: ILinkResolver[] = []) {
+    constructor(permalinkService: IPermalinkService, permalinkResolvers: IPermalinkResolver[] = []) {
         this.permalinkService = permalinkService;
         this.permalinkResolvers = permalinkResolvers;
     }
 
     public async getUriByPermalinkKey(permalinkKey: string): Promise<string> {
+        if (!permalinkKey) {
+            throw "Permalink key cannot be null or empty.";
+        }
+
         let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey)
+
+        if (!permalink) {
+            throw `Could not find permalink with key ${permalinkKey}.`;
+        }
 
         return this.getUriByPermalink(permalink);
     }
 
     public async getUriByPermalink(permalink: IPermalink): Promise<string> {
+        if (!permalink) {
+            throw "Permalink cannot be null or empty.";
+        }
+
         for (let i = 0; i < this.permalinkResolvers.length; i++) {
             let resolvedUri = await this.permalinkResolvers[i].getUriByPermalink(permalink);
 

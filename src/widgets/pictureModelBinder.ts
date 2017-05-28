@@ -4,12 +4,12 @@ import { PictureModel } from "./models/pictureModel";
 import { IPictureNode } from "./models/IPictureNode";
 import { IWidgetModel } from "./../editing/IWidgetModel";
 import { IModelBinder } from "./../editing/IModelBinder";
-import { ILinkResolver } from "../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 
 export class PictureModelBinder implements IModelBinder {
-    private readonly permalinkResolver: ILinkResolver;
+    private readonly permalinkResolver: IPermalinkResolver;
 
-    constructor(permalinkResolver: ILinkResolver) {
+    constructor(permalinkResolver: IPermalinkResolver) {
         this.permalinkResolver = permalinkResolver;
     }
 
