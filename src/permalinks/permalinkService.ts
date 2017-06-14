@@ -35,8 +35,6 @@ export class PermalinkService implements IPermalinkService {
         }
 
         location.hash = "/404.html";
-
-        throw new Error(`Could not find resource by URI ${uri}.`);
     }
 
     public async getPermalinkByKey(permalinkKey: string): Promise<IPermalink> {

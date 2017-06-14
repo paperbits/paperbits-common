@@ -34,21 +34,24 @@ export class InversifyInjector implements IInjector {
             this.kernel.unbind(name);
         }
 
-        try {
-            decorate(injectable(), component);
-        }
-        catch (error) {
-            console.warn(`Unable to decorate component "${name}". ${error}`);
-        }
-
-        let constructorArguments = this.getFunctionArguments(component);
-
-        for (let i = 0; i < constructorArguments.length; i++) {
+        let metaDataKeys = Reflect.getMetadataKeys(component);
+        
+        if (metaDataKeys.length === 0) {
             try {
-                decorate(inject(constructorArguments[i]), component, i);
+                decorate(injectable(), component);
             }
             catch (error) {
-                console.warn(`Unable to decorate constructor argument "${constructorArguments[i]}" for component "${name}". ${error}`);
+                console.warn(`Unable to decorate component "${name}". ${error}`);
+            }
+            let constructorArguments = this.getFunctionArguments(component);
+
+            for (let i = 0; i < constructorArguments.length; i++) {
+                try {
+                    decorate(inject(constructorArguments[i]), component, i);
+                }
+                catch (error) {
+                    console.warn(`Unable to decorate constructor argument "${constructorArguments[i]}" for component "${name}". ${error}`);
+                }
             }
         }
 
@@ -89,6 +92,10 @@ export class InversifyInjector implements IInjector {
     }
 
     public bindInstance<T>(name: string, instance: T): void {
+        if (this.kernel.isBound(name)) {
+            this.kernel.unbind(name);
+        }
+
         this.kernel.bind(name).toConstantValue(instance);
     }
 
