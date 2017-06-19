@@ -34,6 +34,39 @@ export class FirebaseService {
         firebase.initializeApp(firebaseSettings); // This can be called only once
     }
 
+    private async trySignIn(auth: FirebaseAuth): Promise<void> {
+        if (!auth) {
+            console.info("Firebase: Signing-in anonymously...");
+            await firebase.auth().signInAnonymously();
+            return;
+        }
+
+        if (auth.github) {
+            console.info("Firebase: Signing-in with Github...");
+            let provider = new firebase.auth.GithubAuthProvider();
+
+            if (auth.github.scopes) {
+                auth.github.scopes.forEach(scope => {
+                    provider.addScope(scope);
+                })
+            }
+
+            let redirectResult = await firebase.auth().getRedirectResult();
+
+            if (!redirectResult.credential) {
+                await firebase.auth().signInWithRedirect(provider);
+                return;
+            }
+            return;
+        }
+
+        if (auth.basic) {
+            console.info("Firebase: Signing-in with email and password...");
+            await firebase.auth().signInWithEmailAndPassword(auth.basic.email, auth.basic.password);
+            return;
+        }
+    }
+
     private async authenticate(auth: FirebaseAuth): Promise<void> {
         if (this.authenticationPromise) {
             return this.authenticationPromise;
@@ -42,39 +75,12 @@ export class FirebaseService {
         this.authenticationPromise = new Promise<void>((resolve) => {
             firebase.auth().onAuthStateChanged(async (user: firebase.User) => {
                 if (user) {
+                    resolve();
                     return;
                 }
 
-                if (!auth) {
-                    console.info("Firebase: Signing-in anonymously...");
-                    await firebase.auth().signInAnonymously();
-                    return;
-                }
-
-                if (auth.github) {
-                    console.info("Firebase: Signing-in with Github...");
-                    let provider = new firebase.auth.GithubAuthProvider();
-
-                    if (auth.github.scopes) {
-                        auth.github.scopes.forEach(scope => {
-                            provider.addScope(scope);
-                        })
-                    }
-
-                    let redirectResult = await firebase.auth().getRedirectResult();
-
-                    if (!redirectResult.credential) {
-                        await firebase.auth().signInWithRedirect(provider);
-                        return;
-                    }
-                    return;
-                }
-
-                if (auth.basic) {
-                    console.info("Firebase: Signing-in with email and password...");
-                    await firebase.auth().signInWithEmailAndPassword(auth.basic.email, auth.basic.password);
-                    return;
-                }
+                await this.trySignIn(auth);
+                resolve();
             });
         });
 

@@ -29,9 +29,9 @@
     },
     "devDependencies": {
         "@types/es6-shim": "^0.31.34",
-        "@types/jquery": "^2.0.46",
-        "@types/knockout": "^3.4.40",
-        "@types/node": "^7.0.29",
+        "@types/jquery": "^3.2.1",
+        "@types/knockout": "^3.4.41",
+        "@types/node": "^7.0.31",
         "gulp": "^3.9.1",
         "gulp-sourcemaps": "^2.6.0",
         "gulp-typescript": "^3.1.7",
