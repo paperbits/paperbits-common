@@ -21,6 +21,7 @@ export class FirebaseService {
 
     private tenantRootKey: string;
     private preparingPromise: Promise<any>;
+    private authenticationPromise: Promise<any>;
 
     constructor(settingsProvider: ISettingsProvider) {
         this.settingsProvider = settingsProvider;
@@ -33,42 +34,51 @@ export class FirebaseService {
         firebase.initializeApp(firebaseSettings); // This can be called only once
     }
 
-    private async authenticate(auth: FirebaseAuth): Promise<any> {
-        try {
-            if (!auth) {
-                console.info("Firebase: Signing-in anonymously...");
-                await firebase.auth().signInAnonymously();
-                return;
-            }
+    private async authenticate(auth: FirebaseAuth): Promise<void> {
+        if (this.authenticationPromise) {
+            return this.authenticationPromise;
+        }
 
-            if (auth.github) {
-                console.info("Firebase: Signing-in with Github...");
-                let provider = new firebase.auth.GithubAuthProvider();
-
-                if (auth.github.scopes) {
-                    auth.github.scopes.forEach(scope => {
-                        provider.addScope(scope);
-                    })
-                }
-
-                let redirectResult = await firebase.auth().getRedirectResult();
-
-                if (!redirectResult.credential) {
-                    await firebase.auth().signInWithRedirect(provider);
+        this.authenticationPromise = new Promise<void>((resolve) => {
+            firebase.auth().onAuthStateChanged(async (user: firebase.User) => {
+                if (user) {
                     return;
                 }
-                return;
-            }
 
-            if (auth.basic) {
-                console.info("Firebase: Signing-in with email and password...");
-                await firebase.auth().signInWithEmailAndPassword(auth.basic.email, auth.basic.password);
-                return;
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
+                if (!auth) {
+                    console.info("Firebase: Signing-in anonymously...");
+                    await firebase.auth().signInAnonymously();
+                    return;
+                }
+
+                if (auth.github) {
+                    console.info("Firebase: Signing-in with Github...");
+                    let provider = new firebase.auth.GithubAuthProvider();
+
+                    if (auth.github.scopes) {
+                        auth.github.scopes.forEach(scope => {
+                            provider.addScope(scope);
+                        })
+                    }
+
+                    let redirectResult = await firebase.auth().getRedirectResult();
+
+                    if (!redirectResult.credential) {
+                        await firebase.auth().signInWithRedirect(provider);
+                        return;
+                    }
+                    return;
+                }
+
+                if (auth.basic) {
+                    console.info("Firebase: Signing-in with email and password...");
+                    await firebase.auth().signInWithEmailAndPassword(auth.basic.email, auth.basic.password);
+                    return;
+                }
+            });
+        });
+
+        return this.authenticationPromise;
     }
 
     public async getFirebaseRef(): Promise<firebase.app.App> {
