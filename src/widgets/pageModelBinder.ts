@@ -14,6 +14,7 @@ import { ContentConfig } from "./../editing/contentNode";
 import { IModelBinder } from "../editing/IModelBinder";
 import { ISiteService } from "../sites/ISiteService";
 import { PagePlaceholderModel } from "./models/pagePlaceholderModel";
+import { ModelBinderSelector } from "./modelBinderSelector";
 
 export class PageModelBinder implements IModelBinder {
     private readonly pageService: IPageService;
@@ -22,14 +23,16 @@ export class PageModelBinder implements IModelBinder {
     private readonly sectionModelBinder: SectionModelBinder;
     private readonly routeHandler: IRouteHandler;
     private readonly siteService: ISiteService;
+    private readonly modelBinderSelector: ModelBinderSelector;
 
-    constructor(pageService: IPageService, permalinkService: IPermalinkService, fileService: IFileService, sectionModelBinder: SectionModelBinder, routeHandler: IRouteHandler, siteService: ISiteService) {
+    constructor(pageService: IPageService, permalinkService: IPermalinkService, fileService: IFileService, sectionModelBinder: SectionModelBinder, routeHandler: IRouteHandler, siteService: ISiteService, modelBinderSelector: ModelBinderSelector) {
         this.pageService = pageService;
         this.permalinkService = permalinkService;
         this.fileService = fileService;
         this.sectionModelBinder = sectionModelBinder;
         this.routeHandler = routeHandler;
         this.siteService = siteService;
+        this.modelBinderSelector = modelBinderSelector;
 
         // rebinding...
         this.nodeToModel = this.nodeToModel.bind(this);
@@ -69,9 +72,21 @@ export class PageModelBinder implements IModelBinder {
         pageModel.keywords = pageConfig.keywords;
 
         let pageContentNode = await this.fileService.getFileByKey(pageConfig.contentKey);
-        let sectionModelPromises = pageContentNode.nodes.map(this.sectionModelBinder.nodeToModel);
-        let sections = await Promise.all<SectionModel>(sectionModelPromises);
-        pageModel.sections = sections;
+        let modelPromises = pageContentNode.nodes.map(async (config) => {
+            let modelBinder;
+
+            if (config.type === "layout-section") {
+                modelBinder = this.sectionModelBinder;
+            }
+            else {
+                modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
+            }
+
+            return await modelBinder.nodeToModel(config, layoutMode);
+        });
+
+        let models = await Promise.all<any>(modelPromises);
+        pageModel.sections = models;
 
         let settings = await this.siteService.getSiteSettings();
 
@@ -100,11 +115,19 @@ export class PageModelBinder implements IModelBinder {
             model: pageModel
         };
 
-        widgetModel.children = await Promise.all(pageModel.sections.map(x => this.sectionModelBinder.modelToWidgetModel(x, false)));
+        let widgetModelPromises = pageModel.sections.map(x => {
+            let modelBinder = this.modelBinderSelector.getModelBinderByModel(x);
+            return modelBinder.modelToWidgetModel(x, false);
+        });
+
+        widgetModel.children = await Promise.all(widgetModelPromises);
 
         widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
             if (this.isChildrenChanged(widgetModel.children, pageModel.sections)) {
-                widgetModel.children = await Promise.all(pageModel.sections.map(x => this.sectionModelBinder.modelToWidgetModel(x, false)));
+                widgetModel.children = await Promise.all(pageModel.sections.map(x => {
+                    let modelBinder = this.modelBinderSelector.getModelBinderByModel(x);
+                    return modelBinder.modelToWidgetModel(x, false);
+                }));
             }
             viewModel.attachToModel(widgetModel);
         };
@@ -125,7 +148,8 @@ export class PageModelBinder implements IModelBinder {
             nodes: []
         };
         pageModel.sections.forEach(section => {
-            pageConfig.nodes.push(this.sectionModelBinder.getConfig(section));
+            let modelBinder = this.modelBinderSelector.getModelBinderByModel(section);
+            pageConfig.nodes.push(modelBinder.getConfig(section));
         });
 
         return pageConfig;

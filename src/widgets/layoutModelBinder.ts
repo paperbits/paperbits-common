@@ -57,12 +57,9 @@ export class LayoutModelBinder {
         layoutModel.description = layoutNode.description;
         layoutModel.uriTemplate = layoutNode.uriTemplate;
 
-        let layoutContentNode = await this.fileService.getFileByKey
-            (layoutNode.contentKey);
+        let layoutContentNode = await this.fileService.getFileByKey(layoutNode.contentKey);
 
         let modelPromises = layoutContentNode.nodes.map(async (config) => {
-            // TODO: Depending on current URL assign new type: page, blog, news.
-
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
 
             return await modelBinder.nodeToModel(config, layoutMode);
