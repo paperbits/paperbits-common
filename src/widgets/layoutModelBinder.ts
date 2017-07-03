@@ -12,10 +12,11 @@ import { IFileService } from '../files/IFileService';
 import { SectionModelBinder } from "../widgets/sectionModelBinder";
 import { SectionModel } from "../widgets/models/sectionModel";
 import { ContentConfig } from "./../editing/contentNode";
-import { PagePlaceholderModel } from "./models/pagePlaceholderModel";
+import { PlaceholderModel } from "./models/placeholderModel";
 import { ILayoutService } from "../layouts/ILayoutService";
 import { ISiteService } from "../sites/ISiteService";
 import { ModelBinderSelector } from "./modelBinderSelector";
+
 
 export class LayoutModelBinder {
     private readonly routeHandler: IRouteHandler;
@@ -86,7 +87,10 @@ export class LayoutModelBinder {
             if (this.isChildrenChanged(widgetModel.children, model.sections)) {
                 widgetModel.children = await this.getWidgetsFromModel(model.sections);
             }
-            viewModel.attachToModel(widgetModel);
+
+            if (viewModel.attachToModel) {
+                viewModel.attachToModel(widgetModel);
+            }
         };
 
         return widgetModel;
@@ -94,13 +98,15 @@ export class LayoutModelBinder {
 
     private async getWidgetsFromModel(models: any[], readonly: boolean = false): Promise<IWidgetModel[]> {
         return await Promise.all(models.map(async (model) => {
-            if (model instanceof PagePlaceholderModel) {
+            if (model instanceof PlaceholderModel) {
                 let widgetModel: IWidgetModel = {
-                    name: "paperbits-page-placeholder",
+                    name: "paperbits-placeholder",
                     params: {},
-                    nodeType: "page-placeholder",
+                    nodeType: "placeholder",
                     setupViewModel: (viewModel: IViewModelBinder) => {
-                        viewModel.attachToModel(model);
+                        if (viewModel.attachToModel) {
+                            viewModel.attachToModel(model);
+                        }
                     },
                     model: model
                 };
@@ -127,7 +133,7 @@ export class LayoutModelBinder {
             nodes: []
         };
         layoutModel.sections.forEach(model => {
-            if (model instanceof PagePlaceholderModel) {
+            if (model instanceof PlaceholderModel) {
                 layoutConfig.nodes.push({ kind: "block", type: "page" });
             }
             else {

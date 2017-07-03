@@ -13,7 +13,7 @@ import { SectionModel } from "../widgets/models/sectionModel";
 import { ContentConfig } from "./../editing/contentNode";
 import { IModelBinder } from "../editing/IModelBinder";
 import { ISiteService } from "../sites/ISiteService";
-import { PagePlaceholderModel } from "./models/pagePlaceholderModel";
+import { PlaceholderModel } from "./models/placeholderModel";
 
 export class BlogModelBinder implements IModelBinder {
     private readonly blogService: IBlogService;
@@ -46,7 +46,7 @@ export class BlogModelBinder implements IModelBinder {
 
     public async nodeToModel(blogConfig: IBlogPost, layoutMode?: boolean): Promise<BlogPostModel> {
         if (layoutMode) {
-            return await Promise.resolve(new PagePlaceholderModel());
+            return await Promise.resolve(new PlaceholderModel());
         }
 
         if (!blogConfig.key) {

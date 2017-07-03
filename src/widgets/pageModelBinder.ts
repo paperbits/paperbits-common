@@ -13,8 +13,8 @@ import { SectionModel } from "../widgets/models/sectionModel";
 import { ContentConfig } from "./../editing/contentNode";
 import { IModelBinder } from "../editing/IModelBinder";
 import { ISiteService } from "../sites/ISiteService";
-import { PagePlaceholderModel } from "./models/pagePlaceholderModel";
 import { ModelBinderSelector } from "./modelBinderSelector";
+import { PlaceholderModel } from "./models/placeholderModel";
 
 export class PageModelBinder implements IModelBinder {
     private readonly pageService: IPageService;
@@ -49,7 +49,8 @@ export class PageModelBinder implements IModelBinder {
 
     public async nodeToModel(pageConfig: IPage, layoutMode?: boolean): Promise<PageModel> {
         if (layoutMode) {
-            return await Promise.resolve(new PagePlaceholderModel());
+            // TODO: Make it regular page but readonly
+            return await Promise.resolve(new PlaceholderModel());
         }
 
         let type = "page";
@@ -73,15 +74,7 @@ export class PageModelBinder implements IModelBinder {
 
         let pageContentNode = await this.fileService.getFileByKey(pageConfig.contentKey);
         let modelPromises = pageContentNode.nodes.map(async (config) => {
-            let modelBinder;
-
-            if (config.type === "layout-section") {
-                modelBinder = this.sectionModelBinder;
-            }
-            else {
-                modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
-            }
-
+            let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
             return await modelBinder.nodeToModel(config, layoutMode);
         });
 
@@ -129,7 +122,10 @@ export class PageModelBinder implements IModelBinder {
                     return modelBinder.modelToWidgetModel(x, false);
                 }));
             }
-            viewModel.attachToModel(widgetModel);
+
+            if (viewModel.attachToModel) {
+                viewModel.attachToModel(widgetModel);
+            }
         };
 
         return widgetModel;
