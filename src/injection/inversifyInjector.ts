@@ -1,6 +1,7 @@
-﻿import { IInjector } from '../injection/IInjector';
+﻿import "reflect-metadata";
+import { IInjector } from '../injection/IInjector';
 import { inject, injectable, Container, decorate, interfaces } from "inversify";
-import "reflect-metadata";
+import { IInjectorModule } from "./IRegistration";
 
 export class InversifyInjector implements IInjector {
     private kernel: Container;
@@ -105,5 +106,9 @@ export class InversifyInjector implements IInjector {
         }
 
         return component;
+    }
+
+    public bindModule(module: IInjectorModule): void {
+        module.register(this);
     }
 }

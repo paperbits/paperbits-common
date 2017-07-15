@@ -13,9 +13,10 @@ import { GithubClient } from "./../github/githubClient";
 import { IHttpClient } from "./../http/IHttpClient";
 import { IBlobStorage } from "./../persistence/IBlobStorage";
 import { IInjector } from "./../injection/IInjector";
-import { IRegistration } from "./../injection/IRegistration";
+import { IInjectorModule } from "./../injection/IRegistration";
 
-export class PublishingRegistration implements IRegistration {
+
+export class PublishingModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("sitePublisher", SitePublisher);
         injector.bindSingleton("pagePublisher", PagePublisher);

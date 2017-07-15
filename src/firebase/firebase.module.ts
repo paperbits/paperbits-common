@@ -2,12 +2,12 @@ import { FirebaseObjectStorage } from '../firebase/firebaseObjectStorage';
 import { FirebaseBlobStorage } from '../firebase/firebaseBlobStorage';
 import { FirebaseService } from '../firebase/firebaseService';
 import { OfflineObjectStorage } from '../persistence/offlineObjectStorage';
-import { IRegistration } from '../injection/IRegistration';
+import { IInjectorModule } from '../injection/IRegistration';
 import { IInjector } from '../injection/IInjector';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 
 
-export class FirebaseRegistration implements IRegistration {
+export class FirebaseModule implements IInjectorModule {
     private readonly useCache: boolean;
 
     constructor(useCache?: boolean) {

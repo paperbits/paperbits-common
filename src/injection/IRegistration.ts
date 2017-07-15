@@ -1,5 +1,5 @@
 import { IInjector } from '../injection/IInjector';
 
-export interface IRegistration {
+export interface IInjectorModule {
     register(injector: IInjector): void;
 }
