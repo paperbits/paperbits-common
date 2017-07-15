@@ -1,7 +1,7 @@
 ﻿import "reflect-metadata";
-import { IInjector } from '../injection/IInjector';
+import { IInjector, IInjectorModule } from '../injection';
 import { inject, injectable, Container, decorate, interfaces } from "inversify";
-import { IInjectorModule } from "./IRegistration";
+
 
 export class InversifyInjector implements IInjector {
     private kernel: Container;

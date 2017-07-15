@@ -1,5 +1,4 @@
-import { IInjector } from '../injection/IInjector';
-import { IInjectorModule } from "./IRegistration";
+import { IInjector, IInjectorModule } from "../injection";
 
 
 export interface IInjector {

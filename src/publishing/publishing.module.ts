@@ -12,8 +12,7 @@ import { GithubBlobStorage } from "./../github/githubBlobStorage";
 import { GithubClient } from "./../github/githubClient";
 import { IHttpClient } from "./../http/IHttpClient";
 import { IBlobStorage } from "./../persistence/IBlobStorage";
-import { IInjector } from "./../injection/IInjector";
-import { IInjectorModule } from "./../injection/IRegistration";
+import { IInjector, IInjectorModule } from "./../injection";
 
 
 export class PublishingModule implements IInjectorModule {

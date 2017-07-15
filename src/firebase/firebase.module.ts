@@ -2,8 +2,7 @@ import { FirebaseObjectStorage } from '../firebase/firebaseObjectStorage';
 import { FirebaseBlobStorage } from '../firebase/firebaseBlobStorage';
 import { FirebaseService } from '../firebase/firebaseService';
 import { OfflineObjectStorage } from '../persistence/offlineObjectStorage';
-import { IInjectorModule } from '../injection/IRegistration';
-import { IInjector } from '../injection/IInjector';
+import { IInjector, IInjectorModule } from '../injection';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 
 
