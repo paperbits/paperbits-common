@@ -1,5 +1,3 @@
-import { IViewManager } from "./../ui/IViewManager";
-import { IEventManager } from '../events/IEventManager';
 import { FirebaseObjectStorage } from '../firebase/firebaseObjectStorage';
 import { FirebaseBlobStorage } from '../firebase/firebaseBlobStorage';
 import { FirebaseService } from '../firebase/firebaseService';
@@ -24,11 +22,9 @@ export class FirebaseRegistration implements IRegistration {
         injector.bindSingletonFactory<IObjectStorage>("objectStorage", (ctx: IInjector) => {
             var firebaseService = ctx.resolve<FirebaseService>("firebaseService");
             var objectStorage = new FirebaseObjectStorage(firebaseService);
-            var eventManager = ctx.resolve<IEventManager>("eventManager");
-            var viewManager = ctx.resolve<IViewManager>("viewManager");
 
             if (this.useCache) {
-                return new OfflineObjectStorage(objectStorage, eventManager, viewManager);
+                return new OfflineObjectStorage(objectStorage);
             }
 
             return objectStorage;

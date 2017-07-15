@@ -9,7 +9,13 @@ export class ModelBinderSelector {
     }
 
     public getModelBinderByNodeType(widgetType: string): IModelBinder {
-        return this.modelBinders.find(x => x.canHandleWidgetType(widgetType));
+        let modelBinder = this.modelBinders.find(x => x.canHandleWidgetType(widgetType));
+
+        if (!modelBinder) {
+            throw `Could not find model binder for widget type ${widgetType}`;
+        }
+
+        return modelBinder;
     }
 
     public getModelBinderByModel(model): IModelBinder {

@@ -26,12 +26,12 @@ export class LayoutModelBinder {
     private readonly pageModelBinder: PageModelBinder;
     private readonly modelBinderSelector: ModelBinderSelector;
 
-    constructor(fileService: IFileService, layoutService: ILayoutService, routeHandler: IRouteHandler, pageModelBinder: PageModelBinder, layoutModelBinderSelector: ModelBinderSelector) {
+    constructor(fileService: IFileService, layoutService: ILayoutService, routeHandler: IRouteHandler, pageModelBinder: PageModelBinder, modelBinderSelector: ModelBinderSelector) {
         this.fileService = fileService;
         this.layoutService = layoutService;
         this.routeHandler = routeHandler;
         this.pageModelBinder = pageModelBinder;
-        this.modelBinderSelector = layoutModelBinderSelector;
+        this.modelBinderSelector = modelBinderSelector;
 
         // rebinding...
         this.nodeToModel = this.nodeToModel.bind(this);

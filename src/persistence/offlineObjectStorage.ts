@@ -1,9 +1,9 @@
 import { IViewManager } from "./../ui/IViewManager";
-import { ProgressPromise } from '../core/progressPromise';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IEventManager } from '../events/IEventManager';
-import { LruCache } from '../caching/lruCache';
-import * as _ from 'lodash';
+import { ProgressPromise } from "../core/progressPromise";
+import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IEventManager } from "../events/IEventManager";
+import { LruCache } from "../caching/lruCache";
+import * as _ from "lodash";
 
 const ActionProperty = "action";
 const ActionAdd = "add";
@@ -11,46 +11,18 @@ const ActionUpdate = "update";
 
 export class OfflineObjectStorage implements IObjectStorage {
     private readonly underlyingStorage: IObjectStorage;      //for storage
-    private readonly eventManager: IEventManager;
-    private readonly viewManager: IViewManager;
-
     private readonly localStorage: Storage;  //for changes
     private readonly lruCache: LruCache<any>; //lru cache for getting objects
-    private deletedObjects;
+    private deletedObjects: Object;
+    
     public isOnline: boolean;
 
-    constructor(underlyingStorage: IObjectStorage, eventManager: IEventManager, viewManager: IViewManager) {
+    constructor(underlyingStorage: IObjectStorage) {
         this.localStorage = window.sessionStorage;
         this.underlyingStorage = underlyingStorage;
-        this.viewManager = viewManager;
 
         this.lruCache = new LruCache<any>(10000);
-        this.eventManager = eventManager;
-
-        eventManager.addEventListener("onSaveChanges", this.saveChanges.bind(this));
-
         this.isOnline = true;
-
-        setTimeout(() => {
-            eventManager.addEventListener("onOnlineStatusChanged", this.onOnlineStatusChanged);
-        }, 500);
-    }
-
-    private async onOnlineStatusChanged(status): Promise<void> {
-        this.isOnline = status === "online";
-
-        if (this.isOnline && this.deletedObjects) {
-            let tasks = [];
-
-            Object.keys(this.deletedObjects).forEach(path => {
-                tasks.push(this.underlyingStorage.deleteObject(path));
-            });
-
-            if (tasks.length) {
-                await Promise.all(tasks);
-                this.deletedObjects = undefined;
-            }
-        }
     }
 
     private getItemFromCache(path: string): any {
@@ -81,7 +53,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    public async updateObject<T>(key: string, dataObject: T): Promise<T> {
+    public async updateObject<T>(key: string, dataObject: T): Promise<void> {
         if (!key) {
             throw new Error("Could not update object: Key is undefined.");
         }
@@ -103,8 +75,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.localStorage.setItem(key, JSON.stringify(dataObject));
         this.lruCache.removeItem(key);
-
-        return dataObject;
     }
 
     public async getObject<T>(key: string): Promise<T> {
@@ -324,8 +294,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async saveChanges(): Promise<void> {
-        let indicator = this.viewManager.addProgressIndicator("Storage", "Saving changes...");
-
         if (!this.isOnline) {
             throw "No internet connection";
         }
@@ -356,7 +324,5 @@ export class OfflineObjectStorage implements IObjectStorage {
         });
 
         await Promise.all(saveTasks);
-
-        this.viewManager.scheduleIndicatorRemoval(indicator);
     }
 }
