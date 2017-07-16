@@ -22,7 +22,7 @@ export class CodeblockModelBinder implements IModelBinder {
         return codeModel;
     }
 
-    public modelToWidgetModel(codeNode: ContentConfig, readonly: boolean = false): Promise<{}> {
+    public modelToWidgetModel(codeNode: ContentConfig, readonly: boolean = false): Promise<IWidgetModel> {
         return new Promise<IWidgetModel>((resolve, reject) => {
 
             let codeWidgetModel: IWidgetModel = {

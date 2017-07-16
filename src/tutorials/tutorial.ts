@@ -137,7 +137,7 @@ export class Tutorial {
     }
 
     private findElement(searchFunction: () => HTMLElement): Promise<HTMLElement> {
-        var promise = new Promise((resolve) => {
+        var promise = new Promise<HTMLElement>((resolve) => {
             var observer: MutationObserver;
             var onDomChanged = (): void => {
                 var htmlElement = searchFunction();
