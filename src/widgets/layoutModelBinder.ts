@@ -1,20 +1,12 @@
-import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { IRouteHandler } from "./../routing/IRouteHandler";
-import { IPageService } from "./../pages/IPageService";
-import { PageModel } from "./models/pageModel";
-import { IPage } from "./../pages/IPage";
-import { PageModelBinder } from "./pageModelBinder";
 import { ILayout } from "./../layouts/ILayout";
 import { LayoutModel } from "./models/layoutModel";
 import { IViewModelBinder } from "./IViewModelBinder";
 import { IWidgetModel } from "./../editing/IWidgetModel";
 import { IFileService } from '../files/IFileService';
-import { SectionModelBinder } from "../widgets/sectionModelBinder";
-import { SectionModel } from "../widgets/models/sectionModel";
 import { ContentConfig } from "./../editing/contentNode";
 import { PlaceholderModel } from "./models/placeholderModel";
 import { ILayoutService } from "../layouts/ILayoutService";
-import { ISiteService } from "../sites/ISiteService";
 import { ModelBinderSelector } from "./modelBinderSelector";
 
 
@@ -22,15 +14,12 @@ export class LayoutModelBinder {
     private readonly routeHandler: IRouteHandler;
     private readonly fileService: IFileService;
     private readonly layoutService: ILayoutService;
-    private readonly pageService: IPageService;
-    private readonly pageModelBinder: PageModelBinder;
     private readonly modelBinderSelector: ModelBinderSelector;
 
-    constructor(fileService: IFileService, layoutService: ILayoutService, routeHandler: IRouteHandler, pageModelBinder: PageModelBinder, modelBinderSelector: ModelBinderSelector) {
+    constructor(fileService: IFileService, layoutService: ILayoutService, routeHandler: IRouteHandler, modelBinderSelector: ModelBinderSelector) {
         this.fileService = fileService;
         this.layoutService = layoutService;
         this.routeHandler = routeHandler;
-        this.pageModelBinder = pageModelBinder;
         this.modelBinderSelector = modelBinderSelector;
 
         // rebinding...
