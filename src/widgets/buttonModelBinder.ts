@@ -17,7 +17,7 @@ export class ButtonModelBinder implements IModelBinder {
         return widgetType === "button";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof ButtonModel;
     }
 
@@ -32,22 +32,6 @@ export class ButtonModelBinder implements IModelBinder {
         }
 
         return model;
-    }
-
-    public async modelToWidgetModel(buttonModel: ButtonModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "paperbits-button",
-            params: {},
-            setupViewModel: (viewModel: IViewModelBinder) => {
-                viewModel.attachToModel(buttonModel);
-            },
-            nodeType: "button",
-            model: buttonModel,
-            editor: "paperbits-button-editor",
-            readonly: readonly
-        };
-
-        return widgetModel;
     }
 
     public getConfig(buttonModel: ButtonModel): ContentConfig {

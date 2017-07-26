@@ -17,7 +17,7 @@ export class PictureModelBinder implements IModelBinder {
         return widgetType === "picture";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof PictureModel;
     }
 
@@ -33,22 +33,6 @@ export class PictureModelBinder implements IModelBinder {
         }
 
         return pictureModel;
-    }
-
-    public async modelToWidgetModel(model: PictureModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let pictureWidgetModel: IWidgetModel = {
-            name: "paperbits-picture",
-            params: {},
-            setupViewModel: (viewModel: IViewModelBinder) => {
-                viewModel.attachToModel(model);
-            },
-            nodeType: "picture",
-            model: model,
-            editor: "picture-editor-editor",
-            readonly: readonly
-        };
-
-        return pictureWidgetModel;
     }
 
     public getConfig(pictureModel: PictureModel): IPictureNode {

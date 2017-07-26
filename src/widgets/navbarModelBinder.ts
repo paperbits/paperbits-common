@@ -25,7 +25,6 @@ export class NavbarModelBinder implements IModelBinder {
         this.routeHandler = routeHandler;
 
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
         this.navigationItemToNavbarItemModel = this.navigationItemToNavbarItemModel.bind(this);
     }
 
@@ -42,38 +41,11 @@ export class NavbarModelBinder implements IModelBinder {
         return model;
     }
 
-    public async modelToWidgetModel(navbarModel: NavbarModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let navbarWidgetModel: IWidgetModel = {
-            name: "navbar",
-            params: {},
-            setupViewModel: (viewModelBinder: IViewModelBinder) => {
-                viewModelBinder.attachToModel(navbarModel);
-            },
-            model: navbarModel,
-            nodeType: "navbar",
-            editor: "navbar-editor",
-            readonly: readonly
-        };
-
-        this.eventManager.addEventListener(NavigationEvents.onNavigationItemUpdate, async () => {
-            if (navbarWidgetModel.applyChanges) {                
-                let currentUrl = this.routeHandler.getCurrentUrl();
-                let navigationItem = await this.navigationService.getNavigationItem(navbarModel.rootKey);
-                let navbarItem = await this.navigationItemToNavbarItemModel(navigationItem, currentUrl);
-
-                navbarModel.root = navbarItem;
-                navbarWidgetModel.applyChanges();
-            }
-        });
-
-        return navbarWidgetModel;
-    }
-
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "navbar";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof NavbarModel;
     }
 

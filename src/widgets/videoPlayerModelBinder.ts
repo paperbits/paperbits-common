@@ -22,7 +22,7 @@ export class VideoPlayerModelBinder implements IModelBinder {
         return widgetType === "video-player";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof VideoPlayerModel;
     }
 
@@ -30,7 +30,6 @@ export class VideoPlayerModelBinder implements IModelBinder {
         let videoPlayerModel = new VideoPlayerModel();
         videoPlayerModel.controls = videoPlayerNode.controls;
         videoPlayerModel.autoplay = videoPlayerNode.autoplay;
-
 
         if (videoPlayerNode.sourceKey) {
             videoPlayerModel.sourceKey = videoPlayerNode.sourceKey;
@@ -60,23 +59,6 @@ export class VideoPlayerModelBinder implements IModelBinder {
         }
 
         return videoPlayerModel;
-    }
-
-    public modelToWidgetModel(model: VideoPlayerModel, readonly: boolean = false): Promise<IWidgetModel> {
-        return new Promise<IWidgetModel>((resolve, reject) => {
-            let widgetModel: IWidgetModel = {
-                name: "paperbits-video-player",
-                params: {},
-                setupViewModel: (viewModel: IViewModelBinder) => {                
-                    viewModel.attachToModel(model);
-                },
-                nodeType: "video-player",
-                model: model,
-                editor: "video-player-editor",
-                readonly: readonly
-            };
-            resolve(widgetModel);
-        });
     }
 
     public getConfig(videoPlayerModel: VideoPlayerModel): IVideoPlayerNode {

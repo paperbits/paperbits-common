@@ -33,22 +33,17 @@ export class BlogModelBinder implements IModelBinder {
 
         // rebinding...
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "blog";
     }
 
-    public canHandleWidgetModel(model: Object): boolean {
+    public canHandleModel(model: Object): boolean {
         return model instanceof BlogPostModel;
     }
 
-    public async nodeToModel(blogConfig: IBlogPost, layoutMode?: boolean): Promise<BlogPostModel> {
-        if (layoutMode) {
-            return await Promise.resolve(new PlaceholderModel());
-        }
-
+    public async nodeToModel(blogConfig: IBlogPost): Promise<BlogPostModel> {
         if (!blogConfig.key) {
             let currentUrl = this.routeHandler.getCurrentUrl();
             let permalink = await this.permalinkService.getPermalinkByUrl(currentUrl);
@@ -71,32 +66,6 @@ export class BlogModelBinder implements IModelBinder {
         document.title = `${settings.title} | ${blogModel.title}`;
 
         return blogModel;
-    }
-
-    public async modelToWidgetModel(blogModel: BlogPostModel): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "paperbits-page",
-            params: {},
-            nodeType: "blog",
-            model: blogModel
-        };
-
-        widgetModel.children = await Promise.all(blogModel.sections.map(x => this.sectionModelBinder.modelToWidgetModel(x, false)));
-
-        widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
-            if (this.isChildrenChanged(widgetModel.children, blogModel.sections)) {
-                widgetModel.children = await Promise.all(blogModel.sections.map(x => this.sectionModelBinder.modelToWidgetModel(x, false)));
-            }
-            viewModel.attachToModel(widgetModel);
-        };
-
-        return widgetModel;
-    }
-
-    private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {
-        return (widgetChildren && !modelItems) ||
-            (!widgetChildren && modelItems) ||
-            (widgetChildren && modelItems && widgetChildren.length !== modelItems.length);
     }
 
     public getConfig(blogModel: BlogPostModel): ContentConfig {

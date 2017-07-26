@@ -12,7 +12,7 @@ export class SectionModelBinder implements IModelBinder {
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "layout-section";
     }
-    public canHandleWidgetModel(model: Object): boolean {
+    public canHandleModel(model: Object): boolean {
         return model instanceof SectionModel;
     }
 
@@ -24,7 +24,6 @@ export class SectionModelBinder implements IModelBinder {
         this.permalinkResolver = permalinkResolver;
 
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
     public async nodeToModel(sectionNode: SectionConfig): Promise<SectionModel> {
@@ -70,28 +69,6 @@ export class SectionModelBinder implements IModelBinder {
         sectionModel.rows = await Promise.all<RowModel>(rowModelPromises);
 
         return sectionModel;
-    }
-
-    public async modelToWidgetModel(model: SectionModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "layout-section",
-            params: {},
-            nodeType: "layout-section",
-            model: model,
-            editor: "layout-section-editor",
-            readonly: readonly
-        };
-
-        widgetModel.children = await Promise.all(model.rows.map((x) => this.rowModelBinder.modelToWidgetModel(x, readonly)));
-
-        widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
-            if (this.isChildrenChanged(widgetModel.children, model.rows)) {
-                widgetModel.children = await Promise.all(model.rows.map((x) => this.rowModelBinder.modelToWidgetModel(x, readonly)));
-            }
-            viewModel.attachToModel(widgetModel);
-        };
-
-        return widgetModel;
     }
 
     private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {

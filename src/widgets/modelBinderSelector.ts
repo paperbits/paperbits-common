@@ -19,6 +19,13 @@ export class ModelBinderSelector {
     }
 
     public getModelBinderByModel(model): IModelBinder {
-        return this.modelBinders.find(x => x.canHandleWidgetModel(model));
+        let modelBinder = this.modelBinders.find(x => x.canHandleModel(model));
+
+        if (!modelBinder) {
+            console.log(model);
+            throw `Could not find model binder for model.`;
+        }
+
+        return modelBinder;
     }
 }

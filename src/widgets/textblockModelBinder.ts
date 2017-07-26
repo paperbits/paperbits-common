@@ -12,8 +12,6 @@ export class TextblockModelBinder implements IModelBinder {
 
     constructor(permalinkService: IPermalinkService) {
         this.permalinkService = permalinkService;
-
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
     private async resolveHyperlinks(nodes: ContentConfig[]): Promise<void> {
@@ -47,31 +45,11 @@ export class TextblockModelBinder implements IModelBinder {
         return textblockModel;
     }
 
-    public async modelToWidgetModel(textblockModel: TextblockModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "paperbits-text",
-            params: {
-                state: textblockModel.state
-            },
-            nodeType: "text",
-            model: textblockModel,
-            editor: "paperbits-text-editor",
-            hideCloseButton: true,
-            readonly: readonly
-        };
-
-        widgetModel.setupViewModel = (viewModel: IViewModelBinder) => {
-            viewModel.attachToModel(widgetModel);
-        };
-
-        return widgetModel;
-    }
-
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "text";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof TextblockModel;
     }
 

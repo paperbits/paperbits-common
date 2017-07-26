@@ -24,24 +24,16 @@ export class LayoutModelBinder {
 
         // rebinding...
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
-    public async getCurrentLayout(layoutMode?: boolean): Promise<IWidgetModel> {
-        let layoutModel = await this.getCurrentLayoutModel(layoutMode);
-        let layoutComponentAreReadonly = !layoutMode;
-
-        return await this.modelToWidgetModel(layoutModel, layoutComponentAreReadonly);
-    }
-
-    public async getCurrentLayoutModel(layoutMode?: boolean): Promise<LayoutModel> {
+    public async getCurrentLayoutModel(): Promise<LayoutModel> {
         let url = this.routeHandler.getCurrentUrl();
         let layoutNode = await this.layoutService.getLayoutByRoute(url);
 
-        return await this.nodeToModel(layoutNode, url, layoutMode);
+        return await this.nodeToModel(layoutNode, url);
     }
 
-    public async nodeToModel(layoutNode: ILayout, currentUrl: string, layoutMode?: boolean): Promise<LayoutModel> {
+    public async nodeToModel(layoutNode: ILayout, currentUrl: string): Promise<LayoutModel> {
         let layoutModel = new LayoutModel();
         layoutModel.title = layoutNode.title;
         layoutModel.description = layoutNode.description;
@@ -52,61 +44,13 @@ export class LayoutModelBinder {
         let modelPromises = layoutContentNode.nodes.map(async (config) => {
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
 
-            return await modelBinder.nodeToModel(config, layoutMode);
+            return await modelBinder.nodeToModel(config);
         });
 
         let models = await Promise.all<any>(modelPromises);
         layoutModel.sections = models;
 
         return layoutModel;
-    }
-
-    public async modelToWidgetModel(model: LayoutModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "paperbits-layout",
-            params: {},
-            nodeType: "layout",
-            model: model,
-            readonly: readonly
-        };
-
-        widgetModel.children = await this.getWidgetsFromModel(model.sections, readonly);
-
-        widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
-            if (this.isChildrenChanged(widgetModel.children, model.sections)) {
-                widgetModel.children = await this.getWidgetsFromModel(model.sections);
-            }
-
-            if (viewModel.attachToModel) {
-                viewModel.attachToModel(widgetModel);
-            }
-        };
-
-        return widgetModel;
-    }
-
-    private async getWidgetsFromModel(models: any[], readonly: boolean = false): Promise<IWidgetModel[]> {
-        return await Promise.all(models.map(async (model) => {
-            if (model instanceof PlaceholderModel) {
-                let widgetModel: IWidgetModel = {
-                    name: "paperbits-placeholder",
-                    params: {},
-                    nodeType: "placeholder",
-                    setupViewModel: (viewModel: IViewModelBinder) => {
-                        if (viewModel.attachToModel) {
-                            viewModel.attachToModel(model);
-                        }
-                    },
-                    model: model
-                };
-                return await Promise.resolve(widgetModel);
-            }
-            else {
-                let modelBinder = this.modelBinderSelector.getModelBinderByModel(model);
-
-                return await modelBinder.modelToWidgetModel(model, readonly);
-            }
-        }));
     }
 
     private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {

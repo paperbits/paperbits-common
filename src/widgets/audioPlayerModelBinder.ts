@@ -22,7 +22,7 @@ export class AudioPlayerModelBinder implements IModelBinder {
         return widgetType === "audio-player";
     }
 
-    public canHandleWidgetModel(model): boolean {
+    public canHandleModel(model): boolean {
         return model instanceof AudioPlayerModel;
     }
 
@@ -46,21 +46,6 @@ export class AudioPlayerModelBinder implements IModelBinder {
             audioModel.sourceUrl = DefaultSourceUrl;
         }
         return audioModel;
-    }
-
-    public async modelToWidgetModel(audioModel: AudioPlayerModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let audioWidgetModel: IWidgetModel = {
-            name: "paperbits-audio-player",
-            params: {},
-            setupViewModel: (viewModel: IViewModelBinder) => {
-                viewModel.attachToModel(audioModel);
-            },
-            nodeType: "audio-player",
-            model: audioModel,
-            readonly: readonly
-        };
-
-        return audioWidgetModel;
     }
 
     public getConfig(audioPlayerModel: AudioPlayerModel): IAudioPlayerNode {

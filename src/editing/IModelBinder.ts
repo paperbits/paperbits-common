@@ -3,8 +3,7 @@ import { ContentConfig } from "./contentNode";
 
 export interface IModelBinder {
     canHandleWidgetType(widgetType: string): boolean;
-    canHandleWidgetModel(model: Object): boolean;
+    canHandleModel(model: Object): boolean;
     getConfig<T>(model: T): ContentConfig;
-    nodeToModel(node: Object, layoutMode?: boolean): Promise<any>;
-    modelToWidgetModel<T>(model: T, readonly?: boolean): Promise<IWidgetModel>;
+    nodeToModel(node: Object): Promise<any>;
 }

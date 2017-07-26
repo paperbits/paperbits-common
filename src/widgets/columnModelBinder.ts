@@ -13,7 +13,6 @@ export class ColumnModelBinder {
         this.modelBinderSelector = modelBinderSelector;
 
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
     public async nodeToModel(node: IColumnNode): Promise<ColumnModel> {
@@ -43,43 +42,6 @@ export class ColumnModelBinder {
         columnModel.widgets = await Promise.all<any>(modelPromises);
 
         return columnModel;
-    }
-
-    public async modelToWidgetModel(model: ColumnModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "layout-column",
-            params: {},
-            nodeType: "layout-column",
-            model: model,
-            editor: "layout-column-editor",
-            readonly: readonly
-        };
-
-        widgetModel.children = await this.getWidgetsFromModel(model.widgets, readonly);
-
-        widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
-            if (this.isChildrenChanged(widgetModel.children, model.widgets)) {
-                widgetModel.children = await this.getWidgetsFromModel(model.widgets, readonly);
-            }
-            viewModel.attachToModel(widgetModel);
-        };
-
-        return widgetModel;
-    }
-
-    private async getWidgetsFromModel(widgetModels: any[], readonly: boolean): Promise<IWidgetModel[]> {
-        return await Promise.all(widgetModels.map(async (widget) => {
-            let modelBinder: IModelBinder = this.modelBinderSelector.getModelBinderByModel(widget);
-            return await modelBinder.modelToWidgetModel(widget, readonly);
-        }));
-    }
-
-    private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {
-        return true;
-
-        // return (widgetChildren && !modelItems) ||
-        //     (!widgetChildren && modelItems) ||
-        //     (widgetChildren && modelItems && widgetChildren.length !== modelItems.length);
     }
 
     public getColumnConfig(columnModel: ColumnModel): ContentConfig {

@@ -14,7 +14,6 @@ export class RowModelBinder {
         this.columnModelBinder = columnModelBinder;
 
         this.nodeToModel = this.nodeToModel.bind(this);
-        this.modelToWidgetModel = this.modelToWidgetModel.bind(this);
     }
 
     public async nodeToModel(node: IRowNode): Promise<RowModel> {
@@ -52,37 +51,6 @@ export class RowModelBinder {
         rowModel.columns = await Promise.all<ColumnModel>(columnModelPromises);
 
         return rowModel;
-    }
-
-    public async modelToWidgetModel(model: RowModel, readonly: boolean = false): Promise<IWidgetModel> {
-        let widgetModel: IWidgetModel = {
-            name: "layout-row",
-            params: {},
-            nodeType: "layout-row",
-            model: model,
-            readonly: readonly
-        };
-
-        widgetModel.children = await Promise.all(model.columns.map((x) => this.columnModelBinder.modelToWidgetModel(x, readonly)));
-
-        widgetModel.setupViewModel = async (viewModel: IViewModelBinder) => {
-            if (this.isChildrenChanged(widgetModel.children, model.columns)) {
-                widgetModel.children = await Promise.all(model.columns.map((x) => this.columnModelBinder.modelToWidgetModel(x, readonly)));
-            }
-            viewModel.attachToModel(widgetModel);
-        };
-
-        return widgetModel;
-    }
-
-    private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {
-        return true;
-
-        // TODO: Do more precise check
-
-        // return (widgetChildren && !modelItems) ||
-        //        (!widgetChildren && modelItems) ||
-        //        (widgetChildren && modelItems && widgetChildren.length !== modelItems.length);
     }
 
     public getRowConfig(rowModel: RowModel): ContentConfig {
