@@ -22,7 +22,6 @@ export class ModelBinderSelector {
         let modelBinder = this.modelBinders.find(x => x.canHandleModel(model));
 
         if (!modelBinder) {
-            console.log(model);
             throw `Could not find model binder for model.`;
         }
 
