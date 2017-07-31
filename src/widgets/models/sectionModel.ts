@@ -1,5 +1,6 @@
 import { RowModel } from "./rowModel";
 import { IModel } from "./IModel";
+import { BackgroundModel } from "./backgroundModel";
 
 export class SectionModel implements IModel {
     public type: string = "section";
@@ -8,22 +9,13 @@ export class SectionModel implements IModel {
     public padding: string;
     public snap: string;
     public height: string;
-    public backgroundType: string;
-    public backgroundIntentionKey: string;
-    public backgroundSourceKey: string;
-    public backgroundPictureUrl: string;
-    public backgroundSize: string;
-    public backgroundPosition: string;
-    public backgroundRepeat: string;
+    public background: BackgroundModel;
 
     constructor() {
         this.layout = "container";
         this.padding = "with-padding";
         this.snap = "none";
-        this.backgroundType = "none";
-        this.backgroundSize = "cover";
-        this.backgroundPosition = "center center";
-        this.backgroundRepeat = "no-repeat";
+        this.background = new BackgroundModel();
         this.rows = [];
     }
 }

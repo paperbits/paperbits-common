@@ -7,6 +7,8 @@ import { SectionModel } from "./models/sectionModel";
 import { RowModelBinder } from "./rowModelBinder";
 import { IWidgetModel } from "./../editing/IWidgetModel";
 import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
+import { BackgroundModelBinder } from "./backgroundModelBinder";
+
 
 export class SectionModelBinder implements IModelBinder {
     public canHandleWidgetType(widgetType: string): boolean {
@@ -17,55 +19,41 @@ export class SectionModelBinder implements IModelBinder {
     }
 
     private readonly rowModelBinder: RowModelBinder;
+    private readonly backgroundModelBinder: BackgroundModelBinder;
     private readonly permalinkResolver: IPermalinkResolver;
 
-    constructor(rowModelBinder: RowModelBinder, permalinkResolver: IPermalinkResolver) {
+    constructor(rowModelBinder: RowModelBinder, backgroundModelBinder: BackgroundModelBinder, permalinkResolver: IPermalinkResolver) {
         this.rowModelBinder = rowModelBinder;
+        this.backgroundModelBinder = backgroundModelBinder;
         this.permalinkResolver = permalinkResolver;
 
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async nodeToModel(sectionNode: SectionConfig): Promise<SectionModel> {
+    public async nodeToModel(sectionContract: SectionConfig): Promise<SectionModel> {
         let sectionModel = new SectionModel();
 
-        if (!sectionNode.nodes) {
-            sectionNode.nodes = [];
+        if (!sectionContract.nodes) {
+            sectionContract.nodes = [];
         }
 
-        if (sectionNode.layout) {
-            sectionModel.layout = sectionNode.layout;
+        if (sectionContract.layout) {
+            sectionModel.layout = sectionContract.layout;
         }
 
-        if (sectionNode.padding) {
-            sectionModel.padding = sectionNode.padding;
+        if (sectionContract.padding) {
+            sectionModel.padding = sectionContract.padding;
         }
 
-        if (sectionNode.snapping) {
-            sectionModel.snap = sectionNode.snapping;
+        if (sectionContract.snapping) {
+            sectionModel.snap = sectionContract.snapping;
         }
 
-        if (sectionNode.background) {
-            if (sectionNode.background.color) {
-                sectionModel.backgroundIntentionKey = sectionNode.background.color;
-            }
-
-            if (sectionNode.background.size) {
-                sectionModel.backgroundSize = sectionNode.background.size;
-            }
-
-            if (sectionNode.background.position) {
-                sectionModel.backgroundPosition = sectionNode.background.position;
-            }
-
-            if (sectionNode.background.picture) {
-                sectionModel.backgroundType = "picture";
-                sectionModel.backgroundSourceKey = sectionNode.background.picture.sourcePermalinkKey;
-                sectionModel.backgroundPictureUrl = await this.permalinkResolver.getUriByPermalinkKey(sectionModel.backgroundSourceKey);
-            }
+        if (sectionContract.background) {
+            sectionModel.background = await this.backgroundModelBinder.nodeToModel(sectionContract.background);
         }
 
-        let rowModelPromises = sectionNode.nodes.map(this.rowModelBinder.nodeToModel);
+        let rowModelPromises = sectionContract.nodes.map(this.rowModelBinder.nodeToModel);
         sectionModel.rows = await Promise.all<RowModel>(rowModelPromises);
 
         return sectionModel;
@@ -86,16 +74,16 @@ export class SectionModelBinder implements IModelBinder {
             padding: sectionModel.padding,
             snapping: sectionModel.snap,
             background: {
-                color: sectionModel.backgroundIntentionKey,
-                size: sectionModel.backgroundSize,
-                position: sectionModel.backgroundPosition
+                color: sectionModel.background.colorKey,
+                size: sectionModel.background.size,
+                position: sectionModel.background.position
             }
         };
 
-        if (sectionModel.backgroundType === "picture") {
+        if (sectionModel.background.sourceType === "picture") {
             sectionConfig.background.picture = {
-                sourcePermalinkKey: sectionModel.backgroundSourceKey,
-                repeat: sectionModel.backgroundRepeat
+                sourcePermalinkKey: sectionModel.background.sourceKey,
+                repeat: sectionModel.background.repeat
             }
         }
 

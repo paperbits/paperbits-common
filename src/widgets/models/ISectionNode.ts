@@ -1,8 +1,8 @@
-import { BackgroundData } from "./../../ui/draggables/backgorund";
+import { BackgroundContract } from "./../../ui/draggables/backgorund";
 import { ContentConfig } from "./../../editing/contentNode";
 
 export interface SectionConfig extends ContentConfig {
-    background: BackgroundData;
+    background: BackgroundContract;
 
     /**
      *  Layout types: container, full width.

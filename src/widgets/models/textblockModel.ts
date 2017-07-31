@@ -6,8 +6,12 @@ export class TextblockModel implements IModel {
     public state: Object;
     public htmlEditor: IHtmlEditor;
 
-    constructor(state: Object, htmlEditor?: IHtmlEditor) {
+    constructor(state: Object) {
         this.state = state;
-        this.htmlEditor = htmlEditor;
+        // htmlEditor.addSelectionChangeListener(this.onChange.bind(this));
+    }
+
+    private onChange(): void {
+        this.state = this.htmlEditor.getState();
     }
 }

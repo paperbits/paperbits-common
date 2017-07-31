@@ -1,13 +1,17 @@
 import { IComponent } from "./IComponent";
 
 export interface IContextualEditor {
-    element?: HTMLElement;
-    component: IComponent;
-    position: string;
-    deleteCallback?: () => void;
-    deleteTooltip?: string;
-    settingsCallback?: () => void;
-    settingsTooltip?: string;
     color?: string;
-    addTooltip?: string;
+    element?: HTMLElement;
+    hoverCommand?: IContextualEditorCommand;
+    selectionCommands?: IContextualEditorCommand[];
+    deleteCommand?: IContextualEditorCommand;
+}
+
+export interface IContextualEditorCommand {
+    callback?: () => void;
+    component?: IComponent;
+    tooltip?: string;
+    position?: string;
+    iconClass?: string;
 }

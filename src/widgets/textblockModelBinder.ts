@@ -58,6 +58,7 @@ export class TextblockModelBinder implements IModelBinder {
 
         if (model.htmlEditor) {
             state = model.htmlEditor.getState();
+            model.state = state;
         }
         else {
             state = model.state;

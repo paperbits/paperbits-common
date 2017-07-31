@@ -59,7 +59,7 @@ export class PagePublisher implements IPublisher {
             setTimeout(() => {
                 htmlContent = document.documentElement.outerHTML;
                 resolve();
-            }, 3000);
+            }, 1000);
         });
 
         await Promise.all([siteSettingsPromise, buildContentPromise]);

@@ -1,20 +1,20 @@
-export interface BackgroundPictureData {
+export interface BackgroundPictureContract {
     sourcePermalinkKey: string;
     repeat?: string;
 }
 
-export interface BackgroundVideoData {
+export interface BackgroundVideoContract {
     sourcePermalinkKey: string;
 }
 
-export interface BackgroundMapData {
+export interface BackgroundMapContract {
     address: string;
     markerIconPermalinkKey?: string;
 }
 
-export interface BackgroundData {
-    picture?: BackgroundPictureData;
-    map?: BackgroundMapData;
+export interface BackgroundContract {
+    picture?: BackgroundPictureContract;
+    map?: BackgroundMapContract;
     position?: string;
     color?: string;
     size?: string;
