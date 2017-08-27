@@ -6,7 +6,6 @@ import { AssetPublisher } from "./assetPublisher";
 import { MediaPublisher } from "./mediaPublisher";
 import { PagePublisher } from "./pagePublisher";
 import { BlogPublisher } from "./blogPublisher";
-import { NewsPublisher } from "./newsPublisher";
 import { SitePublisher } from "./publisher";
 import { GithubBlobStorage } from "./../github/githubBlobStorage";
 import { GithubClient } from "./../github/githubClient";
@@ -20,14 +19,12 @@ export class PublishingModule implements IInjectorModule {
         injector.bindSingleton("sitePublisher", SitePublisher);
         injector.bindSingleton("pagePublisher", PagePublisher);
         injector.bindSingleton("blogPublisher", BlogPublisher);
-        injector.bindSingleton("newsPublisher", NewsPublisher);
         injector.bindSingleton("mediaPublisher", MediaPublisher);
 
         let pagePublisher = injector.resolve("pagePublisher");
         let mediaPublisher = injector.resolve("mediaPublisher");
         let assetPublisher = injector.resolve("assetPublisher");
         let blogPublisher = injector.resolve("blogPublisher");
-        let newsPublisher = injector.resolve("newsPublisher");
 
         injector.bindInstance("publishers", [
             assetPublisher,

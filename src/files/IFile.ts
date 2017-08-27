@@ -1,9 +1,9 @@
-import { ContentConfig } from "./../editing/contentNode";
+import { Contract } from "./../editing/contentNode";
 
 export interface IFile {
     key: string;
     mimeType?: string;
     size?: number;
     content?: string;
-    contentModel?: ContentConfig
+    contentModel?: Contract
 }

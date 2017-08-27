@@ -31,6 +31,16 @@ export function guid(): string {
         s4() + "-" + s4() + s4() + s4();
 }
 
+export function identifier() {
+    var result = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 5; i++)
+        result += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return result;
+}
+
 export function createComponent(nodeName: string, attributes: Object): HTMLElement {
     var htmlElement = document.createElement(nodeName);
     htmlElement.style.width = "200px";

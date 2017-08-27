@@ -85,4 +85,8 @@ export interface IViewManager {
     getViewport(): string;
 
     switchToEditing(): void;
+
+    setShutter(): void;
+
+    removeShutter(): void;
 }

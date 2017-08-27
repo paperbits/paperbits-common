@@ -1,4 +1,4 @@
-﻿import { ContentConfig } from "./../editing/contentNode";
+﻿import { Contract } from "./../editing/contentNode";
 import * as Utils from '../core/utils';
 import { IFile } from '../files/IFile';
 import { IFileService } from '../files/IFileService';
@@ -13,11 +13,11 @@ export class FileService implements IFileService {
         this.objectStorage = objectStorage;
     }
 
-    public async getFileByKey(key: string): Promise<ContentConfig> {
-        return await this.objectStorage.getObject<ContentConfig>(key);
+    public async getFileByKey(key: string): Promise<Contract> {
+        return await this.objectStorage.getObject<Contract>(key);
     }
 
-    public async createFile(contentNode: ContentConfig): Promise<ContentConfig> {
+    public async createFile(contentNode: Contract): Promise<Contract> {
         let key = `${filesPath}/${Utils.guid()}`;
 
         if (!contentNode["key"]) {
@@ -29,7 +29,7 @@ export class FileService implements IFileService {
         return contentNode;
     }
 
-    public updateFile(content: ContentConfig): Promise<void> {
+    public updateFile(content: Contract): Promise<void> {
         return this.objectStorage.updateObject(content["key"], content);
     }
 }

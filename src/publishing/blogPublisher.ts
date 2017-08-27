@@ -5,9 +5,9 @@ import { IBlogPost } from "./../blogs/IBlogPost";
 import { IBlogService } from "./../blogs/IBlogService";
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { IBlobStorage } from "./../persistence/IBlobStorage";
-import { PageModelBinder } from "../widgets/pageModelBinder";
+import { PageModelBinder } from "../widgets/page/pageModelBinder";
 import { IPublisher } from './IPublisher';
-import { LayoutModelBinder } from "../widgets/layoutModelBinder";
+import { LayoutModelBinder } from "../widgets/layout/layoutModelBinder";
 import { IRouteHandler } from "../routing/IRouteHandler";
 
 

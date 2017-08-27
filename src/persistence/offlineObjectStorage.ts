@@ -298,6 +298,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw "No internet connection";
         }
 
+        console.log("Saving changes...");
+
         let saveTasks = [];
 
         Object.keys(this.localStorage).forEach(localStorageObjectKey => {

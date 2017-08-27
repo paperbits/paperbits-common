@@ -1,6 +1,6 @@
-export interface ContentConfig {
-    kind: string;
+export interface Contract {
+    kind?: string;
     type?: string;
-    nodes?: ContentConfig[];
+    nodes?: Contract[];
     [key: string]: any;
 }

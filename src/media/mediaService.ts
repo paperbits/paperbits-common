@@ -33,8 +33,26 @@ export class MediaService implements IMediaService {
         return this.objectStorage.getObject<IMedia>(key);
     }
 
-    public search(pattern: string): Promise<Array<IMedia>> {
-        return this.searchByTags(["filename"], pattern, true);
+
+
+    public async search(pattern: string): Promise<Array<IMedia>> {
+        let result = await this.searchByTags(["filename"], pattern, true);
+
+        result.sort(function (x, y) {
+            var a = x.filename.toUpperCase();
+            var b = y.filename.toUpperCase();
+
+            if (a > b) {
+                return 1;
+            }
+            
+            if (a < b) {
+                return -1;
+            }
+            return 0;
+        });
+
+        return result;
     }
 
     public async deleteMedia(media: IMedia): Promise<void> {
@@ -49,7 +67,7 @@ export class MediaService implements IMediaService {
         }
     }
 
-    public createMedia(name: string, content: Uint8Array, contentType?:string): ProgressPromise<ICreatedMedia> {
+    public createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia> {
         return new ProgressPromise<ICreatedMedia>(async (resolve, reject, progress) => {
             await this.blobStorage.uploadBlob(name, content, contentType)
                 .progress(progress)

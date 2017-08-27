@@ -1,9 +1,9 @@
-import { ContentConfig } from "./../editing/contentNode";
+import { Contract } from "./../editing/contentNode";
 
 export interface IFileService {
-    createFile(contenNode: ContentConfig): Promise<ContentConfig>;
+    createFile(contenNode: Contract): Promise<Contract>;
 
-    getFileByKey(key: string): Promise<ContentConfig>;
+    getFileByKey(key: string): Promise<Contract>;
 
-    updateFile(content: ContentConfig): Promise<void>;
+    updateFile(content: Contract): Promise<void>;
 }

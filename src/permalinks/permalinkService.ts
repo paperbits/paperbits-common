@@ -33,8 +33,6 @@ export class PermalinkService implements IPermalinkService {
         if (permalinks.length > 0) {
             return permalinks[0];
         }
-
-        location.hash = "/404.html";
     }
 
     public async getPermalinkByKey(permalinkKey: string): Promise<IPermalink> {
@@ -43,7 +41,11 @@ export class PermalinkService implements IPermalinkService {
         }
 
         let permalink = await this.objectStorage.getObject<IPermalink>(permalinkKey);
-        
+
+        if (!permalink) {
+            throw `Unable to find permalink by key ${permalinkKey}`;
+        }
+
         return permalink;
     }
 

@@ -14,4 +14,5 @@ export interface IContextualEditorCommand {
     tooltip?: string;
     position?: string;
     iconClass?: string;
+    color?: string;
 }
