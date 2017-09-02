@@ -64,13 +64,27 @@ export interface IHtmlEditor {
     toggleH6(): void;
     toggleQuote(): void;
     toggleCode(): void;
+
+    /**
+     * Toggles alignment category.
+     */
     toggleAlignment(intentionFn: string): void;
+
+    /**
+     * Toggles color category.
+     */
     toggleColor(intentionFn: string): void;
-    toggleCategory(category: string, intentionFn: string, type: string): void;
-    setIntention(intentionFn: string, type: string): void;
-    resetIntention(intentionFn: string, type: string): void;
+
+    /**
+     * Toggles specific category, i.e. "color" or "alignment".
+     * 
+     * @param {string} category Name of category.
+     * @param {string} value Value of category.
+     * @param {string} type Can be either "block" or "inline".
+     */
+    toggleCategory(category: string, value: string, type: string): void;
     resetToNormal(): void;
-    setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition);
+    setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;
     getHyperlink(): IHyperlink;
     enable(): void;
@@ -78,9 +92,7 @@ export interface IHtmlEditor {
     addSelectionChangeListener(callback: () => void): void;
     removeSelectionChangeListener(callback: () => void): void;
     renderToContainer(element: HTMLElement): IHtmlEditor;
-    getState(): any;
     updateState(state: any): void;
-    setInitialState(state: any): void;
     setSelection(selection: Selection): void;
     expandSelection(): void;
 }
