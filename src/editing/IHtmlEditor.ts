@@ -95,6 +95,7 @@ export interface IHtmlEditor {
     updateState(state: any): void;
     setSelection(selection: Selection): void;
     expandSelection(): void;
+    getState(): Selection;
 }
 
 export class HtmlEditorEvents {
