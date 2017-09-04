@@ -36,9 +36,9 @@ export class SettingsProvider implements ISettingsProvider {
         return promise;
     }
 
-    public onSettingChange(name: string, eventHandler: (value)=> void) {
-        this.eventManager.addEventListener("onSettingChange", (setting) =>{
-            if (setting.name == name){
+    public onSettingChange(name: string, eventHandler: (value) => void) {
+        this.eventManager.addEventListener("onSettingChange", (setting) => {
+            if (setting.name == name) {
                 eventHandler(setting.value);
             }
         });
@@ -61,7 +61,7 @@ export class SettingsProvider implements ISettingsProvider {
         let response = await this.httpClient.send<any>({ url: "config.json" })
         let config = response.toObject();
         let tenantHostname = window.location.hostname;
-        let tenantConfig = config[tenantHostname];
+        let tenantConfig = config[tenantHostname] || config["default"];
 
         this.configuration = tenantConfig;
 
