@@ -74,7 +74,7 @@ export class MediaService implements IMediaService {
                 .then(() => this.blobStorage.getDownloadUrl(name))
                 .then(async uri => {
                     var mediaId = `${uploadsPath}/${Utils.guid()}`;
-                    var permalinkId = `${permalinksPath}/${Utils.guid()}`;
+                    var permalinkKey = `${permalinksPath}/${Utils.guid()}`;
 
                     var media: IMedia = {
                         key: mediaId,
@@ -82,17 +82,17 @@ export class MediaService implements IMediaService {
                         description: "",
                         keywords: "",
                         downloadUrl: uri,
-                        permalinkKey: permalinkId,
+                        permalinkKey: permalinkKey,
                         contentType: contentType
                     };
 
                     var permalink: IPermalink = {
-                        key: permalinkId,
+                        key: permalinkKey,
                         targetKey: mediaId,
                         uri: `/content/${name}`
                     };
 
-                    await Promise.all([this.objectStorage.addObject(mediaId, media), this.objectStorage.addObject(permalinkId, permalink)]);
+                    await Promise.all([this.objectStorage.addObject(mediaId, media), this.objectStorage.addObject(permalinkKey, permalink)]);
 
                     resolve({
                         media: media,

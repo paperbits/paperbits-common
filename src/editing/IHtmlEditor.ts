@@ -1,5 +1,6 @@
 ﻿import { ISelectionBox } from '../editing/ISelectionBox';
 import { IHyperlink } from "../permalinks/IHyperlink";
+import { IBag } from '../core/IBag';
 
 export var formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
@@ -27,12 +28,12 @@ export class SelectionState {
     public code: boolean;
     public ol: boolean;
     public ul: boolean;
-    public intentions: Intentions;
+    public intentions: IBag<string>;
 }
 
 export interface Intentions {
-    block: string[];
-    inline: string[];
+    block: IBag<string>;
+    inline: IBag<string>;
 }
 
 export interface ISelectionPosition {
@@ -92,13 +93,15 @@ export interface IHtmlEditor {
     addSelectionChangeListener(callback: () => void): void;
     removeSelectionChangeListener(callback: () => void): void;
     renderToContainer(element: HTMLElement): IHtmlEditor;
-    updateState(state: any): void;
     setSelection(selection: Selection): void;
     expandSelection(): void;
-    getState(): Selection;
+    getState(): Object;
+    setState(state: Object): void;
+    getSelectionText(): string;
 }
 
 export class HtmlEditorEvents {
     static onSelectionChange = "onSelectionChange";
     static onEditorDisabled = "onEditorDisabled";
 }
+

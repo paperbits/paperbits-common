@@ -76,6 +76,7 @@ export class PermalinkResolver implements IPermalinkResolver {
                     hyperlinkModel.target = hyperlink.target || "_blank";
                     hyperlinkModel.permalinkKey = permalink.key;
                     hyperlinkModel.href = permalink.uri
+                    hyperlinkModel.type = "url";
                 }
 
                 return hyperlinkModel;
@@ -88,6 +89,7 @@ export class PermalinkResolver implements IPermalinkResolver {
             hyperlinkModel.target = hyperlink.target || "_blank";
             hyperlinkModel.permalinkKey = null;
             hyperlinkModel.href = hyperlink.href;
+            hyperlinkModel.type = "url";
 
             return hyperlinkModel;
         }
@@ -97,6 +99,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.target = hyperlink.target || "_blank";
         hyperlinkModel.permalinkKey = null;
         hyperlinkModel.href = "#";
+        hyperlinkModel.type = "url";
 
         return hyperlinkModel;
     }

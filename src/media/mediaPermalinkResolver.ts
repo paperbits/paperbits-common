@@ -27,6 +27,10 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getUriByPermalink(permalink: IPermalink): Promise<string> {
+        if (!permalink.targetKey) {
+            return null;
+        }
+
         let media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
         if (media) {
@@ -40,6 +44,10 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
+        if (!permalink.targetKey) {
+            return null;
+        }
+
         let media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
         if (!media) {
@@ -51,6 +59,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.target = target;
         hyperlinkModel.permalinkKey = permalink.key;
         hyperlinkModel.href = permalink.uri;
+        hyperlinkModel.type = "media";
 
         return hyperlinkModel;
     }

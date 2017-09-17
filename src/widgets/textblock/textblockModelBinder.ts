@@ -18,12 +18,32 @@ export class TextblockModelBinder implements IModelBinder {
         for (let i = 0; i < nodes.length; i++) {
             let node = nodes[i];
 
-            if (node.type == "link") {
+            if (node && node.type == "link") {
                 let hyperlink: IHyperlink = node["data"];
 
                 if (hyperlink.permalinkKey) {
-                    let permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
-                    hyperlink.href = permalink.uri;
+                    const permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
+
+                    if (permalink) {
+                        hyperlink.href = permalink.uri;
+
+                        if (permalink.parentKey) {
+                            const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
+
+                            if (parentPermalink) {
+                                // TODO: Probably we should use separate property of permalink instead of URI, i.e. "hash".
+                                hyperlink.href = `${parentPermalink.uri}#${hyperlink.href}`;
+                            }
+                            else {
+                                // TODO: Show permalink is broken somehow
+                                console.warn(`Broken parent permalink: ${permalink.parentKey}.`);
+                            }
+                        }
+                    }
+                    else {
+                        // TODO: Show permalink is broken somehow
+                        console.warn(`Broken permalink: ${hyperlink.permalinkKey}.`);
+                    }
                 }
             }
 
@@ -33,11 +53,38 @@ export class TextblockModelBinder implements IModelBinder {
         }
     }
 
+    private async resolveAnchors(nodes: Contract[]) {
+        for (let i = 0; i < nodes.length; i++) {
+            let node = nodes[i];
+
+            if (node && node["data"] && node["data"]["categories"] && node["data"]["categories"]["anchorKey"]) {
+                const anchorKey = node["data"]["categories"]["anchorKey"];
+                const anchorPermalink = await this.permalinkService.getPermalinkByKey(anchorKey);
+
+                if (anchorPermalink) {
+                    node["data"]["categories"]["anchorId"] = anchorPermalink.uri;
+                }
+                else {
+                    // TODO: Show permalink is broken somehow
+                    console.warn(`Broken anchor permalink: ${anchorKey}.`);
+                }
+            }
+
+            if (node && node.nodes) {
+                await this.resolveAnchors(node.nodes);
+            }
+        }
+    }
+
     public async nodeToModel(node: Contract): Promise<TextblockModel> {
-        // TODO: Scan for unresolved hyperlink permalinks
+        // TODO: Scan for unresolved hyperlink permalinks (this is compensation of Slate not being able to do async work)
 
         if (node.nodes) {
             await this.resolveHyperlinks(node.nodes);
+        }
+
+        if (node.nodes) {
+            await this.resolveAnchors(node.nodes);
         }
 
         let textblockModel = new TextblockModel({ "nodes": node.nodes });

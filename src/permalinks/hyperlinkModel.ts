@@ -21,4 +21,6 @@ export class HyperlinkModel {
      * Example: "http://external-resource"
      */
     public href: string;
+
+    public type: string;
 }

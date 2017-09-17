@@ -164,3 +164,107 @@ export function uint8ArrayToString(bytes: Uint8Array): string {
 
     return decodeURIComponent(content);
 }
+
+/**
+ * Remove all properties with undefined value from object.
+ */
+export function cleanupObject(source: Object): void {
+    if (source instanceof Object) {
+        Object.keys(source).forEach(key => {
+            const child = source[key];
+
+            if (child instanceof Object) {
+                this.cleanupObject(child);
+            }
+            else if (child === undefined) {
+                delete source[key];
+            }
+        });
+    }
+}
+
+export function patchObject(target: Object, source: Object): void {
+    Object.keys(source).forEach(key => {
+        if (target[key]) {
+            if (typeof source[key] === "object" && typeof target[key] === "object") {
+                patchObject(target[key], source[key]);
+            }
+            else {
+                if (source[key] !== undefined) {
+                    target[key] = source[key];
+                }
+            }
+        }
+        else {
+            if (source[key] !== undefined) {
+                target[key] = source[key];
+            }
+        }
+    });
+}
+
+export function setStructure(path: string, target: Object): Object {
+    const segments = path.split("/");
+    let segmentObject = target;
+
+    segments.forEach(segment => {
+        if (!segmentObject[segment]) {
+            segmentObject[segment] = {};
+        }
+        segmentObject = segmentObject[segment];
+    });
+
+    return segmentObject;
+}
+
+export function setValue(path: string, target: Object, value: any): void {
+    const segments = path.split("/");
+    let segmentObject = target;
+
+    for (let i = 0; i < segments.length - 1; i++) {
+        const segment = segments[i];
+
+        if (!segmentObject[segment]) {
+            segmentObject[segment] = {};
+        }
+        segmentObject = segmentObject[segment];
+    }
+
+    segmentObject[segments[segments.length - 1]] = value;
+}
+
+export function getObjectAt<T>(path: string, source: Object): T {
+    const segments = path.split("/");
+    let segmentObject = source;
+
+    for (var i = 0; i < segments.length; i++) {
+        segmentObject = segmentObject[segments[i]];
+
+        if (!segmentObject) {
+            return null;
+        }
+    }
+
+    return <T>segmentObject;
+}
+
+export function findNodesRecursively(predicate: (x: Object) => boolean, source: Object): Object[] {
+    const result = [];
+
+    if (predicate(source)) {
+        result.push(source);
+    }
+
+    const keys = Object.keys(source); // This includes array keys
+
+    keys.forEach(key => {
+        const child = source[key];
+
+        if (child instanceof Object) {
+            const childResult = findNodesRecursively(predicate, child);
+            result.push.apply(result, childResult);
+        }
+    });
+
+    return result;
+}

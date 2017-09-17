@@ -43,18 +43,19 @@ export class PermalinkService implements IPermalinkService {
         let permalink = await this.objectStorage.getObject<IPermalink>(permalinkKey);
 
         if (!permalink) {
-            throw `Unable to find permalink by key ${permalinkKey}`;
+            console.warn(`Unable to find permalink by key ${permalinkKey}`);
         }
 
         return permalink;
     }
 
-    public async createPermalink(uri: string, objectLocation: string): Promise<IPermalink> {
-        let permalinkKey = `${permalinksPath}/${Utils.guid()}`;
+    public async createPermalink(uri: string, targetKey: string, parentKey?: string): Promise<IPermalink> {
+        const permalinkKey = `${permalinksPath}/${Utils.guid()}`;
 
-        let permalink: IPermalink = {
+        const permalink: IPermalink = {
             key: permalinkKey,
-            targetKey: objectLocation,
+            targetKey: targetKey,
+            parentKey: parentKey,
             uri: uri
         };
 

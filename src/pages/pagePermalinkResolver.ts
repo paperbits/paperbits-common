@@ -29,22 +29,34 @@ export class PagePermalinkResolver implements IPermalinkResolver {
     }
 
     public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
-        if (!permalink.targetKey.startsWith("pages/")) {
-            return null;
+        if (permalink.targetKey && permalink.targetKey.startsWith("pages/")) {
+            const page = await this.pageService.getPageByKey(permalink.targetKey);
+
+            let hyperlinkModel = new HyperlinkModel();
+            hyperlinkModel.title = page.title;
+            hyperlinkModel.target = target;
+            hyperlinkModel.permalinkKey = permalink.key;
+            hyperlinkModel.href = permalink.uri;
+            hyperlinkModel.type = "page";
+
+            return hyperlinkModel;
+        }
+        else if (permalink.parentKey) {
+            const parentPermalink = await this.permalinkService.getPermalink(permalink.parentKey);
+            const page = await this.pageService.getPageByKey(parentPermalink.targetKey);
+
+            let anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];
+
+            let hyperlinkModel = new HyperlinkModel();
+            hyperlinkModel.title = `${page.title} > ${anchorTitle}`;
+            hyperlinkModel.target = target;
+            hyperlinkModel.permalinkKey = permalink.key;
+            hyperlinkModel.href = permalink.uri;
+            hyperlinkModel.type = "anchor";
+
+            return hyperlinkModel;
         }
 
-        let page = await this.pageService.getPageByKey(permalink.targetKey);
-
-        if (!page) {
-            return null;
-        }
-
-        let hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = page.title;
-        hyperlinkModel.target = target;
-        hyperlinkModel.permalinkKey = permalink.key;
-        hyperlinkModel.href = permalink.uri;
-
-        return hyperlinkModel;
+        return null;
     }
 }

@@ -39,10 +39,10 @@ export class PageModelBinder implements IModelBinder {
         return model instanceof PageModel;
     }
 
-    public async nodeToModel(pageConfig: IPage): Promise<PageModel> {
+    public async nodeToModel(pageContract: IPage): Promise<PageModel> {
         let type = "page";
 
-        if (!pageConfig.key) {
+        if (!pageContract.key) {
             let currentUrl = this.routeHandler.getCurrentUrl();
             let permalink = await this.permalinkService.getPermalinkByUrl(currentUrl);
             let pageKey = permalink.targetKey;
@@ -51,15 +51,15 @@ export class PageModelBinder implements IModelBinder {
                 type = "post"
             }
 
-            pageConfig = await this.pageService.getPageByKey(pageKey);
+            pageContract = await this.pageService.getPageByKey(pageKey);
         }
 
         let pageModel = new PageModel();
-        pageModel.title = pageConfig.title;
-        pageModel.description = pageConfig.description;
-        pageModel.keywords = pageConfig.keywords;
+        pageModel.title = pageContract.title;
+        pageModel.description = pageContract.description;
+        pageModel.keywords = pageContract.keywords;
 
-        let pageContentNode = await this.fileService.getFileByKey(pageConfig.contentKey);
+        let pageContentNode = await this.fileService.getFileByKey(pageContract.contentKey);
         let modelPromises = pageContentNode.nodes.map(async (config) => {
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
             return await modelBinder.nodeToModel(config);
@@ -116,6 +116,13 @@ export class PageModelBinder implements IModelBinder {
         let config = this.getConfig(pageModel);
 
         Object.assign(file, config);
+
+
+        // TODO: Should we move anchor middleware here?
+        // let anchor = Utils.findNodeByKeyRecursively("anchorKey", config);
+
+        // console.log(anchor);
+
 
         await this.fileService.updateFile(file);
     }

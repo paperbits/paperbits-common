@@ -29,22 +29,34 @@ export class BlogPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
-        if (!permalink.targetKey.startsWith("blogs/")) {
-            return null;
+        if (permalink.targetKey && permalink.targetKey.startsWith("blogs/")) {
+            const post = await this.blogService.getBlogPostByKey(permalink.targetKey);
+
+            let hyperlinkModel = new HyperlinkModel();
+            hyperlinkModel.title = post.title;
+            hyperlinkModel.target = target;
+            hyperlinkModel.permalinkKey = permalink.key;
+            hyperlinkModel.href = permalink.uri;
+            hyperlinkModel.type = "post";
+
+            return hyperlinkModel;
+        }
+        else if (permalink.parentKey) {
+            const parentPermalink = await this.permalinkService.getPermalink(permalink.parentKey);
+            const post = await this.blogService.getBlogPostByKey(parentPermalink.targetKey);
+
+            let anchorTitle = post.anchors[permalink.key.replaceAll("/", "|")];
+
+            let hyperlinkModel = new HyperlinkModel();
+            hyperlinkModel.title = anchorTitle;
+            hyperlinkModel.target = target;
+            hyperlinkModel.permalinkKey = permalink.key;
+            hyperlinkModel.href = permalink.uri;
+            hyperlinkModel.type = "post";
+
+            return hyperlinkModel;
         }
 
-        let blogpost = await this.blogService.getBlogPostByKey(permalink.targetKey);
-
-        if (!blogpost) {
-            return null;
-        }
-
-        let hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = blogpost.title;
-        hyperlinkModel.target = target;
-        hyperlinkModel.permalinkKey = permalink.key;
-        hyperlinkModel.href = permalink.uri;
-
-        return hyperlinkModel;
+        return null;
     }
 }
