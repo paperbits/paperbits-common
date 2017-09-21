@@ -39,12 +39,11 @@ export class PageModelBinder implements IModelBinder {
         return model instanceof PageModel;
     }
 
-    public async nodeToModel(pageContract: IPage): Promise<PageModel> {
+    public async nodeToModel(pageContract, pageUrl: string): Promise<PageModel> {
         let type = "page";
 
         if (!pageContract.key) {
-            let currentUrl = this.routeHandler.getCurrentUrl();
-            let permalink = await this.permalinkService.getPermalinkByUrl(currentUrl);
+            let permalink = await this.permalinkService.getPermalinkByUrl(pageUrl);
             let pageKey = permalink.targetKey;
 
             if (pageKey.startsWith("posts")) {
@@ -54,21 +53,21 @@ export class PageModelBinder implements IModelBinder {
             pageContract = await this.pageService.getPageByKey(pageKey);
         }
 
-        let pageModel = new PageModel();
+        const pageModel = new PageModel();
         pageModel.title = pageContract.title;
         pageModel.description = pageContract.description;
         pageModel.keywords = pageContract.keywords;
 
-        let pageContentNode = await this.fileService.getFileByKey(pageContract.contentKey);
-        let modelPromises = pageContentNode.nodes.map(async (config) => {
+        const pageContentNode = await this.fileService.getFileByKey(pageContract.contentKey);
+        const modelPromises = pageContentNode.nodes.map(async (config) => {
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
             return await modelBinder.nodeToModel(config);
         });
 
-        let models = await Promise.all<any>(modelPromises);
+        const models = await Promise.all<any>(modelPromises);
         pageModel.sections = models;
 
-        let settings = await this.siteService.getSiteSettings();
+        const settings = await this.siteService.getSiteSettings();
 
         switch (type) {
             case "page":

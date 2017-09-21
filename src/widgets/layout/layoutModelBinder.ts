@@ -26,9 +26,8 @@ export class LayoutModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async getCurrentLayoutModel(): Promise<LayoutModel> {
-        let url = this.routeHandler.getCurrentUrl();
-        let layoutNode = await this.layoutService.getLayoutByRoute(url);
+    public async getLayoutModel(url: string): Promise<LayoutModel> {
+        const layoutNode = await this.layoutService.getLayoutByRoute(url);
 
         return await this.nodeToModel(layoutNode, url);
     }
@@ -44,7 +43,7 @@ export class LayoutModelBinder {
         let modelPromises = layoutContentNode.nodes.map(async (config) => {
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
 
-            return await modelBinder.nodeToModel(config);
+            return await modelBinder.nodeToModel(config, currentUrl);
         });
 
         let models = await Promise.all<any>(modelPromises);

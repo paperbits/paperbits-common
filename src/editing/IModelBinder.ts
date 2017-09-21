@@ -5,5 +5,5 @@ export interface IModelBinder {
     canHandleWidgetType(widgetType: string): boolean;
     canHandleModel(model: Object): boolean;
     getConfig<T>(model: T): Contract;
-    nodeToModel(node: Object): Promise<any>;
+    nodeToModel(node: Object, params?: any): Promise<any>;
 }

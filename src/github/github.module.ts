@@ -8,13 +8,13 @@ import { OfflineObjectStorage } from '../persistence/offlineObjectStorage';
 import { IInjector, IInjectorModule } from '../injection';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { ISettingsProvider } from "../configuration/ISettingsProvider";
-import { GithubPublisher } from "./githubPublisher";
+//import { GithubPublisher } from "./githubPublisher";
 
 
 export class GithubModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("outputBlobStorage", GithubBlobStorage);
         injector.bindSingleton("githubClient", GithubClient);
-        injector.bindSingleton("githubPublisher", GithubPublisher);
+        //injector.bindSingleton("githubPublisher", GithubPublisher);
     }
 }
