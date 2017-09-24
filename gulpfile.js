@@ -1,8 +1,9 @@
-var gulp = require("gulp");
-var typescript = require("typescript");
-var typescriptCompiler = require("gulp-typescript");
-var sourcemaps = require("gulp-sourcemaps");
-var merge = require("merge2");
+const gulp = require("gulp");
+const typescript = require("typescript");
+const typescriptCompiler = require("gulp-typescript");
+const sourcemaps = require("gulp-sourcemaps");
+const merge = require("merge2");
+const mocha = require("gulp-mocha");
 
 function handleError(error) {
     console.error("ERROR");
@@ -11,12 +12,12 @@ function handleError(error) {
 }
 
 gulp.task("typescript", function () {
-    var typescriptProject = typescriptCompiler.createProject("tsconfig.json", {
+    const typescriptProject = typescriptCompiler.createProject("tsconfig.json", {
         typescript: typescript,
         declaration: true
     });
 
-    var tsResult = typescriptProject
+    const tsResult = typescriptProject
         .src()
         .pipe(typescriptProject())
 
@@ -27,7 +28,19 @@ gulp.task("typescript", function () {
 });
 
 gulp.task("watch", function () {
-    gulp.watch(["src/**/*.ts", "src/**/*.tsx"], ["typescript"]).on("error", handleError);
+    gulp.watch(["src/**/*.ts"], ["typescript"]).on("error", handleError);
 });
 
 gulp.task("default", ["typescript", "watch"]);
+
+gulp.task("test", ["typescript"], function () {
+    const typescriptProject = typescriptCompiler.createProject("tsconfig.json", {
+        typescript: typescript,
+        declaration: true
+    });
+
+    return gulp.src("./dist/specs/*.js")
+        .pipe(mocha({
+            reporter: 'progress'
+        }));
+});

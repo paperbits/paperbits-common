@@ -33,9 +33,11 @@
         "@types/knockout": "^3.4.44",
         "@types/node": "^8.0.24",
         "gulp": "^3.9.1",
+        "gulp-mocha": "^4.3.1",
         "gulp-sourcemaps": "^2.6.1",
         "gulp-typescript": "^3.2.1",
         "merge2": "^1.1.0",
+        "mocha": "^3.5.3",
         "typescript": "^2.4.2"
     }
 }
