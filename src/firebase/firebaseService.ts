@@ -11,8 +11,13 @@ export interface GithubFirebaseAuth {
     scopes: string[];
 }
 
+export interface GoogleFirebaseAuth {
+    scopes: string[];
+}
+
 export interface FirebaseAuth {
     github: GithubFirebaseAuth;
+    google: GoogleFirebaseAuth;
     basic: BasicFirebaseAuth;
 }
 
@@ -47,6 +52,25 @@ export class FirebaseService {
 
             if (auth.github.scopes) {
                 auth.github.scopes.forEach(scope => {
+                    provider.addScope(scope);
+                })
+            }
+
+            let redirectResult = await firebase.auth().getRedirectResult();
+
+            if (!redirectResult.credential) {
+                await firebase.auth().signInWithRedirect(provider);
+                return;
+            }
+            return;
+        }
+
+        if (auth.google) {
+            console.info("Firebase: Signing-in with Google...");
+            let provider = new firebase.auth.GoogleAuthProvider();
+
+            if (auth.google.scopes) {
+                auth.google.scopes.forEach(scope => {
                     provider.addScope(scope);
                 })
             }
