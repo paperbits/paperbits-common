@@ -99,6 +99,7 @@ export class FirebaseService {
         this.authenticationPromise = new Promise<void>((resolve) => {
             firebase.auth().onAuthStateChanged(async (user: firebase.User) => {
                 if (user) {
+                    console.info(`Logged in as ${user.displayName}.`);
                     resolve();
                     return;
                 }
