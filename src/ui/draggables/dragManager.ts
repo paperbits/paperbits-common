@@ -2,10 +2,13 @@
 import { DragTarget } from '../../ui/draggables/dragTarget';
 import { IDragSourceConfig } from '../../ui/draggables/IDragSourceConfig';
 import { IDragTargetConfig } from '../../ui/draggables/IDragTargetConfig';
+import { IEventManager } from '../../events/IEventManager';
 
 const startDraggingTime = 300;
 
 export class DragManager {
+    private readonly eventManager: IEventManager;
+
     private pointerX = 0;
     private pointerY = 0;
     private startDraggingTimeout: number;
@@ -16,7 +19,7 @@ export class DragManager {
     public payload: any;
     public dragged: HTMLElement;
 
-    constructor() {
+    constructor(eventManager: IEventManager) {
         this.startDragging = this.startDragging.bind(this);
         this.completeDragging = this.completeDragging.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -27,8 +30,9 @@ export class DragManager {
         this.registerDragTarget = this.registerDragTarget.bind(this);
         this.resetDraggedElementPosition = this.resetDraggedElementPosition.bind(this);
 
-        document.addEventListener("mousemove", this.onPointerMove, true);
-        document.addEventListener("mouseup", this.onPointerUp, true);
+        
+        eventManager.addEventListener("onPointerMove", this.onPointerMove);
+        eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
 
     private onPointerMove(event: PointerEvent): void {
