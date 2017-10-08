@@ -6,6 +6,12 @@ import { IEventManager } from '../../events/IEventManager';
 
 const startDraggingTime = 300;
 
+export interface DragSession {
+    type: string;
+    payload: any;
+    dropHandler?: () => void;
+}
+
 export class DragManager {
     private readonly eventManager: IEventManager;
 
@@ -20,6 +26,8 @@ export class DragManager {
     public dragged: HTMLElement;
 
     constructor(eventManager: IEventManager) {
+        this.eventManager = eventManager;
+
         this.startDragging = this.startDragging.bind(this);
         this.completeDragging = this.completeDragging.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -30,7 +38,7 @@ export class DragManager {
         this.registerDragTarget = this.registerDragTarget.bind(this);
         this.resetDraggedElementPosition = this.resetDraggedElementPosition.bind(this);
 
-        
+
         eventManager.addEventListener("onPointerMove", this.onPointerMove);
         eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
