@@ -13,4 +13,6 @@ export interface IWidgetBinding {
     children?: Array<IWidgetBinding>;
     readonly?: boolean;
     canAcceptDraggedItem?: (draggedItem: DragSession) => string;
+    onDragOver?: (dragSession: DragSession) => boolean;
+    onDragDrop?: (dragSession: DragSession) => void;
 }

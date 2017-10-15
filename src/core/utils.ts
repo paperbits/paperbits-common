@@ -184,23 +184,25 @@ export function cleanupObject(source: Object): void {
 }
 
 export function patchObject(target: Object, source: Object): void {
-    Object.keys(source).forEach(key => {
-        if (target[key]) {
-            if (typeof source[key] === "object" && typeof target[key] === "object") {
-                patchObject(target[key], source[key]);
-            }
-            else {
-                if (source[key] !== undefined) {
-                    target[key] = source[key];
-                }
-            }
-        }
-        else {
-            if (source[key] !== undefined) {
-                target[key] = source[key];
-            }
-        }
-    });
+    Object.assign(target, source);
+    
+    // Object.keys(source).forEach(key => {
+    //     if (target[key]) {
+    //         if (typeof source[key] === "object" && typeof target[key] === "object") {
+    //             patchObject(target[key], source[key]);
+    //         }
+    //         else {
+    //             if (source[key] !== undefined) {
+    //                 target[key] = source[key];
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         if (source[key] !== undefined) {
+    //             target[key] = source[key];
+    //         }
+    //     }
+    // });
 }
 
 export function setStructure(path: string, target: Object): Object {

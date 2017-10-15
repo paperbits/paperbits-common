@@ -92,4 +92,6 @@ export interface IViewManager {
     removeShutter(): void;
 
     beginDrag(session: DragSession): void;
+
+    getDragSession(): DragSession;
 }
