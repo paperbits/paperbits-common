@@ -53,8 +53,8 @@ export class DragManager {
     }
 
     private onPointerMove(event: PointerEvent): void {
-        this.pointerX = event.pageX;
-        this.pointerY = event.pageY;
+        this.pointerX = event.clientX;
+        this.pointerY = event.clientY;
 
         if (this.acceptor && this.acceptor.element.classList.contains("accepting")) {
             this.acceptor.element.classList.remove("accepting");
