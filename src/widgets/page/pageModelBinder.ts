@@ -116,13 +116,6 @@ export class PageModelBinder implements IModelBinder {
 
         Object.assign(file, config);
 
-
-        // TODO: Should we move anchor middleware here?
-        // let anchor = Utils.findNodeByKeyRecursively("anchorKey", config);
-
-        // console.log(anchor);
-
-
         await this.fileService.updateFile(file);
     }
 }

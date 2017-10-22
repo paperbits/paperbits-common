@@ -2,10 +2,21 @@
 import { DragTarget } from '../../ui/draggables/dragTarget';
 import { IDragSourceConfig } from '../../ui/draggables/IDragSourceConfig';
 import { IDragTargetConfig } from '../../ui/draggables/IDragTargetConfig';
+import { IEventManager } from '../../events/IEventManager';
 
 const startDraggingTime = 300;
 
+export interface DragSession {
+    type: string;
+    payload: any;
+    dropHandler?: (payload?: any) => void;
+    acceptor?: HTMLElement;
+    quadrant?: any;
+}
+
 export class DragManager {
+    private readonly eventManager: IEventManager;
+
     private pointerX = 0;
     private pointerY = 0;
     private startDraggingTimeout: number;
@@ -16,7 +27,9 @@ export class DragManager {
     public payload: any;
     public dragged: HTMLElement;
 
-    constructor() {
+    constructor(eventManager: IEventManager) {
+        this.eventManager = eventManager;
+
         this.startDragging = this.startDragging.bind(this);
         this.completeDragging = this.completeDragging.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -27,13 +40,13 @@ export class DragManager {
         this.registerDragTarget = this.registerDragTarget.bind(this);
         this.resetDraggedElementPosition = this.resetDraggedElementPosition.bind(this);
 
-        document.addEventListener("mousemove", this.onPointerMove, true);
-        document.addEventListener("mouseup", this.onPointerUp, true);
+        eventManager.addEventListener("onPointerMove", this.onPointerMove);
+        eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
 
     private onPointerMove(event: PointerEvent): void {
-        this.pointerX = event.clientX;
-        this.pointerY = event.clientY;
+        this.pointerX = event.pageX;
+        this.pointerY = event.pageY;
 
         if (this.acceptor && this.acceptor.element.classList.contains("accepting")) {
             this.acceptor.element.classList.remove("accepting");
@@ -58,6 +71,14 @@ export class DragManager {
         this.payload = source.configuration.payload;
         this.source = source;
 
+
+        // Fixating the sizes
+        if (source.configuration.sticky) {
+            this.dragged.style.width = this.dragged.clientWidth + "px";
+            this.dragged.style.height = this.dragged.clientHeight + "px";
+        }
+
+
         if (source.configuration.ondragstart) {
             var replacement = source.configuration.ondragstart(source.configuration.payload, source.element);
 
@@ -70,10 +91,6 @@ export class DragManager {
             document.body.appendChild(this.dragged);
         }
 
-        // Fixating the sizes
-        if (source.configuration.sticky) {
-            this.dragged.style.width = this.dragged.clientWidth + "px";
-        }
         this.dragged.classList.add("dragged");
 
         this.resetDraggedElementPosition();

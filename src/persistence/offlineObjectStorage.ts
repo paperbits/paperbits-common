@@ -98,9 +98,9 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error("Could not update object: Key is undefined.");
         }
 
-        const promises = this.middlewares.map(x => x.applyChanges(key, dataObject));
+        // const promises = this.middlewares.map(x => x.applyChanges(key, dataObject));
 
-        await Promise.all(promises);
+        // await Promise.all(promises);
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject);

@@ -33,11 +33,9 @@ export class DragSource {
         }
 
         event["handled"] = true;
-        event.stopImmediatePropagation();
-        event.preventDefault();
 
-        var offsetX = event.pageX - $(this.element).offset().left;
-        var offsetY = event.pageY - $(this.element).offset().top;
+        const offsetX = event.pageX - $(this.element).offset().left;
+        const offsetY = event.pageY - $(this.element).offset().top;
 
         this.percentageOffsetX = offsetX / this.element.clientWidth * 100;
         this.percentageOffsetY = offsetY / this.element.clientHeight * 100;

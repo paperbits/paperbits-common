@@ -3,6 +3,7 @@ import { IContextualEditor } from "./IContextualEditor";
 import { IEditorSession } from "./IEditorSession";
 import { ProgressPromise } from '../core/progressPromise';
 import { IComponent } from '../ui/IComponent';
+import { DragSession } from "./draggables/dragManager";
 
 export enum ViewManagerMode {
     edit,
@@ -89,4 +90,8 @@ export interface IViewManager {
     setShutter(): void;
 
     removeShutter(): void;
+
+    beginDrag(session: DragSession): void;
+
+    getDragSession(): DragSession;
 }

@@ -1,3 +1,5 @@
+import { DragSession } from "../ui/draggables/dragManager";
+
 export interface IWidgetBinding {
     name: string;
     params: Object;
@@ -10,4 +12,7 @@ export interface IWidgetBinding {
     applyChanges?: () => void;
     children?: Array<IWidgetBinding>;
     readonly?: boolean;
+    canAcceptDraggedItem?: (draggedItem: DragSession) => string;
+    onDragOver?: (dragSession: DragSession) => boolean;
+    onDragDrop?: (dragSession: DragSession) => void;
 }
