@@ -1,7 +1,25 @@
 import { ICreatedMedia } from "./../media/ICreatedMedia";
+import { IWidgetBinding } from "./IWidgetBinding";
+
 
 export interface IWidgetFactoryResult {
+    /**
+     * HTML element created by widget order (element is used only in virtual dragging).
+     */
     element: HTMLElement;
+
+    /**
+     * Widget model created by widget order.
+     */
     widgetModel?: Object;
+
+    /**
+     * Widget binding created by widget order.
+     */
+    widgetBinding?: IWidgetBinding;
+
+    /**
+     * Callback method invoked when media file upload completed.
+     */
     onMediaUploadedCallback?(media: ICreatedMedia);
 }
