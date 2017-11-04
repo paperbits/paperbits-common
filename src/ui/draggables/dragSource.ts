@@ -24,12 +24,17 @@ export class DragSource {
     private onPointerDown(event: PointerEvent): void {
         var targetElement = event.target as HTMLElement;
 
+
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
             return;
         }
 
         if (event.buttons !== 1 || event["handled"]) {
             return;
+        }
+
+        if (event.pointerType === "touch") {
+            debugger;
         }
 
         event["handled"] = true;
