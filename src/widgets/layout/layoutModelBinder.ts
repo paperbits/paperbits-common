@@ -8,6 +8,7 @@ import { Contract } from "./../../editing/contentNode";
 import { PlaceholderModel } from "../placeholder/placeholderModel";
 import { ILayoutService } from "../../layouts/ILayoutService";
 import { ModelBinderSelector } from "./../modelBinderSelector";
+import { PageModel } from "../page/pageModel";
 
 
 export class LayoutModelBinder {
@@ -26,13 +27,13 @@ export class LayoutModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async getLayoutModel(url: string): Promise<LayoutModel> {
+    public async getLayoutModel(url: string, readonly?:boolean): Promise<LayoutModel> {
         const layoutNode = await this.layoutService.getLayoutByRoute(url);
 
-        return await this.nodeToModel(layoutNode, url);
+        return await this.nodeToModel(layoutNode, url, readonly);
     }
 
-    public async nodeToModel(layoutNode: ILayout, currentUrl: string): Promise<LayoutModel> {
+    public async nodeToModel(layoutNode: ILayout, currentUrl: string, readonly?:boolean): Promise<LayoutModel> {
         let layoutModel = new LayoutModel();
         layoutModel.title = layoutNode.title;
         layoutModel.description = layoutNode.description;
@@ -41,6 +42,9 @@ export class LayoutModelBinder {
         let layoutContentNode = await this.fileService.getFileByKey(layoutNode.contentKey);
 
         let modelPromises = layoutContentNode.nodes.map(async (config) => {
+            if(!readonly && config.type === "page") {
+                return new PageModel();
+            }
             let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
 
             return await modelBinder.nodeToModel(config, currentUrl);

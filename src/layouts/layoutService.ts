@@ -53,6 +53,11 @@ export class LayoutService implements ILayoutService {
         await this.objectStorage.updateObject<ILayout>(layout.key, layout);
     }
 
+    public async getLayoutByUriTemplate(uriTemplate: string): Promise<ILayout> {
+        let layouts = await this.objectStorage.searchObjects<ILayout>(layoutsPath, ["uriTemplate"], uriTemplate);
+        return layouts.length > 0 ? layouts[0] : null;
+    }
+
     public async getLayoutByRoute(route: string): Promise<ILayout> {
         if (!route) {
             return null;
