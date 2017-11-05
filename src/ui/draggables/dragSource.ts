@@ -36,7 +36,7 @@ export class DragSource {
 
         const rect = this.element.getBoundingClientRect();
         this.initialOffsetX = event.clientX - rect.left;
-        this.initialOffsetY  = event.clientY - rect.top;
+        this.initialOffsetY = event.clientY - rect.top;
 
         this.dragManager.onPointerDown(this);
     }
