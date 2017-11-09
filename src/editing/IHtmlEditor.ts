@@ -84,6 +84,7 @@ export interface IHtmlEditor {
      * @param {string} type Can be either "block" or "inline".
      */
     toggleCategory(category: string, value: string, type: string): void;
+    toggleIntention(category: string, value: string, type: string): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;
