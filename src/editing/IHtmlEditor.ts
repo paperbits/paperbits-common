@@ -28,12 +28,7 @@ export class SelectionState {
     public code: boolean;
     public ol: boolean;
     public ul: boolean;
-    public intentions: IBag<string>;
-}
-
-export interface Intentions {
-    block: IBag<string>;
-    inline: IBag<string>;
+    public intentions: IBag<string[]>;
 }
 
 export interface ISelectionPosition {
@@ -84,6 +79,7 @@ export interface IHtmlEditor {
      * @param {string} type Can be either "block" or "inline".
      */
     toggleCategory(category: string, value: string, type: string): void;
+    toggleIntention(category: string, value: string, type: string): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;

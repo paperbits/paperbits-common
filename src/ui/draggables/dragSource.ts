@@ -28,7 +28,7 @@ export class DragSource {
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
             return;
         }
-
+        
         if (event.buttons !== 1 || event["handled"]) {
             return;
         }
@@ -39,8 +39,9 @@ export class DragSource {
 
         event["handled"] = true;
 
-        this.initialOffsetX = event.offsetX;
-        this.initialOffsetY = event.offsetY;
+        const rect = this.element.getBoundingClientRect();
+        this.initialOffsetX = event.clientX - rect.left;
+        this.initialOffsetY = event.clientY - rect.top;
 
         this.dragManager.onPointerDown(this);
     }

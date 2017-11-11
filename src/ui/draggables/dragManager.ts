@@ -20,6 +20,14 @@ export interface DragSession {
     targetBinding?: IWidgetBinding;
 }
 
+export interface DragSession {
+    type: string;
+    payload: any;
+    dropHandler?: (payload?: any) => void;
+    acceptor?: HTMLElement;
+    quadrant?: any;
+}
+
 export class DragManager {
     private readonly eventManager: IEventManager;
     private readonly viewManager: IViewManager;
@@ -53,8 +61,8 @@ export class DragManager {
     }
 
     private onPointerMove(event: PointerEvent): void {
-        this.pointerX = event.clientX;
-        this.pointerY = event.clientY;
+        this.pointerX = event.pageX;
+        this.pointerY = event.pageY;
 
         if (this.acceptor && this.acceptor.element.classList.contains("accepting")) {
             this.acceptor.element.classList.remove("accepting");
