@@ -72,18 +72,21 @@ export class SectionModelBinder implements IModelBinder {
             nodes: [],
             layout: sectionModel.layout,
             padding: sectionModel.padding,
-            snapping: sectionModel.snap,
-            background: {
+            snapping: sectionModel.snap
+        };
+
+        if (sectionModel.background) {
+            sectionConfig.background = {
                 color: sectionModel.background.colorKey,
                 size: sectionModel.background.size,
                 position: sectionModel.background.position
             }
-        };
 
-        if (sectionModel.background.sourceType === "picture") {
-            sectionConfig.background.picture = {
-                sourcePermalinkKey: sectionModel.background.sourceKey,
-                repeat: sectionModel.background.repeat
+            if (sectionModel.background.sourceType === "picture") {
+                sectionConfig.background.picture = {
+                    sourcePermalinkKey: sectionModel.background.sourceKey,
+                    repeat: sectionModel.background.repeat
+                }
             }
         }
 
