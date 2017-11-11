@@ -28,12 +28,7 @@ export class SelectionState {
     public code: boolean;
     public ol: boolean;
     public ul: boolean;
-    public intentions: IBag<string>;
-}
-
-export interface Intentions {
-    block: IBag<string>;
-    inline: IBag<string>;
+    public intentions: IBag<string[]>;
 }
 
 export interface ISelectionPosition {
