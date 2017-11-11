@@ -270,3 +270,15 @@ export function findNodesRecursively(predicate: (x: Object) => boolean, source: 
 
     return result;
 }
+
+export function elementsFromPoint(ownerDocument: Document, x: number, y: number): HTMLElement[] {
+    if (ownerDocument.elementsFromPoint) {
+        return Array.prototype.slice.call(ownerDocument.elementsFromPoint(x, y));
+    }
+    else if (this.ownerDocument.msElementsFromPoint) {
+        return Array.prototype.slice.call(ownerDocument.msElementsFromPoint(x, y));
+    }
+    else {
+        throw `Method "elementsFromPoint" not supported by browser.`
+    }
+}

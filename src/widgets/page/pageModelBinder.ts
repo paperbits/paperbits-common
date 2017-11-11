@@ -9,6 +9,7 @@ import { Contract } from "./../../editing/contentNode";
 import { IModelBinder } from "../../editing/IModelBinder";
 import { ISiteService } from "../../sites/ISiteService";
 import { ModelBinderSelector } from "../modelBinderSelector";
+import { IPermalink } from "../../permalinks/IPermalink";
 
 
 export class PageModelBinder implements IModelBinder {
@@ -18,6 +19,7 @@ export class PageModelBinder implements IModelBinder {
     private readonly routeHandler: IRouteHandler;
     private readonly siteService: ISiteService;
     private readonly modelBinderSelector: ModelBinderSelector;
+    private pageNotFound: IPermalink;
 
     constructor(pageService: IPageService, permalinkService: IPermalinkService, fileService: IFileService, routeHandler: IRouteHandler, siteService: ISiteService, modelBinderSelector: ModelBinderSelector) {
         this.pageService = pageService;
@@ -44,6 +46,9 @@ export class PageModelBinder implements IModelBinder {
 
         if (!pageContract.key) {
             let permalink = await this.permalinkService.getPermalinkByUrl(pageUrl);
+            if(!permalink) {
+                permalink = await this.getPageNotFound();
+            }
             let pageKey = permalink.targetKey;
 
             if (pageKey.startsWith("posts")) {
@@ -84,6 +89,13 @@ export class PageModelBinder implements IModelBinder {
         }
 
         return pageModel;
+    }
+
+    private async getPageNotFound(): Promise<IPermalink> {
+        if(!this.pageNotFound) {
+            this.pageNotFound = await this.permalinkService.getPermalinkByUrl("/404.html");
+        }
+        return this.pageNotFound;
     }
 
     private isChildrenChanged(widgetChildren: any[], modelItems: any[]) {

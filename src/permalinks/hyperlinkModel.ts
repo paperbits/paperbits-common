@@ -22,5 +22,8 @@ export class HyperlinkModel {
      */
     public href: string;
 
+    /**
+     * Allowed values: "media", "page", "post", "url", "anchor".
+     */
     public type: string;
 }

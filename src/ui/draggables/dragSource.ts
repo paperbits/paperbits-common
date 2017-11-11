@@ -8,8 +8,8 @@ export class DragSource {
 
     public element: HTMLElement;
     public configuration: IDragSourceConfig;
-    public percentageOffsetX: number;
-    public percentageOffsetY: number;
+    public initialOffsetX: number;
+    public initialOffsetY: number;
 
     constructor(element: HTMLElement, config: IDragSourceConfig, dragManager: DragManager) {
         this.element = element;
@@ -18,7 +18,7 @@ export class DragSource {
 
         this.onPointerDown = this.onPointerDown.bind(this);
 
-        element.addEventListener("mousedown", this.onPointerDown);
+        element.addEventListener("pointerdown", this.onPointerDown);
     }
 
     private onPointerDown(event: PointerEvent): void {
@@ -27,18 +27,16 @@ export class DragSource {
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
             return;
         }
-
+        
         if (event.buttons !== 1 || event["handled"]) {
             return;
         }
 
         event["handled"] = true;
 
-        const offsetX = event.pageX - $(this.element).offset().left;
-        const offsetY = event.pageY - $(this.element).offset().top;
-
-        this.percentageOffsetX = offsetX / this.element.clientWidth * 100;
-        this.percentageOffsetY = offsetY / this.element.clientHeight * 100;
+        const rect = this.element.getBoundingClientRect();
+        this.initialOffsetX = event.clientX - rect.left;
+        this.initialOffsetY = event.clientY - rect.top;
 
         this.dragManager.onPointerDown(this);
     }

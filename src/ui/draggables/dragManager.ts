@@ -3,8 +3,22 @@ import { DragTarget } from '../../ui/draggables/dragTarget';
 import { IDragSourceConfig } from '../../ui/draggables/IDragSourceConfig';
 import { IDragTargetConfig } from '../../ui/draggables/IDragTargetConfig';
 import { IEventManager } from '../../events/IEventManager';
+import { IWidgetBinding } from '../../editing/IWidgetBinding';
+import { IViewManager, ViewManagerMode } from '../IViewManager';
 
-const startDraggingTime = 300;
+const startDraggingTime = 300
+
+export interface DragSession {
+    type: string;
+    sourceElement?: Element;
+    sourceModel: Object;
+    sourceBinding?: IWidgetBinding;
+    parentModel?: Object;
+    parentBinding?: IWidgetBinding;
+    insertIndex?: number;
+    targetElement?: Element;
+    targetBinding?: IWidgetBinding;
+}
 
 export interface DragSession {
     type: string;
@@ -16,6 +30,7 @@ export interface DragSession {
 
 export class DragManager {
     private readonly eventManager: IEventManager;
+    private readonly viewManager: IViewManager;
 
     private pointerX = 0;
     private pointerY = 0;
@@ -27,8 +42,9 @@ export class DragManager {
     public payload: any;
     public dragged: HTMLElement;
 
-    constructor(eventManager: IEventManager) {
+    constructor(eventManager: IEventManager, viewManager: IViewManager) {
         this.eventManager = eventManager;
+        this.viewManager = viewManager;
 
         this.startDragging = this.startDragging.bind(this);
         this.completeDragging = this.completeDragging.bind(this);
@@ -59,11 +75,8 @@ export class DragManager {
         if (!this.dragged)
             return;
 
-        var offsetX = this.dragged.clientWidth * this.source.percentageOffsetX / 100;
-        var offsetY = this.dragged.clientHeight * this.source.percentageOffsetY / 100;
-
-        this.dragged.style.left = (this.pointerX - offsetX) + "px";
-        this.dragged.style.top = (this.pointerY - offsetY) + "px";
+        this.dragged.style.left = (this.pointerX - this.source.initialOffsetX) + "px";
+        this.dragged.style.top = (this.pointerY - this.source.initialOffsetY) + "px";
     }
 
     public startDragging(source: DragSource): void {
@@ -71,13 +84,13 @@ export class DragManager {
         this.payload = source.configuration.payload;
         this.source = source;
 
-
         // Fixating the sizes
         if (source.configuration.sticky) {
             this.dragged.style.width = this.dragged.clientWidth + "px";
             this.dragged.style.height = this.dragged.clientHeight + "px";
         }
 
+        this.dragged.style.position = "fixed";
 
         if (source.configuration.ondragstart) {
             var replacement = source.configuration.ondragstart(source.configuration.payload, source.element);

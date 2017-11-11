@@ -40,7 +40,7 @@ export class PermalinkService implements IPermalinkService {
             throw `Could not retrieve permalink: Parameter "permalinkKey" was not specified.`;
         }
 
-        let permalink = await this.objectStorage.getObject<IPermalink>(permalinkKey);
+        const permalink = await this.objectStorage.getObject<IPermalink>(permalinkKey);
 
         if (!permalink) {
             console.warn(`Unable to find permalink by key ${permalinkKey}`);

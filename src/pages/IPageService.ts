@@ -1,6 +1,9 @@
 ﻿import { IFile } from '../files/IFile';
 import { IPage } from '../pages/IPage';
 
+/**
+ * Service for managing pages.
+ */
 export interface IPageService {
     search(pattern: string): Promise<Array<IPage>>;
 

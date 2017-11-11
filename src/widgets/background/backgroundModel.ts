@@ -1,25 +1,25 @@
 export class BackgroundModel {
-    public color: string;
+    public color?: string;
 
-    public colorKey: string;
+    public colorKey?: string;
 
-    public size: string;
+    public size?: string;
 
-    public position: string;
+    public position?: string;
 
     /**
      * i.e. Picture.
      */
-    public sourceType: string;
+    public sourceType?: string;
 
     /**
      * Permalink to source, image or video.
      */
-    public sourceKey: string;
+    public sourceKey?: string;
 
-    public sourceUrl: string;
+    public sourceUrl?: string;
 
-    public repeat: string;
+    public repeat?: string;
     
 
     constructor() {

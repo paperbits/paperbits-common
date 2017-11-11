@@ -6,6 +6,8 @@ export interface ILayoutService {
 
     getLayoutByKey(key: string): Promise<ILayout>;
 
+    getLayoutByUriTemplate(uriTemplate: string): Promise<ILayout>
+
     deleteLayout(layout: ILayout): Promise<void>;
 
     createLayout(title: string, description: string, uriTemplate:string): Promise<ILayout>;

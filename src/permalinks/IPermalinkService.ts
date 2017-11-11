@@ -1,5 +1,8 @@
 import { IPermalink } from '../permalinks/IPermalink';
 
+/**
+ * Service for managing permalinks.
+ */
 export interface IPermalinkService {
     isPermalinkKey(uri: string): boolean;
     isPermalinkExists(permalink: string): Promise<boolean>;
