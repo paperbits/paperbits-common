@@ -20,14 +20,6 @@ export interface DragSession {
     targetBinding?: IWidgetBinding;
 }
 
-export interface DragSession {
-    type: string;
-    payload: any;
-    dropHandler?: (payload?: any) => void;
-    acceptor?: HTMLElement;
-    quadrant?: any;
-}
-
 export class DragManager {
     private readonly eventManager: IEventManager;
     private readonly viewManager: IViewManager;
