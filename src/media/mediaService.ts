@@ -22,8 +22,8 @@ export class MediaService implements IMediaService {
         this.permalinkService = permalinkService;
     }
 
-    private searchByTags(tags: Array<string>, tagValue: string, startSearch: boolean): Promise<Array<IMedia>> {
-        return this.objectStorage.searchObjects<IMedia>(uploadsPath, tags, tagValue, startSearch);
+    public searchByProperties(propertyNames: Array<string>, propertyValue: string, startSearch: boolean): Promise<Array<IMedia>> {
+        return this.objectStorage.searchObjects<IMedia>(uploadsPath, propertyNames, propertyValue, startSearch);
     }
 
     public getMediaByKey(key: string): Promise<IMedia> {
@@ -32,11 +32,19 @@ export class MediaService implements IMediaService {
         }
         return this.objectStorage.getObject<IMedia>(key);
     }
-
-
+    
+    public async getMediaByPermalink(permalink: string): Promise<IMedia> {
+        if(permalink) {
+            let iconPermalink = await this.permalinkService.getPermalinkByKey(permalink);
+            if(iconPermalink){
+                return this.getMediaByKey(iconPermalink.targetKey);
+            }
+        }
+        return null;
+    }
 
     public async search(pattern: string): Promise<Array<IMedia>> {
-        let result = await this.searchByTags(["filename"], pattern, true);
+        let result = await this.searchByProperties(["filename"], pattern, true);
 
         result.sort(function (x, y) {
             var a = x.filename.toUpperCase();

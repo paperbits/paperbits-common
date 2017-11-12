@@ -94,4 +94,6 @@ export interface IViewManager {
     beginDrag(session: DragSession): void;
 
     getDragSession(): DragSession;
+
+    loadFavIcon(): Promise<void>;
 }

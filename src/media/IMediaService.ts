@@ -5,6 +5,10 @@ import { ICreatedMedia } from '../media/ICreatedMedia';
 
 export interface IMediaService {
     getMediaByKey(key: string): Promise<IMedia>;
+    
+    getMediaByPermalink(permalink: string): Promise<IMedia>;
+
+    searchByProperties(propertyNames: Array<string>, propertyValue: string, startSearch: boolean): Promise<Array<IMedia>>;
 
     search(pattern?: string): Promise<Array<IMedia>>;
 
