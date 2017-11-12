@@ -12,6 +12,7 @@ interface Array<T> {
     first(predicate?: (item: T) => boolean): T;
     where(predicate: (item: T) => boolean): Array<T>;
     remove(item: T): void;
+    contains(item: T): boolean;
 }
 
 String.prototype.contains = function (value: string, caseInsensitive: boolean = false): boolean {
@@ -102,3 +103,7 @@ Array.prototype.remove = function <T>(item: T): void {
     var index = this.indexOf(item);
     this.splice(index, 1);
 };
+
+Array.prototype.contains = function <T>(item: T): boolean {
+    return this.indexOf(item) >= 0;
+}

@@ -17,6 +17,11 @@ export interface IWidgetOrder { //to be displayed in UI and enough to build new 
     displayName: string;
 
     /**
+     * Icon CSS class.
+     */
+    iconClass?: string;
+
+    /**
      * Widget factory method.
      */
     createWidget?(): IWidgetFactoryResult;
