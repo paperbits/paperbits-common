@@ -17,7 +17,7 @@ export interface IViewManager {
 
     addProgressIndicator(title: string, content: string);
 
-    addPromiseProgressIndicator<T>(task: ProgressPromise<T>, title: string, content: string);
+    addPromiseProgressIndicator<T>(task: Promise<T>, title: string, content: string);
 
     openWorkshop(componentName: string, parameters?: any): void;
 
