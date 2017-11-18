@@ -64,22 +64,22 @@ export interface IHtmlEditor {
     /**
      * Toggles alignment category.
      */
-    toggleAlignment(intentionFn: string): void;
+    toggleAlignment(intentionFn: string | string[]): void;
 
     /**
      * Toggles color category.
      */
-    toggleColor(intentionFn: string): void;
+    toggleColor(intentionFn: string | string[]): void;
 
     /**
      * Toggles specific category, i.e. "color" or "alignment".
      * 
      * @param {string} category Name of category.
-     * @param {string} value Value of category.
+     * @param {string} intentionFn Intention function name or list of function names.
      * @param {string} type Can be either "block" or "inline".
      */
-    toggleCategory(category: string, value: string, type: string): void;
-    toggleIntention(category: string, value: string, type: string): void;
+    toggleCategory(category: string, intentionFn: string | string[], type: string): void;
+    toggleIntention(category: string, intentionFn: string | string[], type: string): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;
