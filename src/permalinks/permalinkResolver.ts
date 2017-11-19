@@ -103,4 +103,11 @@ export class PermalinkResolver implements IPermalinkResolver {
 
         return hyperlinkModel;
     }
+
+    public async getHyperlinkByPermalinkKey(permalinkKey: string): Promise<HyperlinkModel> {
+        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+        const hyperlink = await this.getHyperlinkByPermalink(permalink, "blank");
+
+        return hyperlink;
+    }
 }

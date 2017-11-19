@@ -33,6 +33,9 @@ export interface IWidgetBinding {
      * Registration name (tag name) of editor component.
      */
     editor?: string;
+
+    editorResize?: string;
+
     hideCloseButton?: boolean;
 
     /**
