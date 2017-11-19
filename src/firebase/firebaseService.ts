@@ -28,6 +28,8 @@ export class FirebaseService {
     private preparingPromise: Promise<any>;
     private authenticationPromise: Promise<any>;
 
+    public authenticatedUser: firebase.User;
+
     constructor(settingsProvider: ISettingsProvider) {
         this.settingsProvider = settingsProvider;
     }
@@ -99,6 +101,7 @@ export class FirebaseService {
         this.authenticationPromise = new Promise<void>((resolve) => {
             firebase.auth().onAuthStateChanged(async (user: firebase.User) => {
                 if (user) {
+                    this.authenticatedUser = user;
                     console.info(`Logged in as ${user.displayName || "anonymous"}.`);
                     resolve();
                     return;

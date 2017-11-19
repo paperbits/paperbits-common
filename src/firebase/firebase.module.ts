@@ -1,6 +1,7 @@
 import { FirebaseObjectStorage } from "../firebase/firebaseObjectStorage";
 import { FirebaseBlobStorage } from "../firebase/firebaseBlobStorage";
 import { FirebaseService } from "../firebase/firebaseService";
+import { FirebaseUserService } from "../firebase/firebaseUserService";
 import { OfflineObjectStorage } from "../persistence/offlineObjectStorage";
 import { IInjector, IInjectorModule } from "../injection";
 import { IObjectStorage } from "../persistence/IObjectStorage";
@@ -13,6 +14,7 @@ export class FirebaseModule implements IInjectorModule {
 
     public register(injector: IInjector): void {
         injector.bindSingleton("firebaseService", FirebaseService);
+        injector.bindSingleton("userService", FirebaseUserService);
         injector.bindSingleton("blobStorage", FirebaseBlobStorage);
 
         injector.bindSingletonFactory<IObjectStorage>("objectStorage", (ctx: IInjector) => {
