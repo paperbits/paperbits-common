@@ -275,7 +275,7 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
     if (ownerDocument.elementsFromPoint) {
         return Array.prototype.slice.call(ownerDocument.elementsFromPoint(x, y));
     }
-    else if (this.ownerDocument.msElementsFromPoint) {
+    else if (ownerDocument.msElementsFromPoint) {
         return Array.prototype.slice.call(ownerDocument.msElementsFromPoint(x, y));
     }
     else {
