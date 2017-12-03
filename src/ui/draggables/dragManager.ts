@@ -1,12 +1,15 @@
 ﻿import { DragSource } from '../../ui/draggables/dragSource';
 import { DragTarget } from '../../ui/draggables/dragTarget';
-import { IDragSourceConfig } from '../../ui/draggables/IDragSourceConfig';
-import { IDragTargetConfig } from '../../ui/draggables/IDragTargetConfig';
+import { DragSourceConfig } from '../../ui/draggables/dragSourceConfig';
+import { DragTargetConfig } from '../../ui/draggables/dragTargetConfig';
 import { IEventManager } from '../../events/IEventManager';
 import { IWidgetBinding } from '../../editing/IWidgetBinding';
 import { IViewManager, ViewManagerMode } from '../IViewManager';
+import { Box } from '../../editing/ISelectionBox';
 
-const startDraggingTime = 300
+const startDraggingTime = 300;
+const frictionCoeff = 0.85;
+const bounceCoeff = 0.4;
 
 export interface DragSession {
     type: string;
@@ -24,15 +27,26 @@ export class DragManager {
     private readonly eventManager: IEventManager;
     private readonly viewManager: IViewManager;
 
-    private pointerX = 0;
-    private pointerY = 0;
+    private pointerX: number;
+    private pointerY: number;
+    private positionX: number;
+    private positionY: number;
+    private previousX: number;
+    private previousY: number;
+    private velocityX: number;
+    private velocityY: number;
     private startDraggingTimeout: number;
     private source: DragSource;
     private acceptor: DragTarget;
     private acceptBefore: boolean;
+    private initialOffsetX: number;
+    private initialOffsetY: number;
+    private bounds: Box;
 
     public payload: any;
     public dragged: HTMLElement;
+    public isDragged: boolean;
+    public draggedClientRect: ClientRect;
 
     constructor(eventManager: IEventManager, viewManager: IViewManager) {
         this.eventManager = eventManager;
@@ -47,14 +61,45 @@ export class DragManager {
         this.registerDragSource = this.registerDragSource.bind(this);
         this.registerDragTarget = this.registerDragTarget.bind(this);
         this.resetDraggedElementPosition = this.resetDraggedElementPosition.bind(this);
+        this.inertia = this.inertia.bind(this);
 
         eventManager.addEventListener("onPointerMove", this.onPointerMove);
         eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
 
     private onPointerMove(event: PointerEvent): void {
+        this.previousX = this.positionX;
+        this.previousY = this.positionY;
+
         this.pointerX = event.clientX;
         this.pointerY = event.clientY;
+
+        if (!this.isDragged)
+            return;
+
+        this.positionX = this.pointerX - this.initialOffsetX;
+        this.positionY = this.pointerY - this.initialOffsetY;
+
+        if (!this.source.configuration.sticky) {
+            if (this.positionX > this.bounds.width - this.draggedClientRect.width) {
+                this.positionX = this.bounds.width - this.draggedClientRect.width;
+            }
+
+            if (this.positionX < 0) {
+                this.positionX = 0;
+            }
+
+            if (this.positionY > this.bounds.height - this.draggedClientRect.height) {
+                this.positionY = this.bounds.height - this.draggedClientRect.height;
+            }
+
+            if (this.positionY < 0) {
+                this.positionY = 0;
+            }
+
+            this.velocityX = this.positionX - this.previousX;
+            this.velocityY = this.positionY - this.previousY;
+        }
 
         if (this.acceptor && this.acceptor.element.classList.contains("accepting")) {
             this.acceptor.element.classList.remove("accepting");
@@ -64,25 +109,37 @@ export class DragManager {
     }
 
     private resetDraggedElementPosition(): void {
-        if (!this.dragged)
-            return;
-
-        this.dragged.style.left = (this.pointerX - this.source.initialOffsetX) + "px";
-        this.dragged.style.top = (this.pointerY - this.source.initialOffsetY) + "px";
+        this.dragged.style.left = this.positionX + "px";
+        this.dragged.style.top = this.positionY + "px";
     }
 
     public startDragging(source: DragSource): void {
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.isDragged = true;
         this.dragged = source.element;
+
         this.payload = source.configuration.payload;
         this.source = source;
+        this.initialOffsetX = this.source.initialOffsetX;
+        this.initialOffsetY = this.source.initialOffsetY;
+        this.pointerX = this.source.initialPointerX;
+        this.pointerY = this.source.initialPointerY;
+        this.positionX = this.pointerX - this.initialOffsetX;
+        this.positionY = this.pointerY - this.initialOffsetY;
+
+        this.bounds = {
+            top: 0,
+            left: 0,
+            width: document.body.clientWidth,
+            height: document.body.clientHeight
+        }
 
         // Fixating the sizes
         if (source.configuration.sticky) {
             this.dragged.style.width = this.dragged.clientWidth + "px";
             this.dragged.style.height = this.dragged.clientHeight + "px";
         }
-
-        this.dragged.style.position = "fixed";
 
         if (source.configuration.ondragstart) {
             var replacement = source.configuration.ondragstart(source.configuration.payload, source.element);
@@ -97,11 +154,14 @@ export class DragManager {
         }
 
         this.dragged.classList.add("dragged");
+        this.draggedClientRect = source.element.getBoundingClientRect();
 
         this.resetDraggedElementPosition();
     }
 
     private completeDragging(): void {
+        this.isDragged = false;
+
         if (this.acceptor) {
             this.acceptor.element.classList.remove("accepting");
 
@@ -126,13 +186,16 @@ export class DragManager {
             this.dragged.style.removeProperty("width");
             this.dragged.style.removeProperty("height");
         }
+        else {
+            this.inertia();
+        }
 
         if (this.source.configuration.ondragend) {
             this.source.configuration.ondragend(this.source.configuration.payload, this.source.element);
         }
 
         this.payload = null;
-        this.dragged = null;
+        // this.dragged = null;
         this.source = null;
         this.acceptor = null;
     }
@@ -140,18 +203,18 @@ export class DragManager {
     private onPointerUp(event: PointerEvent): void {
         clearTimeout(this.startDraggingTimeout);
 
-        if (!this.dragged) {
+        if (!this.isDragged) {
             return;
         }
 
         this.completeDragging();
     }
 
-    public registerDragSource(element: HTMLElement, config: IDragSourceConfig): void {
+    public registerDragSource(element: HTMLElement, config: DragSourceConfig): void {
         new DragSource(element, config, this);
     }
 
-    public registerDragTarget(element: HTMLElement, config: IDragTargetConfig): void {
+    public registerDragTarget(element: HTMLElement, config: DragTargetConfig): void {
         new DragTarget(element, config, this);
     }
 
@@ -172,5 +235,42 @@ export class DragManager {
         }
 
         this.acceptBefore = before;
+    }
+
+    public inertia(): void {
+        if (this.isDragged) {
+            return;
+        }
+
+        if (Math.abs(this.velocityX) > 0.005 || Math.abs(this.velocityY) > 0.005) {
+            requestAnimationFrame(this.inertia);
+        }
+
+        this.positionX += this.velocityX;
+        this.positionY += this.velocityY;
+        this.velocityX *= frictionCoeff;
+        this.velocityY *= frictionCoeff;
+
+        if (this.positionX > this.bounds.width - this.draggedClientRect.width) {
+            this.velocityX *= -bounceCoeff;
+            this.positionX = this.bounds.width - this.draggedClientRect.width;
+        }
+
+        if (this.positionX < 0) {
+            this.velocityX *= -bounceCoeff;
+            this.positionX = 0;
+        }
+
+        if (this.positionY > this.bounds.height - this.draggedClientRect.height) {
+            this.velocityY *= -bounceCoeff;
+            this.positionY = this.bounds.height - this.draggedClientRect.height;
+        }
+
+        if (this.positionY < 0) {
+            this.velocityY *= -bounceCoeff;
+            this.positionY = 0;
+        }
+
+        this.resetDraggedElementPosition();
     }
 }

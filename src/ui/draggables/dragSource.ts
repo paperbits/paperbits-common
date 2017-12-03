@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { IDragSourceConfig } from "../../ui/draggables/IDragSourceConfig";
+import { DragSourceConfig } from "../../ui/draggables/dragSourceConfig";
 import { DragManager } from "../../ui/draggables/dragManager";
 
 
@@ -7,11 +7,13 @@ export class DragSource {
     private dragManager: DragManager;
 
     public element: HTMLElement;
-    public configuration: IDragSourceConfig;
+    public configuration: DragSourceConfig;
     public initialOffsetX: number;
     public initialOffsetY: number;
+    public initialPointerX: number;
+    public initialPointerY: number;
 
-    constructor(element: HTMLElement, config: IDragSourceConfig, dragManager: DragManager) {
+    constructor(element: HTMLElement, config: DragSourceConfig, dragManager: DragManager) {
         this.element = element;
         this.configuration = config;
         this.dragManager = dragManager;
@@ -42,6 +44,8 @@ export class DragSource {
         const rect = this.element.getBoundingClientRect();
         this.initialOffsetX = event.clientX - rect.left;
         this.initialOffsetY = event.clientY - rect.top;
+        this.initialPointerX = event.clientX;
+        this.initialPointerY = event.clientY;
 
         this.dragManager.onPointerDown(this);
     }

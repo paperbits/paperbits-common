@@ -1,13 +1,13 @@
 ﻿import { DragManager } from '../../ui/draggables/dragManager';
-import { IDragTargetConfig } from '../../ui/draggables/IDragTargetConfig';
+import { DragTargetConfig } from '../../ui/draggables/dragTargetConfig';
 
 export class DragTarget {
-    private dragManager: DragManager;
+    private readonly dragManager: DragManager;
 
-    public element: HTMLElement;
-    public config: IDragTargetConfig;
+    public readonly element: HTMLElement;
+    public readonly  config: DragTargetConfig;
 
-    constructor(element: HTMLElement, config: IDragTargetConfig, dragManager: DragManager) {
+    constructor(element: HTMLElement, config: DragTargetConfig, dragManager: DragManager) {
         this.element = element;
         this.config = config;
         this.dragManager = dragManager;

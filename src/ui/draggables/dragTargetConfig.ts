@@ -1,4 +1,4 @@
-﻿export interface IDragTargetConfig {
+﻿export interface DragTargetConfig {
     accept: (payload: any, dragged: HTMLElement) => boolean;
     ondrop: (payload: any) => void;
     ondropbefore: (payload: any, dragged: HTMLElement) => void;
