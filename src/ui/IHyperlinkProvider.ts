@@ -5,8 +5,8 @@ import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 export interface IHyperlinkProvider {
     name: string;
     componentName: string;
-    canHandleHyperlink?(hyperlink: HyperlinkModel): boolean;
+    canHandleHyperlink?(permalink: IPermalink): boolean;
     getHyperlinkFromUrl?(url: string, target?: string): HyperlinkModel;
     getHyperlinkFromPermalink?(permalink: IPermalink, target?: string): Promise<HyperlinkModel>;
-    getHyperlinkFromResource<T>(resource: T);
+    getHyperlinkFromResource(resource: any);
 }
