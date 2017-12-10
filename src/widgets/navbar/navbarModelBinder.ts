@@ -69,7 +69,7 @@ export class NavbarModelBinder implements IModelBinder {
         }
         else if (navItem.permalinkKey) {
             let permalink = await this.permalinkService.getPermalinkByKey(navItem.permalinkKey);
-            let url = permalink ? `/#${permalink.uri}` : "";
+            let url = permalink ? `/${permalink.uri}` : "";
 
             navbarItem.url = url;
         }
