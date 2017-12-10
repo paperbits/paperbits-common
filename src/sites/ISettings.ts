@@ -1,12 +1,16 @@
-﻿export interface ISiteSettings {
+﻿export interface ISettings {
+    integration?: IIntegrationSettings;
+    site: ISiteSettings;
+}
+
+export interface ISiteSettings {
     title: string;
     description?: string;
     keywords?: string;
-    config?: ISiteConfig;
-    iconPermalinkKey?: string;
+    faviconPermalinkKey?: string;
 }
 
-export interface ISiteConfig {
+export interface IIntegrationSettings {
     googlemaps?: IGMapsConfig;
     gtm?: IGtmConfig;
     intercom?: IIntercomConfig;

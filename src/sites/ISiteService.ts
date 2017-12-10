@@ -1,7 +1,7 @@
 ﻿import { IMedia } from '../media/IMedia';
-import { ISiteSettings } from '../sites/ISiteSettings';
+import { ISettings } from '../sites/ISettings';
 
 export interface ISiteService {
-    setSiteSettings(settings: ISiteSettings): Promise<void>;
-    getSiteSettings(): Promise<ISiteSettings>;
+    setSiteSettings(settings: ISettings): Promise<void>;
+    getSiteSettings(): Promise<ISettings>;
 }

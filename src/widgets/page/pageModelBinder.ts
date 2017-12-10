@@ -76,13 +76,13 @@ export class PageModelBinder implements IModelBinder {
 
         switch (type) {
             case "page":
-                document.title = `${settings.title} | ${pageModel.title}`;
+                document.title = `${settings.site.title} | ${pageModel.title}`;
                 break;
             case "post":
-                document.title = `${settings.title} | Blog - ${pageModel.title}`;
+                document.title = `${settings.site.title} | Blog - ${pageModel.title}`;
                 break;
             case "news":
-                document.title = `${settings.title} | News - ${pageModel.title}`;
+                document.title = `${settings.site.title} | News - ${pageModel.title}`;
                 break;
             default:
                 throw "Unknown type";
