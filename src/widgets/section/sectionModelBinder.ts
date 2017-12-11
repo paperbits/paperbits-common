@@ -6,32 +6,30 @@ import { RowModel } from "../row/rowModel";
 import { SectionModel } from "./sectionModel";
 import { RowModelBinder } from "../row/rowModelBinder";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
-import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";
 import { BackgroundModelBinder } from "../background/backgroundModelBinder";
 
 
 export class SectionModelBinder implements IModelBinder {
+    private readonly rowModelBinder: RowModelBinder;
+    private readonly backgroundModelBinder: BackgroundModelBinder;
+
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "layout-section";
     }
+
     public canHandleModel(model: Object): boolean {
         return model instanceof SectionModel;
     }
 
-    private readonly rowModelBinder: RowModelBinder;
-    private readonly backgroundModelBinder: BackgroundModelBinder;
-    private readonly permalinkResolver: IPermalinkResolver;
-
-    constructor(rowModelBinder: RowModelBinder, backgroundModelBinder: BackgroundModelBinder, permalinkResolver: IPermalinkResolver) {
+    constructor(rowModelBinder: RowModelBinder, backgroundModelBinder: BackgroundModelBinder) {
         this.rowModelBinder = rowModelBinder;
         this.backgroundModelBinder = backgroundModelBinder;
-        this.permalinkResolver = permalinkResolver;
 
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
     public async nodeToModel(sectionContract: SectionConfig): Promise<SectionModel> {
-        let sectionModel = new SectionModel();
+        const sectionModel = new SectionModel();
 
         if (!sectionContract.nodes) {
             sectionContract.nodes = [];
@@ -66,7 +64,7 @@ export class SectionModelBinder implements IModelBinder {
     }
 
     public getConfig(sectionModel: SectionModel): Contract {
-        let sectionConfig: SectionConfig = {
+        const sectionConfig: SectionConfig = {
             type: "layout-section",
             kind: "block",
             nodes: [],
