@@ -72,22 +72,6 @@ export class PageModelBinder implements IModelBinder {
         const models = await Promise.all<any>(modelPromises);
         pageModel.sections = models;
 
-        const settings = await this.siteService.getSiteSettings();
-
-        switch (type) {
-            case "page":
-                document.title = `${settings.site.title} | ${pageModel.title}`;
-                break;
-            case "post":
-                document.title = `${settings.site.title} | Blog - ${pageModel.title}`;
-                break;
-            case "news":
-                document.title = `${settings.site.title} | News - ${pageModel.title}`;
-                break;
-            default:
-                throw "Unknown type";
-        }
-
         return pageModel;
     }
 

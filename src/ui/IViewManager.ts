@@ -4,6 +4,8 @@ import { IEditorSession } from "./IEditorSession";
 import { ProgressPromise } from '../core/progressPromise';
 import { IComponent } from '../ui/IComponent';
 import { DragSession } from "./draggables/dragManager";
+import { ISettings } from "../sites/ISettings";
+import { IPage } from "../pages/IPage";
 
 export enum ViewManagerMode {
     edit,
@@ -96,4 +98,6 @@ export interface IViewManager {
     getDragSession(): DragSession;
 
     loadFavIcon(): Promise<void>;
+
+    setTitle(settings?:ISettings, page?: IPage): Promise<void>;
 }

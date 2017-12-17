@@ -8,6 +8,7 @@ export interface ISiteSettings {
     description?: string;
     keywords?: string;
     faviconPermalinkKey?: string;
+    author?: string;
 }
 
 export interface IIntegrationSettings {

@@ -63,9 +63,6 @@ export class BlogModelBinder implements IModelBinder {
         let sections = await Promise.all<SectionModel>(sectionModelPromises);
         blogModel.sections = sections;
 
-        let settings = await this.siteService.getSiteSettings();
-        document.title = `${settings.site.title} | ${blogModel.title}`;
-
         return blogModel;
     }
 

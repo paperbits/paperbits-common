@@ -12,10 +12,18 @@ export class metaDataSetter {
     }
 
     public static setKeywords(keywords: string) {
-        document.getElementsByTagName('meta')["keywords"].content = keywords;
+        metaDataSetter.setElementByTagName("keywords", keywords);
     }
 
     public static setDescription(description: string) {
-        document.getElementsByTagName('meta')["description"].content = description;
+        metaDataSetter.setElementByTagName("description", description);
+    }
+
+    public static setAuthor(author: string) {
+        metaDataSetter.setElementByTagName("author", author);
+    }
+
+    private static setElementByTagName(tagName: string, content: string) {
+        document.getElementsByTagName('meta')[tagName].content = content;
     }
 }
