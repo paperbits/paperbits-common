@@ -27,30 +27,27 @@ export class LayoutModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async getLayoutModel(url: string, readonly?:boolean): Promise<LayoutModel> {
+    public async getLayoutModel(url: string, readonly?: boolean): Promise<LayoutModel> {
         const layoutNode = await this.layoutService.getLayoutByRoute(url);
 
         return await this.nodeToModel(layoutNode, url, readonly);
     }
 
-    public async nodeToModel(layoutNode: ILayout, currentUrl: string, readonly?:boolean): Promise<LayoutModel> {
+    public async nodeToModel(layoutNode: ILayout, currentUrl: string, readonly?: boolean): Promise<LayoutModel> {
         let layoutModel = new LayoutModel();
         layoutModel.title = layoutNode.title;
         layoutModel.description = layoutNode.description;
         layoutModel.uriTemplate = layoutNode.uriTemplate;
 
-        let layoutContentNode = await this.fileService.getFileByKey(layoutNode.contentKey);
+        const layoutContentNode = await this.fileService.getFileByKey(layoutNode.contentKey);
 
-        let modelPromises = layoutContentNode.nodes.map(async (config) => {
-            if(!readonly && config.type === "page") {
-                return new PageModel();
-            }
-            let modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
+        const modelPromises = layoutContentNode.nodes.map(async (config) => {
+            const modelBinder = this.modelBinderSelector.getModelBinderByNodeType(config.type);
 
-            return await modelBinder.nodeToModel(config, currentUrl);
+            return await modelBinder.nodeToModel(config, currentUrl, !readonly);
         });
 
-        let models = await Promise.all<any>(modelPromises);
+        const models = await Promise.all<any>(modelPromises);
         layoutModel.sections = models;
 
         return layoutModel;
@@ -69,20 +66,15 @@ export class LayoutModelBinder {
             nodes: []
         };
         layoutModel.sections.forEach(model => {
-            if (model instanceof PlaceholderModel) {
-                layoutConfig.nodes.push({ kind: "block", type: "page" });
-            }
-            else {
-                let modelBinder = this.modelBinderSelector.getModelBinderByModel(model);
-                layoutConfig.nodes.push(modelBinder.getConfig(model));
-            }
+            const modelBinder = this.modelBinderSelector.getModelBinderByModel(model);
+            layoutConfig.nodes.push(modelBinder.getConfig(model));
         });
 
         return layoutConfig;
     }
 
     public async setConfig(layout: ILayout, config: Contract): Promise<void> {
-        let file = await this.fileService.getFileByKey(layout.contentKey);
+        const file = await this.fileService.getFileByKey(layout.contentKey);
 
         Object.assign(file, config);
 

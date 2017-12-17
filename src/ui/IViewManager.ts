@@ -2,26 +2,25 @@
 import { IContextualEditor } from "./IContextualEditor";
 import { IEditorSession } from "./IEditorSession";
 import { ProgressPromise } from '../core/progressPromise';
-import { IComponent } from '../ui/IComponent';
 import { DragSession } from "./draggables/dragManager";
 import { ISettings } from "../sites/ISettings";
 import { IPage } from "../pages/IPage";
 
 export enum ViewManagerMode {
-    edit,
-    fold,
-    select,
+    selecting,
+    dragging,
+    selected,
     configure
 }
 
 export interface IViewManager {
-    getCurrentJourney(): string;
-
     addProgressIndicator(title: string, content: string);
 
     addPromiseProgressIndicator<T>(task: Promise<T>, title: string, content: string);
 
-    openWorkshop(componentName: string, parameters?: any): void;
+    openWorkshop(heading: string, componentName: string, parameters?: any): void;
+
+    journeyName(): string;
 
     foldEverything(): void;
 
@@ -41,9 +40,7 @@ export interface IViewManager {
 
     scheduleIndicatorRemoval(indicator: any): void;
 
-    newJourney(journeyName: string, componentName: string, parameters?: any);
-
-    updateJourneyComponent(component: IComponent);
+    updateJourneyComponent(component: IEditorSession);
 
     clearJourney(): void;
 
@@ -55,9 +52,9 @@ export interface IViewManager {
 
     unfoldEverything(): void;
 
-    openWorkshop(componentName: string, parameters?: any): void;
+    openWorkshop(componentName: string, parameters?: any): IEditorSession;
 
-    closeWorkshop(componentName: string);
+    closeWorkshop(editor: IEditorSession | string);
 
     openUploadDialog(): Promise<Array<File>>;
 
@@ -99,5 +96,5 @@ export interface IViewManager {
 
     loadFavIcon(): Promise<void>;
 
-    setTitle(settings?:ISettings, page?: IPage): Promise<void>;
+    setTitle?(settings?:ISettings, page?: IPage): Promise<void>;
 }

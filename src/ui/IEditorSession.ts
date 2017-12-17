@@ -1,6 +1,8 @@
 import { IComponent } from "./IComponent";
 
 export interface IEditorSession {
+    heading?: string;
+    
     component: IComponent;
 
     /**

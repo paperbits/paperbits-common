@@ -10,6 +10,7 @@ import { IModelBinder } from "../../editing/IModelBinder";
 import { ISiteService } from "../../sites/ISiteService";
 import { ModelBinderSelector } from "../modelBinderSelector";
 import { IPermalink } from "../../permalinks/IPermalink";
+import { PlaceholderModel } from "../placeholder/placeholderModel";
 
 
 export class PageModelBinder implements IModelBinder {
@@ -41,15 +42,21 @@ export class PageModelBinder implements IModelBinder {
         return model instanceof PageModel;
     }
 
-    public async nodeToModel(pageContract, pageUrl: string): Promise<PageModel> {
+    public async nodeToModel(pageContract, pageUrl: string, readonly?: boolean): Promise<PageModel> {
+        if (readonly) {
+            return new PlaceholderModel();
+        }
+
         let type = "page";
 
         if (!pageContract.key) {
             let permalink = await this.permalinkService.getPermalinkByUrl(pageUrl);
-            if(!permalink) {
+
+            if (!permalink) {
                 permalink = await this.getPageNotFound();
             }
-            let pageKey = permalink.targetKey;
+
+            const pageKey = permalink.targetKey;
 
             if (pageKey.startsWith("posts")) {
                 type = "post"
@@ -76,7 +83,7 @@ export class PageModelBinder implements IModelBinder {
     }
 
     private async getPageNotFound(): Promise<IPermalink> {
-        if(!this.pageNotFound) {
+        if (!this.pageNotFound) {
             this.pageNotFound = await this.permalinkService.getPermalinkByUrl("/404.html");
         }
         return this.pageNotFound;
@@ -103,6 +110,10 @@ export class PageModelBinder implements IModelBinder {
     }
 
     public async updateContent(pageModel: PageModel): Promise<void> {
+        if (pageModel instanceof PlaceholderModel) {
+            return;
+        }
+
         let url = this.routeHandler.getCurrentUrl();
         let permalink = await this.permalinkService.getPermalinkByUrl(url);
         let pageKey = permalink.targetKey;

@@ -1,4 +1,5 @@
 import { IEventManager } from '../events/IEventManager';
+import { Keys } from '../core/keys';
 
 export class GlobalEventHandler {
     private readonly eventManager: IEventManager;
@@ -42,17 +43,17 @@ export class GlobalEventHandler {
     }
 
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.keyCode === 83) {
+        if (event.ctrlKey && event.keyCode === Keys.S) {
             event.preventDefault();
             this.onCtrlS();
         }
 
-        if (event.ctrlKey && event.keyCode === 80) {
+        if (event.ctrlKey && event.keyCode === Keys.P) {
             event.preventDefault();
             this.onCtrlP();
         }
 
-        if (event.keyCode === 27) {
+        if (event.keyCode === Keys.Esc) {
             event.preventDefault();
             this.onEscape();
         }

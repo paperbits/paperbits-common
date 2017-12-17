@@ -19,5 +19,5 @@ export interface IModelBinder {
      * @param {Object} node Widget contract.
      * @param params Additional parameters needed to create widget model.
      */
-    nodeToModel(node: Object, params?: any): Promise<any>;
+    nodeToModel(node: Object, ...params): Promise<any>;
 }
