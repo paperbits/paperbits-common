@@ -24,6 +24,13 @@ export class metaDataSetter {
     }
 
     private static setElementByTagName(tagName: string, content: string) {
-        document.getElementsByTagName('meta')[tagName].content = content;
+        let tag = document.getElementsByTagName('meta')[tagName];
+        if (tag) {
+            tag.content = content;
+        } else {
+            let meta = document.createElement('meta');
+            meta.setAttribute('content', content);
+            document.getElementsByTagName('head')[0].appendChild(meta);
+        }
     }
 }
