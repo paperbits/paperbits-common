@@ -1,24 +1,42 @@
 import { IEventManager } from '../events/IEventManager';
 
+interface EventListener {
+    eventName: string;
+    eventHandler: (...args) => void;
+}
+
 export class DefaultEventManager implements IEventManager {
+    private readonly eventListeners: Array<EventListener>;
+
     constructor() {
         this.addEventListener = this.addEventListener.bind(this);
         this.dispatchEvent = this.dispatchEvent.bind(this);
+        this.eventListeners = [];
     }
 
-    public addEventListener(eventName: string, callback: any): any {
-        var handler = (customEvent: CustomEvent) => callback(customEvent.detail);
-        document.addEventListener(eventName, handler);
-        return handler;
+    public addEventListener(eventName: string, eventHandler: (...args) => void): void {
+        const exists = this.eventListeners.some(listener =>
+            listener.eventName === eventName &&
+            listener.eventHandler === eventHandler);
+
+        if (!exists) {
+            this.eventListeners.push({ eventName: eventName, eventHandler: eventHandler });
+        }
     }
 
-    public removeEventListener(eventName: string, handle: any) {
-        document.removeEventListener(eventName, handle);
+    public removeEventListener(eventName: string, eventHandler: (...args) => void): void {
+        const listener = this.eventListeners.first(listener =>
+            listener.eventName === eventName &&
+            listener.eventHandler === eventHandler);
+
+        if (listener) {
+            this.eventListeners.remove(listener);
+        }
     }
 
-    public dispatchEvent(eventName: string, args?: any) {
-        var customEvent = document.createEvent("CustomEvent");
-        customEvent.initCustomEvent(eventName, true, true, args);
-        document.dispatchEvent(customEvent);
+    public dispatchEvent(eventName: string, args?): void {
+        this.eventListeners
+            .filter(listener => listener.eventName === eventName)
+            .forEach(x => x.eventHandler(args));
     }
 }
