@@ -9,8 +9,6 @@ export class DefaultEventManager implements IEventManager {
     private readonly eventListeners: Array<EventListener>;
 
     constructor() {
-        this.addEventListener = this.addEventListener.bind(this);
-        this.dispatchEvent = this.dispatchEvent.bind(this);
         this.eventListeners = [];
     }
 
