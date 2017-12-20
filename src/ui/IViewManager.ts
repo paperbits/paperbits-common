@@ -10,7 +10,8 @@ export enum ViewManagerMode {
     selecting,
     dragging,
     selected,
-    configure
+    configure,
+    zoomout
 }
 
 export interface IViewManager {
