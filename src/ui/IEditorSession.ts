@@ -6,7 +6,7 @@ export interface IEditorSession {
     component: IComponent;
 
     /**
-     * Allowed values: "vertically", "horizontally" and "both".
+     * Allowed values: "vertically", "horizontally" and "all".
      */
     resize?: string;
 }
