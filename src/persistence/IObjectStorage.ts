@@ -1,11 +1,29 @@
 export interface IObjectStorage {
-    addObject(path: string, dataObject: any): Promise<void>;
+    /**
+     * Creates object with specified key in storage.
+     * @param key string Object key.
+     * @param dataObject T Object.
+     */
+    addObject<T>(key: string, dataObject: T): Promise<void>;
 
-    getObject<T>(path: string): Promise<T>;
+    /**
+     * Retrieves an object from storage by specified key.
+     * @param key string Object key.
+     */
+    getObject<T>(key: string): Promise<T>;
 
-    deleteObject(path: string): Promise<void>;
+    /**
+     * Deletes an object with specfied key in stoage.
+     * @param key string Object key.
+     */
+    deleteObject(key: string): Promise<void>;
 
-    updateObject<T>(path: string, dataObject: T): Promise<void>;
+    /**
+     * Updates object with specified key in storage.
+     * @param key string Object key.
+     * @param dataObject T Object.
+     */
+    updateObject<T>(key: string, dataObject: T): Promise<void>;
 
-    searchObjects<T>(path: string, propertyNames?: Array<string>, searchValue?: string, startAtSearch?: boolean): Promise<Array<T>>;
+    searchObjects<T>(key: string, propertyNames?: Array<string>, searchValue?: string, startAtSearch?: boolean): Promise<Array<T>>;
 }
