@@ -8,7 +8,7 @@ export class metaDataSetter {
         link.type = metaDataSetter.iconContentType;
         link.rel = 'icon';
         link.href = iconHref;
-        document.getElementsByTagName('head')[0].appendChild(link);
+        document.head.appendChild(link);
     }
 
     public static setKeywords(keywords: string) {
@@ -24,13 +24,14 @@ export class metaDataSetter {
     }
 
     private static setElementByTagName(tagName: string, content: string) {
-        let tag = document.getElementsByTagName('meta')[tagName];
+        let tag = <HTMLMetaElement> document.head.querySelector(`[name=${tagName}]`);
         if (tag) {
             tag.content = content;
         } else {
-            let meta = document.createElement('meta');
-            meta.setAttribute('content', content);
-            document.getElementsByTagName('head')[0].appendChild(meta);
+            let meta = new HTMLMetaElement();
+            meta.name = tagName;
+            meta.content = content;
+            document.head.appendChild(meta);
         }
     }
 }
