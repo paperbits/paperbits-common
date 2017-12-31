@@ -1,4 +1,4 @@
-import { BackgroundContract } from "./../../ui/draggables/backgorund";
+import { BackgroundContract } from "./../../ui/background";
 import { Contract } from "./../../editing/contentNode";
 
 export interface SectionConfig extends Contract {

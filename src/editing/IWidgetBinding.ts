@@ -1,4 +1,4 @@
-import { DragSession } from "../ui/draggables/dragManager";
+import { DragSession } from "../ui/draggables/dragSession";
 
 /**
  * Structure that binds widget view model to widget HTML element.

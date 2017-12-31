@@ -2,7 +2,7 @@
 import { IContextualEditor } from "./IContextualEditor";
 import { IEditorSession } from "./IEditorSession";
 import { ProgressPromise } from '../core/progressPromise';
-import { DragSession } from "./draggables/dragManager";
+import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
 import { IPage } from "../pages/IPage";
 

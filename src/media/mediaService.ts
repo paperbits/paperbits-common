@@ -1,10 +1,10 @@
 ﻿import * as Utils from '../core/utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IBlobStorage } from '../persistence/IBlobStorage';
-import { IMedia } from '../media/IMedia';
-import { IMediaService } from '../media/IMediaService';
+import { IMedia } from './IMedia';
+import { IMediaService } from './IMediaService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
-import { ICreatedMedia } from '../media/ICreatedMedia';
+import { ICreatedMedia } from './ICreatedMedia';
 import { IPermalink } from '../permalinks/IPermalink';
 import { ProgressPromise } from '../core/progressPromise';
 

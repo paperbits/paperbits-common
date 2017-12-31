@@ -1,16 +1,8 @@
-﻿import { ISelectionBox } from '../editing/ISelectionBox';
-import { IHyperlink } from "../permalinks/IHyperlink";
+﻿import { IHyperlink } from "../permalinks/IHyperlink";
 import { IBag } from '../core/IBag';
 
 export var formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
-
-export class ParagraphAlignmentClassNames {
-    static alignLeft = "text-left";
-    static alignCenter = "text-center";
-    static alignRight = "text-right";
-    static justify = "text-justify";
-}
 
 export class SelectionState {
     public normal: boolean;
@@ -36,13 +28,6 @@ export interface ISelectionPosition {
     anchorOffset: number;
     focusKey: string;
     focusOffset: number;
-}
-
-export interface ISelectionBox {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
 }
 
 export interface IHtmlEditor {

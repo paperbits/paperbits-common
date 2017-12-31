@@ -1,6 +1,7 @@
 export class BackgroundModel {
     public color?: string;
 
+    // TODO: There should not be mixes of keys and values. There should be BackgroundModel and BackgroundViewModel.
     public colorKey?: string;
 
     public size?: string;

@@ -1,27 +1,16 @@
 ﻿import { DragSource } from '../../ui/draggables/dragSource';
 import { DragTarget } from '../../ui/draggables/dragTarget';
+import { DragSession } from "../../ui/draggables/dragSession";
 import { DragSourceConfig } from '../../ui/draggables/dragSourceConfig';
 import { DragTargetConfig } from '../../ui/draggables/dragTargetConfig';
 import { IEventManager } from '../../events/IEventManager';
 import { IWidgetBinding } from '../../editing/IWidgetBinding';
 import { IViewManager, ViewManagerMode } from '../IViewManager';
-import { Box } from '../../editing/ISelectionBox';
+import { Box } from '../../editing/box';
 
 const startDraggingTime = 300;
 const frictionCoeff = 0.85;
 const bounceCoeff = 0.4;
-
-export interface DragSession {
-    type: string;
-    sourceElement?: Element;
-    sourceModel: Object;
-    sourceBinding?: IWidgetBinding;
-    parentModel?: Object;
-    parentBinding?: IWidgetBinding;
-    insertIndex?: number;
-    targetElement?: Element;
-    targetBinding?: IWidgetBinding;
-}
 
 export class DragManager {
     private readonly eventManager: IEventManager;

@@ -1,7 +1,7 @@
 import { IModelBinder } from "../../editing/IModelBinder";
 import { Contract } from "../../editing/contentNode";
 import { BackgroundModel } from "./backgroundModel";
-import { BackgroundContract } from "../../ui/draggables/backgorund";
+import { BackgroundContract } from "../../ui/background";
 import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";
 
 export class BackgroundModelBinder {

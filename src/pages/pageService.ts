@@ -36,16 +36,16 @@ export class PageService implements IPageService {
     }
 
     public async createPage(title: string, description: string, keywords): Promise<IPage> {
-        var pageId = `${pagesPath}/${Utils.guid()}`;
+        var key = `${pagesPath}/${Utils.guid()}`;
 
         var page: IPage = {
-            key: pageId,
+            key: key,
             title: title,
             description: description,
             keywords: keywords,
         };
 
-        await this.objectStorage.addObject(pageId, page);
+        await this.objectStorage.addObject(key, page);
 
         return page;
     }
