@@ -1,4 +1,4 @@
-import * as Utils from "../../core/utils";
+import * as Utils from "../../utils";
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { AudioPlayerModel } from "./audioPlayerModel";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";

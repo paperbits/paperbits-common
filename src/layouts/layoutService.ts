@@ -1,5 +1,5 @@
 ﻿import * as _ from 'lodash';
-import * as Utils from '../core/utils';
+import * as Utils from '../utils';
 import { IPermalink } from '../permalinks/IPermalink';
 import { IFile } from '../files/IFile';
 import { LayoutContract } from '../layouts/layoutContract';

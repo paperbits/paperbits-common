@@ -1,6 +1,6 @@
-import { ProgressPromise } from "./../core/progressPromise";
+import { ProgressPromise } from "./../progressPromise";
 import { IBlobStorage } from "./../persistence/IBlobStorage";
-import { IBag } from '../core/IBag';
+import { IBag } from '../IBag';
 import { IGithubClient } from '../github/IGithubClient';
 import { IFileReference } from '../github/IFileReference';
 import { IGithubFile } from '../github/IGithubFile';
@@ -10,7 +10,7 @@ import { IGithubTreeItem } from '../github/IGithubTreeItem';
 import { IGithubCreateTreeResponse } from '../github/IGithubCreateTreeResponse';
 import { IGithubCreateBlobReponse } from '../github/IGithubCreateBlobReponse';
 import * as _ from 'lodash';
-import * as Utils from '../core/utils';
+import * as Utils from '../utils';
 
 export class GithubBlobStorage implements IBlobStorage {
     private readonly githubClient: IGithubClient;

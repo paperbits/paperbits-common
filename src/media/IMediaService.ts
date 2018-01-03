@@ -1,6 +1,6 @@
 ﻿import { MediaContract } from '../media/mediaContract';
 import { IPermalink } from '../permalinks/IPermalink';
-import { ProgressPromise } from '../core/progressPromise';
+import { ProgressPromise } from '../progressPromise';
 import { ICreatedMedia } from '../media/ICreatedMedia';
 
 export interface IMediaService {

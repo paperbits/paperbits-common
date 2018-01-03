@@ -1,11 +1,11 @@
-﻿import * as Utils from '../core/utils';
+﻿import * as Utils from '../utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IBlobStorage } from '../persistence/IBlobStorage';
 import { IBlock } from './IBlock';
 import { IBlockService } from './IBlockService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { IPermalink } from '../permalinks/IPermalink';
-import { ProgressPromise } from '../core/progressPromise';
+import { ProgressPromise } from '../progressPromise';
 import { Contract } from '../contract';
 
 const blockPath = "blocks";

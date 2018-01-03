@@ -1,4 +1,4 @@
-﻿import { IBag } from "../core/IBag";
+﻿import { IBag } from "../IBag";
 
 export interface BlogPostContract {
     key?: string;

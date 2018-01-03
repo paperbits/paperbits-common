@@ -1,4 +1,4 @@
-﻿import { ProgressPromise } from "./../core/progressPromise";
+﻿import { ProgressPromise } from "./../progressPromise";
 import { ISettingsProvider } from "./../configuration/ISettingsProvider";
 import { IHttpClient } from '../http/IHttpClient';
 import { IGithubClient } from '../github/IGithubClient';
@@ -16,7 +16,7 @@ import { IGithubGetBlobResponse } from '../github/IGithubGetBlobResponse';
 import { IGithubObject } from '../github/IGithubObject';
 import { GithubMode } from '../github/githubMode';
 import { GithubTreeItemType } from '../github/githubTreeItemType';
-import * as Utils from '../core/utils';
+import * as Utils from '../utils';
 import * as _ from 'lodash';
 
 declare function moment(): any; // TODO: use proper import 

@@ -1,5 +1,5 @@
 ﻿import { Contract } from "./../contract";
-import * as Utils from '../core/utils';
+import * as Utils from '../utils';
 import { IFile } from '../files/IFile';
 import { IFileService } from '../files/IFileService';
 import { IObjectStorage } from '../persistence/IObjectStorage';

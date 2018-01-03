@@ -4,7 +4,7 @@ import { IRouteHandler } from "./../../routing/IRouteHandler";
 import { BlogPostModel } from "./blogPostModel";
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
-import * as Utils from '../../core/utils';
+import * as Utils from '../../utils';
 import { IFile } from '../../files/IFile';
 import { IFileService } from '../../files/IFileService';
 import { BlogPostContract } from '../../blogs/blogPostContract';

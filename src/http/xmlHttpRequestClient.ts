@@ -1,6 +1,6 @@
 ﻿import { IHttpClient } from '../http/IHttpClient';
 import { IHttpRequest } from '../http/IHttpRequest';
-import { ProgressPromise } from '../core/progressPromise';
+import { ProgressPromise } from '../progressPromise';
 import { HttpClientReponse } from '../http/httpClientReponse';
 
 

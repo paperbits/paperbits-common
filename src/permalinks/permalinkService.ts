@@ -1,4 +1,4 @@
-import * as Utils from '../core/utils';
+import * as Utils from '../utils';
 import { IPermalinkService } from '../permalinks/IPermalinkService';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IPermalink } from '../permalinks/IPermalink';

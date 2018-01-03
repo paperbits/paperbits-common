@@ -1,4 +1,4 @@
-// import { IBag } from '../core/IBag';
+// import { IBag } from '../IBag';
 // import { ILocalCache } from '../caching/ILocalCache';
 // import { IGithubClient } from '../github/IGithubClient';
 // import { IFileReference } from '../github/IFileReference';

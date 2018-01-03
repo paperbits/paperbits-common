@@ -1,5 +1,5 @@
 import { IEventManager } from '../events/IEventManager';
-import { Keys } from '../core/keys';
+import { Keys } from '../keyboard';
 
 export class GlobalEventHandler {
     private readonly eventManager: IEventManager;

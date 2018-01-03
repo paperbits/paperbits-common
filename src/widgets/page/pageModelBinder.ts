@@ -2,7 +2,7 @@ import { IPermalinkService } from "./../../permalinks/IPermalinkService";
 import { IPageService } from "./../../pages/IPageService";
 import { IRouteHandler } from "./../../routing/IRouteHandler";
 import { PageModel } from "./pageModel";
-import * as Utils from '../../core/utils';
+import * as Utils from '../../utils';
 import { IFileService } from '../../files/IFileService';
 import { PageContract } from '../../pages/pageContract';
 import { Contract } from "./../../contract";

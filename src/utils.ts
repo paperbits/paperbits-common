@@ -1,4 +1,4 @@
-﻿import { ProgressPromise } from '../core/progressPromise';
+﻿import { ProgressPromise } from './progressPromise';
 
 export interface IFunctionBag {
     (): void;

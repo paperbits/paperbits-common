@@ -1,4 +1,4 @@
-﻿import * as Utils from '../core/utils';
+﻿import * as Utils from '../utils';
 import { IPermalink } from '../permalinks/IPermalink';
 import { PageContract } from '../pages/pageContract';
 import { IPageService } from '../pages/IPageService';

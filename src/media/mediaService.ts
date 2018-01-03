@@ -1,4 +1,4 @@
-﻿import * as Utils from '../core/utils';
+﻿import * as Utils from '../utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IBlobStorage } from '../persistence/IBlobStorage';
 import { MediaContract } from './MediaContract';
@@ -6,7 +6,7 @@ import { IMediaService } from './IMediaService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { ICreatedMedia } from './ICreatedMedia';
 import { IPermalink } from '../permalinks/IPermalink';
-import { ProgressPromise } from '../core/progressPromise';
+import { ProgressPromise } from '../progressPromise';
 
 const uploadsPath = "uploads";
 const permalinksPath = "permalinks";

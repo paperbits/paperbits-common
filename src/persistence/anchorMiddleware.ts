@@ -1,4 +1,4 @@
-import * as Utils from "../core/utils";
+import * as Utils from "../utils";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IPermalinkService } from "../permalinks/IPermalinkService";
 import { IPageService } from "../pages/IPageService";

@@ -1,7 +1,7 @@
-import * as Utils from "../core/utils";
+import * as Utils from "../utils";
 import * as _ from "lodash";
 import { IViewManager } from "./../ui/IViewManager";
-import { ProgressPromise } from "../core/progressPromise";
+import { ProgressPromise } from "../progressPromise";
 import { IObjectStorage } from "../persistence/IObjectStorage";
 import { IEventManager } from "../events/IEventManager";
 import { LruCache } from "../caching/lruCache";

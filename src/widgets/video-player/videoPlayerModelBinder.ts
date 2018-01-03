@@ -1,5 +1,5 @@
 import { IViewModelBinder } from "./../IViewModelBinder";
-import * as Utils from '../../core/utils';
+import * as Utils from '../../utils';
 import { VideoPlayerModel } from "./videoPlayerModel";
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { IPermalinkService } from "../../permalinks/IPermalinkService";

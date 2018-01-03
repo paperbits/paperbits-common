@@ -1,7 +1,7 @@
 ﻿import { IHighlightConfig } from "./IHighlightConfig";
 import { IContextualEditor } from "./IContextualEditor";
 import { IEditorSession } from "./IEditorSession";
-import { ProgressPromise } from '../core/progressPromise';
+import { ProgressPromise } from '../progressPromise';
 import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
 import { PageContract } from "../pages/pageContract";

@@ -1,5 +1,5 @@
 import { HttpClientReponse } from "./httpClientReponse";
-import { ProgressPromise } from "./../core/progressPromise";
+import { ProgressPromise } from "./../progressPromise";
 import { IHttpRequest } from '../http/IHttpRequest';
 
 export interface IHttpClient {
