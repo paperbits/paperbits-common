@@ -1,4 +1,4 @@
-﻿import { Contract } from "../editing/contentNode";
+﻿import { Contract } from "../contract";
 
 export interface IBlock {
     key?: string;

@@ -3,7 +3,7 @@ import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { PermalinkService } from "../../permalinks/permalinkService";
 import { IModelBinder } from "../../editing/IModelBinder";
 import { ButtonModel } from "./buttonModel";
-import { Contract } from "../../editing/contentNode";
+import { Contract } from "../../contract";
 import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";
 
 

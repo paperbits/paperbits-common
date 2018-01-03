@@ -1,7 +1,7 @@
-import { IMedia } from '../media/IMedia';
+import { MediaContract } from '../media/mediaContract';
 import { IPermalink } from '../permalinks/IPermalink';
 
 export interface ICreatedMedia {
-    media: IMedia,
+    media: MediaContract,
     permalink: IPermalink
 }

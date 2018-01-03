@@ -1,4 +1,4 @@
-﻿export interface ILayout {
+﻿export interface LayoutContract {
     key?: string;
     title: string;
     description: string;

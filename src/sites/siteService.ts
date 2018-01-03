@@ -1,5 +1,5 @@
 ﻿import { ISettingsProvider, Settings } from "./../configuration/ISettingsProvider";
-import { IMedia } from '../media/IMedia';
+import { MediaContract } from '../media/mediaContract';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { ISiteService } from '../sites/ISiteService';
 import { ISettings } from '../sites/ISettings';

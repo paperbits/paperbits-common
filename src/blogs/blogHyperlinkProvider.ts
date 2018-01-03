@@ -1,4 +1,4 @@
-import { IBlogPost } from "@paperbits/common/blogs/IBlogPost";
+import { BlogPostContract } from "@paperbits/common/blogs/BlogPostContract";
 import { IBlogService } from "@paperbits/common/blogs/IBlogService";
 import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
 import { IHyperlinkProvider } from "@paperbits/common/ui/IHyperlinkProvider";
@@ -20,7 +20,7 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
         return permalink.targetKey.startsWith("posts/");
     }
 
-    public getHyperlinkFromLinkable(blogPost: IBlogPost): HyperlinkModel {
+    public getHyperlinkFromLinkable(blogPost: BlogPostContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = blogPost.title;
         hyperlinkModel.target = "_blank";
@@ -61,7 +61,7 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
         return null;
     }
 
-    public getHyperlinkFromResource(blogPost: IBlogPost): HyperlinkModel {
+    public getHyperlinkFromResource(blogPost: BlogPostContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = blogPost.title;
         hyperlinkModel.target = "_blank";

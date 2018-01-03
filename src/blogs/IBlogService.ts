@@ -1,14 +1,14 @@
 ﻿import { IFile } from '../files/IFile';
-import { IBlogPost } from '../blogs/IBlogPost';
+import { BlogPostContract } from '../blogs/BlogPostContract';
 
 export interface IBlogService {
-    search(pattern: string): Promise<Array<IBlogPost>>;
+    search(pattern: string): Promise<Array<BlogPostContract>>;
 
-    getBlogPostByKey(key: string): Promise<IBlogPost>;
+    getBlogPostByKey(key: string): Promise<BlogPostContract>;
 
-    deleteBlogPost(blogPostRef: IBlogPost): Promise<void>;
+    deleteBlogPost(blogPostRef: BlogPostContract): Promise<void>;
 
-    createBlogPost(title: string, description: string, keywords): Promise<IBlogPost>;
+    createBlogPost(title: string, description: string, keywords): Promise<BlogPostContract>;
 
-    updateBlogPost(blogPostRef: IBlogPost): Promise<void>;
+    updateBlogPost(blogPostRef: BlogPostContract): Promise<void>;
 }

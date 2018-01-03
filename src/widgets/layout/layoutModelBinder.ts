@@ -1,10 +1,10 @@
 import { IRouteHandler } from "./../../routing/IRouteHandler";
-import { ILayout } from "./../../layouts/ILayout";
+import { LayoutContract } from "./../../layouts/layoutContract";
 import { LayoutModel } from "./layoutModel";
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import { IFileService } from '../../files/IFileService';
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 import { PlaceholderModel } from "../placeholder/placeholderModel";
 import { ILayoutService } from "../../layouts/ILayoutService";
 import { ModelBinderSelector } from "./../modelBinderSelector";
@@ -33,7 +33,7 @@ export class LayoutModelBinder {
         return await this.nodeToModel(layoutNode, url, readonly);
     }
 
-    public async nodeToModel(layoutNode: ILayout, currentUrl: string, readonly?: boolean): Promise<LayoutModel> {
+    public async nodeToModel(layoutNode: LayoutContract, currentUrl: string, readonly?: boolean): Promise<LayoutModel> {
         let layoutModel = new LayoutModel();
         layoutModel.title = layoutNode.title;
         layoutModel.description = layoutNode.description;
@@ -73,7 +73,7 @@ export class LayoutModelBinder {
         return layoutConfig;
     }
 
-    public async setConfig(layout: ILayout, config: Contract): Promise<void> {
+    public async setConfig(layout: LayoutContract, config: Contract): Promise<void> {
         const file = await this.fileService.getFileByKey(layout.contentKey);
 
         Object.assign(file, config);

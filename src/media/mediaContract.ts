@@ -1,4 +1,4 @@
-﻿export interface IMedia {
+﻿export interface MediaContract {
     key?: string;
     filename: string;
     description: string;

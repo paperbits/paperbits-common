@@ -2,7 +2,7 @@
 import * as Utils from '../core/utils';
 import { IPermalink } from '../permalinks/IPermalink';
 import { IFile } from '../files/IFile';
-import { ILayout } from '../layouts/ILayout';
+import { LayoutContract } from '../layouts/layoutContract';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { ILayoutService } from "./ILayoutService";
 
@@ -15,29 +15,29 @@ export class LayoutService implements ILayoutService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<ILayout>> {
-        return await this.objectStorage.searchObjects<ILayout>(layoutsPath, tags, tagValue, startAtSearch);
+    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<LayoutContract>> {
+        return await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, tags, tagValue, startAtSearch);
     }
 
-    public async getLayoutByKey(key: string): Promise<ILayout> {
-        return await this.objectStorage.getObject<ILayout>(key);
+    public async getLayoutByKey(key: string): Promise<LayoutContract> {
+        return await this.objectStorage.getObject<LayoutContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<ILayout>> {
+    public search(pattern: string): Promise<Array<LayoutContract>> {
         return this.searchByTags(["title"], pattern, true);
     }
 
-    public async deleteLayout(layout: ILayout): Promise<void> {
+    public async deleteLayout(layout: LayoutContract): Promise<void> {
         var deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
         var deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
 
         await Promise.all([deleteContentPromise, deleteLayoutPromise]);
     }
 
-    public async createLayout(title: string, description: string, uriTemplate: string): Promise<ILayout> {
+    public async createLayout(title: string, description: string, uriTemplate: string): Promise<LayoutContract> {
         var layoutId = `${layoutsPath}/${Utils.guid()}`;
 
-        var layout: ILayout = {
+        var layout: LayoutContract = {
             key: layoutId,
             title: title,
             description: description,
@@ -49,30 +49,30 @@ export class LayoutService implements ILayoutService {
         return layout;
     }
 
-    public async updateLayout(layout: ILayout): Promise<void> {
-        await this.objectStorage.updateObject<ILayout>(layout.key, layout);
+    public async updateLayout(layout: LayoutContract): Promise<void> {
+        await this.objectStorage.updateObject<LayoutContract>(layout.key, layout);
     }
 
-    public async getLayoutByUriTemplate(uriTemplate: string): Promise<ILayout> {
-        let layouts = await this.objectStorage.searchObjects<ILayout>(layoutsPath, ["uriTemplate"], uriTemplate);
+    public async getLayoutByUriTemplate(uriTemplate: string): Promise<LayoutContract> {
+        let layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, ["uriTemplate"], uriTemplate);
         return layouts.length > 0 ? layouts[0] : null;
     }
 
-    public async getLayoutByRoute(route: string): Promise<ILayout> {
+    public async getLayoutByRoute(route: string): Promise<LayoutContract> {
         if (!route) {
             return null;
         }
 
-        let layouts = await this.objectStorage.searchObjects<ILayout>(layoutsPath);
+        let layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
 
         if (layouts && layouts.length) {
-            var filteredLayouts = layouts.filter((lyout: ILayout) => {
+            var filteredLayouts = layouts.filter((lyout: LayoutContract) => {
                 var regExp = lyout.uriTemplate;
                 return !!route.match(regExp);
             });
 
             if (filteredLayouts && filteredLayouts.length) {
-                let layout: ILayout = _.maxBy(filteredLayouts, (item: ILayout) => { return item.uriTemplate.length });
+                let layout: LayoutContract = _.maxBy(filteredLayouts, (item: LayoutContract) => { return item.uriTemplate.length });
 
                 return layout;
             }

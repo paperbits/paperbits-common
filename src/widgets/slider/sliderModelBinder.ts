@@ -1,7 +1,7 @@
 import { SliderModel, SlideModel } from "./sliderModel";
 import { ModelBinderSelector } from "./../modelBinderSelector";
 import { IModelBinder } from "../../editing/IModelBinder";
-import { Contract } from "../../editing/contentNode";
+import { Contract } from "../../contract";
 import { RowModel } from "../row/rowModel";
 import { RowModelBinder } from "../row/rowModelBinder";
 import { BackgroundModel } from "../background/backgroundModel";

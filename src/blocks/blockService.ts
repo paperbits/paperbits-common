@@ -6,7 +6,7 @@ import { IBlockService } from './IBlockService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { IPermalink } from '../permalinks/IPermalink';
 import { ProgressPromise } from '../core/progressPromise';
-import { Contract } from '../editing/contentNode';
+import { Contract } from '../contract';
 
 const blockPath = "blocks";
 

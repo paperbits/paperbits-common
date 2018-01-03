@@ -1,6 +1,6 @@
-import { Contract } from "../../editing/contentNode";
+import { Contract } from "../../contract";
 
-export interface IVideoPlayerNode extends Contract {
+export interface VideoPlayerContract extends Contract {
     /**
      * Key of the permalink pointing to an actual resource.
      */

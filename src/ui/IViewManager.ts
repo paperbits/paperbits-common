@@ -4,7 +4,7 @@ import { IEditorSession } from "./IEditorSession";
 import { ProgressPromise } from '../core/progressPromise';
 import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
-import { IPage } from "../pages/IPage";
+import { PageContract } from "../pages/pageContract";
 
 export enum ViewManagerMode {
     selecting,
@@ -97,5 +97,5 @@ export interface IViewManager {
 
     loadFavIcon(): Promise<void>;
 
-    setTitle?(settings?:ISettings, page?: IPage): Promise<void>;
+    setTitle?(settings?:ISettings, page?: PageContract): Promise<void>;
 }

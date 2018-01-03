@@ -1,18 +1,18 @@
 ﻿import { IFile } from '../files/IFile';
-import { ILayout } from '../layouts/ILayout';
+import { LayoutContract } from '../layouts/layoutContract';
 
 export interface ILayoutService {
-    search(pattern: string): Promise<Array<ILayout>>;
+    search(pattern: string): Promise<Array<LayoutContract>>;
 
-    getLayoutByKey(key: string): Promise<ILayout>;
+    getLayoutByKey(key: string): Promise<LayoutContract>;
 
-    getLayoutByUriTemplate(uriTemplate: string): Promise<ILayout>
+    getLayoutByUriTemplate(uriTemplate: string): Promise<LayoutContract>
 
-    deleteLayout(layout: ILayout): Promise<void>;
+    deleteLayout(layout: LayoutContract): Promise<void>;
 
-    createLayout(title: string, description: string, uriTemplate:string): Promise<ILayout>;
+    createLayout(title: string, description: string, uriTemplate:string): Promise<LayoutContract>;
 
-    updateLayout(layout: ILayout): Promise<void>;
+    updateLayout(layout: LayoutContract): Promise<void>;
 
-    getLayoutByRoute(routeTemplate: string): Promise<ILayout>;
+    getLayoutByRoute(routeTemplate: string): Promise<LayoutContract>;
 }

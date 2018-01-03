@@ -1,4 +1,4 @@
-﻿import { Contract } from "./../editing/contentNode";
+﻿import { Contract } from "./../contract";
 import * as Utils from '../core/utils';
 import { IFile } from '../files/IFile';
 import { IFileService } from '../files/IFileService';

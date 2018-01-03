@@ -1,6 +1,6 @@
 ﻿import { IBag } from "../core/IBag";
 
-export interface IBlogPost {
+export interface BlogPostContract {
     key?: string;
     title: string;
     description: string;

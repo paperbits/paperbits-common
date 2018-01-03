@@ -1,5 +1,5 @@
 import { IModelBinder } from "../../editing/IModelBinder";
-import { Contract } from "../../editing/contentNode";
+import { Contract } from "../../contract";
 import { BackgroundModel } from "./backgroundModel";
 import { BackgroundContract } from "../../ui/background";
 import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";

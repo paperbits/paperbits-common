@@ -2,7 +2,7 @@ import { IModelBinder } from "../../editing/IModelBinder";
 import { INavigationService } from "../../navigation/INavigationService";
 import { IPermalinkService } from "../../permalinks/IPermalinkService";
 import { NavbarModel } from "./navbarModel";
-import { Contract } from "../../editing/contentNode";
+import { Contract } from "../../contract";
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { NavbarItemModel } from "./navbarItemModel";
 import { INavigationItem } from "../../navigation/INavigationItem";

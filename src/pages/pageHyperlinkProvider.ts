@@ -1,4 +1,4 @@
-import { IPage } from "@paperbits/common/pages/IPage";
+import { PageContract } from "@paperbits/common/pages/pageContract";
 import { IPageService } from "@paperbits/common/pages/IPageService";
 import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
 import { IHyperlinkProvider } from "@paperbits/common/ui/IHyperlinkProvider";
@@ -21,7 +21,7 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
         return permalink.targetKey.startsWith("pages/");
     }
 
-    public getHyperlinkFromLinkable(page: IPage): HyperlinkModel {
+    public getHyperlinkFromLinkable(page: PageContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = page.title;
         hyperlinkModel.target = "_blank";

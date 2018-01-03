@@ -1,5 +1,5 @@
 import { IModelBinder } from "./../editing/IModelBinder";
-import { Contract } from "./../editing/contentNode";
+import { Contract } from "./../contract";
 
 export class ModelBinderSelector {
     private readonly modelBinders: Array<IModelBinder>;

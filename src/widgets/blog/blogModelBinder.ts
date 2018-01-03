@@ -7,10 +7,10 @@ import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import * as Utils from '../../core/utils';
 import { IFile } from '../../files/IFile';
 import { IFileService } from '../../files/IFileService';
-import { IBlogPost } from '../../blogs/IBlogPost';
+import { BlogPostContract } from '../../blogs/blogPostContract';
 import { SectionModelBinder } from "../section/sectionModelBinder";
 import { SectionModel } from "../section/sectionModel";
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 import { IModelBinder } from "../../editing/IModelBinder";
 import { ISiteService } from "../../sites/ISiteService";
 import { PlaceholderModel } from "../placeholder/placeholderModel";
@@ -44,21 +44,21 @@ export class BlogModelBinder implements IModelBinder {
         return model instanceof BlogPostModel;
     }
 
-    public async nodeToModel(blogConfig: IBlogPost): Promise<BlogPostModel> {
-        if (!blogConfig.key) {
+    public async nodeToModel(blogPostContract: BlogPostContract): Promise<BlogPostModel> {
+        if (!blogPostContract.key) {
             let currentUrl = this.routeHandler.getCurrentUrl();
             let permalink = await this.permalinkService.getPermalinkByUrl(currentUrl);
             let blogKey = permalink.targetKey;
 
-            blogConfig = await this.blogService.getBlogPostByKey(blogKey);
+            blogPostContract = await this.blogService.getBlogPostByKey(blogKey);
         }
 
         let blogModel = new BlogPostModel();
-        blogModel.title = blogConfig.title;
-        blogModel.description = blogConfig.description;
-        blogModel.keywords = blogConfig.keywords;
+        blogModel.title = blogPostContract.title;
+        blogModel.description = blogPostContract.description;
+        blogModel.keywords = blogPostContract.keywords;
 
-        let blogContentNode = await this.fileService.getFileByKey(blogConfig.contentKey);
+        let blogContentNode = await this.fileService.getFileByKey(blogPostContract.contentKey);
         let sectionModelPromises = blogContentNode.nodes.map(this.sectionModelBinder.nodeToModel);
         let sections = await Promise.all<SectionModel>(sectionModelPromises);
         blogModel.sections = sections;

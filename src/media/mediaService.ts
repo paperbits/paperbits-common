@@ -1,7 +1,7 @@
 ﻿import * as Utils from '../core/utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IBlobStorage } from '../persistence/IBlobStorage';
-import { IMedia } from './IMedia';
+import { MediaContract } from './MediaContract';
 import { IMediaService } from './IMediaService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { ICreatedMedia } from './ICreatedMedia';
@@ -22,18 +22,18 @@ export class MediaService implements IMediaService {
         this.permalinkService = permalinkService;
     }
 
-    public searchByProperties(propertyNames: Array<string>, propertyValue: string, startSearch: boolean): Promise<Array<IMedia>> {
-        return this.objectStorage.searchObjects<IMedia>(uploadsPath, propertyNames, propertyValue, startSearch);
+    public searchByProperties(propertyNames: Array<string>, propertyValue: string, startSearch: boolean): Promise<Array<MediaContract>> {
+        return this.objectStorage.searchObjects<MediaContract>(uploadsPath, propertyNames, propertyValue, startSearch);
     }
 
-    public getMediaByKey(key: string): Promise<IMedia> {
+    public getMediaByKey(key: string): Promise<MediaContract> {
         if (!key.startsWith(uploadsPath)) {
             return null;
         }
-        return this.objectStorage.getObject<IMedia>(key);
+        return this.objectStorage.getObject<MediaContract>(key);
     }
     
-    public async getMediaByPermalink(permalink: string): Promise<IMedia> {
+    public async getMediaByPermalink(permalink: string): Promise<MediaContract> {
         if(permalink) {
             let iconPermalink = await this.permalinkService.getPermalinkByKey(permalink);
             if(iconPermalink){
@@ -43,7 +43,7 @@ export class MediaService implements IMediaService {
         return null;
     }
 
-    public async search(pattern: string): Promise<Array<IMedia>> {
+    public async search(pattern: string): Promise<Array<MediaContract>> {
         let result = await this.searchByProperties(["filename"], pattern, true);
 
         result.sort(function (x, y) {
@@ -63,7 +63,7 @@ export class MediaService implements IMediaService {
         return result;
     }
 
-    public async deleteMedia(media: IMedia): Promise<void> {
+    public async deleteMedia(media: MediaContract): Promise<void> {
         try {
             await this.objectStorage.deleteObject(media.key);
             await this.blobStorage.deleteBlob(media.filename);
@@ -84,7 +84,7 @@ export class MediaService implements IMediaService {
                     var mediaId = `${uploadsPath}/${Utils.guid()}`;
                     var permalinkKey = `${permalinksPath}/${Utils.guid()}`;
 
-                    var media: IMedia = {
+                    var media: MediaContract = {
                         key: mediaId,
                         filename: name,
                         description: "",
@@ -110,7 +110,7 @@ export class MediaService implements IMediaService {
         });
     }
 
-    public updateMedia(media: IMedia): Promise<void> {
+    public updateMedia(media: MediaContract): Promise<void> {
         return this.objectStorage.updateObject(media.key, media);
     }
 }

@@ -1,4 +1,4 @@
-﻿import { IMedia } from '../media/IMedia';
+﻿import { MediaContract } from '../media/mediaContract';
 import { ISettings } from '../sites/ISettings';
 
 export interface ISiteService {

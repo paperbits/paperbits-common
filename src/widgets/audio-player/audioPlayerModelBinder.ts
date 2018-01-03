@@ -3,7 +3,7 @@ import { IViewModelBinder } from "./../IViewModelBinder";
 import { AudioPlayerModel } from "./audioPlayerModel";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import { IMediaService } from "../../media/IMediaService";
-import { IAudioPlayerNode } from "./IAudioPlayerNode";
+import { AudioPlayerContract } from "./AudioPlayerContract";
 import { IPermalinkService } from "./../../permalinks/IPermalinkService";
 import { IModelBinder } from "./../../editing/IModelBinder";
 
@@ -26,7 +26,7 @@ export class AudioPlayerModelBinder implements IModelBinder {
         return model instanceof AudioPlayerModel;
     }
 
-    public async nodeToModel(audioNode: IAudioPlayerNode): Promise<AudioPlayerModel> {
+    public async nodeToModel(audioNode: AudioPlayerContract): Promise<AudioPlayerModel> {
         let audioModel = new AudioPlayerModel();
         audioModel.controls = audioNode.controls;
         audioModel.autoplay = audioNode.autoplay;
@@ -48,8 +48,8 @@ export class AudioPlayerModelBinder implements IModelBinder {
         return audioModel;
     }
 
-    public getConfig(audioPlayerModel: AudioPlayerModel): IAudioPlayerNode {
-        let audioConfig: IAudioPlayerNode = {
+    public getConfig(audioPlayerModel: AudioPlayerModel): AudioPlayerContract {
+        let audioConfig: AudioPlayerContract = {
             kind: "block",
             type: "audio-player",
             sourceKey: audioPlayerModel.sourceKey,

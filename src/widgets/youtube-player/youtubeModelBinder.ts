@@ -1,6 +1,6 @@
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { IModelBinder } from "../../editing/IModelBinder";
-import { IYoutubePlayerNode } from "./IYoutubePlayerNode";
+import { YoutubePlayerContract } from "./IYoutubePlayerNode";
 import { YoutubePlayerModel } from "./youtubePlayerModel";
 
 
@@ -17,7 +17,7 @@ export class YoutubeModelBinder implements IModelBinder {
         return model instanceof YoutubePlayerModel;
     }
 
-    public async nodeToModel(youtubeNode: IYoutubePlayerNode): Promise<YoutubePlayerModel> {
+    public async nodeToModel(youtubeNode: YoutubePlayerContract): Promise<YoutubePlayerModel> {
         let youtubePlayerModel = new YoutubePlayerModel();
 
         youtubePlayerModel.videoId = youtubeNode.videoId;
@@ -25,8 +25,8 @@ export class YoutubeModelBinder implements IModelBinder {
         return youtubePlayerModel;
     }
 
-    public getConfig(youtubeModel: YoutubePlayerModel): IYoutubePlayerNode {
-        let youtubeConfig: IYoutubePlayerNode = {
+    public getConfig(youtubeModel: YoutubePlayerModel): YoutubePlayerContract {
+        let youtubeConfig: YoutubePlayerContract = {
             kind: "block",
             type: "youtube-player",
             videoId: youtubeModel.videoId

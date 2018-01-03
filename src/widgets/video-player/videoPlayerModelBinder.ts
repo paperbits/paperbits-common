@@ -4,7 +4,7 @@ import { VideoPlayerModel } from "./videoPlayerModel";
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { IPermalinkService } from "../../permalinks/IPermalinkService";
 import { IMediaService } from "../../media/IMediaService";
-import { IVideoPlayerNode } from "./IVideoPlayerNode";
+import { VideoPlayerContract } from "./VideoPlayerContract";
 import { IModelBinder } from "../../editing/IModelBinder";
 
 
@@ -27,7 +27,7 @@ export class VideoPlayerModelBinder implements IModelBinder {
         return model instanceof VideoPlayerModel;
     }
 
-    public async nodeToModel(videoPlayerNode: IVideoPlayerNode): Promise<VideoPlayerModel> {
+    public async nodeToModel(videoPlayerNode: VideoPlayerContract): Promise<VideoPlayerModel> {
         let videoPlayerModel = new VideoPlayerModel();
         videoPlayerModel.controls = videoPlayerNode.controls;
         videoPlayerModel.autoplay = videoPlayerNode.autoplay;
@@ -62,8 +62,8 @@ export class VideoPlayerModelBinder implements IModelBinder {
         return videoPlayerModel;
     }
 
-    public getConfig(videoPlayerModel: VideoPlayerModel): IVideoPlayerNode {
-        let videoConfig: IVideoPlayerNode = {
+    public getConfig(videoPlayerModel: VideoPlayerModel): VideoPlayerContract {
+        let videoConfig: VideoPlayerContract = {
             kind: "block",
             type: "video-player",
             sourceKey: videoPlayerModel.sourceKey,

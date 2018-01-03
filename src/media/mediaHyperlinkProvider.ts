@@ -1,4 +1,4 @@
-import { IMedia } from "@paperbits/common/media/IMedia";
+import { MediaContract } from "@paperbits/common/media/mediaContract";
 import { IMediaService } from "@paperbits/common/media/IMediaService";
 import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
 import { IPermalinkService } from "@paperbits/common/permalinks/IPermalinkService";
@@ -22,7 +22,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
         return permalink.targetKey.startsWith("uploads/");
     }
 
-    public getHyperlinkFromLinkable(media: IMedia): HyperlinkModel {
+    public getHyperlinkFromLinkable(media: MediaContract): HyperlinkModel {
         let hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = media.filename;
         hyperlinkModel.target = "_blank";
@@ -44,7 +44,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
         return hyperlinkModel;
     }
 
-    public getHyperlinkFromResource(media: IMedia): HyperlinkModel {
+    public getHyperlinkFromResource(media: MediaContract): HyperlinkModel {
         let hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = media.filename;
         hyperlinkModel.target = "_blank";
@@ -54,7 +54,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
         return hyperlinkModel;
     }
 
-    public async getResourceFromHyperlink(hyperlink: HyperlinkModel): Promise<IMedia> {
+    public async getResourceFromHyperlink(hyperlink: HyperlinkModel): Promise<MediaContract> {
         let permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
         let media = await this.mediaService.getMediaByKey(permalink.targetKey);
 

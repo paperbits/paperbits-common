@@ -1,9 +1,9 @@
-import { IRowNode } from "./IRowNode";
+import { RowContract } from "./rowContract";
 import { IModelBinder } from "./../../editing/IModelBinder";
 import { ColumnModel } from "../column/columnModel";
 import { ColumnModelBinder } from "../column/columnModelBinder";
 import { RowModel } from "./rowModel";
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 
@@ -16,7 +16,7 @@ export class RowModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async nodeToModel(node: IRowNode): Promise<RowModel> {
+    public async nodeToModel(node: RowContract): Promise<RowModel> {
         let rowModel = new RowModel();
 
         if (node.align) {
@@ -54,7 +54,7 @@ export class RowModelBinder {
     }
 
     public getRowConfig(rowModel: RowModel): Contract {
-        let rowConfig: IRowNode = {
+        let rowConfig: RowContract = {
             type: "layout-row",
             kind: "block",
             nodes: []

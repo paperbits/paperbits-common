@@ -1,10 +1,10 @@
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import { IModelBinder } from "./../../editing/IModelBinder";
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 import { ModelBinderSelector } from "./../modelBinderSelector";
 import { ColumnModel } from "./columnModel";
-import { IColumnNode } from "../codeblock/IColumnNode";
+import { ColumnContract } from "./columnContract";
 
 
 export class ColumnModelBinder {
@@ -16,7 +16,7 @@ export class ColumnModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async nodeToModel(node: IColumnNode): Promise<ColumnModel> {
+    public async nodeToModel(node: ColumnContract): Promise<ColumnModel> {
         let columnModel = new ColumnModel();
 
         if (node.size) {
@@ -58,7 +58,7 @@ export class ColumnModelBinder {
     }
 
     public getColumnConfig(columnModel: ColumnModel): Contract {
-        let columnConfig: IColumnNode = {
+        let columnConfig: ColumnContract = {
             type: "layout-column",
             kind: "block",
             nodes: []

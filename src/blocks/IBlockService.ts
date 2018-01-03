@@ -1,5 +1,5 @@
 ﻿import { IBlock } from './IBlock';
-import { Contract } from '../editing/contentNode';
+import { Contract } from '../contract';
 
 export interface IBlockService {
     getBlockByKey(key: string): Promise<IBlock>;

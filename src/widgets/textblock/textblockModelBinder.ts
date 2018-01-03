@@ -1,7 +1,7 @@
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { IModelBinder } from "./../../editing/IModelBinder";
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 import { TextblockModel } from "./textblockModel";
 import { IHyperlink } from "../../permalinks/IHyperlink";
 import { IPermalinkService } from "../../permalinks/IPermalinkService";

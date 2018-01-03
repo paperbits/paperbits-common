@@ -1,6 +1,6 @@
 ﻿import * as Utils from '../core/utils';
 import { IPermalink } from '../permalinks/IPermalink';
-import { IBlogPost } from '../blogs/IBlogPost';
+import { BlogPostContract } from '../blogs/BlogPostContract';
 import { IBlogService } from '../blogs/IBlogService';
 import { IFile } from '../files/IFile';
 import { IObjectStorage } from '../persistence/IObjectStorage';
@@ -15,19 +15,19 @@ export class BlogService implements IBlogService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<IBlogPost>> {
-        return await this.objectStorage.searchObjects<IBlogPost>(blogPostsPath, tags, tagValue, startAtSearch);
+    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<BlogPostContract>> {
+        return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
     }
 
-    public async getBlogPostByKey(key: string): Promise<IBlogPost> {
-        return await this.objectStorage.getObject<IBlogPost>(key);
+    public async getBlogPostByKey(key: string): Promise<BlogPostContract> {
+        return await this.objectStorage.getObject<BlogPostContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<IBlogPost>> {
+    public search(pattern: string): Promise<Array<BlogPostContract>> {
         return this.searchByTags(["title"], pattern, true);
     }
 
-    public async deleteBlogPost(blogPost: IBlogPost): Promise<void> {
+    public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
         var deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
         var deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
         var deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
@@ -35,10 +35,10 @@ export class BlogService implements IBlogService {
         await Promise.all([deleteContentPromise, deletePermalinkPromise, deleteBlogPostPromise]);
     }
 
-    public async createBlogPost(title: string, description: string, keywords): Promise<IBlogPost> {
+    public async createBlogPost(title: string, description: string, keywords): Promise<BlogPostContract> {
         var blogPostId = `${blogPostsPath}/${Utils.guid()}`;
 
-        var blogPost: IBlogPost = {
+        var blogPost: BlogPostContract = {
             key: blogPostId,
             title: title,
             description: description,
@@ -50,7 +50,7 @@ export class BlogService implements IBlogService {
         return blogPost;
     }
 
-    public async updateBlogPost(blogPost: IBlogPost): Promise<void> {
-        await this.objectStorage.updateObject<IBlogPost>(blogPost.key, blogPost);
+    public async updateBlogPost(blogPost: BlogPostContract): Promise<void> {
+        await this.objectStorage.updateObject<BlogPostContract>(blogPost.key, blogPost);
     }
 }

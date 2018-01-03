@@ -3,7 +3,7 @@
 /**
  * Page metadata.
  */
-export interface IPage {
+export interface PageContract {
     /**
      * Own key.
      */

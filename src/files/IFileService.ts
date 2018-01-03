@@ -1,4 +1,4 @@
-import { Contract } from "./../editing/contentNode";
+import { Contract } from "./../contract";
 
 /**
  * Service for managing JSON-like content objects.

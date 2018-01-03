@@ -1,4 +1,4 @@
-import { Contract } from "./../../editing/contentNode";
+import { Contract } from "./../../contract";
 
 export interface IDimensionalValues {
     sm?: string;
@@ -6,7 +6,7 @@ export interface IDimensionalValues {
     lg?: string;
 }
 
-export interface IRowNode extends Contract {
+export interface RowContract extends Contract {
     justify?: IDimensionalValues;
     align?: IDimensionalValues;
 }
