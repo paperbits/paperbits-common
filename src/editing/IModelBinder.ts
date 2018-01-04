@@ -1,5 +1,5 @@
 import { IWidgetBinding } from "./IWidgetBinding";
-import { Contract } from "./contentNode";
+import { Contract } from "../contract";
 
 /**
  * Utility for conversions between widget contracts and and widget models.

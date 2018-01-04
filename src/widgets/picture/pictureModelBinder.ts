@@ -1,7 +1,7 @@
 import { IViewModelBinder } from "./../IViewModelBinder";
 import { ModelBinderSelector } from "./../modelBinderSelector";
 import { PictureModel } from "./pictureModel";
-import { PictureContract } from "./IPictureNode";
+import { PictureContract } from "./pictureContract";
 import { IWidgetBinding } from "./../../editing/IWidgetBinding";
 import { IModelBinder } from "./../../editing/IModelBinder";
 import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";

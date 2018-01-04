@@ -1,6 +1,6 @@
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { IModelBinder } from "../../editing/IModelBinder";
-import { YoutubePlayerContract } from "./IYoutubePlayerNode";
+import { YoutubePlayerContract } from "./youtubePlayerContract";
 import { YoutubePlayerModel } from "./youtubePlayerModel";
 
 

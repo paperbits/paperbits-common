@@ -2,7 +2,7 @@ import { IViewModelBinder } from "./../IViewModelBinder";
 import { MapModel } from "./mapModel";
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { PermalinkService } from "../../permalinks/permalinkService";
-import { IMapConfig } from "./IMapNode";
+import { IMapConfig } from "./mapContract";
 import { IModelBinder } from "../../editing/IModelBinder";
 
 

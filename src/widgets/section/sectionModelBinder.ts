@@ -1,5 +1,5 @@
 import { IViewModelBinder } from "./../IViewModelBinder";
-import { SectionConfig } from "./ISectionNode";
+import { SectionConfig } from "./sectionContract";
 import { Contract } from "./../../contract";
 import { IModelBinder } from "./../../editing/IModelBinder";
 import { RowModel } from "../row/rowModel";

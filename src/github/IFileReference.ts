@@ -1,4 +1,4 @@
-﻿﻿import { IBag } from '../cIBag;
+﻿﻿import { IBag } from "../IBag";
 
 export interface IFileReference {
     path: string;
