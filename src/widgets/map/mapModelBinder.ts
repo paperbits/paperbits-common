@@ -2,7 +2,7 @@ import { IViewModelBinder } from "./../IViewModelBinder";
 import { MapModel } from "./mapModel";
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
 import { PermalinkService } from "../../permalinks/permalinkService";
-import { IMapConfig } from "./mapContract";
+import { MapContract } from "./mapContract";
 import { IModelBinder } from "../../editing/IModelBinder";
 
 
@@ -15,7 +15,7 @@ export class MapModelBinder implements IModelBinder {
         return model instanceof MapModel;
     }
 
-    public async nodeToModel(mapNode: IMapConfig): Promise<MapModel> {
+    public async nodeToModel(mapNode: MapContract): Promise<MapModel> {
         let model = new MapModel();
         model.caption = mapNode.caption;
         model.layout = mapNode.layout;
@@ -25,8 +25,8 @@ export class MapModelBinder implements IModelBinder {
         return model;
     }
 
-    public getConfig(mapModel: MapModel): IMapConfig {
-        let mapConfig: IMapConfig = {
+    public getConfig(mapModel: MapModel): MapContract {
+        let mapConfig: MapContract = {
             kind: "block",
             type: "map",
             caption: mapModel.caption,

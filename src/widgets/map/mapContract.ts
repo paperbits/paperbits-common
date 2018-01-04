@@ -1,6 +1,6 @@
 import { Contract } from "../../contract";
 
-export interface IMapConfig extends Contract {
+export interface MapContract extends Contract {
     location: string;
     layout?: string;
     caption?: string;
