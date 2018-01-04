@@ -1,43 +1,43 @@
 {
-    "name": "@paperbits/common",
-    "version": "0.0.35",
-    "description": "Paperbits common components.",
-    "author": "Vienna LLC",
-    "license": "GPL-3.0",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/paperbits/paperbits-common.git"
-    },
-    "keywords": [
-        "paperbits"
-    ],
-    "bugs": {
-        "url": "https://github.com/paperbits/paperbits-common/issues"
-    },
-    "dependencies": {
-        "crossroads": "^0.12.2",
-        "es6-shim": "^0.35.3",
-        "firebase": "^4.3.0",
-        "hasher": "^1.2.0",
-        "inversify": "^4.3.0",
-        "jquery": "^3.2.1",
-        "lity": "^2.3.0",
-        "lodash": "^4.17.4",
-        "moment": "^2.18.1",
-        "reflect-metadata": "^0.1.10",
-        "xhr2": "^0.1.4"
-    },
-    "devDependencies": {
-        "@types/es6-shim": "^0.31.34",
-        "@types/jquery": "^3.2.11",
-        "@types/knockout": "^3.4.44",
-        "@types/node": "^8.0.24",
-        "gulp": "^3.9.1",
-        "gulp-mocha": "^4.3.1",
-        "gulp-sourcemaps": "^2.6.1",
-        "gulp-typescript": "^3.2.1",
-        "merge2": "^1.1.0",
-        "mocha": "^3.5.3",
-        "typescript": "^2.4.2"
-    }
+  "name": "@paperbits/common",
+  "version": "0.0.36",
+  "description": "Paperbits common components.",
+  "author": "Vienna LLC",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paperbits/paperbits-common.git"
+  },
+  "keywords": [
+    "paperbits"
+  ],
+  "bugs": {
+    "url": "https://github.com/paperbits/paperbits-common/issues"
+  },
+  "dependencies": {
+    "crossroads": "^0.12.2",
+    "es6-shim": "^0.35.3",
+    "firebase": "^4.3.0",
+    "hasher": "^1.2.0",
+    "inversify": "^4.3.0",
+    "jquery": "^3.2.1",
+    "lity": "^2.3.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "reflect-metadata": "^0.1.10",
+    "xhr2": "^0.1.4"
+  },
+  "devDependencies": {
+    "@types/es6-shim": "^0.31.34",
+    "@types/jquery": "^3.2.11",
+    "@types/knockout": "^3.4.44",
+    "@types/node": "^8.0.24",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^4.3.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.1",
+    "merge2": "^1.1.0",
+    "mocha": "^3.5.3",
+    "typescript": "^2.4.2"
+  }
 }
