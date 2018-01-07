@@ -99,7 +99,9 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         }
     
         public build(): any {
-            this.intentions.flattenMap = IntentionsUtils.flatten(this.intentions);
+            if (!this.intentions.flattenMap){
+                this.intentions.flattenMap = IntentionsUtils.flatten(this.intentions);
+            }
             return this.intentions;
         }
 
