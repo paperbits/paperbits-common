@@ -28,8 +28,9 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     private handleHashChangeEvent(): void {
-        if(this.hash !== location.hash && `#${this.hash}` !== location.hash) {
+        if (this.hash !== location.hash && `#${this.hash}` !== location.hash) {
             this.hash = location.hash;
+
             if (this.notificationEnabled) {
                 this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
             }
@@ -45,9 +46,14 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public navigateTo(hash: string, notifyListeners: boolean = true) {
-        if(!hash) {
+        if (!hash) {
             return;
         }
+
+        if (hash === location.hash || `#${hash}` === location.hash) {
+            return;
+        }
+
         if (!notifyListeners) {
             this.notificationEnabled = false;
         }

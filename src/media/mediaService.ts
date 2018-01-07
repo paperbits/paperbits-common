@@ -32,11 +32,11 @@ export class MediaService implements IMediaService {
         }
         return this.objectStorage.getObject<MediaContract>(key);
     }
-    
+
     public async getMediaByPermalink(permalink: string): Promise<MediaContract> {
-        if(permalink) {
+        if (permalink) {
             let iconPermalink = await this.permalinkService.getPermalinkByKey(permalink);
-            if(iconPermalink){
+            if (iconPermalink) {
                 return this.getMediaByKey(iconPermalink.targetKey);
             }
         }
@@ -53,7 +53,7 @@ export class MediaService implements IMediaService {
             if (a > b) {
                 return 1;
             }
-            
+
             if (a < b) {
                 return -1;
             }
@@ -77,14 +77,16 @@ export class MediaService implements IMediaService {
 
     public createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia> {
         return new ProgressPromise<ICreatedMedia>(async (resolve, reject, progress) => {
-            await this.blobStorage.uploadBlob(name, content, contentType)
-                .progress(progress)
-                .then(() => this.blobStorage.getDownloadUrl(name))
-                .then(async uri => {
-                    var mediaId = `${uploadsPath}/${Utils.guid()}`;
-                    var permalinkKey = `${permalinksPath}/${Utils.guid()}`;
+            const fileIdentifier = Utils.guid();
 
-                    var media: MediaContract = {
+            await this.blobStorage.uploadBlob(fileIdentifier, content, contentType)
+                .progress(progress)
+                .then(() => this.blobStorage.getDownloadUrl(fileIdentifier))
+                .then(async uri => {
+                    const mediaId = `${uploadsPath}/${Utils.guid()}`;
+                    const permalinkKey = `${permalinksPath}/${fileIdentifier}`;
+
+                    const media: MediaContract = {
                         key: mediaId,
                         filename: name,
                         description: "",
@@ -94,7 +96,7 @@ export class MediaService implements IMediaService {
                         contentType: contentType
                     };
 
-                    var permalink: IPermalink = {
+                    const permalink: IPermalink = {
                         key: permalinkKey,
                         targetKey: mediaId,
                         uri: `/content/${name}`
