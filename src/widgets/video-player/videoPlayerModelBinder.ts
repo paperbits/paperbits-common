@@ -64,7 +64,7 @@ export class VideoPlayerModelBinder implements IModelBinder {
 
     public getConfig(videoPlayerModel: VideoPlayerModel): VideoPlayerContract {
         let videoConfig: VideoPlayerContract = {
-            kind: "block",
+            object: "block",
             type: "video-player",
             sourceKey: videoPlayerModel.sourceKey,
             controls: videoPlayerModel.controls,

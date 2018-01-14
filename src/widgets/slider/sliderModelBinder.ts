@@ -68,13 +68,13 @@ export class SliderModelBinder implements IModelBinder {
     public getConfig(sliderModel: SliderModel): Contract {
         let sliderContract: Contract = {
             type: "slider",
-            kind: "block",
+            object: "block",
             size: sliderModel.size,
             style: sliderModel.style,
             nodes: sliderModel.slides.map(slideModel => {
                 let slideContract: Contract = {
                     type: "slide",
-                    kind: "block",
+                    object: "block",
                     nodes: [],
                     layout: slideModel.layout,
                     padding: slideModel.padding

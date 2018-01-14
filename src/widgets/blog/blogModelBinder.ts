@@ -68,7 +68,7 @@ export class BlogModelBinder implements IModelBinder {
 
     public getConfig(blogModel: BlogPostModel): Contract {
         let blogConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "blog",
             nodes: []
         };

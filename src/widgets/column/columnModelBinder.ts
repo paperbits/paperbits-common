@@ -60,7 +60,7 @@ export class ColumnModelBinder {
     public getColumnConfig(columnModel: ColumnModel): Contract {
         let columnConfig: ColumnContract = {
             type: "layout-column",
-            kind: "block",
+            object: "block",
             nodes: []
         };
 

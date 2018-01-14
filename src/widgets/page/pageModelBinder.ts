@@ -97,7 +97,7 @@ export class PageModelBinder implements IModelBinder {
 
     public getConfig(pageModel: PageModel): Contract {
         let pageConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "page",
             nodes: []
         };

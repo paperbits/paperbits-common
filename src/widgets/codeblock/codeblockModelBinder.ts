@@ -22,7 +22,7 @@ export class CodeblockModelBinder implements IModelBinder {
 
     public getConfig(codeModel: CodeModel): Contract {
         let codeConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "codeblock",
             language: codeModel.lang,
             code: codeModel.code,

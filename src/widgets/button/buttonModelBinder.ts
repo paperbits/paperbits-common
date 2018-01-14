@@ -37,7 +37,7 @@ export class ButtonModelBinder implements IModelBinder {
 
     public getConfig(buttonModel: ButtonModel): Contract {
         let buttonConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "button",
             label: buttonModel.label,
             style: buttonModel.style,

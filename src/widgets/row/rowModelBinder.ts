@@ -56,7 +56,7 @@ export class RowModelBinder {
     public getRowConfig(rowModel: RowModel): Contract {
         let rowConfig: RowContract = {
             type: "layout-row",
-            kind: "block",
+            object: "block",
             nodes: []
         };
 

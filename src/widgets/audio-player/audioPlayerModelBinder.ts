@@ -50,7 +50,7 @@ export class AudioPlayerModelBinder implements IModelBinder {
 
     public getConfig(audioPlayerModel: AudioPlayerModel): AudioPlayerContract {
         let audioConfig: AudioPlayerContract = {
-            kind: "block",
+            object: "block",
             type: "audio-player",
             sourceKey: audioPlayerModel.sourceKey,
             sourceUrl: audioPlayerModel.sourceUrl,

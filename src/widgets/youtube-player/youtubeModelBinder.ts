@@ -27,7 +27,7 @@ export class YoutubeModelBinder implements IModelBinder {
 
     public getConfig(youtubeModel: YoutubePlayerModel): YoutubePlayerContract {
         let youtubeConfig: YoutubePlayerContract = {
-            kind: "block",
+            object: "block",
             type: "youtube-player",
             videoId: youtubeModel.videoId
         }

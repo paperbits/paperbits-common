@@ -66,7 +66,7 @@ export class SectionModelBinder implements IModelBinder {
     public getConfig(sectionModel: SectionModel): Contract {
         const sectionConfig: SectionConfig = {
             type: "layout-section",
-            kind: "block",
+            object: "block",
             nodes: [],
             layout: sectionModel.layout,
             padding: sectionModel.padding,

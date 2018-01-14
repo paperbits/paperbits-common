@@ -84,7 +84,7 @@ export class NavbarModelBinder implements IModelBinder {
 
     public getConfig(model: NavbarModel): Contract {
         let navbarConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "navbar",
             rootKey: model.rootKey,
             align: model.align

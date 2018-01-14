@@ -73,7 +73,7 @@ export interface IHtmlEditor {
     disable(): void;
     addSelectionChangeListener(callback: () => void): void;
     removeSelectionChangeListener(callback: () => void): void;
-    renderToContainer(element: HTMLElement): IHtmlEditor;
+    renderToContainer(element: HTMLElement): void;
     setSelection(selection: Selection): void;
     expandSelection(): void;
     getState(): Object;

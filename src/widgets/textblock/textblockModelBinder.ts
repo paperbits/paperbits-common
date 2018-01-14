@@ -112,7 +112,7 @@ export class TextblockModelBinder implements IModelBinder {
         }
 
         let textblockConfig: Contract = {
-            kind: "widget",
+            object: "widget",
             type: "text",
             nodes: state["nodes"]
         }

@@ -1,5 +1,5 @@
 export interface Contract {
-    kind?: string;
+    object?: string;
     type?: string;
     nodes?: Contract[];
     [key: string]: any;

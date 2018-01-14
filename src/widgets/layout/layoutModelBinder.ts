@@ -61,7 +61,7 @@ export class LayoutModelBinder {
 
     public getConfig(layoutModel: LayoutModel): Contract {
         let layoutConfig: Contract = {
-            kind: "block",
+            object: "block",
             type: "layout",
             nodes: []
         };

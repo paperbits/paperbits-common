@@ -27,7 +27,7 @@ export class MapModelBinder implements IModelBinder {
 
     public getConfig(mapModel: MapModel): MapContract {
         let mapConfig: MapContract = {
-            kind: "block",
+            object: "block",
             type: "map",
             caption: mapModel.caption,
             layout: mapModel.layout,
