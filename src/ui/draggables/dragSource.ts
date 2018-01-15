@@ -35,9 +35,9 @@ export class DragSource {
             return;
         }
 
-        if (event.pointerType === "touch") {
-            debugger;
-        }
+        // if (event.pointerType === "touch") {
+        //     debugger;
+        // }
 
         event["handled"] = true;
 

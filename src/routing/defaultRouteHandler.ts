@@ -1,5 +1,6 @@
 ﻿import { IEventManager } from '../events/IEventManager';
 import { IRouteHandler } from '../routing/IRouteHandler';
+import { debug } from 'util';
 
 export class RouteHandlerEvents {
     static onRouteChange = "onRouteChange";
@@ -28,7 +29,7 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     private handleHashChangeEvent(): void {
-        if (this.hash !== location.hash && `#${this.hash}` !== location.hash) {
+        if (this.hash && this.hash !== location.hash && `#${this.hash}` !== location.hash) {
             this.hash = location.hash;
 
             if (this.notificationEnabled) {
@@ -45,10 +46,22 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, handle);
     }
 
-    public navigateTo(hash: string, notifyListeners: boolean = true) {
-        if (!hash) {
+    public navigateTo(url: string, notifyListeners: boolean = true) {
+        if (!url) {
             return;
         }
+
+        const isFullUrl = !url.startsWith("/");
+        const isLocalUrl = url.startsWith(location.origin);
+
+        if (isFullUrl && !isLocalUrl) {
+            window.open(url, "_blank"); // navigating external link
+            return;
+        }
+
+        const hash = isFullUrl
+            ? url.substring(location.origin.length)
+            : url;
 
         if (hash === location.hash || `#${hash}` === location.hash) {
             return;
