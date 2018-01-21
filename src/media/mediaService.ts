@@ -44,7 +44,7 @@ export class MediaService implements IMediaService {
     }
 
     public async search(pattern: string): Promise<Array<MediaContract>> {
-        let result = await this.searchByProperties(["filename"], pattern, true);
+        const result = await this.searchByProperties(["filename"], pattern, true);
 
         result.sort(function (x, y) {
             var a = x.filename.toUpperCase();
@@ -63,11 +63,11 @@ export class MediaService implements IMediaService {
         return result;
     }
 
-    public async deleteMedia(media: MediaContract): Promise<void> {
+    public async deleteMedia(mediaContract: MediaContract): Promise<void> {
         try {
-            await this.objectStorage.deleteObject(media.key);
-            await this.blobStorage.deleteBlob(media.filename);
-            await this.permalinkService.deletePermalinkByKey(media.permalinkKey);
+            await this.objectStorage.deleteObject(mediaContract.key);
+            await this.blobStorage.deleteBlob(mediaContract.blobKey);
+            await this.permalinkService.deletePermalinkByKey(mediaContract.permalinkKey);
         }
         catch (error) {
             // TODO: Do proper handling.
@@ -77,38 +77,43 @@ export class MediaService implements IMediaService {
 
     public createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia> {
         return new ProgressPromise<ICreatedMedia>(async (resolve, reject, progress) => {
-            const fileIdentifier = Utils.guid();
+            const blobKey = Utils.guid();
+            const blobPath = blobKey;
 
-            await this.blobStorage.uploadBlob(fileIdentifier, content, contentType)
-                .progress(progress)
-                .then(() => this.blobStorage.getDownloadUrl(fileIdentifier))
-                .then(async uri => {
-                    const mediaId = `${uploadsPath}/${Utils.guid()}`;
-                    const permalinkKey = `${permalinksPath}/${fileIdentifier}`;
+            await this.blobStorage
+                .uploadBlob(blobPath, content, contentType)
+                .progress(progress);
 
-                    const media: MediaContract = {
-                        key: mediaId,
-                        filename: name,
-                        description: "",
-                        keywords: "",
-                        downloadUrl: uri,
-                        permalinkKey: permalinkKey,
-                        contentType: contentType
-                    };
+            const uri = await this.blobStorage.getDownloadUrl(blobKey);
+            const mediaKey = `${uploadsPath}/${blobKey}`;
+            const permalinkKey = `${permalinksPath}/${blobKey}`;
 
-                    const permalink: IPermalink = {
-                        key: permalinkKey,
-                        targetKey: mediaId,
-                        uri: `/content/${name}`
-                    };
+            const media: MediaContract = {
+                key: mediaKey,
+                filename: name,
+                blobKey: blobKey,
+                description: "",
+                keywords: "",
+                downloadUrl: uri,
+                permalinkKey: permalinkKey,
+                contentType: contentType
+            };
 
-                    await Promise.all([this.objectStorage.addObject(mediaId, media), this.objectStorage.addObject(permalinkKey, permalink)]);
+            const permalink: IPermalink = {
+                key: permalinkKey,
+                targetKey: mediaKey,
+                uri: `/content/${name}`
+            };
 
-                    resolve({
-                        media: media,
-                        permalink: permalink
-                    });
-                });
+            await Promise.all([
+                this.objectStorage.addObject(mediaKey, media),
+                this.objectStorage.addObject(permalinkKey, permalink)
+            ]);
+
+            resolve({
+                media: media,
+                permalink: permalink
+            });
         });
     }
 

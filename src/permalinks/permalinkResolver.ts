@@ -13,7 +13,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         this.permalinkResolvers = permalinkResolvers;
     }
 
-    public async getUriByPermalinkKey(permalinkKey: string): Promise<string> {
+    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
         if (!permalinkKey) {
             throw "Permalink key cannot be null or empty.";
         }

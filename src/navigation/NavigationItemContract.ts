@@ -1,7 +1,7 @@
 ﻿/**
  * Data structure describing a navigation items like menus.
  */
-export interface INavigationItem {
+export interface NavigationItemContract {
     /**
      * Own key.
      */
@@ -25,5 +25,5 @@ export interface INavigationItem {
     /**
      * Child navigation items.
      */
-    navigationItems?: Array<INavigationItem>;
+    navigationItems?: Array<NavigationItemContract>;
 }

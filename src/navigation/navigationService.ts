@@ -1,7 +1,7 @@
 ﻿import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IEventManager } from '../events/IEventManager';
 import { INavigationService } from '../navigation/INavigationService';
-import { INavigationItem } from '../navigation/INavigationItem';
+import { NavigationItemContract } from '../navigation/NavigationItemContract';
 import { NavigationEvents } from '../navigation/navigationEvents';
 
 const navigationItemsPath = "navigationItems";
@@ -18,15 +18,15 @@ export class NavigationService implements INavigationService {
         this.getNavigationItem = this.getNavigationItem.bind(this);
     }
 
-    public getNavigationItem(navigationItemKey: string): Promise<INavigationItem> {
-        return this.objectStorage.getObject<INavigationItem>(navigationItemKey);
+    public getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract> {
+        return this.objectStorage.getObject<NavigationItemContract>(navigationItemKey);
     }
 
-    public getNavigationItems(): Promise<Array<INavigationItem>> {
-        return this.objectStorage.searchObjects<INavigationItem>(navigationItemsPath);
+    public getNavigationItems(): Promise<Array<NavigationItemContract>> {
+        return this.objectStorage.searchObjects<NavigationItemContract>(navigationItemsPath);
     }
 
-    public async updateNavigationItem(navigationItem: INavigationItem): Promise<void> {
+    public async updateNavigationItem(navigationItem: NavigationItemContract): Promise<void> {
         var path = navigationItem.key;
 
         await this.objectStorage.updateObject(path, navigationItem);

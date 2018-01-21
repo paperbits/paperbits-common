@@ -15,7 +15,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         this.mediaService = mediaService;
     }
 
-    public async getUriByPermalinkKey(permalinkKey: string): Promise<string> {
+    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
         let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {

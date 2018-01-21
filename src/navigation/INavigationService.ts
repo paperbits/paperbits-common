@@ -1,7 +1,7 @@
-﻿import { INavigationItem } from '../navigation/INavigationItem';
+﻿import { NavigationItemContract } from '../navigation/NavigationItemContract';
 
 export interface INavigationService {
-    getNavigationItem(navigationItemKey: string): Promise<INavigationItem>;
-    updateNavigationItem(navigationItem: INavigationItem): Promise<void>;
-    getNavigationItems(): Promise<Array<INavigationItem>>;
+    getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract>;
+    updateNavigationItem(navigationItem: NavigationItemContract): Promise<void>;
+    getNavigationItems(): Promise<Array<NavigationItemContract>>;
 }

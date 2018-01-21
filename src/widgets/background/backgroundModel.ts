@@ -25,7 +25,7 @@ export class BackgroundModel {
 
     constructor() {
         this.sourceType = "none";
-        this.size = "cover";
+        this.size = "contain";
         this.position = "center center";
         this.repeat = "no-repeat";
     }

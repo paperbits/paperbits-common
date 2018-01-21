@@ -7,7 +7,7 @@ export interface IBlobStorage {
 
     downloadBlob?(path: string): Promise<Uint8Array>;
 
-    getDownloadUrl(permalink: string): Promise<string>;
+    getDownloadUrl(blobKey: string): Promise<string>;
     
     deleteBlob(path: string): Promise<void>;
 }

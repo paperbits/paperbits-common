@@ -9,11 +9,7 @@ import { BackgroundModel } from "../background/backgroundModel";
 
 
 export class PictureModelBinder implements IModelBinder {
-    private readonly permalinkResolver: IPermalinkResolver;
-
-    constructor(permalinkResolver: IPermalinkResolver) {
-        this.permalinkResolver = permalinkResolver;
-    }
+    constructor(private readonly permalinkResolver: IPermalinkResolver) { }
 
     public canHandleWidgetType(widgetType: string): boolean {
         return widgetType === "picture";
@@ -23,17 +19,17 @@ export class PictureModelBinder implements IModelBinder {
         return model instanceof PictureModel;
     }
 
-    public async nodeToModel(pictureNode: PictureContract): Promise<PictureModel> {
+    public async nodeToModel(pictureContract: PictureContract): Promise<PictureModel> {
         let pictureModel = new PictureModel();
-        pictureModel.caption = pictureNode.caption;
-        pictureModel.layout = pictureNode.layout;
-        pictureModel.animation = pictureNode.animation ? pictureNode.animation : "none";
+        pictureModel.caption = pictureContract.caption;
+        pictureModel.layout = pictureContract.layout;
+        pictureModel.animation = pictureContract.animation ? pictureContract.animation : "none";
         pictureModel.background = new BackgroundModel();
 
-        if (pictureNode.sourceKey) {
+        if (pictureContract.sourceKey) {
             try {
-                pictureModel.background.sourceUrl = await this.permalinkResolver.getUriByPermalinkKey(pictureNode.sourceKey);
-                pictureModel.background.sourceKey = pictureNode.sourceKey;
+                pictureModel.background.sourceUrl = await this.permalinkResolver.getUrlByPermalinkKey(pictureContract.sourceKey);
+                pictureModel.background.sourceKey = pictureContract.sourceKey;
             }
             catch (error) {
                 console.log(error);

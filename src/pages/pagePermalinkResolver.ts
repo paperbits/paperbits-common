@@ -13,7 +13,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         this.pageService = pageService;
     }
 
-    public async getUriByPermalinkKey(permalinkKey: string): Promise<string> {
+    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
         let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {
