@@ -1,6 +1,6 @@
 ﻿import { IHighlightConfig } from "./IHighlightConfig";
 import { IContextualEditor } from "./IContextualEditor";
-import { IEditorSession } from "./IEditorSession";
+import { IView } from "./IView";
 import { ProgressPromise } from '../progressPromise';
 import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
@@ -19,7 +19,7 @@ export interface IViewManager {
 
     addPromiseProgressIndicator<T>(task: Promise<T>, title: string, content: string);
 
-    openWorkshop(heading: string, componentName: string, parameters?: any): void;
+    openViewAsWorkshop(heading: string, componentName: string, parameters?: any): void;
 
     journeyName(): string;
 
@@ -41,7 +41,7 @@ export interface IViewManager {
 
     scheduleIndicatorRemoval(indicator: any): void;
 
-    updateJourneyComponent(component: IEditorSession);
+    updateJourneyComponent(component: IView);
 
     clearJourney(): void;
 
@@ -53,15 +53,15 @@ export interface IViewManager {
 
     unfoldEverything(): void;
 
-    openWorkshop(componentName: string, parameters?: any): IEditorSession;
+    openViewAsWorkshop(componentName: string, parameters?: any): IView;
 
-    closeWorkshop(editor: IEditorSession | string);
+    closeWorkshop(editor: IView | string);
 
     openUploadDialog(): Promise<Array<File>>;
 
-    setWidgetEditor(editorSession: IEditorSession);
+    openViewAsPopup(view: IView);
 
-    getWidgetEditorSession(): IEditorSession;
+    getWidgetview(): IView;
 
     setContextualEditor(editorName: string, contextualEditor: IContextualEditor);
 
