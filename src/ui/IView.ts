@@ -6,7 +6,7 @@ export interface IView {
     component: IComponent;
 
     /**
-     * Allowed values: "vertically", "horizontally" and "all".
+     * Allowed values: "vertically", "horizontally".
      */
     resize?: string;
 }
