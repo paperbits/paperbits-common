@@ -51,7 +51,7 @@ export function createComponent(nodeName: string, attributes: Object): HTMLEleme
     return htmlElement;
 }
 
-export function readUrlAsBlob(url: string): ProgressPromise<Uint8Array> {
+export function downloadFile(url: string): ProgressPromise<Uint8Array> {
     return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
         var xhr = new XMLHttpRequest();
         xhr.responseType = "arraybuffer";
@@ -86,8 +86,8 @@ export function readFileAsByteArray(file: File): ProgressPromise<Uint8Array> {
     });
 }
 
-export function readBlobAsDataUrl(file: Blob): ProgressPromise<string> {
-    return readDataUrlFromReader(reader => reader.readAsDataURL(file));
+export function readBlobAsDataUrl(blob: Blob): ProgressPromise<string> {
+    return readDataUrlFromReader(reader => reader.readAsDataURL(blob));
 }
 
 function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressPromise<string> {
@@ -151,9 +151,9 @@ export function stringToUnit8Array(content: string): Uint8Array {
 }
 
 export function uint8ArrayToString(bytes: Uint8Array): string {
-    let binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join('');
+    const binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join('');
 
-    var content = binstr.replace(/(.)/g, (m, p) => {
+    const content = binstr.replace(/(.)/g, (m, p) => {
         var code = p.charCodeAt(p).toString(16).toUpperCase();
 
         if (code.length < 2) {

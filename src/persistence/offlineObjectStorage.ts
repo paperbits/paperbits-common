@@ -8,10 +8,6 @@ import { LruCache } from "../caching/lruCache";
 import { IPermalinkService } from '../permalinks/IPermalinkService';
 import { IObjectStorageMiddleware } from './IObjectStorageMiddleware';
 
-const ActionProperty = "action";
-const ActionAdd = "add";
-const ActionUpdate = "update";
-
 
 export class OfflineObjectStorage implements IObjectStorage {
     private underlyingStorage: IObjectStorage;      //for storage
