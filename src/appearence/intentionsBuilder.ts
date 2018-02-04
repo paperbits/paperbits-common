@@ -61,8 +61,6 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             name: string,
             scope: string): IIntentionsBuilder {
 
-            console.log(this.prefix)
-            console.log(path)
             const parent = this.buildHierarchy(this.prefix);
             const intentionSupplier = (vp) => parent["viewports"][vp][path];
             
@@ -70,10 +68,6 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             
             const current = parent[path];
             current["for"] = intentionSupplier;
-
-            if (this.prefix == "text.alignment"){
-                console.log(this.intentions["text"]["alignment"][path])
-            }
             
             this.scope("viewports", viewportsBuilder=> {
                 const viewPorts = ["xs", "sm", "md", "lg", "xl"];
