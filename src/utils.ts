@@ -1,5 +1,6 @@
 ﻿import { ProgressPromise } from './progressPromise';
 import { Object } from 'es6-shim';
+import { fail } from 'assert';
 
 export interface IFunctionBag {
     (): void;
@@ -395,7 +396,7 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
     }
 }
 
-export function leaves(source: any): any[]{
+export function leaves(source: any, ignoreRoot: boolean = true): any[]{
     let output = [];
 
     const q = [];
@@ -405,8 +406,10 @@ export function leaves(source: any): any[]{
     let keys = Object.keys(source);
 
     if (keys.length === 0){
-        output.push(source);
-        return;
+        if (ignoreRoot === false) {
+            output.push(source);
+        }
+        return output;
     }
 
     let node: any = source;
