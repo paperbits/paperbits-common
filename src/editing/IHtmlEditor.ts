@@ -1,5 +1,6 @@
 ﻿import { IHyperlink } from "../permalinks/IHyperlink";
 import { IBag } from '../IBag';
+import { Intention } from "../appearence/intention";
 
 export var formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
@@ -20,7 +21,7 @@ export class SelectionState {
     public code: boolean;
     public ol: boolean;
     public ul: boolean;
-    public intentions: IBag<string[]>;
+    public intentions: any;
 }
 
 export interface ISelectionPosition {
@@ -45,26 +46,7 @@ export interface IHtmlEditor {
     toggleH6(): void;
     toggleQuote(): void;
     toggleCode(): void;
-
-    /**
-     * Toggles alignment category.
-     */
-    toggleAlignment(intentionFn: string | string[]): void;
-
-    /**
-     * Toggles color category.
-     */
-    toggleColor(intentionFn: string | string[]): void;
-
-    /**
-     * Toggles specific category, i.e. "color" or "alignment".
-     * 
-     * @param {string} category Name of category.
-     * @param {string} intentionFn Intention function name or list of function names.
-     * @param {string} type Can be either "block" or "inline".
-     */
-    toggleCategory(category: string, intentionFn: string | string[], type: string): void;
-    toggleIntention(category: string, intentionFn: string | string[], type: string): void;
+    toggleIntention(intention: Intention): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;
@@ -79,6 +61,7 @@ export interface IHtmlEditor {
     getState(): Object;
     setState(state: Object): void;
     getSelectionText(): string;
+    removeAllIntentions(): void;
 }
 
 export class HtmlEditorEvents {

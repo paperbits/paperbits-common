@@ -1,14 +1,16 @@
-import { Intention, IIntentionsBuilder, IntentionsMap } from "./intention";
-import { Array } from "es6-shim";
+import { Intention, IIntentionsBuilder, IntentionsMap, IntentionWithViewport } from "./intention";
+import { Array, Object } from "es6-shim";
 import { IntentionsUtils } from "./intentionsUtils";
 
 export class Interface {
     public Name: string;
     public Scopes: Array<Interface>;
     public Intentions: Array<Intention>;
+    public IsViewportContainer: boolean;
 
-    constructor(name: string){
+    constructor(name: string, isViewportContainer: boolean = false){
         this.Name = name;
+        this.IsViewportContainer = isViewportContainer;
         this.Scopes = new Array<Interface>();
         this.Intentions = new Array<Intention>();
     }
@@ -31,27 +33,24 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         private intentions : IntentionsMap = <IntentionsMap>{};
         private prefix: string;
     
-        public addIntention(
+    public addIntention(
             path: string, 
             category: string,
             name: string,
             scope: string,
             viewport?: string): IIntentionsBuilder{
             
+            const lastSegment: string = path;
             path = this.combinePath(path);
-            const lastSegment: string = path.substring(path.lastIndexOf(".") + 1);
-            const parent = this.buildHierarchy(path);
+            const intention : Intention= this.buildHierarchy(path);
             const cssClass = this.findClass(path, viewport);
-            const intention : Intention= {
-                category: category,
-                name: () => name,
-                scope: scope,
-                styles: () => cssClass,
-                id: lastSegment,
-                fullId: path
-            };
+            intention.category = category;
+            intention.name= () => name;
+            intention.scope= scope;
+            intention.params= () => cssClass;
+            intention.id= lastSegment;
+            intention.fullId= path;
 
-            parent[lastSegment] = intention;
             this.interfaceDefinition.Intentions.push(intention);
 
             return this;
@@ -61,7 +60,21 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             category: string,
             name: string,
             scope: string): IIntentionsBuilder {
+
+            console.log(this.prefix)
+            console.log(path)
+            const parent = this.buildHierarchy(this.prefix);
+            const intentionSupplier = (vp) => parent["viewports"][vp][path];
+            
             this.addIntention(path, category, name, scope);
+            
+            const current = parent[path];
+            current["for"] = intentionSupplier;
+
+            if (this.prefix == "text.alignment"){
+                console.log(this.intentions["text"]["alignment"][path])
+            }
+            
             this.scope("viewports", viewportsBuilder=> {
                 const viewPorts = ["xs", "sm", "md", "lg", "xl"];
                 viewPorts.forEach(viewPort => {
@@ -85,7 +98,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             this.interfaceDefinition = currentInterfaceDefinition.Scopes.find(scope => scope.Name === this.prefix);
             if (!this.interfaceDefinition)
             {
-                this.interfaceDefinition = new Interface(this.prefix);
+                this.interfaceDefinition = new Interface(this.prefix, this.prefix.endsWith("viewports"));
                 currentInterfaceDefinition.Scopes.push(this.interfaceDefinition);
             }
             
@@ -111,7 +124,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             contracts += "THIS IS AUTO-GENERATED CODE.\n";
             contracts += "DO NOT MODIFY THIS FILE DIRECTLY OTHERWISE ALL CHANGES WILL BE LOST.\n";
             contracts += "********************************************************************/\n"; 
-            contracts +="\nimport { Intention, IntentionsMap } from '@paperbits/common/appearence/intention'\n";
+            contracts +="\nimport { Intention, IntentionsMap, IntentionWithViewport } from '@paperbits/common/appearence/intention'\n";
             
             contracts = this.appendInterface(contracts, this.interfaceDefinition);
 
@@ -123,20 +136,18 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             const segments: Array<string> = path.split(".");
             let node: Object = this.intentions;
             for(var i = 0; i < segments.length; i++){
-                if (i === segments.length - 1) {
-                    return node;       
-                }
-                else if (node[segments[i]]){
+                if (node[segments[i]]){
                     node = node[segments[i]];
                 }
                 else {
-                    node = node[segments[i]] = {};
+                    node[segments[i]] = {};
+                    node = node[segments[i]];
                 }
             }
-            return this.intentions;
+            return node;
         }
 
-        private findClass(path: string, viewport?: string) : string {
+        private findClass(path: string, viewport?: string) : any {
             const segments: Array<string> = path.split(".");
             let node: Object = this.theme;
             for(var i = 0; i < segments.length; i++){
@@ -170,7 +181,8 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             let interfaceName = definition.Name === 'Root' ? "Intentions" : "Intentions_" + definition.Name;
             interfaceName = this.replaceAll(interfaceName,".", "_");
             stringBuilder += "\nexport interface " + interfaceName + " extends IntentionsMap{\n";
-            definition.Scopes.forEach(scope => {
+
+            definition.Scopes.filter(s => !s.IsViewportContainer).forEach(scope => {
                 let fieldName = scope.Name.substring(scope.Name.lastIndexOf(".") + 1);
                 stringBuilder += 
                     "\t" + 
@@ -179,15 +191,18 @@ export class IntentionsBuilder implements IIntentionsBuilder {
                     this.replaceAll(this.replaceAll(scope.Name, ".", "_"), "-", "_") + 
                     ";\n";
             });
+            const hasViewports = !!definition.Scopes.find(_ => _.IsViewportContainer);
+            const intentionClassName = hasViewports ? "IntentionWithViewport" : "Intention";
+
             definition.Intentions.forEach(intention => {
                 stringBuilder += 
                     "\t" + 
                     this.replaceAll(this.replaceAll(intention.id, ".", "_"), "-", "_") + 
-                    ": Intention;\n";
+                    ": " + intentionClassName + ";\n";
             });
             stringBuilder += "}\n";
-            
-            definition.Scopes.forEach(scope => {
+
+            definition.Scopes.filter(s => !s.IsViewportContainer).forEach(scope => {
                 stringBuilder = this.appendInterface(stringBuilder, scope);
             });
 

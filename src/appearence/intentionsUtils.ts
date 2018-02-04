@@ -12,7 +12,7 @@ export class IntentionsUtils
     }
 
     private static addIntentions(intentions: any, result: Array<Intention>){
-        Object.getOwnPropertyNames(intentions).forEach(key => {
+        Object.getOwnPropertyNames(intentions).filter(n => n !== "for").forEach(key => {
             if (intentions[key].fullId){
                 result[intentions[key].fullId] = intentions[key];
             } else {

@@ -31,7 +31,7 @@ export class AnchorMiddleware implements IObjectStorageMiddleware {
         // const headingNodes = Utils.findNodesRecursively(node => node["type"] && node["type"] === "heading-one", changesObject);
 
         // const promises = headingNodes.map(async headingNode => {
-        //     if (headingNode["data"] && headingNode["data"]["categories"] && headingNode["data"]["categories"]["anchorKey"]) {
+        //     if (headingNode["data"] && headingNode["data"]["intentions"] && headingNode["data"]["intentions"]["anchorKey"]) {
         //         return;
         //     }
 

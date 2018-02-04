@@ -68,16 +68,13 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     private setStateObjectAt(key: string, source: Object): void {
-        let stateTarget = Utils.setStructure(key, this.stateObject);
-        Utils.patchObject(stateTarget, source);
+        Utils.mergeDeepAt(key, this.stateObject, source);
     }
 
     private setChangesObjectAt(key: string, source: Object): void {
         Utils.cleanupObject(source);
 
-        let changesTarget = Utils.setStructure(key, this.changesObject);
-
-        Utils.patchObject(changesTarget, source);
+        Utils.mergeDeepAt(key, this.changesObject, source);
     }
 
     public async addObject(key: string, dataObject: Object): Promise<void> {

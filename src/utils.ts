@@ -1,4 +1,5 @@
 ﻿import { ProgressPromise } from './progressPromise';
+import { Object } from 'es6-shim';
 
 export interface IFunctionBag {
     (): void;
@@ -183,30 +184,119 @@ export function cleanupObject(source: Object): void {
     }
 }
 
-export function patchObject(target: Object, source: Object): void {
-    Object.assign(target, source);
-    
-    // Object.keys(source).forEach(key => {
-    //     if (target[key]) {
-    //         if (typeof source[key] === "object" && typeof target[key] === "object") {
-    //             patchObject(target[key], source[key]);
-    //         }
-    //         else {
-    //             if (source[key] !== undefined) {
-    //                 target[key] = source[key];
-    //             }
-    //         }
-    //     }
-    //     else {
-    //         if (source[key] !== undefined) {
-    //             target[key] = source[key];
-    //         }
-    //     }
-    // });
+/**
+ * Simple object check.
+ * @param item
+ * @returns {boolean}
+ */
+export function isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
-export function setStructure(path: string, target: Object): Object {
-    const segments = path.split("/");
+export function mergeDeepAt(path: String, target: any, source: any) {
+    let updatingObject = this.setStructure(path, target);
+    updatingObject = this.mergeDeep(updatingObject, source);
+    this.setValue(path, target, updatingObject);
+}
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function mergeDeep(target, source) {
+    let output = Object.assign({}, target);
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if (!(key in target)){
+                    Object.assign(output, { [key]: source[key] });
+                } else {
+                    output[key] = mergeDeep(target[key], source[key]);
+                }
+            } else {
+                Object.assign(output, { [key]: source[key] });
+            }
+        });
+    }
+    return output;
+}
+
+export function intersectDeepMany(target, nonObjectHandler: (target: any, source: any, key: string) => any, ...sources: any[]) {
+    let result = target;
+    sources.forEach(source => {
+        result = this.intersectDeep(result, nonObjectHandler, source);
+    })
+    return result;
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function intersectDeep(target, nonObjectHandler: (target: any, source: any, key: string) => any, source: any) {
+    let output : any = null;
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if ((key in target)) {
+                    const intersection = intersectDeep(target[key], nonObjectHandler, source[key]);
+                    if (intersection && Object.keys(intersection).length > 0) {
+                        output = output || {};
+                        output[key] = intersection;
+                    }
+                }
+            } else {
+                if (nonObjectHandler){
+                    const value = nonObjectHandler(target, source, key);
+                    if (value !== undefined){
+                        output = output || {};
+                        output[key] = value;
+                    }
+                }
+            }
+        });
+    }
+    return output;
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function complementDeep(target: any, treatEmptyAsComplete: boolean, source) : any {
+    let output = {};
+    if (isObject(target) && isObject(source)) {
+        Object.keys(target).forEach(key => {
+            if (isObject(target[key])) {
+                if (!(key in target))
+                    Object.assign(output, { [key]: target[key] });
+                else{
+                    const value = complementDeep(target[key], treatEmptyAsComplete, source[key]);
+                    if (value) {
+                        output[key] = value;
+                    }
+                }
+            } else {
+                //Array are not supported
+            }
+        });
+    } else if (isObject(target)) {
+        if (!treatEmptyAsComplete){
+            Object.keys(target).forEach(key => {
+                Object.assign(output, { [key]: target[key] });
+            });
+        }
+    }
+    if (isObject(output) && Object.keys(output).length === 0){
+        return null;
+    }
+    return output;
+}
+
+export function setStructure(path: string, target: Object, delimiter: string = "/"): Object {
+    const segments = path.split(delimiter);
     let segmentObject = target;
 
     segments.forEach(segment => {
@@ -217,6 +307,28 @@ export function setStructure(path: string, target: Object): Object {
     });
 
     return segmentObject;
+}
+
+export function replace(path: string, target: Object, value: any, delimiter: string = "/"): Object {
+    target = JSON.parse(JSON.stringify(target))
+    const segments = path.split(delimiter);
+    let segmentObject = target;
+    let segment: string;
+    let parent: any = target;
+
+    segments.forEach(s => {
+        if (!segmentObject[s]) {
+            segmentObject[s] = {};
+        }
+        parent = segmentObject;
+        segmentObject = segmentObject[s];
+        segment = s;
+    });
+
+    if (segment){
+        parent[segment] = value;
+    }
+    return target;
 }
 
 export function setValue(path: string, target: Object, value: any): void {
@@ -281,4 +393,41 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
     else {
         throw `Method "elementsFromPoint" not supported by browser.`
     }
+}
+
+export function leaves(source: any): any[]{
+    let output = [];
+
+    const q = [];
+    if (!isObject(source)) {
+        return output;
+    }
+    let keys = Object.keys(source);
+
+    if (keys.length === 0){
+        output.push(source);
+        return;
+    }
+
+    let node: any = source;
+
+    keys.map(key => ({ key, node })).forEach(i => q.push(i));
+
+    let iterator = q.pop();
+    while (iterator){
+        const node = iterator.node[iterator.key]
+        if (!isObject(node)) {
+            return output;
+        }
+        
+        if (node.fullId){
+            output.push(node);
+        } else {
+            Object.keys(node).map(key => ({ key, node })).forEach(i => q.push(i));
+        }
+
+        iterator = q.pop();
+    }
+
+    return output;
 }
