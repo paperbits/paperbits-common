@@ -57,12 +57,12 @@ export class TextblockModelBinder implements IModelBinder {
         for (let i = 0; i < nodes.length; i++) {
             let node = nodes[i];
 
-            if (node && node["data"] && node["data"]["categories"] && node["data"]["categories"]["anchorKey"]) {
-                const anchorKey = node["data"]["categories"]["anchorKey"];
+            if (node && node["data"] && node["data"]["intentions"] && node["data"]["intentions"]["anchorKey"]) {
+                const anchorKey = node["data"]["intentions"]["anchorKey"];
                 const anchorPermalink = await this.permalinkService.getPermalinkByKey(anchorKey);
 
                 if (anchorPermalink) {
-                    node["data"]["categories"]["anchorId"] = anchorPermalink.uri;
+                    node["data"]["intentions"]["anchorId"] = anchorPermalink.uri;
                 }
                 else {
                     // TODO: Show permalink is broken somehow

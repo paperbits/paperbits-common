@@ -1,5 +1,5 @@
 export interface Intention{
-    styles: () => string;
+    params: () => any;
     id: string;
     fullId: string;
     category: string, 
@@ -7,8 +7,13 @@ export interface Intention{
     scope: string;
 }
 
+export interface IntentionWithViewport extends Intention{
+	for: (viewport: string) => Intention;
+}
+
 export interface IntentionsMap{
     flattenMap: Array<Intention>;
+    [key]: Intention;
 }
 
 export interface IIntentionsBuilder
