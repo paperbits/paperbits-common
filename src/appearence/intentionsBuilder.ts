@@ -59,7 +59,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         const parent = this.buildHierarchy(this.prefix);
         const intentionSupplier = (vp) => vp ? parent[vp][path] : parent[path];
         
-        this.addIntentionInternal(path, name, scope);
+        this.addIntentionInternal(path, name, scope, null);
         
         const current = parent[path];
         current["for"] = intentionSupplier;
@@ -173,7 +173,8 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         for(var i = 0; i < segments.length; i++){
             const segment = segments[i];
             if (IntentionsBuilder.viewPorts.find(vp => vp === segment)){
-                const cssClass = (<string>node["viewports"][segments[i + 1]]).replace("%viewport%", segment);
+                node = node[segments[i + 1]];
+                const cssClass = typeof node === 'function' ? node(segment) : node;
                 return cssClass;
             }
             if (node[segment]){

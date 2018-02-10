@@ -205,6 +205,9 @@ export function mergeDeepAt(path: String, target: any, source: any) {
  * @param ...sources
  */
 export function mergeDeep(target, source) {
+    if (!isObject(target)){
+        return JSON.parse(JSON.stringify(source));
+    }
     let output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach(key => {
