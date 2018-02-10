@@ -1,8 +1,6 @@
 export interface Intention{
     params: () => any;
-    id: string;
     fullId: string;
-    category: string, 
     name: () => string,
     scope: string;
 }
