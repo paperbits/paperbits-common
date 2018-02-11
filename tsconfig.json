@@ -14,8 +14,7 @@
         "allowUnreachableCode": true,
         "listFiles": false,
         "inlineSourceMap": true,
-        "inlineSources": true,
-        "jsx": "react"
+        "inlineSources": true
     },
     "compileOnSave": false,
     "include": [
