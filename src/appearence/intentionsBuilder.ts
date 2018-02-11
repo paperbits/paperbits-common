@@ -169,7 +169,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
 
     private findClass(path: string, viewport?: string) : any {
         const segments: Array<string> = path.split(".");
-        let node: Object = this.theme;
+        let node: any = this.theme;
         for(var i = 0; i < segments.length; i++){
             const segment = segments[i];
             if (IntentionsBuilder.viewPorts.find(vp => vp === segment)){

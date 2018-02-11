@@ -47,8 +47,6 @@ export class PageModelBinder implements IModelBinder {
             return new PlaceholderModel();
         }
 
-        console.log(pageUrl);
-
         let type = "page";
 
         if (!pageContract.key) {
