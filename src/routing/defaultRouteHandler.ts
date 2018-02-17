@@ -26,7 +26,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         addEventListener("popstate", () => this.navigateTo(location.pathname));
     }
 
-    public addRouteChangeListener(eventHandler: () => void): void {
+    public addRouteChangeListener(eventHandler: (args?) => void): void {
         this.eventManager.addEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
