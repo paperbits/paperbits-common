@@ -1,6 +1,4 @@
-import * as $ from "jquery";
 import { TutorialStep } from "../tutorials/tutorialStep";
-
 
 export class Tutorial {
     private currentStepNum = 0;
@@ -33,7 +31,7 @@ export class Tutorial {
         //     "value": elapsedTime
         // });
 
-        $(this.arrowElement).remove();
+        this.arrowElement.parentElement.remove();
         this.arrowElement = null;
         this.currentStepNum += 1;
 
@@ -124,16 +122,16 @@ export class Tutorial {
     private scrollToTarget(trackedElement: HTMLElement): void {
         var step = this.tutorialSteps[this.currentStepNum];
 
-        (<any>$(trackedElement)).scrollintoview({
-            duration: 500,
-            direction: "vertical",
-            complete: function () {
-                (<any>$(this.arrowElement)).scrollintoview({
-                    duration: 500,
-                    direction: "vertical"
-                });
-            }
-        });
+        // (<any>$(trackedElement)).scrollintoview({
+        //     duration: 500,
+        //     direction: "vertical",
+        //     complete: function () {
+        //         (<any>$(this.arrowElement)).scrollintoview({
+        //             duration: 500,
+        //             direction: "vertical"
+        //         });
+        //     }
+        // });
     }
 
     private findElement(searchFunction: () => HTMLElement): Promise<HTMLElement> {
@@ -172,7 +170,7 @@ export class Tutorial {
             trackedElement = targetElement;
         }
 
-        this.arrowElement = $(`<div class="arrow"><span class="step-number">${this.currentStepNum + 1}</span>${step.arrowText}</div>`)[0];
+        // this.arrowElement = $(`<div class="arrow"><span class="step-number">${this.currentStepNum + 1}</span>${step.arrowText}</div>`)[0];
 
         if (step.targetElementFixed) {
             this.arrowElement.classList.add("arrow-fixed");

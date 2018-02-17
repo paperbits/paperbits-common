@@ -20,7 +20,6 @@
         "firebase": "^4.3.0",
         "hasher": "^1.2.0",
         "inversify": "^4.3.0",
-        "jquery": "^3.2.1",
         "lity": "^2.3.0",
         "lodash": "^4.17.4",
         "moment": "^2.18.1",
@@ -29,7 +28,6 @@
     },
     "devDependencies": {
         "@types/es6-shim": "^0.31.34",
-        "@types/jquery": "^3.2.11",
         "@types/knockout": "^3.4.44",
         "@types/node": "^8.0.24",
         "gulp": "^3.9.1",

@@ -1,4 +1,3 @@
-import * as $ from "jquery";
 import { DragSourceConfig } from "../../ui/draggables/dragSourceConfig";
 import { DragManager } from "../../ui/draggables/dragManager";
 
