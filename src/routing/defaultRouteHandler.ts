@@ -1,52 +1,40 @@
-﻿import { IEventManager } from '../events/IEventManager';
-import { IRouteHandler } from '../routing/IRouteHandler';
-import { debug } from 'util';
+﻿import { IEventManager } from "../events/IEventManager";
+import { IRouteHandler } from "../routing/IRouteHandler";
+
 
 export class RouteHandlerEvents {
     static onRouteChange = "onRouteChange";
 }
 
 export class DefaultRouteHandler implements IRouteHandler {
-    private readonly eventManager: IEventManager;
-
-    private hash: string;
+    private path: string;
     private notificationEnabled: boolean;
 
-    constructor(eventManager: IEventManager) {
+    constructor(
+        private readonly eventManager: IEventManager
+    ) {
         // initialization...
         this.eventManager = eventManager;
 
         // rebinding...
-        this.handleHashChangeEvent = this.handleHashChangeEvent.bind(this);
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
 
         // setting up...
-        this.hash = window.location.hash;
+        this.path = "";
         this.notificationEnabled = true;
 
-        // subscribing for events...
-        window.addEventListener("hashchange", this.handleHashChangeEvent, false);
+        addEventListener("popstate", () => this.navigateTo(location.pathname));
     }
 
-    private handleHashChangeEvent(): void {
-        if (this.hash && this.hash !== location.hash && `#${this.hash}` !== location.hash) {
-            this.hash = location.hash;
-
-            if (this.notificationEnabled) {
-                this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
-            }
-        }
+    public addRouteChangeListener(eventHandler: () => void): void {
+        this.eventManager.addEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public addRouteChangeListener(callback: () => void): any {
-        return this.eventManager.addEventListener(RouteHandlerEvents.onRouteChange, callback);
+    public removeRouteChangeListener(eventHandler: (args?) => void): void {
+        this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public removeRouteChangeListener(handle: any) {
-        this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, handle);
-    }
-
-    public navigateTo(url: string, notifyListeners: boolean = true) {
+    public navigateTo(url: string, notifyListeners: boolean = true): void {
         if (!url) {
             return;
         }
@@ -59,11 +47,11 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
-        const hash = isFullUrl
+        const path = isFullUrl
             ? url.substring(location.origin.length)
             : url;
 
-        if (hash === location.hash || `#${hash}` === location.hash) {
+        if (path === this.path) {
             return;
         }
 
@@ -71,8 +59,9 @@ export class DefaultRouteHandler implements IRouteHandler {
             this.notificationEnabled = false;
         }
 
-        this.hash = hash;
-        location.hash = hash;
+        this.path = path;
+
+        history.pushState(null, null, path);
 
         if (this.notificationEnabled) {
             this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
@@ -84,7 +73,7 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public getCurrentUrl(): string {
-        var permalink = this.hash.replace("#", "");
+        let permalink = this.path;
 
         if (permalink === "") {
             permalink = location.pathname;
