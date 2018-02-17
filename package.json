@@ -15,10 +15,8 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
-        "crossroads": "^0.12.2",
         "es6-shim": "^0.35.3",
         "firebase": "^4.3.0",
-        "hasher": "^1.2.0",
         "inversify": "^4.3.0",
         "lity": "^2.3.0",
         "lodash": "^4.17.4",
