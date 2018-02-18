@@ -23,7 +23,7 @@ export class DefaultEventManager implements IEventManager {
     }
 
     public removeEventListener(eventName: string, eventHandler: (...args) => void): void {
-        const listener = this.eventListeners.first(listener =>
+        const listener = this.eventListeners.find(listener =>
             listener.eventName === eventName &&
             listener.eventHandler === eventHandler);
 
