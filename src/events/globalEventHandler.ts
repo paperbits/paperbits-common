@@ -40,6 +40,7 @@ export class GlobalEventHandler {
         doc.addEventListener("pointermove", this.onPointerMove.bind(this), true);
         doc.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
         doc.addEventListener("pointerup", this.onPointerUp.bind(this), true);
+        doc.defaultView.window.addEventListener("error", this.onError.bind(this), true);
     }
 
     public onKeyDown(event: KeyboardEvent): void {
@@ -119,6 +120,10 @@ export class GlobalEventHandler {
 
     private onPaste(event: ClipboardEvent): void {
         this.eventManager.dispatchEvent("onPaste", event);
+    }
+
+    private onError(event: ErrorEvent): void {
+        this.eventManager.dispatchEvent("onError", event);
     }
 
     public addDragStartListener(callback): void {

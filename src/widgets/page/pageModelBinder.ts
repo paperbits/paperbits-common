@@ -84,7 +84,7 @@ export class PageModelBinder implements IModelBinder {
 
     private async getPageNotFound(): Promise<IPermalink> {
         if (!this.pageNotFound) {
-            this.pageNotFound = await this.permalinkService.getPermalinkByUrl("/404.html");
+            this.pageNotFound = await this.permalinkService.getPermalinkByUrl("/404");
         }
         return this.pageNotFound;
     }
