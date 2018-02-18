@@ -1,6 +1,6 @@
 ﻿import { IHyperlink } from "../permalinks/IHyperlink";
 import { IBag } from '../IBag';
-import { Intention } from "../appearence/intention";
+import { Intention } from "../appearance/intention";
 
 export var formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
@@ -47,6 +47,7 @@ export interface IHtmlEditor {
     toggleQuote(): void;
     toggleCode(): void;
     toggleIntention(intention: Intention): void;
+    setIntention(intention: Intention): void;
     resetToNormal(): void;
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;

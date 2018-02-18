@@ -145,7 +145,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         contracts += "THIS IS AUTO-GENERATED CODE.\n";
         contracts += "DO NOT MODIFY THIS FILE MANUALLY, OTHERWISE ALL CHANGES WILL BE LOST.\n";
         contracts += "********************************************************************/\n"; 
-        contracts +="\nimport { Intention, IntentionsMap, IntentionWithViewport } from '@paperbits/common/appearence/intention'\n";
+        contracts +="\nimport { Intention, IntentionsMap, IntentionWithViewport } from '@paperbits/common/appearance/intention'\n";
         
         contracts = this.appendInterface(contracts, this.interfaceDefinition);
 
