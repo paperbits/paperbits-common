@@ -19,6 +19,7 @@
         "es6-shim": "^0.35.3",
         "firebase": "^4.3.0",
         "hasher": "^1.2.0",
+        "immutable": "^3.8.2",
         "inversify": "^4.3.0",
         "jquery": "^3.2.1",
         "lity": "^2.3.0",

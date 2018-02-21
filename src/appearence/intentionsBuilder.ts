@@ -1,5 +1,6 @@
 import { Intention, IIntentionsBuilder, IntentionsMap, IntentionWithViewport } from "./intention";
 import { Array, Object } from "es6-shim";
+import { Record, Map } from "immutable";
 import { IntentionsUtils } from "./intentionsUtils";
 
 export class Interface {
@@ -13,6 +14,28 @@ export class Interface {
         this.IsViewportContainer = isViewportContainer;
         this.Scopes = new Array<Interface>();
         this.Intentions = new Array<Intention>();
+    }
+}
+
+export class IntentionRecord extends Record({ 
+    params: () => {},
+    fullId: "",
+    name: () => "",
+    scope: "",
+    for: (viewport: string) => <Intention>{} }) {
+
+    params: () => any;
+    fullId: string;
+    name: () => string;
+    scope: string;
+    for: (viewport: string) => Intention;
+
+    constructor(params?: Intention) {
+        params ? super(params) : super();
+    }
+
+    with(values: Intention) {
+        return this.merge(values) as this;
     }
 }
 
@@ -33,61 +56,61 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         }
     }
 
-    private intentions : IntentionsMap = <IntentionsMap>{};
+    private intentions : Map<string, any> = Map();
     private prefix: string;
     private viewportContainer: boolean;
     
     public addIntention(
-            path: string,
+            id: string,
             name: string,
             scope: string): IIntentionsBuilder{
             
         if (this.viewportContainer === true){
-            this.addIntentionPerViewPort(path, name, scope);
+            this.addIntentionPerViewPort(id, name, scope);
         } else {
-            this.addIntentionInternal(path, name, scope);
+            this.addIntentionInternal(id, name, scope);
         }
 
         return this;
     }
         
     public addIntentionPerViewPort(
-        path: string, 
+        id: string, 
         name: string,
         scope: string): IIntentionsBuilder {
 
-        const parent = this.buildHierarchy(this.prefix);
-        const intentionSupplier = (vp) => vp ? parent[vp][path] : parent[path];
+        const path = this.combinePath(id).split(".");
+        let parent = this.intentions.getIn(path);
+        const intentionSupplier = (vp) => vp ? parent.get(vp).get(id) : parent.get(id);
         
-        this.addIntentionInternal(path, name, scope, null);
+        this.addIntentionInternal(id, name, scope, null);
         
-        const current = parent[path];
-        current["for"] = intentionSupplier;
+        this.intentions = this.intentions.updateIn(path, (val: IntentionRecord) => val.set("for", intentionSupplier));
         
         IntentionsBuilder.viewPorts.forEach(viewPort => {
             this.scope(viewPort, viewportBuilder => {
-                return viewportBuilder.addIntentionInternal(path, name, scope, viewPort);
+                return viewportBuilder.addIntentionInternal(id, name, scope, viewPort);
             })
         });
         return this;
     }
 
     private addIntentionInternal(
-        path: string, 
+        id: string, 
         name: string,
         scope: string,
         viewport?: string): IIntentionsBuilder {
         
-        path = this.combinePath(path);
-        const intention : Intention= this.buildHierarchy(path);
+        const path = this.combinePath(id);
         const cssClass = this.findClass(path, viewport);
-        intention.name= () => name;
-        intention.scope= scope;
-        intention.params= () => cssClass;
-        intention.fullId= path;
-
+        const intention : IntentionRecord = new IntentionRecord({
+            name: () => name,
+            scope: scope,
+            params: () => cssClass,
+            fullId: path
+        });
+        this.intentions = this.intentions.setIn(path.split("."), intention);
         this.interfaceDefinition.Intentions.push(intention);
-
         return this;
     }
 
@@ -133,38 +156,20 @@ export class IntentionsBuilder implements IIntentionsBuilder {
     }
 
     public build(): any {
-        if (!this.intentions.flattenMap){
-            this.intentions.flattenMap = IntentionsUtils.flatten(this.intentions);
-        }
         return this.intentions;
     }
 
-    public generateContracts(): string{
+    public generateContracts(): string {
         let contracts : string = "";
         contracts += "/********************************************************************\n"; 
         contracts += "THIS IS AUTO-GENERATED CODE.\n";
         contracts += "DO NOT MODIFY THIS FILE MANUALLY, OTHERWISE ALL CHANGES WILL BE LOST.\n";
         contracts += "********************************************************************/\n"; 
         contracts +="\nimport { Intention, IntentionsMap, IntentionWithViewport } from '@paperbits/common/appearence/intention'\n";
-        
+
         contracts = this.appendInterface(contracts, this.interfaceDefinition);
 
         return contracts;
-    }        
-
-    private buildHierarchy(path: string) : any {
-        const segments: Array<string> = path.split(".");
-        let node: Object = this.intentions;
-        for(var i = 0; i < segments.length; i++){
-            if (node[segments[i]]){
-                node = node[segments[i]];
-            }
-            else {
-                node[segments[i]] = {};
-                node = node[segments[i]];
-            }
-        }
-        return node;
     }
 
     private findClass(path: string, viewport?: string) : any {
