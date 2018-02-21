@@ -1,7 +1,7 @@
 export interface Intention{
     params: () => any;
     fullId: string;
-    name: () => string,
+    name: () => string;
     scope: string;
 }
 
@@ -10,7 +10,6 @@ export interface IntentionWithViewport extends Intention{
 }
 
 export interface IntentionsMap{
-    flattenMap: Array<Intention>;
     [key]: Intention;
 }
 
