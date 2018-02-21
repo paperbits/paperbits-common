@@ -43,6 +43,9 @@ export class IntentionRecord extends Record({
 export class IntentionsBuilder implements IIntentionsBuilder {
     
     private static viewPorts = ["xs", "sm", "md", "lg", "xl"];
+    private static RESTRICTED_WORDS = {
+        size: true
+    };
         
     constructor(private theme: any,
         private interfaceDefinition?: Interface,
@@ -80,18 +83,20 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         scope: string): IIntentionsBuilder {
 
         const path = this.combinePath(id).split(".");
-        let parent = this.intentions.getIn(path);
-        const intentionSupplier = (vp) => vp ? parent.get(vp).get(id) : parent.get(id);
         
         this.addIntentionInternal(id, name, scope, null);
-        
-        this.intentions = this.intentions.updateIn(path, (val: IntentionRecord) => val.set("for", intentionSupplier));
-        
+
         IntentionsBuilder.viewPorts.forEach(viewPort => {
             this.scope(viewPort, viewportBuilder => {
                 return viewportBuilder.addIntentionInternal(id, name, scope, viewPort);
             })
         });
+
+        const parentPath = this.prefix.split(".");
+        const self = this;
+        const intentionSupplier = (vp) => vp ? this.intentions.getIn(parentPath).get(vp).get(id) : this.intentions.getIn(parentPath).get(id);
+        this.intentions = this.intentions.updateIn(path, (val: IntentionRecord) => val.set("for", intentionSupplier));
+        
         return this;
     }
 
@@ -100,6 +105,10 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         name: string,
         scope: string,
         viewport?: string): IIntentionsBuilder {
+        
+        if (IntentionsBuilder.RESTRICTED_WORDS[id]){
+            id = id+"_";
+        }
         
         const path = this.combinePath(id);
         const cssClass = this.findClass(path, viewport);
@@ -129,6 +138,10 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             throw new Error("Nested viewport container scopes are not allowed.")
         }
 
+        if (IntentionsBuilder.RESTRICTED_WORDS[prefix]){
+            prefix = prefix+"_";
+        }
+
         //save
         const currentPrefix = this.prefix;
         const currentInterfaceDefinition = this.interfaceDefinition;
@@ -156,7 +169,36 @@ export class IntentionsBuilder implements IIntentionsBuilder {
     }
 
     public build(): any {
+
+        let obj = this.intentions.toObject();
+        this.intentions = Record(obj)();
+        this.intentions = this.convert(this.intentions);
+
         return this.intentions;
+    }
+
+    private convert(container: Map<string, any>){
+        const keys = container.keySeq().toArray();
+        var current = container;
+        keys.forEach(k => {
+            //if this field is IntentionRecord then we don't need to convert
+            if (current.get(k).fullId){
+                return;
+            }
+            const obj = current.get(k).toObject();
+            let record = Record(obj)();
+            current = current.set(k, record)
+        });
+        keys.forEach(k => {
+            //if this field is IntentionRecord then we don't need to convert
+            if (current.get(k).fullId){
+                return;
+            }
+            const newRec = this.convert(current.get(k));
+            current = current.set(k, newRec);
+        });
+        
+        return current;
     }
 
     public generateContracts(): string {

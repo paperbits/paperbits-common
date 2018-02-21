@@ -1,4 +1,5 @@
 import { Intention } from "./intention";
+import { Record } from "immutable";
 
 export class IntentionsUtils
 {
@@ -30,12 +31,12 @@ export class IntentionsUtils
         return result;
     }
 
-    private static addIntentionsToArray(intentions: any, result: Array<Intention>){
-        Object.getOwnPropertyNames(intentions).forEach(key => {
-            if (intentions[key].fullId){
-                result.push(intentions[key]);
+    private static addIntentionsToArray(intentions: Record<string, any>, result: Array<Intention>){
+        intentions.toSeq().forEach((value, key) => {
+            if (value.fullId){
+                result.push(value);
             } else {
-                this.addIntentionsToArray(intentions[key], result);
+                this.addIntentionsToArray(value, result);
             }
         });
     }
