@@ -36,8 +36,6 @@ export interface IHtmlEditor {
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
-    toggleUl(): void;
-    toggleOl(): void;
     toggleH1(): void;
     toggleH2(): void;
     toggleH3(): void;
@@ -62,7 +60,9 @@ export interface IHtmlEditor {
     getState(): Object;
     setState(state: Object): void;
     getSelectionText(): string;
-    removeAllIntentions(): void;
+    setList(intention: Intention);
+    incIndent(): void;
+    decIndent(): void;
 }
 
 export class HtmlEditorEvents {

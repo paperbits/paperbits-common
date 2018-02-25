@@ -3,6 +3,7 @@ export interface Intention{
     fullId: string;
     name: () => string;
     scope: string;
+    properties: any;
 }
 
 export interface IntentionWithViewport extends Intention{

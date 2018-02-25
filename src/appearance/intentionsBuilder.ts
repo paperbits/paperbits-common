@@ -22,13 +22,15 @@ export class IntentionRecord extends Record({
     fullId: "",
     name: () => "",
     scope: "",
-    for: (viewport: string) => <Intention>{} }) {
+    for: (viewport: string) => <Intention>{},
+    properties: {} }) {
 
     params: () => any;
     fullId: string;
     name: () => string;
     scope: string;
     for: (viewport: string) => Intention;
+    properties: any;
 
     constructor(params?: Intention) {
         params ? super(params) : super();
@@ -116,7 +118,8 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             name: () => name,
             scope: scope,
             params: () => cssClass,
-            fullId: path
+            fullId: path,
+            properties: null
         });
         this.intentions = this.intentions.setIn(path.split("."), intention);
         this.interfaceDefinition.Intentions.push(intention);
@@ -172,12 +175,12 @@ export class IntentionsBuilder implements IIntentionsBuilder {
 
         let obj = this.intentions.toObject();
         this.intentions = Record(obj)();
-        this.intentions = this.convert(this.intentions);
+        this.intentions = this.convert(this.intentions, "");
 
         return this.intentions;
     }
 
-    private convert(container: Map<string, any>){
+    private convert(container: Map<string, any>, prefix: string){
         const keys = container.keySeq().toArray();
         var current = container;
         keys.forEach(k => {
@@ -185,8 +188,9 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             if (current.get(k).fullId){
                 return;
             }
-            const obj = current.get(k).toObject();
-            let record = Record(obj)();
+            let obj = current.get(k).toObject();
+            obj = Object.assign(obj, { name: prefix + k });
+            const record = Record(obj)();
             current = current.set(k, record)
         });
         keys.forEach(k => {
@@ -194,7 +198,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             if (current.get(k).fullId){
                 return;
             }
-            const newRec = this.convert(current.get(k));
+            const newRec = this.convert(current.get(k), prefix + k + ".");
             current = current.set(k, newRec);
         });
         
@@ -246,6 +250,8 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         let interfaceName = definition.Name === 'Root' ? "Intentions" : "Intentions_" + definition.Name;
         interfaceName = this.replaceAll(interfaceName,".", "_");
         stringBuilder += "\nexport interface " + interfaceName + " extends IntentionsMap{\n";
+
+        stringBuilder += "\tname: string;\n";
 
         definition.Scopes.forEach(scope => {
             let fieldName = scope.Name.substring(scope.Name.lastIndexOf(".") + 1);
