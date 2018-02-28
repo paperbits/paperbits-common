@@ -4,6 +4,7 @@ export interface Intention{
     name: () => string;
     scope: string;
     properties: any;
+    groupId: string;
 }
 
 export interface IntentionWithViewport extends Intention{

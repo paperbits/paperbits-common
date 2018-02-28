@@ -191,7 +191,7 @@ export function cleanupObject(source: Object): void {
  * @returns {boolean}
  */
 export function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+    return item !== undefined && (item && typeof item === 'object' && !Array.isArray(item));
 }
 
 export function mergeDeepAt(path: String, target: any, source: any) {
@@ -273,17 +273,13 @@ export function complementDeep(target: any, treatEmptyAsComplete: boolean, sourc
     let output = {};
     if (isObject(target) && isObject(source)) {
         Object.keys(target).forEach(key => {
-            if (isObject(target[key])) {
-                if (!(key in target))
-                    Object.assign(output, { [key]: target[key] });
-                else{
-                    const value = complementDeep(target[key], treatEmptyAsComplete, source[key]);
-                    if (value) {
-                        output[key] = value;
-                    }
+            if (!(key in source)) {
+                Object.assign(output, { [key]: target[key] });
+            } else if (isObject(target[key])) {
+                const value = complementDeep(target[key], treatEmptyAsComplete, source[key]);
+                if (value) {
+                    output[key] = value;
                 }
-            } else {
-                //Array are not supported
             }
         });
     } else if (isObject(target)) {
@@ -351,8 +347,8 @@ export function setValue(path: string, target: Object, value: any): void {
     segmentObject[segments[segments.length - 1]] = value;
 }
 
-export function getObjectAt<T>(path: string, source: Object): T {
-    const segments = path.split("/");
+export function getObjectAt<T>(path: string, source: Object, delimiter: string = "/"): T {
+    const segments = path.split(delimiter);
     let segmentObject = source;
 
     for (var i = 0; i < segments.length; i++) {
@@ -421,9 +417,15 @@ export function leaves(source: any, ignoreRoot: boolean = true): any[]{
 
     let iterator = q.pop();
     while (iterator){
-        const node = iterator.node[iterator.key]
+        const node = iterator.node[iterator.key];
+        
         if (!isObject(node)) {
-            return output;
+            if (q.length > 0){
+                iterator = q.pop();
+                continue;
+            } else {
+                return output;
+            }
         }
         
         if (node.fullId){

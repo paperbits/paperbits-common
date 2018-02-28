@@ -33,6 +33,9 @@ export class IntentionsUtils
 
     private static addIntentionsToArray(intentions: Record<string, any>, result: Array<Intention>){
         intentions.toSeq().forEach((value, key) => {
+            if (key === "name"){
+                return;
+            }
             if (value.fullId){
                 result.push(value);
             } else {

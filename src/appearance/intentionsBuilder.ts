@@ -23,7 +23,8 @@ export class IntentionRecord extends Record({
     name: () => "",
     scope: "",
     for: (viewport: string) => <Intention>{},
-    properties: {} }) {
+    properties: {},
+    groupId: "" }) {
 
     params: () => any;
     fullId: string;
@@ -31,6 +32,7 @@ export class IntentionRecord extends Record({
     scope: string;
     for: (viewport: string) => Intention;
     properties: any;
+    groupId: string;
 
     constructor(params?: Intention) {
         params ? super(params) : super();
@@ -64,6 +66,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
     private intentions : Map<string, any> = Map();
     private prefix: string;
     private viewportContainer: boolean;
+    private groupId: string;
     
     public addIntention(
             id: string,
@@ -119,7 +122,8 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             scope: scope,
             params: () => cssClass,
             fullId: path,
-            properties: null
+            properties: null,
+            groupId: this.groupId
         });
         this.intentions = this.intentions.setIn(path.split("."), intention);
         this.interfaceDefinition.Intentions.push(intention);
@@ -129,13 +133,26 @@ export class IntentionsBuilder implements IIntentionsBuilder {
     public scopePerViewport(
         prefix: string, 
         buildAction: (IntentionsBuilder) => IIntentionsBuilder): IIntentionsBuilder{
-        return this.scope(prefix, buildAction, true);
+        return this.scope(prefix, buildAction, true, false);
+    }
+
+    public groupPerViewport(
+        prefix: string, 
+        buildAction: (IntentionsBuilder) => IIntentionsBuilder): IIntentionsBuilder{
+        return this.scope(prefix, buildAction, true, true);
+    }
+
+    public group(
+        prefix: string, 
+        buildAction: (IntentionsBuilder) => IIntentionsBuilder): IIntentionsBuilder {
+            return this.scope(prefix, buildAction, false, true);
     }
         
     public scope(
         prefix: string, 
         buildAction: (IntentionsBuilder) => IIntentionsBuilder,
-        viewportContainer: boolean = false): IIntentionsBuilder {
+        viewportContainer: boolean = false,
+        isGroup: boolean = false): IIntentionsBuilder {
 
         if (this.viewportContainer && viewportContainer){
             throw new Error("Nested viewport container scopes are not allowed.")
@@ -149,9 +166,11 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         const currentPrefix = this.prefix;
         const currentInterfaceDefinition = this.interfaceDefinition;
         const currentViewportContainer = this.viewportContainer;
+        const currentGroupId = this.groupId;
         this.prefix = this.combinePath(prefix);
         this.viewportContainer = viewportContainer;
-
+        
+        this.groupId = this.prefix;
         this.interfaceDefinition = currentInterfaceDefinition.Scopes.find(scope => scope.Name === this.prefix);
         if (!this.interfaceDefinition)
         {
@@ -168,6 +187,7 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         this.interfaceDefinition = currentInterfaceDefinition;
         this.prefix = currentPrefix;
         this.viewportContainer = currentViewportContainer;
+        this.groupId = currentGroupId;
         return result;
     }
 
@@ -184,6 +204,9 @@ export class IntentionsBuilder implements IIntentionsBuilder {
         const keys = container.keySeq().toArray();
         var current = container;
         keys.forEach(k => {
+            if (k === "name"){
+                return;
+            }
             //if this field is IntentionRecord then we don't need to convert
             if (current.get(k).fullId){
                 return;
@@ -194,6 +217,9 @@ export class IntentionsBuilder implements IIntentionsBuilder {
             current = current.set(k, record)
         });
         keys.forEach(k => {
+            if (k === "name"){
+                return;
+            }
             //if this field is IntentionRecord then we don't need to convert
             if (current.get(k).fullId){
                 return;
