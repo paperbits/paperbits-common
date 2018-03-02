@@ -31,7 +31,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        let media = await this.mediaService.getMediaByKey(permalink.targetKey);
+        const media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
         if (media) {
             return media.downloadUrl;
