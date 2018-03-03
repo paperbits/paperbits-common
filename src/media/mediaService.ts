@@ -78,10 +78,9 @@ export class MediaService implements IMediaService {
     public createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia> {
         return new ProgressPromise<ICreatedMedia>(async (resolve, reject, progress) => {
             const blobKey = Utils.guid();
-            const blobPath = blobKey;
 
             await this.blobStorage
-                .uploadBlob(blobPath, content, contentType)
+                .uploadBlob(blobKey, content, contentType)
                 .progress(progress);
 
             const uri = await this.blobStorage.getDownloadUrl(blobKey);
