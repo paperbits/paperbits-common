@@ -17,7 +17,7 @@ export class DragTarget {
         element.addEventListener("mousemove", this.onPointerMove, false);
     }
 
-    private onPointerMove(event: PointerEvent) {
+    private onPointerMove(event: MouseEvent) {
         event.stopPropagation();
 
         if (!this.dragManager.dragged)

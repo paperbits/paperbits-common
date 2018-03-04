@@ -37,9 +37,9 @@ export class GlobalEventHandler {
         doc.addEventListener("drop", this.onDragDrop.bind(this), true);
         doc.addEventListener("dragend", this.onDragEnd.bind(this), true);
         doc.addEventListener("paste", this.onPaste.bind(this), true);
-        doc.addEventListener("pointermove", this.onPointerMove.bind(this), true);
-        doc.addEventListener("pointerdown", this.onPointerDown.bind(this), true);
-        doc.addEventListener("pointerup", this.onPointerUp.bind(this), true);
+        doc.addEventListener("mousemove", this.onPointerMove.bind(this), true);
+        doc.addEventListener("mousedown", this.onPointerDown.bind(this), true);
+        doc.addEventListener("mouseup", this.onPointerUp.bind(this), true);
         doc.defaultView.window.addEventListener("error", this.onError.bind(this), true);
     }
 
@@ -72,15 +72,15 @@ export class GlobalEventHandler {
         this.eventManager.dispatchEvent("onEscape");
     }
 
-    private onPointerMove(event: PointerEvent): void {
+    private onPointerMove(event: MouseEvent): void {
         this.eventManager.dispatchEvent("onPointerMove", event);
     }
 
-    private onPointerDown(event: PointerEvent): void {
+    private onPointerDown(event: MouseEvent): void {
         this.eventManager.dispatchEvent("onPointerDown", event);
     }
 
-    private onPointerUp(event: PointerEvent): void {
+    private onPointerUp(event: MouseEvent): void {
         this.eventManager.dispatchEvent("onPointerUp", event);
     }
 

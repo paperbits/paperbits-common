@@ -218,14 +218,14 @@ export class Tutorial {
                 trackedElement.addEventListener("dblclick", dblclickHandler);
                 break;
 
-            case "pointerdown":
+            case "mousedown":
                 var pointerdownHandler = () => {
                     if (step.isComplete(trackedElement)) {
-                        trackedElement.removeEventListener("pointerdown", pointerdownHandler);
+                        trackedElement.removeEventListener("mousedown", pointerdownHandler);
                         this.completeStep();
                     }
                 };
-                trackedElement.addEventListener("pointerdown", pointerdownHandler);
+                trackedElement.addEventListener("mousedown", pointerdownHandler);
                 break;
         }
     }

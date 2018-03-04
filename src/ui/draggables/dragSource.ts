@@ -19,10 +19,10 @@ export class DragSource {
 
         this.onPointerDown = this.onPointerDown.bind(this);
 
-        element.addEventListener("pointerdown", this.onPointerDown);
+        element.addEventListener("mousedown", this.onPointerDown);
     }
 
-    private onPointerDown(event: PointerEvent): void {
+    private onPointerDown(event: MouseEvent): void {
         var targetElement = event.target as HTMLElement;
 
 

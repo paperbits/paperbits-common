@@ -56,7 +56,7 @@ export class DragManager {
         eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
 
-    private onPointerMove(event: PointerEvent): void {
+    private onPointerMove(event: MouseEvent): void {
         this.previousX = this.positionX;
         this.previousY = this.positionY;
 
@@ -189,7 +189,7 @@ export class DragManager {
         this.acceptor = null;
     }
 
-    private onPointerUp(event: PointerEvent): void {
+    private onPointerUp(event: MouseEvent): void {
         clearTimeout(this.startDraggingTimeout);
 
         if (!this.isDragged) {
