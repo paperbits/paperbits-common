@@ -348,6 +348,12 @@ export function setValue(path: string, target: Object, value: any): void {
 }
 
 export function getObjectAt<T>(path: string, source: Object, delimiter: string = "/"): T {
+    if (typeof path !== "string"){
+        return null;
+    }
+    if (typeof source !== "object"){
+        return null;
+    }
     const segments = path.split(delimiter);
     let segmentObject = source;
 
