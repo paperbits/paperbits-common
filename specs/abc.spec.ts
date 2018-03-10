@@ -1,6 +1,24 @@
-import { it, assert } from "mocha";
+import { describe, it, assert } from "mocha";
 
+var abc = (): Promise<string> => {
+    return new Promise<string>((resolve) => {
+        setTimeout(() => {
+            resolve("Hi!");
+        }, 2000);
+    });
+}
 
-it('should complete this test', function (done) {
-    console.log("HELLO");
+describe('My tests', async () => {
+    it('Test 1', async () => {
+
+    });
+
+    it('Test 2', async () => {
+        const result = await abc();
+        console.log(result);
+    });
+
+    it('Test 3', async () => {
+
+    });
 });
