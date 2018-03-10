@@ -7,15 +7,9 @@
             "request": "launch",
             "protocol": "inspector",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-            "args": [
-                "./dist/specs/*.js",
-                "-u", "tdd",
-                "--timeout", "999999",
-                "--colors"
-            ],
+            "args": ["--no-timeouts", "--compilers", "ts:ts-node/register", "${workspaceRoot}/specs/**/*.spec.ts"],
             "stopOnEntry": false,
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "typescript",
             "runtimeExecutable": null,
             "runtimeArgs": [
                 "--nolazy"
