@@ -128,7 +128,10 @@ export class OfflineObjectStorage implements IObjectStorage {
         Utils.setValue(key, this.stateObject, null);
     }
 
-    public async searchObjects<T>(path: string, propertyNames?: Array<string>, searchValue?: string, startAtSearch?: boolean): Promise<Array<T>> {
+    public async searchObjects<T>(pattern: string, options?: Object): Promise<Array<T>> {
+        const path = options["area"];
+        const propertyNames = options["properties"];
+
         let resultObject = {};
         let keys = [];
 
@@ -147,8 +150,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         keys.forEach(key => {
             const matchedObj = Utils.getObjectAt(key, this.stateObject);
 
-            if (propertyNames && propertyNames.length && searchValue) {
-                let searchProps = this.convertToSearchParam(propertyNames, searchValue);
+            if (propertyNames && propertyNames.length && pattern) {
+                let searchProps = this.convertToSearchParam(propertyNames, pattern);
                 let searchProperty = this.searchPropertyInObject(searchProps, startAtSearch, matchedObj);
 
                 if (searchProperty) {
@@ -172,7 +175,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         });
 
         if (this.isOnline) {
-            let objects = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
+            let objects = await this.underlyingStorage.searchObjects<T>(pattern, options);
 
             objects.forEach(item => {
                 let key;
