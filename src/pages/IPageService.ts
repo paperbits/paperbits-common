@@ -8,7 +8,7 @@ export interface IPageService {
     /**
      * Searches for pages that contain specified pattern in their title, description or keywords.
      */
-    searchPages(pattern: string): Promise<Array<PageContract>>;
+    search(pattern: string): Promise<Array<PageContract>>;
 
     /**
      * Returns a page by sepcified key;

@@ -15,12 +15,16 @@ export class PageService implements IPageService {
         this.objectStorage = objectStorage;
     }
 
+    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<PageContract>> {
+        return await this.objectStorage.searchObjects<PageContract>(pagesPath, tags, tagValue, startAtSearch);
+    }
+
     public async getPageByKey(key: string): Promise<PageContract> {
         return await this.objectStorage.getObject<PageContract>(key);
     }
 
-    public async searchPages(pattern: string): Promise<Array<PageContract>> {
-        return await this.objectStorage.searchObjects<PageContract>(pagesPath, { area: pagesPath, properties: "title" });
+    public search(pattern: string): Promise<Array<PageContract>> {
+        return this.searchByTags(["title"], pattern, true);
     }
 
     public async deletePage(page: PageContract): Promise<void> {

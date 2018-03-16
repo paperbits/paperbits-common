@@ -15,8 +15,8 @@ export class BlogService implements IBlogService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByTags(tags: Array<string>, tagValue: string): Promise<Array<BlogPostContract>> {
-        return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue);
+    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<BlogPostContract>> {
+        return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
     }
 
     public async getBlogPostByKey(key: string): Promise<BlogPostContract> {
@@ -24,7 +24,7 @@ export class BlogService implements IBlogService {
     }
 
     public search(pattern: string): Promise<Array<BlogPostContract>> {
-        return this.searchByTags(["title"], pattern);
+        return this.searchByTags(["title"], pattern, true);
     }
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
