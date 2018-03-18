@@ -1,7 +1,6 @@
 const gulp = require("gulp");
 const typescript = require("typescript");
 const typescriptCompiler = require("gulp-typescript");
-const sourcemaps = require("gulp-sourcemaps");
 const merge = require("merge2");
 const mocha = require("gulp-mocha");
 

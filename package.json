@@ -1,6 +1,6 @@
 {
     "name": "@paperbits/common",
-    "version": "0.0.61",
+    "version": "0.0.118",
     "description": "Paperbits common components.",
     "author": "Vienna LLC",
     "license": "GPL-3.0",
@@ -31,7 +31,6 @@
         "@types/node": "^8.0.24",
         "gulp": "^3.9.1",
         "gulp-mocha": "^4.3.1",
-        "gulp-sourcemaps": "^2.6.1",
         "gulp-typescript": "^3.2.1",
         "merge2": "^1.1.0",
         "mocha": "^3.5.3",
