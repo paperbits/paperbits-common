@@ -1,5 +1,4 @@
-﻿import { IFile } from '../files/IFile';
-import { LayoutContract } from '../layouts/layoutContract';
+﻿import { LayoutContract } from '../layouts/layoutContract';
 
 export interface ILayoutService {
     search(pattern: string): Promise<Array<LayoutContract>>;

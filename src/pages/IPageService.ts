@@ -1,5 +1,4 @@
-﻿import { IFile } from '../files/IFile';
-import { PageContract } from '../pages/pageContract';
+﻿import { PageContract } from '../pages/pageContract';
 
 /**
  * Service for managing pages.
@@ -11,7 +10,7 @@ export interface IPageService {
     search(pattern: string): Promise<Array<PageContract>>;
 
     /**
-     * Returns a page by sepcified key;
+     * Returns a page by specified key;
      */
     getPageByKey(key: string): Promise<PageContract>;
 

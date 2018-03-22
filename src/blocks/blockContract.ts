@@ -1,6 +1,6 @@
 ﻿import { Contract } from "../contract";
 
-export interface IBlock {
+export interface BlockContract extends Contract {
     key?: string;
     title: string;
     description: string;

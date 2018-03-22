@@ -1,12 +1,12 @@
 ﻿import * as Utils from '../utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IBlobStorage } from '../persistence/IBlobStorage';
-import { IBlock } from './IBlock';
 import { IBlockService } from './IBlockService';
 import { IPermalinkService } from "./../permalinks/IPermalinkService";
 import { IPermalink } from '../permalinks/IPermalink';
 import { ProgressPromise } from '../progressPromise';
 import { Contract } from '../contract';
+import { BlockContract } from './blockContract';
 
 const blockPath = "blocks";
 
@@ -17,18 +17,18 @@ export class BlockService implements IBlockService {
         this.objectStorage = objectStorage;
     }
 
-    public getBlockByKey(key: string): Promise<IBlock> {
+    public getBlockByKey(key: string): Promise<BlockContract> {
         if (!key.startsWith(blockPath)) {
             return null;
         }
-        return this.objectStorage.getObject<IBlock>(key);
+        return this.objectStorage.getObject<BlockContract>(key);
     }
 
-    public async search(pattern: string): Promise<IBlock[]> {
-        return await this.objectStorage.searchObjects<IBlock>(blockPath);
+    public async search(pattern: string): Promise<BlockContract[]> {
+        return await this.objectStorage.searchObjects<BlockContract>(blockPath);
     }
 
-    public async deleteBlock(block: IBlock): Promise<void> {
+    public async deleteBlock(block: BlockContract): Promise<void> {
         try {
             await this.objectStorage.deleteObject(block.key);
         }
@@ -41,7 +41,7 @@ export class BlockService implements IBlockService {
     public async createBlock(title: string, description: string, content: Contract): Promise<void> {
         const key = `${blockPath}/${Utils.guid()}`;
 
-        const block: IBlock = {
+        const block: BlockContract = {
             key: key,
             title: title,
             description: description,
@@ -51,7 +51,7 @@ export class BlockService implements IBlockService {
         await this.objectStorage.updateObject(key, block);
     }
 
-    public updateBlock(block: IBlock): Promise<void> {
+    public updateBlock(block: BlockContract): Promise<void> {
         return this.objectStorage.updateObject(block.key, block);
     }
 }
