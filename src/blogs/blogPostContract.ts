@@ -8,4 +8,7 @@ export interface BlogPostContract {
     contentKey?: string;
     permalinkKey?: string;
     anchors?: IBag<string>;
+    created?: string;
+    updated?: string;
+    author?: string;
 }
