@@ -1,4 +1,4 @@
-# Paperbits common libraries
+# Paperbits common components
 
 Paperbits is a library of reusable tools and components helping you build web apps with rich content authoring experience for users. It includes in-place editing, advanced drag & drop interface, real-time collaboration, offline capabilities, push-notifications and many other modern features.
 
