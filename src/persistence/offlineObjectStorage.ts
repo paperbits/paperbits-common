@@ -203,32 +203,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         console.log("Saving changes...");
 
-        let saveTasks = [];
-        let keys = [];
-
-        Object.keys(this.changesObject).map(key => {
-            let firstLevelObject = this.changesObject[key];
-
-            Object.keys(firstLevelObject).forEach(subkey => {
-                keys.push(`${key}/${subkey}`);
-            });
-        })
-
-        keys.forEach(key => {
-            let changeObject = Utils.getObjectAt(key, this.changesObject);
-
-            Utils.cleanupObject(changeObject);
-
-            if (changeObject) {
-                saveTasks.push(this.underlyingStorage.updateObject(key, changeObject));
-            }
-            else {
-                saveTasks.push(this.underlyingStorage.deleteObject(key));
-            }
-        })
-
-        await Promise.all(saveTasks);
-
+        await this.underlyingStorage.saveChanges(this.changesObject);
+        
         this.changesObject = {};
 
         console.log("Saved.");
