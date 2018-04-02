@@ -3,7 +3,7 @@
     "version": "0.0.70",
     "description": "Paperbits common components.",
     "author": "Vienna LLC",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/paperbits/paperbits-common.git"
