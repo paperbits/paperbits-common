@@ -2,7 +2,6 @@
 import { IPermalink } from '../permalinks/IPermalink';
 import { PageContract } from '../pages/pageContract';
 import { IPageService } from '../pages/IPageService';
-import { IFile } from '../files/IFile';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import * as _ from 'lodash';
 

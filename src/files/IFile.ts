@@ -1,6 +1,6 @@
 import { Contract } from "./../contract";
 
-export interface IFile {
+export interface FileContract {
     key: string;
     mimeType?: string;
     size?: number;

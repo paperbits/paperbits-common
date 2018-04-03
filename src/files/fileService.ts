@@ -1,6 +1,6 @@
 ﻿import { Contract } from "./../contract";
 import * as Utils from '../utils';
-import { IFile } from '../files/IFile';
+import { FileContract } from '../files/IFile';
 import { IFileService } from '../files/IFileService';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 
@@ -13,11 +13,11 @@ export class FileService implements IFileService {
         this.objectStorage = objectStorage;
     }
 
-    public async getFileByKey(key: string): Promise<Contract> {
-        return await this.objectStorage.getObject<Contract>(key);
+    public async getFileByKey(key: string): Promise<FileContract> {
+        return await this.objectStorage.getObject<FileContract>(key);
     }
 
-    public async createFile(contentNode: Contract): Promise<Contract> {
+    public async createFile(contentNode: FileContract): Promise<FileContract> {
         let key = `${filesPath}/${Utils.guid()}`;
 
         if (!contentNode["key"]) {

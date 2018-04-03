@@ -1,4 +1,4 @@
-﻿import { IFile } from '../files/IFile';
+﻿import { FileContract } from '../files/IFile';
 import { BlogPostContract } from '../blogs/BlogPostContract';
 
 export interface IBlogService {

@@ -29,4 +29,6 @@ export interface IObjectStorage {
     updateObject<T>(key: string, dataObject: T): Promise<void>;
 
     searchObjects<T>(key: string, propertyNames?: Array<string>, searchValue?: string, startAtSearch?: boolean): Promise<Array<T>>;
+
+    saveChanges?(delta: Object): Promise<void>;
 }

@@ -1,9 +1,9 @@
 {
     "name": "@paperbits/common",
-    "version": "0.0.118",
+    "version": "0.0.72",
     "description": "Paperbits common components.",
     "author": "Vienna LLC",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/paperbits/paperbits-common.git"

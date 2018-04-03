@@ -2,7 +2,6 @@
 import { IPermalink } from '../permalinks/IPermalink';
 import { BlogPostContract } from '../blogs/BlogPostContract';
 import { IBlogService } from '../blogs/IBlogService';
-import { IFile } from '../files/IFile';
 import { IObjectStorage } from '../persistence/IObjectStorage';
 import * as _ from 'lodash';
 
