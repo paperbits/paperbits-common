@@ -1,10 +1,10 @@
-import { BlogPostContract } from "@paperbits/common/blogs/BlogPostContract";
-import { IBlogService } from "@paperbits/common/blogs/IBlogService";
-import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
-import { IHyperlinkProvider } from "@paperbits/common/ui/IHyperlinkProvider";
-import { HyperlinkModel } from "@paperbits/common/permalinks/hyperlinkModel";
-import { BlogPermalinkResolver } from "@paperbits/common/blogs/blogPermalinkResolver";
-import { IPermalinkService } from "@paperbits/common/permalinks/IPermalinkService";
+import { BlogPostContract } from "../blogs/BlogPostContract";
+import { IBlogService } from "../blogs/IBlogService";
+import { IPermalink } from "../permalinks/IPermalink";
+import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
+import { HyperlinkModel } from "../permalinks/hyperlinkModel";
+import { BlogPermalinkResolver } from "../blogs/blogPermalinkResolver";
+import { IPermalinkService } from "../permalinks/IPermalinkService";
 
 
 export class BlogHyperlinkProvider implements IHyperlinkProvider {

@@ -1,7 +1,7 @@
-import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
-import { IPermalinkService } from "@paperbits/common/permalinks/IPermalinkService";
-import { IHyperlinkProvider } from "@paperbits/common/ui/IHyperlinkProvider";
-import { HyperlinkModel } from "@paperbits/common/permalinks/hyperlinkModel";
+import { IPermalink } from "../permalinks/IPermalink";
+import { IPermalinkService } from "../permalinks/IPermalinkService";
+import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
+import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 export class UrlHyperlinkProvider implements IHyperlinkProvider {
     public readonly name = "Web URL";

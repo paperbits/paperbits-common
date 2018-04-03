@@ -1,11 +1,11 @@
-import { PageContract } from "@paperbits/common/pages/pageContract";
-import { IPageService } from "@paperbits/common/pages/IPageService";
-import { IPermalink } from "@paperbits/common/permalinks/IPermalink";
-import { IHyperlinkProvider } from "@paperbits/common/ui/IHyperlinkProvider";
-import { HyperlinkModel } from "@paperbits/common/permalinks/hyperlinkModel";
-import { PagePermalinkResolver } from "@paperbits/common/pages/pagePermalinkResolver";
-import { PageSelection } from '@paperbits/common/pages/pageSelection';
-import { IPermalinkService } from "@paperbits/common/permalinks/IPermalinkService";
+import { PageContract } from "../pages/pageContract";
+import { IPageService } from "../pages/IPageService";
+import { IPermalink } from "../permalinks/IPermalink";
+import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
+import { HyperlinkModel } from "../permalinks/hyperlinkModel";
+import { PagePermalinkResolver } from "../pages/pagePermalinkResolver";
+import { PageSelection } from '../pages/pageSelection';
+import { IPermalinkService } from "../permalinks/IPermalinkService";
 
 
 export class PageHyperlinkProvider implements IHyperlinkProvider {
