@@ -12,26 +12,47 @@ export class metaDataSetter {
     }
 
     public static setKeywords(keywords: string) {
-        metaDataSetter.setElementByTagName("keywords", keywords);
+        metaDataSetter.setMetaElement(keywords, "keywords");
     }
 
-    public static setDescription(description: string) {
-        metaDataSetter.setElementByTagName("description", description);
+    public static setDescription(description: string) {        
+        metaDataSetter.setMetaElement(description, "description");
     }
 
     public static setAuthor(author: string) {
-        metaDataSetter.setElementByTagName("author", author);
+        metaDataSetter.setMetaElement(author, "author");
     }
 
-    private static setElementByTagName(tagName: string, content: string) {
-        let tag = <HTMLMetaElement> document.head.querySelector(`[name=${tagName}]`);
-        if (tag) {
-            tag.content = content;
-        } else {
-            let meta = new HTMLMetaElement();
-            meta.name = tagName;
-            meta.content = content;
+    public static setScriptElement(content: object, type: string) {
+        let existScript = <HTMLScriptElement>metaDataSetter.getMetaElement("type", type);
+        let script = existScript || document.createElement("script");
+        script.setAttribute("type", type);
+        script.text = JSON.stringify(content);
+        document.head.appendChild(script);
+    }
+
+    public static setMetaObject(data: object, attributeName: string) {
+        Object.keys(data).forEach(attrValue => {
+            metaDataSetter.setMetaElement(data[attrValue], undefined, attributeName, attrValue);
+        });
+    }
+
+    public static setMetaElement(content: string, name?: string, attributeName?: string, attributeValue?: string) {
+        let existMeta = name ? <HTMLMetaElement>metaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>metaDataSetter.getMetaElement(attributeName, attributeValue);
+        let meta = existMeta || document.createElement("meta");
+        if(name) {
+            meta.name = name;
+        }        
+        if(attributeName && attributeValue) {
+            meta.setAttribute(attributeName, attributeValue);
+        }
+        meta.content = content;
+        if (!existMeta) {
             document.head.appendChild(meta);
         }
+    }
+
+    private static getMetaElement(attributeName: string, attributeValue:string) {
+        return attributeName && attributeValue &&  document.head.querySelector(`[${attributeName}=${attributeValue}]`)
     }
 }

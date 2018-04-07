@@ -9,6 +9,13 @@ export interface ISiteSettings {
     keywords?: string;
     faviconPermalinkKey?: string;
     author?: string;
+    /**
+     * Facebook Open Graph settings.
+     */
+    ogSiteName?: string;
+    ogUrl?: string;
+    ogType?: "website" | "article" | "blog";
+    ogImagePermalinkKey?: string;
 }
 
 export interface IIntegrationSettings {
