@@ -10,7 +10,12 @@ export interface IPermalink {
     /**
      * Target entity key.
      */
-    targetKey: string;
+    targetKey?: string;
+
+    /**
+     * Target entity type. Example: "page", "blog", "external".
+     */
+    targetType?: string;
 
     /**
      * Target URL.

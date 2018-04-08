@@ -29,5 +29,5 @@ export interface IWidgetOrder { //to be displayed in UI and enough to build new 
     /**
      * Widget model factory method.
      */
-    createModel(): any;
+    createModel(): Promise<any>;
 }

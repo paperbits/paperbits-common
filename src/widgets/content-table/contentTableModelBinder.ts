@@ -25,22 +25,23 @@ export class ContentTableModelBinder implements IModelBinder {
 
     public async nodeToModel(contentTableContract: { object: string, type: string, title?: string, targetPermalinkKey: string }): Promise<ContentTableModel> {
         let type = "content-table";
-        
+
         let contentTableModel = new ContentTableModel();
         contentTableModel.title = contentTableContract.title;
         contentTableModel.targetPermalinkKey = contentTableContract.targetPermalinkKey;
+
         if (contentTableContract.targetPermalinkKey) {
             const pagePermalink = await this.permalinkService.getPermalink(contentTableContract.targetPermalinkKey);
             const page = await this.pageService.getPageByKey(pagePermalink.targetKey);
-            
+
             if (page.anchors) {
                 contentTableModel.items = [];
-                Object.keys(page.anchors).forEach(async anchorKey => {
+
+                const promises = Object.keys(page.anchors).map(async anchorKey => {
                     const permalinkKey = anchorKey.replaceAll("|", "/");
-                    console.log("permalinkKey: "+ permalinkKey);
                     const anchorPermalink = await this.permalinkService.getPermalink(permalinkKey);
 
-                    let hyperlinkModel = new HyperlinkModel();
+                    const hyperlinkModel = new HyperlinkModel();
                     hyperlinkModel.title = page.anchors[anchorKey];//`${page.title} > ${page.anchors[anchorKey]}`;
                     hyperlinkModel.permalinkKey = permalinkKey;
                     hyperlinkModel.href = `${pagePermalink.uri}#${anchorPermalink.uri}`;
@@ -48,8 +49,9 @@ export class ContentTableModelBinder implements IModelBinder {
 
                     contentTableModel.items.push(hyperlinkModel);
                 });
-                
-            }                       
+
+                await Promise.all(promises);
+            }
         }
         return contentTableModel;
     }

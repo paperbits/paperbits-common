@@ -18,11 +18,6 @@ export interface NavigationItemContract {
     permalinkKey?: string;
 
     /**
-     * URL to external resource this navigation item is pointing to.
-     */
-    externalUrl?: string;
-
-    /**
      * Child navigation items.
      */
     navigationItems?: Array<NavigationItemContract>;

@@ -32,7 +32,12 @@ export interface ISelectionPosition {
 }
 
 export interface IHtmlEditor {
+    attachToElement(element: HTMLElement): void;
+    enable(): void;
+    disable(): void;
+
     getSelectionState(): SelectionState;
+    
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
@@ -50,19 +55,18 @@ export interface IHtmlEditor {
     setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
     removeHyperlink(): void;
     getHyperlink(): IHyperlink;
-    enable(): void;
-    disable(): void;
-    addSelectionChangeListener(callback: () => void): void;
-    removeSelectionChangeListener(callback: () => void): void;
-    renderToContainer(element: HTMLElement): void;
     setSelection(selection: Selection): void;
     expandSelection(): void;
     getState(): Object;
     setState(state: Object): void;
     getSelectionText(): string;
     setList(intention: Intention);
-    incIndent(): void;
-    decIndent(): void;
+    increaseIndent(): void;
+    decreaseIndent(): void;
+
+    /* Events */
+    addSelectionChangeListener(callback: () => void): void;
+    removeSelectionChangeListener(callback: () => void): void;
 }
 
 export class HtmlEditorEvents {

@@ -74,13 +74,11 @@ export class NavbarModelBinder implements IModelBinder {
         }
         else if (navigationItemContract.permalinkKey) {
             const permalink = await this.permalinkService.getPermalinkByKey(navigationItemContract.permalinkKey);
-            const url = permalink ? permalink.uri : "";
-
-            navbarItem.url = url.startsWith("/") ? url : "/" + url;
+            navbarItem.url = permalink.uri;
         }
-        else if (navigationItemContract.externalUrl) {
-            let url = navigationItemContract.externalUrl;
-            navbarItem.url = url;
+        else {
+            console.warn(`No permalink key for item:`);
+            console.warn(navigationItemContract);
         }
         navbarItem.isActive = (navbarItem.url === currentUrl);
 

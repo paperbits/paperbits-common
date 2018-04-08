@@ -29,7 +29,7 @@ export class BlogPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
-        if (permalink.targetKey && permalink.targetKey.startsWith("blogs/")) {
+        if (permalink.targetKey && permalink.targetKey.startsWith("posts/")) {
             const post = await this.blogService.getBlogPostByKey(permalink.targetKey);
 
             let hyperlinkModel = new HyperlinkModel();
