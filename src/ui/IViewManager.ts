@@ -98,4 +98,6 @@ export interface IViewManager {
     loadFavIcon(): Promise<void>;
 
     setTitle?(settings?:ISettings, page?: PageContract): Promise<void>;
+
+    getCurrentPage(): Promise<PageContract>;
 }
