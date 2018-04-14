@@ -1,28 +1,12 @@
 ﻿import { IHyperlink } from "../permalinks/IHyperlink";
 import { IBag } from '../IBag';
 import { Intention } from "../appearance/intention";
+import { SelectionState } from "./selectionState";
 
 export var formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
 
-export class SelectionState {
-    public normal: boolean;
-    public bold: boolean;
-    public italic: boolean;
-    public underlined: boolean;
-    public hyperlink: boolean;
-    public h1: boolean;
-    public h2: boolean;
-    public h3: boolean;
-    public h4: boolean;
-    public h5: boolean;
-    public h6: boolean;
-    public quote: boolean;
-    public code: boolean;
-    public ol: boolean;
-    public ul: boolean;
-    public intentions: any;
-}
+
 
 export interface ISelectionPosition {
     anchorKey: string;
@@ -35,9 +19,7 @@ export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     enable(): void;
     disable(): void;
-
     getSelectionState(): SelectionState;
-    
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
@@ -68,9 +50,3 @@ export interface IHtmlEditor {
     addSelectionChangeListener(callback: () => void): void;
     removeSelectionChangeListener(callback: () => void): void;
 }
-
-export class HtmlEditorEvents {
-    static onSelectionChange = "onSelectionChange";
-    static onEditorDisabled = "onEditorDisabled";
-}
-
