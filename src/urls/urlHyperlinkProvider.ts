@@ -9,7 +9,7 @@ export class UrlHyperlinkProvider implements IHyperlinkProvider {
     public readonly componentName = "url-selector";
 
     public canHandleHyperlink(permalink: IPermalink): boolean {
-        return permalink.targetKey.startsWith("urls/");
+        return permalink.targetKey && permalink.targetKey.startsWith("urls/");
     }
 
     public getHyperlinkFromResource(url: UrlContract): HyperlinkModel {

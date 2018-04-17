@@ -9,7 +9,7 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
     public readonly componentName = "blog-selector";
 
     public canHandleHyperlink(permalink: IPermalink): boolean {
-        return permalink.targetKey.startsWith("posts/");
+        return permalink.targetKey && permalink.targetKey.startsWith("posts/");
     }
 
     public getHyperlinkFromResource(blogPost: BlogPostContract): HyperlinkModel {

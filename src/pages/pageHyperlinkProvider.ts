@@ -9,7 +9,7 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
     public readonly componentName = "page-selector";
 
     public canHandleHyperlink(permalink: IPermalink): boolean {
-        return permalink.targetKey.startsWith("pages/");
+        return permalink.targetKey && permalink.targetKey.startsWith("pages/");
     }
 
     public getHyperlinkFromResource(page: PageContract): HyperlinkModel {

@@ -9,7 +9,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
     public readonly componentName = "media-selector";
 
     public canHandleHyperlink(permalink: IPermalink): boolean {
-        return permalink.targetKey.startsWith("uploads/");
+        return permalink.targetKey && permalink.targetKey.startsWith("uploads/");
     }
 
     public getHyperlinkFromResource(media: MediaContract): HyperlinkModel {
