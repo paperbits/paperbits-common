@@ -7,7 +7,7 @@
             "request": "launch",
             "protocol": "inspector",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-            "args": ["--no-timeouts", "--compilers", "ts:ts-node/register", "${workspaceRoot}/specs/**/*.spec.ts"],
+            "args": ["--no-timeouts", "-r", "ts-node/register", "${workspaceRoot}/specs/**/*.spec.ts"],
             "stopOnEntry": false,
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
