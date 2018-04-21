@@ -19,7 +19,14 @@ export class InversifyInjector implements IInjector {
             debugger;
         }
 
-        var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+        const signature = func.toString();
+        const matches = signature.match(/function.*?\(([^)]*)\)/);
+
+        if (!matches || matches.length < 2) {
+            throw new Error(`Unable to parse function signature: ${signature}`);
+        }
+
+        const args = matches[1];
 
         return args.split(',')
             .map(function (arg) {
@@ -35,7 +42,7 @@ export class InversifyInjector implements IInjector {
             this.kernel.unbind(name);
         }
 
-        let metaDataKeys = Reflect.getMetadataKeys(component);
+        const metaDataKeys = Reflect.getMetadataKeys(component);
 
         try {
             decorate(injectable(), component);
@@ -43,7 +50,8 @@ export class InversifyInjector implements IInjector {
         catch (error) {
             console.warn(`Unable to decorate component "${name}". ${error}`);
         }
-        let constructorArguments = this.getFunctionArguments(component);
+
+        const constructorArguments = this.getFunctionArguments(component);
 
         for (let i = 0; i < constructorArguments.length; i++) {
             try {
