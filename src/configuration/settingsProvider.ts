@@ -58,10 +58,10 @@ export class SettingsProvider implements ISettingsProvider {
     }
 
     private async loadSettings(): Promise<Object> {
-        let response = await this.httpClient.send<any>({ url: "/config.json" })
-        let config = response.toObject();
-        let tenantHostname = window.location.hostname;
-        let tenantConfig = config[tenantHostname] || config["default"];
+        const response = await this.httpClient.send<any>({ url: "/config.json" })
+        const config = response.toObject();
+        const tenantHostname = window.location.hostname;
+        const tenantConfig = config[tenantHostname] || config["default"];
 
         this.configuration = tenantConfig;
 
