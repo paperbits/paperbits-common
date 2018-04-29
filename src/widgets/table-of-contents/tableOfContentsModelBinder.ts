@@ -8,7 +8,7 @@ import { TableOfContentsContract } from "./../table-of-contents";
 import { INavigationService, NavigationItemContract } from "@paperbits/common/navigation";
 import { IRouteHandler } from "../../routing";
 import { NavbarItemModel } from "../navbar";
-import { IPermalink } from "../../../../node_modules/@paperbits/common/permalinks";
+import { IPermalink } from "@paperbits/common/permalinks";
 
 
 export class TableOfContentsModelBinder implements IModelBinder {
