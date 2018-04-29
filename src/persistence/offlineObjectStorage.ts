@@ -156,10 +156,10 @@ export class OfflineObjectStorage implements IObjectStorage {
                 }
             }
             else {
-                if (path === "navigationItems" && key === "navigationItems") {
-                    resultObject[matchedObj["key"]] = matchedObj;
-                }
-                else {
+                // if (path === "navigationItems" && key === "navigationItems") {
+                //     resultObject[matchedObj["key"]] = matchedObj;
+                // }
+                // else {
                     if (matchedObj) {
                         const searchId = matchedObj["key"];
 
@@ -167,7 +167,7 @@ export class OfflineObjectStorage implements IObjectStorage {
                             resultObject[matchedObj["key"]] = matchedObj;
                         }
                     }
-                }
+                //}
             }
         });
 

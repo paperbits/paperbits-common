@@ -18,8 +18,25 @@ export class NavigationService implements INavigationService {
         this.getNavigationItem = this.getNavigationItem.bind(this);
     }
 
-    public getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract> {
-        return this.objectStorage.getObject<NavigationItemContract>(navigationItemKey);
+    private find(items: NavigationItemContract[], key: string): NavigationItemContract {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].key == key) {
+                return items[i];
+            }
+            else if (items[i].navigationItems) {
+                const child = this.find(items[i].navigationItems, key);
+
+                if (child) {
+                    return child;
+                }
+            }
+        }
+    }
+
+    public async getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract> {
+        const items = await this.getNavigationItems();
+
+        return this.find(items, navigationItemKey);
     }
 
     public getNavigationItems(): Promise<Array<NavigationItemContract>> {
@@ -27,10 +44,18 @@ export class NavigationService implements INavigationService {
     }
 
     public async updateNavigationItem(navigationItem: NavigationItemContract): Promise<void> {
-        var path = navigationItem.key;
+        const path = navigationItem.key;
 
-        await this.objectStorage.updateObject(path, navigationItem);
-        
+        await this.objectStorage.updateObject(`${navigationItemsPath}/${path}`, navigationItem);
+
         this.eventManager.dispatchEvent(NavigationEvents.onNavigationItemUpdate, navigationItem);
+    }
+
+    public async updateNavigation(navigationItems: NavigationItemContract[]): Promise<void> {
+        await this.objectStorage.updateObject(`${navigationItemsPath}`, navigationItems);
+
+        navigationItems.forEach(navigationItem => {
+            this.eventManager.dispatchEvent(NavigationEvents.onNavigationItemUpdate, navigationItem);
+        })
     }
 }

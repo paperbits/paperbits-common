@@ -14,7 +14,7 @@ export class WidgetService implements IWidgetService {
     }
 
     public async getWidgetOrders(): Promise<Array<IWidgetOrder>> {
-        let widgetOrders = new Array<IWidgetOrder>();
+        const widgetOrders = new Array<IWidgetOrder>();
 
         let tasks = this.widgetHandlers.map(async (handler: IWidgetHandler) => {
             let order = await handler.getWidgetOrder();
