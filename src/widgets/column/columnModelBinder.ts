@@ -16,38 +16,38 @@ export class ColumnModelBinder {
         this.nodeToModel = this.nodeToModel.bind(this);
     }
 
-    public async nodeToModel(node: ColumnContract): Promise<ColumnModel> {
+    public async nodeToModel(contract: ColumnContract): Promise<ColumnModel> {
         let columnModel = new ColumnModel();
 
-        if (node.size) {
-            columnModel.sizeXs = Number.parseInt(node.size.xs);
-            columnModel.sizeSm = Number.parseInt(node.size.sm);
-            columnModel.sizeMd = Number.parseInt(node.size.md);
-            columnModel.sizeLg = Number.parseInt(node.size.lg);
-            columnModel.sizeXl = Number.parseInt(node.size.xl);
+        if (contract.size) {
+            columnModel.sizeXs = Number.parseInt(contract.size.xs);
+            columnModel.sizeSm = Number.parseInt(contract.size.sm);
+            columnModel.sizeMd = Number.parseInt(contract.size.md);
+            columnModel.sizeLg = Number.parseInt(contract.size.lg);
+            columnModel.sizeXl = Number.parseInt(contract.size.xl);
         }
 
-        if (node.alignment) {
-            columnModel.alignmentXs = node.alignment.xs;
-            columnModel.alignmentSm = node.alignment.sm;
-            columnModel.alignmentMd = node.alignment.md
-            columnModel.alignmentLg = node.alignment.lg;
-            columnModel.alignmentXl = node.alignment.xl;
+        if (contract.alignment) {
+            columnModel.alignmentXs = contract.alignment.xs;
+            columnModel.alignmentSm = contract.alignment.sm;
+            columnModel.alignmentMd = contract.alignment.md
+            columnModel.alignmentLg = contract.alignment.lg;
+            columnModel.alignmentXl = contract.alignment.xl;
         }
 
-        if (node.order) {
-            columnModel.orderXs = Number.parseInt(node.order.xs);
-            columnModel.orderSm = Number.parseInt(node.order.sm);
-            columnModel.orderMd = Number.parseInt(node.order.md);
-            columnModel.orderLg = Number.parseInt(node.order.lg);
-            columnModel.orderXl = Number.parseInt(node.order.xl);
+        if (contract.order) {
+            columnModel.orderXs = Number.parseInt(contract.order.xs);
+            columnModel.orderSm = Number.parseInt(contract.order.sm);
+            columnModel.orderMd = Number.parseInt(contract.order.md);
+            columnModel.orderLg = Number.parseInt(contract.order.lg);
+            columnModel.orderXl = Number.parseInt(contract.order.xl);
         }
 
-        if (!node.nodes) {
-            node.nodes = [];
+        if (!contract.nodes) {
+            contract.nodes = [];
         }
 
-        let modelPromises = node.nodes.map(async (node) => {
+        let modelPromises = contract.nodes.map(async (node) => {
             let modelBinder: IModelBinder = this.modelBinderSelector.getModelBinderByNodeType(node.type);
             return await modelBinder.nodeToModel(node);
         });

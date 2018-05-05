@@ -42,9 +42,9 @@ export class PageModelBinder implements IModelBinder {
         return model instanceof PageModel;
     }
 
-    public async nodeToModel(pageContract, pageUrl: string, readonly?: boolean): Promise<PageModel> {
+    public async nodeToModel(pageContract, pageUrl: string, readonly?: boolean): Promise<any> {
         if (readonly) {
-            return new PlaceholderModel();
+            return new PlaceholderModel(pageContract, "Page content");
         }
 
         let type = "page";
@@ -96,13 +96,13 @@ export class PageModelBinder implements IModelBinder {
     }
 
     public getConfig(pageModel: PageModel): Contract {
-        let pageConfig: Contract = {
+        const pageConfig: Contract = {
             object: "block",
             type: "page",
             nodes: []
         };
         pageModel.sections.forEach(section => {
-            let modelBinder = this.modelBinderSelector.getModelBinderByModel(section);
+            const modelBinder = this.modelBinderSelector.getModelBinderByModel(section);
             pageConfig.nodes.push(modelBinder.getConfig(section));
         });
 
