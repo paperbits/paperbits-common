@@ -56,7 +56,7 @@ export class VideoPlayerModelBinder implements IModelBinder {
             videoPlayerModel.sourceUrl = videoPlayerNode.sourceUrl;
         }
         else {
-            videoPlayerModel.sourceUrl = DefaultSourceUrl;
+            videoPlayerModel.sourceUrl = null;//DefaultSourceUrl;
         }
 
         return videoPlayerModel;
