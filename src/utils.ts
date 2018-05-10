@@ -1,6 +1,6 @@
-﻿import { ProgressPromise } from './progressPromise';
-import { Object } from 'es6-shim';
-import { fail } from 'assert';
+﻿import { ProgressPromise } from "./progressPromise";
+import { Object } from "es6-shim";
+import { fail } from "assert";
 
 export interface IFunctionBag {
     (): void;
@@ -59,14 +59,14 @@ export function downloadFile(url: string): ProgressPromise<Uint8Array> {
         xhr.responseType = "arraybuffer";
         xhr.onprogress = progressEventToProgress(percent => progress(percent));
         xhr.onload = () => resolve(new Uint8Array(xhr.response));
-        xhr.open('GET', url);
+        xhr.open("GET", url);
         xhr.send();
     });
 }
 
 export function arrayBufferToBase64(buffer: Uint8Array) {
     if (Buffer) {
-        return new Buffer(buffer).toString('base64');
+        return new Buffer(buffer).toString("base64");
     }
     else {
         var binary = "";
@@ -140,7 +140,7 @@ export function stringToUnit8Array(content: string): Uint8Array {
     var escstr = encodeURIComponent(content);
 
     var binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
-        return String.fromCharCode(<any>('0x' + p1));
+        return String.fromCharCode(<any>("0x" + p1));
     });
 
     var bytes = new Uint8Array(binstr.length);
@@ -153,15 +153,15 @@ export function stringToUnit8Array(content: string): Uint8Array {
 }
 
 export function uint8ArrayToString(bytes: Uint8Array): string {
-    const binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join('');
+    const binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join("");
 
     const content = binstr.replace(/(.)/g, (m, p) => {
         var code = p.charCodeAt(p).toString(16).toUpperCase();
 
         if (code.length < 2) {
-            code = '0' + code;
+            code = "0" + code;
         }
-        return '%' + code;
+        return "%" + code;
     });
 
     return decodeURIComponent(content);
@@ -191,7 +191,7 @@ export function cleanupObject(source: Object): void {
  * @returns {boolean}
  */
 export function isObject(item) {
-    return item !== undefined && (item && typeof item === 'object' && !Array.isArray(item));
+    return item !== undefined && (item && typeof item === "object" && !Array.isArray(item));
 }
 
 export function mergeDeepAt(path: String, target: any, source: any) {
