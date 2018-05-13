@@ -1,5 +1,5 @@
 ﻿export interface IComponent {
     name: string;
     params?: any;
-    oncreate?: (viewModel) => void;
+    oncreate?: (viewModel?, element?) => void;
 }

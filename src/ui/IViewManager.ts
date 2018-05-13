@@ -5,13 +5,14 @@ import { ProgressPromise } from '../progressPromise';
 import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
 import { PageContract } from "../pages/pageContract";
+import { IComponent } from "./IComponent";
 
 export enum ViewManagerMode {
     selecting,
     dragging,
     selected,
     configure,
-    zoomout
+    pause
 }
 
 export interface IViewManager {
@@ -100,4 +101,8 @@ export interface IViewManager {
     setTitle?(settings?:ISettings, page?: PageContract): Promise<void>;
 
     getCurrentPage(): Promise<PageContract>;
+
+    addBalloon(component: IComponent): void;
+
+    removeBalloon(component: IComponent): void;
 }

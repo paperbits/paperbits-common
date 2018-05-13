@@ -20,7 +20,7 @@ export class PictureModelBinder implements IModelBinder {
     }
 
     public async nodeToModel(pictureContract: PictureContract): Promise<PictureModel> {
-        let pictureModel = new PictureModel();
+        const pictureModel = new PictureModel();
         pictureModel.caption = pictureContract.caption;
         pictureModel.layout = pictureContract.layout;
         pictureModel.animation = pictureContract.animation ? pictureContract.animation : "none";
