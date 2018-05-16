@@ -1,4 +1,5 @@
-import { IEventManager } from '../events/IEventManager';
+import "../extensions";
+import { IEventManager } from "../events/IEventManager";
 
 interface EventListener {
     eventName: string;
