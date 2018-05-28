@@ -10,7 +10,7 @@ export class PlaceholderModelBinder implements IModelBinder {
     }
 
     public getConfig(model: PlaceholderModel): Contract {
-        return model;
+        return model.contract;
     }
 
     public canHandleModel(model: Object): boolean {
