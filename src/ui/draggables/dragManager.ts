@@ -131,7 +131,7 @@ export class DragManager {
         }
 
         if (source.configuration.ondragstart) {
-            var replacement = source.configuration.ondragstart(source.configuration.payload, source.element);
+            const replacement = source.configuration.ondragstart(source.configuration.payload, source.element);
 
             if (replacement) {
                 this.dragged = replacement;
@@ -146,6 +146,8 @@ export class DragManager {
         this.draggedClientRect = source.element.getBoundingClientRect();
 
         this.resetDraggedElementPosition();
+
+        this.viewManager.mode = ViewManagerMode.dragging;
     }
 
     private completeDragging(): void {
