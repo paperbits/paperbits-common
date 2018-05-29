@@ -2,6 +2,8 @@ export class ProgressPromise<T> implements Promise<T> {
     private inner: Promise<any>;
     private progressCallbacks: ((percent: number) => void)[];
 
+    readonly [Symbol.toStringTag]: 'Promise';
+
     constructor(callback: (resolve: (value?: T | PromiseLike<T>) => void, reject: (error?: any) => void, progress: (percent: number) => void) => void) {
         this.progressCallbacks = [];
         this.inner = new Promise((resolve, reject) => callback(resolve, reject, this._progress.bind(this)));
@@ -16,7 +18,7 @@ export class ProgressPromise<T> implements Promise<T> {
         this.progressCallbacks.forEach(callback => callback(percent));
     }
 
-    public then<U>(onFulfilled?: (value: T) => U | PromiseLike<U>, onRejected?: (error: any) => U | PromiseLike<U> | void, progress?: (percent: number) => void): Promise<U> {
+    public then<U>(onFulfilled?: (value: T) => U | PromiseLike<U> | undefined | null, onRejected?: (error: any) => U | PromiseLike<U> | undefined | null, progress?: (percent: number) => void): Promise<U> {
         if (progress) {
             this.progress(progress);
         }
