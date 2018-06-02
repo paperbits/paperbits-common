@@ -18,7 +18,7 @@ export enum ViewManagerMode {
 export interface IViewManager {
     addProgressIndicator(title: string, content: string);
 
-    addPromiseProgressIndicator<T>(task: Promise<T>, title: string, content: string);
+    addPromiseProgressIndicator<T>(promise: Promise<T>, title: string, content: string): void;
 
     openViewAsWorkshop(heading: string, componentName: string, parameters?: any): void;
 
