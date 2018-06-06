@@ -21,15 +21,9 @@ export class TextblockModelBinder implements IModelBinder {
             if (node && node.type == "link") {
                 const hyperlink: IHyperlink = <IHyperlink>node;
 
-                console.log(hyperlink);
-
                 if (hyperlink.permalinkKey) {
                     const permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
                     
-                    if (permalink.uri.indexOf("firebase-as") >= 0) {
-                        debugger;
-                    }
-
                     if (permalink) {
                         hyperlink.href = permalink.uri;
 
