@@ -5,9 +5,6 @@ export interface IHtmlEditorProvider {
     getCurrentHtmlEditor(): IHtmlEditor;
 }
 
-/**
- * This is Slate specific component and needs to be move into slate package.
- */
 export class HtmlEditorProvider implements IHtmlEditorProvider {
     private htmlEditor: IHtmlEditor;
 

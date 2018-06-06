@@ -15,4 +15,15 @@ export class SelectionState {
     public ol: boolean;
     public ul: boolean;
     public intentions: any;
+    public anchorKey: string;
+
+    /**
+     * Alignment of a block in current viewport.
+     */
+    public alignment: string;
+
+    /**
+     * Font family.
+     */
+    public font: string;
 }

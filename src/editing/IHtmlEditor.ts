@@ -17,8 +17,7 @@ export interface ISelectionPosition {
 
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
-    enable(): void;
-    disable(): void;
+    detachFromElement(): void;
     getSelectionState(): SelectionState;
     toggleBold(): void;
     toggleItalic(): void;
@@ -31,10 +30,19 @@ export interface IHtmlEditor {
     toggleH6(): void;
     toggleQuote(): void;
     toggleCode(): void;
+    toggleSize(): void;
+    alignLeft(): void;
+    alignCenter(): void;
+    alignRight(): void;
+    justify(): void;
+
+
     toggleIntention(intention: Intention): void;
     setIntention(intention: Intention): void;
+    setTypegraphy(font: string): void;
     resetToNormal(): void;
-    setHyperlink(data: IHyperlink, selectionPosition?: ISelectionPosition): any;
+    setHyperlink(hyperlink: IHyperlink, selectionPosition?: ISelectionPosition): void;
+    setAnchor(hash: string, anchorKey: string): void
     removeHyperlink(): void;
     getHyperlink(): IHyperlink;
     setSelection(selection: Selection): void;
@@ -42,7 +50,7 @@ export interface IHtmlEditor {
     getState(): Object;
     setState(state: Object): void;
     getSelectionText(): string;
-    setList(intention: Intention);
+    setList(intention: Intention): void;
     increaseIndent(): void;
     decreaseIndent(): void;
 

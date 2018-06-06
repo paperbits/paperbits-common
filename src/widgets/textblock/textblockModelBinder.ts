@@ -16,13 +16,19 @@ export class TextblockModelBinder implements IModelBinder {
 
     private async resolveHyperlinks(nodes: Contract[]): Promise<void> {
         for (let i = 0; i < nodes.length; i++) {
-            let node = nodes[i];
+            const node = nodes[i];
 
             if (node && node.type == "link") {
-                let hyperlink: IHyperlink = node["data"];
+                const hyperlink: IHyperlink = <IHyperlink>node;
+
+                console.log(hyperlink);
 
                 if (hyperlink.permalinkKey) {
                     const permalink = await this.permalinkService.getPermalinkByKey(hyperlink.permalinkKey);
+                    
+                    if (permalink.uri.indexOf("firebase-as") >= 0) {
+                        debugger;
+                    }
 
                     if (permalink) {
                         hyperlink.href = permalink.uri;
@@ -47,22 +53,22 @@ export class TextblockModelBinder implements IModelBinder {
                 }
             }
 
-            if (node.nodes) {
+            if (node && node.nodes) {
                 await this.resolveHyperlinks(node.nodes);
             }
         }
     }
 
-    private async resolveAnchors(nodes: Contract[]) {
+    private async resolveAnchors(nodes: Contract[]) { // Should be BlockContract
         for (let i = 0; i < nodes.length; i++) {
             let node = nodes[i];
 
-            if (node && node["data"] && node["data"]["intentions"] && node["data"]["intentions"]["anchorKey"]) {
-                const anchorKey = node["data"]["intentions"]["anchorKey"];
+            if (node && node["anchorKey"]) {
+                const anchorKey = node["anchorKey"];
                 const anchorPermalink = await this.permalinkService.getPermalinkByKey(anchorKey);
 
                 if (anchorPermalink) {
-                    node["data"]["intentions"]["anchorId"] = anchorPermalink.uri;
+                    node["anchorHash"] = anchorPermalink.uri;
                 }
                 else {
                     // TODO: Show permalink is broken somehow
@@ -87,9 +93,7 @@ export class TextblockModelBinder implements IModelBinder {
             await this.resolveAnchors(node.nodes);
         }
 
-        let textblockModel = new TextblockModel({ "nodes": node.nodes });
-
-        return textblockModel;
+        return new TextblockModel({ "nodes": node.nodes });
     }
 
     public canHandleWidgetType(widgetType: string): boolean {

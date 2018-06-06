@@ -160,13 +160,13 @@ export class OfflineObjectStorage implements IObjectStorage {
                 //     resultObject[matchedObj["key"]] = matchedObj;
                 // }
                 // else {
-                    if (matchedObj) {
-                        const searchId = matchedObj["key"];
+                if (matchedObj) {
+                    const searchId = matchedObj["key"];
 
-                        if (searchId && key.endsWith(searchId)) {
-                            resultObject[matchedObj["key"]] = matchedObj;
-                        }
+                    if (searchId && key.endsWith(searchId)) {
+                        resultObject[matchedObj["key"]] = matchedObj;
                     }
+                }
                 //}
             }
         });
@@ -204,7 +204,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         console.log("Saving changes...");
 
         await this.underlyingStorage.saveChanges(this.changesObject);
-        
+
         this.changesObject = {};
 
         console.log("Saved.");

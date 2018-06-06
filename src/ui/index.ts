@@ -1,5 +1,4 @@
 export * from "./background";
-export * from "./color";
 export * from "./IBackground";
 export * from "./IComponent";
 export * from "./IContextualEditor";

@@ -36,7 +36,8 @@ export class TableOfContentsModelBinder implements IModelBinder {
 
             const anchorNavbarItem = new NavbarItemModel();
             anchorNavbarItem.label = anchors[anchorKey]; //`${page.title} > ${page.anchors[anchorKey]}`;
-            anchorNavbarItem.url = `${permalink.uri}#${anchorPermalink.uri}`;
+            // nchorNavbarItem.url = `${permalink.uri}#${anchorPermalink.uri}`;
+            anchorNavbarItem.url = `#${anchorPermalink.uri}`;
 
             return anchorNavbarItem;
         });

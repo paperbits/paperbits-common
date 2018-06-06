@@ -1,3 +1,4 @@
+export * from "./blockContract";
 export * from "./box";
 export * from "./htmlEditorEvents";
 export * from "./htmlEditorProvider";
@@ -6,8 +7,11 @@ export * from "./IContentDropHandler";
 export * from "./IDataTransfer";
 export * from "./IHtmlEditor";
 export * from "./IModelBinder";
+export * from "./inlineContract";
 export * from "./IWidgetBinding";
 export * from "./IWidgetFactoryResult";
 export * from "./IWidgetHandler";
 export * from "./IWidgetOrder";
+export * from "./markContract";
+export * from "./rangeContract";
 export * from "./selectionState";

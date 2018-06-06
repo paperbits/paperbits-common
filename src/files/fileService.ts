@@ -25,7 +25,7 @@ export class FileService implements IFileService {
         }
 
         await this.objectStorage.addObject(key, contentNode);
-        
+
         return contentNode;
     }
 

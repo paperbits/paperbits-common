@@ -8,7 +8,6 @@ export class TextblockModel {
 
     constructor(state: Object) {
         this.state = state;
-        // htmlEditor.addSelectionChangeListener(this.onChange.bind(this));
     }
 
     private onChange(): void {

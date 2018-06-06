@@ -5,3 +5,4 @@ export * from "./mediaContract";
 export * from "./mediaHyperlinkProvider";
 export * from "./mediaPermalinkResolver";
 export * from "./mediaService";
+export * from "./mediaUtils";

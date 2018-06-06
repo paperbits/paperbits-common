@@ -14,8 +14,8 @@ export class HttpClientReponse<T> {
 
     public toObject(): T {
         try {
-            let decodedString = this.utf8ArrayToStr(this.response);
-            return JSON.parse(decodedString);
+            const decodedString = this.utf8ArrayToStr(this.response);
+            return JSON.parse(decodedString.trim());
         }
         catch (error) {
             console.log(this.response);

@@ -178,7 +178,7 @@ export function cleanupObject(source: Object): void {
             if (child instanceof Object) {
                 this.cleanupObject(child);
             }
-            else if (child === undefined) {
+            else if (child === undefined || child === null) {
                 delete source[key];
             }
         });
@@ -398,6 +398,10 @@ export function findNodesRecursively(predicate: (x: Object) => boolean, source: 
 }
 
 export function elementsFromPoint(ownerDocument: Document, x: number, y: number): HTMLElement[] {
+    if (!x || !y) {
+        return [];
+    }
+
     if (ownerDocument.elementsFromPoint) {
         return Array.prototype.slice.call(ownerDocument.elementsFromPoint(Math.floor(x), Math.floor(y)));
     }
@@ -452,4 +456,11 @@ export function leaves(source: any, ignoreRoot: boolean = true): any[] {
     }
 
     return output;
+}
+
+export function slugify(text: string): string {
+    return text.toString().toLowerCase().trim()
+        .replace(/[^\w\s-]/g, '') // remove non-word [a-z0-9_], non-whitespace, non-hyphen characters
+        .replace(/[\s_-]+/g, '-') // swap any length of whitespace, underscore, hyphen characters with a single _
+        .replace(/^-+|-+$/g, ''); // remove leading, trailing -
 }
