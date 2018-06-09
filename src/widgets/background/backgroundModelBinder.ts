@@ -12,7 +12,7 @@ export class BackgroundModelBinder {
     }
 
     public async nodeToModel(contract: BackgroundContract): Promise<BackgroundModel> {
-        let model = new BackgroundModel();
+        const model = new BackgroundModel();
 
         if (contract.color) {
             model.colorKey = contract.color;

@@ -11,7 +11,7 @@ export class SelectionState {
     public h5: boolean;
     public h6: boolean;
     public quote: boolean;
-    public code: boolean;
+    public pre: boolean;
     public ol: boolean;
     public ul: boolean;
     public intentions: any;

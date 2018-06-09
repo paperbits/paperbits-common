@@ -36,7 +36,7 @@ export class SectionModelBinder implements IModelBinder {
         }
 
         if (sectionContract.layout) {
-            sectionModel.layout = sectionContract.layout;
+            sectionModel.container = sectionContract.layout;
         }
 
         if (sectionContract.padding) {
@@ -51,7 +51,7 @@ export class SectionModelBinder implements IModelBinder {
             sectionModel.background = await this.backgroundModelBinder.nodeToModel(sectionContract.background);
         }
 
-        let rowModelPromises = sectionContract.nodes.map(this.rowModelBinder.nodeToModel);
+        const rowModelPromises = sectionContract.nodes.map(this.rowModelBinder.nodeToModel);
         sectionModel.rows = await Promise.all<RowModel>(rowModelPromises);
 
         return sectionModel;
@@ -68,7 +68,7 @@ export class SectionModelBinder implements IModelBinder {
             type: "layout-section",
             object: "block",
             nodes: [],
-            layout: sectionModel.layout,
+            layout: sectionModel.container,
             padding: sectionModel.padding,
             snapping: sectionModel.snap
         };
