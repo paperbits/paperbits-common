@@ -1,4 +1,5 @@
 export * from "./INavigationService";
 export * from "./navigationEvents";
-export * from "./NavigationItemContract";
+export * from "./navigationItemContract";
 export * from "./navigationService";
+export * from './navigationItemModel';

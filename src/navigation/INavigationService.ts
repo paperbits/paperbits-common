@@ -1,4 +1,4 @@
-﻿import { NavigationItemContract } from '../navigation/NavigationItemContract';
+﻿import { NavigationItemContract } from '../navigation/navigationItemContract';
 
 export interface INavigationService {
     getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract>;

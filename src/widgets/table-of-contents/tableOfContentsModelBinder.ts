@@ -7,8 +7,8 @@ import { HyperlinkModel } from "../../permalinks/hyperlinkModel";
 import { TableOfContentsContract } from "./../table-of-contents";
 import { INavigationService, NavigationItemContract } from "@paperbits/common/navigation";
 import { IRouteHandler } from "../../routing";
-import { NavbarItemModel } from "../navbar";
 import { IPermalink } from "@paperbits/common/permalinks";
+import { NavigationItemModel } from "../../navigation/navigationItemModel";
 
 
 export class TableOfContentsModelBinder implements IModelBinder {
@@ -29,12 +29,12 @@ export class TableOfContentsModelBinder implements IModelBinder {
         return model instanceof TableOfContentsModel;
     }
 
-    private async processAnchorItems(permalink: IPermalink, anchors): Promise<NavbarItemModel[]> {
+    private async processAnchorItems(permalink: IPermalink, anchors): Promise<NavigationItemModel[]> {
         const anchorPromises = Object.keys(anchors).map(async anchorKey => {
             const permalinkKey = anchorKey.replaceAll("|", "/");
             const anchorPermalink = await this.permalinkService.getPermalink(permalinkKey);
 
-            const anchorNavbarItem = new NavbarItemModel();
+            const anchorNavbarItem = new NavigationItemModel();
             anchorNavbarItem.label = anchors[anchorKey]; //`${page.title} > ${page.anchors[anchorKey]}`;
             // nchorNavbarItem.url = `${permalink.uri}#${anchorPermalink.uri}`;
             anchorNavbarItem.url = `#${anchorPermalink.uri}`;
@@ -47,10 +47,10 @@ export class TableOfContentsModelBinder implements IModelBinder {
         return results;
     }
 
-    private async processNavigationItem(navigationItem: NavigationItemContract, currentPageUrl: string): Promise<NavbarItemModel> {
+    private async processNavigationItem(navigationItem: NavigationItemContract, currentPageUrl: string): Promise<NavigationItemModel> {
         const permalink = await this.permalinkService.getPermalinkByKey(navigationItem.permalinkKey);
 
-        const navbarItemModel = new NavbarItemModel();
+        const navbarItemModel = new NavigationItemModel();
         navbarItemModel.label = navigationItem.label;
         navbarItemModel.url = permalink.uri;
 

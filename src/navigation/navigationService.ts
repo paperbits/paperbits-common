@@ -1,7 +1,7 @@
 ﻿import { IObjectStorage } from '../persistence/IObjectStorage';
 import { IEventManager } from '../events/IEventManager';
 import { INavigationService } from '../navigation/INavigationService';
-import { NavigationItemContract } from '../navigation/NavigationItemContract';
+import { NavigationItemContract } from '../navigation/navigationItemContract';
 import { NavigationEvents } from '../navigation/navigationEvents';
 
 const navigationItemsPath = "navigationItems";

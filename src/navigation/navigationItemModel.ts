@@ -1,9 +1,9 @@
-﻿export class NavbarItemModel {
+﻿export class NavigationItemModel {
     public key: string;
     public label: string;
     public url: string;
     public permalinkKey: string;
-    public nodes: NavbarItemModel[];
+    public nodes: NavigationItemModel[];
     public isActive: boolean;
 
     constructor() {
