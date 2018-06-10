@@ -1,23 +1,21 @@
 import { DragSession } from "../ui/draggables/dragSession";
+import { IContextualEditor } from "../ui";
 
 /**
  * Structure that binds widget view model to widget HTML element.
  */
 export interface IWidgetBinding {
-    /**
-     * Widget name.
-     */
-    name: string;
+    name?: string;
 
     /**
-     * ???
+     * Widget display name.
      */
-    nodeType: string;
+    displayName?: string;
 
     /**
     * ???
     */
-    params: Object;
+    params?: Object;
 
     /**
      * Callback method invoked when HTML element is created.
@@ -50,4 +48,7 @@ export interface IWidgetBinding {
     * Either "box" or "fluid".
     */
     flow?: string;
+
+    getContextualEditor?: (element: HTMLElement, half?: string, placeholderElement?: HTMLElement, placeholderHalf?: string) => IContextualEditor;
+
 }

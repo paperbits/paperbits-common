@@ -6,6 +6,7 @@ import { DragSession } from "./draggables/dragSession";
 import { ISettings } from "../sites/ISettings";
 import { PageContract } from "../pages/pageContract";
 import { IComponent } from "./IComponent";
+import { IWidgetBinding } from "../editing/IWidgetBinding";
 
 export enum ViewManagerMode {
     selecting,
@@ -61,6 +62,8 @@ export interface IViewManager {
     openUploadDialog(): Promise<Array<File>>;
 
     openViewAsPopup(view: IView);
+
+    openWidgetEditor(binding: IWidgetBinding): void ;
 
     getWidgetview(): IView;
 

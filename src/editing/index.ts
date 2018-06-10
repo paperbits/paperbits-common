@@ -15,3 +15,4 @@ export * from "./IWidgetOrder";
 export * from "./markContract";
 export * from "./rangeContract";
 export * from "./selectionState";
+export * from "./gridHelper";
