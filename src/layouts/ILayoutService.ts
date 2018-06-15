@@ -1,4 +1,4 @@
-﻿import { LayoutContract } from '../layouts/layoutContract';
+﻿import { LayoutContract } from './layoutContract';
 
 export interface ILayoutService {
     search(pattern: string): Promise<Array<LayoutContract>>;
