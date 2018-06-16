@@ -1,4 +1,3 @@
-import { PageModel } from "../page/pageModel";
 import { Contract } from "../../contract";
 
 export class PlaceholderModel {
