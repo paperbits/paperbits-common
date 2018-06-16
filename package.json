@@ -28,13 +28,6 @@
     "devDependencies": {
         "@types/es6-shim": "^0.31.34",
         "@types/knockout": "^3.4.53",
-        "@types/node": "^9.6.6",
-        "gulp": "^3.9.1",
-        "gulp-mocha": "^5.0.0",
-        "gulp-typescript": "^4.0.2",
-        "merge2": "^1.1.0",
-        "mocha": "^5.1.1",
-        "ts-node": "^6.0.0",
-        "typescript": "^2.8.3"
+        "@types/node": "^9.6.6"
     }
 }
