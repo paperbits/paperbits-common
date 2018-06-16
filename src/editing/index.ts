@@ -1,5 +1,6 @@
 export * from "./blockContract";
 export * from "./box";
+export * from "./gridHelper";
 export * from "./htmlEditorEvents";
 export * from "./htmlEditorProvider";
 export * from "./IContentDescriptor";
@@ -15,4 +16,3 @@ export * from "./IWidgetOrder";
 export * from "./markContract";
 export * from "./rangeContract";
 export * from "./selectionState";
-export * from "./gridHelper";
