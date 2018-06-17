@@ -1,6 +1,6 @@
 import { IEventManager } from '../events/IEventManager';
 import { IHttpClient } from '../http/IHttpClient';
-import { ISettingsProvider, Settings } from '../configuration/ISettingsProvider';
+import { ISettingsProvider } from '../configuration/ISettingsProvider';
 
 export class SettingsProvider implements ISettingsProvider {
     private readonly httpClient: IHttpClient;
