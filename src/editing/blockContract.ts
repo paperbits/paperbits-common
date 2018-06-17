@@ -22,3 +22,9 @@ export interface BlockContract extends Contract {
     alignment?: AlignmentContract;
     typography?: TypographyContract
 }
+
+export interface HyperlinkContract extends InlineContract {
+    permalinkKey: string;
+    target: string;
+}
+

@@ -55,6 +55,16 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
+        if (path.contains("#")) {
+            const parts = path.split("#");
+            const pathname = parts[0];
+            const hash = parts[1];
+
+            if (pathname == location.pathname) {
+                return; // TODO: Figure out how to navigate anchors.
+            }
+        }
+
         if (!notifyListeners) {
             this.notificationEnabled = false;
         }

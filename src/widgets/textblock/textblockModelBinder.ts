@@ -1,5 +1,3 @@
-import { IWidgetBinding } from "./../../editing/IWidgetBinding";
-import { IViewModelBinder } from "./../IViewModelBinder";
 import { IModelBinder } from "./../../editing/IModelBinder";
 import { Contract } from "./../../contract";
 import { TextblockModel } from "./textblockModel";
@@ -14,9 +12,9 @@ export class TextblockModelBinder implements IModelBinder {
         this.permalinkService = permalinkService;
     }
 
-    private async resolveHyperlinks(nodes: Contract[]): Promise<void> {
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
+    private async resolveHyperlinks(leaves: Contract[]): Promise<void> {
+        for (let i = 0; i < leaves.length; i++) {
+            const node = leaves[i];
 
             if (node && node.type == "link") {
                 const hyperlink: IHyperlink = <IHyperlink>node;
@@ -47,6 +45,10 @@ export class TextblockModelBinder implements IModelBinder {
                 }
             }
 
+            if (node && node.leaves) {
+                await this.resolveHyperlinks(node.leaves);
+            }
+            
             if (node && node.nodes) {
                 await this.resolveHyperlinks(node.nodes);
             }
@@ -81,6 +83,10 @@ export class TextblockModelBinder implements IModelBinder {
 
         if (node.nodes) {
             await this.resolveHyperlinks(node.nodes);
+        }
+
+        if (node.leaves) {
+            await this.resolveHyperlinks(node.leaves);
         }
 
         if (node.nodes) {
