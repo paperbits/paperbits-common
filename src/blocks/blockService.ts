@@ -1,10 +1,6 @@
 ﻿import * as Utils from '../utils';
 import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IBlobStorage } from '../persistence/IBlobStorage';
 import { IBlockService } from './IBlockService';
-import { IPermalinkService } from "./../permalinks/IPermalinkService";
-import { IPermalink } from '../permalinks/IPermalink';
-import { ProgressPromise } from '../progressPromise';
 import { Contract } from '../contract';
 import { BlockContract } from './blockContract';
 
