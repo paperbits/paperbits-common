@@ -30,7 +30,13 @@ export class ModelBinderSelector {
     }
 
     public getModelBinderByNodeType(widgetType: string): IModelBinder {
-        const modelBinder = this.modelBinders.find(x => x.canHandleWidgetType(widgetType));
+        const modelBinder = this.modelBinders.find(x => {
+            if (!x || !x.canHandleWidgetType) {
+                debugger;
+            }
+
+            return x.canHandleWidgetType(widgetType);
+        });
 
         if (!modelBinder) {
             return new PlaceholderModelBinder();
