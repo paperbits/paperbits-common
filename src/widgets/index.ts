@@ -1,4 +1,4 @@
-export * from "./IModel";
+export * from "./widgetModel";
 export * from "./IViewModelBinder";
 export * from "./IWidgetEditor";
 export * from "./IWidgetService";
