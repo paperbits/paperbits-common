@@ -1,6 +1,22 @@
 import { IWidgetBinding } from "@paperbits/common/editing";
 
 export class GridHelper {
+    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding[] {
+        const bindings = [];
+
+        while (element) {
+            const binding = GridHelper.getWidgetBinding(element);
+
+            if (binding) {
+                bindings.push(binding);
+            }
+
+            element = element.parentElement;
+        }
+
+        return bindings;
+    }
+
     public static getParentElementWithModel<T>(element: HTMLElement): HTMLElement {
         let parent = element.parentElement;
 

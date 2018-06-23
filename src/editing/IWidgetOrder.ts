@@ -1,5 +1,4 @@
-﻿import { IWidgetBinding } from "./IWidgetBinding";
-import { IWidgetFactoryResult } from '../editing/IWidgetFactoryResult';
+﻿import { IWidgetFactoryResult } from '../editing/IWidgetFactoryResult';
 import { IWidgetOrder } from '../editing/IWidgetOrder';
 
 /**
@@ -30,4 +29,9 @@ export interface IWidgetOrder { //to be displayed in UI and enough to build new 
      * Widget model factory method.
      */
     createModel(): Promise<any>;
+
+    /**
+     * List of features required for this widget.
+     */
+    requires?: string[];
 }

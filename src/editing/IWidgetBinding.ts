@@ -45,10 +45,14 @@ export interface IWidgetBinding {
     onDragDrop?: (dragSession: DragSession) => void;
 
     /**
-    * Either "box" or "fluid".
-    */
+     * Either "box" or "fluid".
+     */
     flow?: string;
 
     getContextualEditor?: (element: HTMLElement, half?: string, placeholderElement?: HTMLElement, placeholderHalf?: string) => IContextualEditor;
 
+    /**
+     * List of features exposed by the container (given this widget has a container).
+     */
+    provides?: string[];
 }

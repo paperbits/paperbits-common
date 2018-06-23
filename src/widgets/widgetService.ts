@@ -1,5 +1,4 @@
-﻿import { IBlobStorage } from '../persistence/IBlobStorage';
-import { IWidgetService } from '../widgets/IWidgetService';
+﻿import { IWidgetService } from '../widgets/IWidgetService';
 import { IWidgetHandler } from '../editing/IWidgetHandler';
 import { IWidgetOrder } from '../editing/IWidgetOrder';
 
