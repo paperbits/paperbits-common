@@ -1,5 +1,6 @@
 import { DragSession } from "../ui/draggables/dragSession";
 import { IContextualEditor } from "../ui";
+import { WidgetModel } from "../widgets";
 
 /**
  * Structure that binds widget view model to widget HTML element.
@@ -25,7 +26,7 @@ export interface IWidgetBinding {
     /**
      * Widget model.
      */
-    model?: Object;
+    model?: WidgetModel;
 
     /**
      * Registration name (tag name) of editor component.
