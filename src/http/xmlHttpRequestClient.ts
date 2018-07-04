@@ -1,5 +1,4 @@
-﻿import { IHttpClient } from '../http/IHttpClient';
-import { IHttpRequest } from '../http/IHttpRequest';
+﻿import { IHttpClient, IHttpRequest } from '../http';
 import { ProgressPromise } from '../progressPromise';
 import { HttpClientReponse } from '../http/httpClientReponse';
 
@@ -27,7 +26,7 @@ export class XmlHttpRequestClient implements IHttpClient {
             };
             xhr.responseType = "arraybuffer";
             xhr.onload = function () {
-                let response = new HttpClientReponse<T>(xhr.response);
+                const response = new HttpClientReponse<T>(xhr.response);
                 resolve(response);
             };
 

@@ -1,6 +1,3 @@
-import { IHttpHeader } from "./IHttpHeader";
-declare function escape(value: string): string;
-
 export class HttpClientReponse<T> {
     private response: Uint8Array;
 
@@ -18,18 +15,23 @@ export class HttpClientReponse<T> {
             return JSON.parse(decodedString.trim());
         }
         catch (error) {
-            console.log(this.response);
-            debugger;
+            throw new Error(error);
         }
     }
 
+    public toText(): string {
+        const decodedString = this.utf8ArrayToStr(this.response);
+        return decodedString.trim();
+    }
+
     private utf8ArrayToStr(array): string {
-        var out, i, len, c;
-        var char2, char3;
+        let out, i, len, c;
+        let char2, char3;
 
         out = "";
         len = array.length;
         i = 0;
+
         while (i < len) {
             c = array[i++];
             switch (c >> 4) {
