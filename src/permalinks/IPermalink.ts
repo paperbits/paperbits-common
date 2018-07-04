@@ -1,5 +1,5 @@
 /**
- * Permalink metadata. A stucture used for referencing content objects like pages or media files.
+ * Permalink contract. A stucture used for referencing content objects like pages or media files.
  */
 export interface IPermalink {
     /**

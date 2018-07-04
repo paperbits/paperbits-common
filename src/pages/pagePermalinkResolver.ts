@@ -42,7 +42,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
             return hyperlinkModel;
         }
         else if (permalink.parentKey) {
-            const parentPermalink = await this.permalinkService.getPermalink(permalink.parentKey);
+            const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
             const page = await this.pageService.getPageByKey(parentPermalink.targetKey);
 
             let anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];

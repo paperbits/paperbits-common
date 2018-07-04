@@ -1,5 +1,5 @@
-﻿import { IEventManager } from "../events/IEventManager";
-import { IRouteHandler } from "../routing/IRouteHandler";
+﻿import { IEventManager } from "../events";
+import { IRouteHandler } from "../routing";
 
 
 export class RouteHandlerEvents {
@@ -34,7 +34,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public navigateTo(url: string, notifyListeners: boolean = true): void {
+    public navigateTo(url: string, notifyListeners = true): void {
         if (!url) {
             return;
         }
@@ -60,7 +60,7 @@ export class DefaultRouteHandler implements IRouteHandler {
             const pathname = parts[0];
             const hash = parts[1];
 
-            if (pathname == location.pathname) {
+            if (pathname === location.pathname) {
                 return; // TODO: Figure out how to navigate anchors.
             }
         }
@@ -79,7 +79,7 @@ export class DefaultRouteHandler implements IRouteHandler {
 
         setImmediate(() => {
             this.notificationEnabled = true;
-        })
+        });
     }
 
     public getCurrentUrl(): string {

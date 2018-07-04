@@ -1,7 +1,7 @@
-import * as Utils from '../utils';
-import { IPermalinkService } from '../permalinks/IPermalinkService';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IPermalink } from '../permalinks/IPermalink';
+import * as Utils from "../utils";
+import { IPermalinkService } from "../permalinks/IPermalinkService";
+import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IPermalink } from "../permalinks/IPermalink";
 
 const permalinksPath = "permalinks";
 
@@ -12,23 +12,8 @@ export class PermalinkService implements IPermalinkService {
         this.objectStorage = objectStorage;
     }
 
-    public isPermalinkKey(uri: string): boolean {
-        return uri.startsWith(`${permalinksPath}/`);
-    }
-
-    public async isPermalinkExists(permalink: string): Promise<boolean> {
-        let permalinks = await this.objectStorage.searchObjects<IPermalink>(permalinksPath, null, permalink, false);
-
-        return permalinks && permalinks.length > 0;
-    }
-
-    public async getPermalink(url: string): Promise<IPermalink> {
-        let permalink = await this.objectStorage.getObject<IPermalink>(url);
-        return permalink;
-    }
-
     public async getPermalinkByUrl(uri: string): Promise<IPermalink> {
-        let permalinks = await this.objectStorage.searchObjects<IPermalink>(permalinksPath, ["uri"], uri)
+        const permalinks = await this.objectStorage.searchObjects<IPermalink>(permalinksPath, ["uri"], uri)
 
         if (permalinks.length > 0) {
             return permalinks[0];
@@ -37,7 +22,7 @@ export class PermalinkService implements IPermalinkService {
 
     public async getPermalinkByKey(permalinkKey: string): Promise<IPermalink> {
         if (!permalinkKey) {
-            throw `Could not retrieve permalink: Parameter "permalinkKey" was not specified.`;
+            throw new Error(`Could not retrieve permalink: Parameter "permalinkKey" was not specified.`);
         }
 
         const permalink = await this.objectStorage.getObject<IPermalink>(permalinkKey);

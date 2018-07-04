@@ -10,17 +10,17 @@ export interface IPageService {
     search(pattern: string): Promise<Array<PageContract>>;
 
     /**
-     * Returns a page by specified key;
+     * Returns page by specified key;
      */
     getPageByKey(key: string): Promise<PageContract>;
 
     /**
-     * Deletes a specified page from storage.
+     * Deletes specified page from storage.
      */
     deletePage(page: PageContract): Promise<void>;
 
     /**
-     * Creates new page in storage and returns a contract of it.
+     * Creates new page in storage and returns its contract.
      */
     createPage(title: string, description: string, keywords): Promise<PageContract>;
 
