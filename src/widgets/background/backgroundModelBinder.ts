@@ -1,8 +1,6 @@
-import { IModelBinder } from "../../editing/IModelBinder";
-import { Contract } from "../../contract";
 import { BackgroundModel } from "./backgroundModel";
 import { BackgroundContract } from "../../ui/background";
-import { IPermalinkResolver } from "../../permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "../../permalinks";
 
 export class BackgroundModelBinder {
     private readonly permalinkResolver: IPermalinkResolver;
