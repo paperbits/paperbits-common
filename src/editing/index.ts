@@ -1,4 +1,5 @@
 export * from "./blockContract";
+export * from "./hyperlinkContract";
 export * from "./box";
 export * from "./gridHelper";
 export * from "./htmlEditorEvents";

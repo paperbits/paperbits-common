@@ -1,6 +1,4 @@
-﻿import { IContentDropHandler } from "./IContentDropHandler";
-import { IDataTransfer } from "./IDataTransfer";
-import { IContentDescriptor } from "./IContentDescriptor";
+﻿import { IContentDropHandler, IDataTransfer, IContentDescriptor } from "./";
 
 export abstract class MediaHandlers implements IContentDropHandler {
     private mediaTypePrefixes: string[];

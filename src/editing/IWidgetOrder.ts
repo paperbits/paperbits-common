@@ -1,10 +1,9 @@
-﻿import { IWidgetFactoryResult } from '../editing/IWidgetFactoryResult';
-import { IWidgetOrder } from '../editing/IWidgetOrder';
+﻿import { IWidgetFactoryResult, IWidgetOrder } from "../editing";
 
 /**
  * Structure exposing methods to create HTML element or a model for particular widget.
  */
-export interface IWidgetOrder { //to be displayed in UI and enough to build new HTML element
+export interface IWidgetOrder {
     /**
      * Name of a widget created by this widget order.
      */

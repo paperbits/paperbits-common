@@ -1,4 +1,4 @@
-﻿import { IHyperlink } from "../permalinks/IHyperlink";
+﻿import { HyperlinkContract } from "../editing/hyperlinkContract";
 import { SelectionState } from "./selectionState";
 
 export let formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -35,11 +35,11 @@ export interface IHtmlEditor {
     justify(): void;
     setTypegraphy(font: string): void;
     resetToNormal(): void;
-    setHyperlink(hyperlink: IHyperlink, selectionPosition?: ISelectionPosition): void;
-    setAnchor(hash: string, anchorKey: string): void
+    setHyperlink(hyperlink: HyperlinkContract, selectionPosition?: ISelectionPosition): void;
+    setAnchor(hash: string, anchorKey: string): void;
     removeAnchor(): void;
     removeHyperlink(): void;
-    getHyperlink(): IHyperlink;
+    getHyperlink(): HyperlinkContract;
     setSelection(selection: Selection): void;
     expandSelection(): void;
     getState(): Object;

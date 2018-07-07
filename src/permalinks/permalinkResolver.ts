@@ -1,7 +1,7 @@
 import { IPermalink } from "./IPermalink";
 import { IPermalinkResolver } from "./IPermalinkResolver";
 import { IPermalinkService } from "./IPermalinkService";
-import { IHyperlink } from "./IHyperlink";
+import { HyperlinkContract } from "../editing/hyperlinkContract";
 import { HyperlinkModel } from "./hyperlinkModel";
 
 export class PermalinkResolver implements IPermalinkResolver {
@@ -55,7 +55,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         }
     }
 
-    public async getHyperlinkFromConfig(hyperlink: IHyperlink): Promise<HyperlinkModel> {
+    public async getHyperlinkFromConfig(hyperlink: HyperlinkContract): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
         let permalinkKey: string = null;

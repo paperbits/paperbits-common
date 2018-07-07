@@ -1,8 +1,7 @@
-﻿import { FileContract } from '../files/IFile';
-import { BlogPostContract } from '../blogs/BlogPostContract';
+﻿import { BlogPostContract } from "../blogs/BlogPostContract";
 
 export interface IBlogService {
-    search(pattern: string): Promise<Array<BlogPostContract>>;
+    search(pattern: string): Promise<BlogPostContract[]>;
 
     getBlogPostByKey(key: string): Promise<BlogPostContract>;
 

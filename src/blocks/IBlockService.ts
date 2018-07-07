@@ -1,5 +1,5 @@
-﻿import { BlockContract } from './blockContract';
-import { Contract } from '../contract';
+﻿import { BlockContract } from "./blockContract";
+import { Contract } from "../contract";
 
 /**
  * Service for managing design blocks.
@@ -8,7 +8,7 @@ export interface IBlockService {
     /**
      * Searches for design blocks that contain specified pattern in their title, description.
      */
-    search(pattern?: string): Promise<Array<BlockContract>>;
+    search(pattern?: string): Promise<BlockContract[]>;
 
     /**
      * Returns a design block by specified key;

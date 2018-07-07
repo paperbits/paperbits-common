@@ -5,5 +5,5 @@ export interface FileContract {
     mimeType?: string;
     size?: number;
     content?: string;
-    contentModel?: Contract
+    contentModel?: Contract;
 }

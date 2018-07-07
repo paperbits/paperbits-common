@@ -1,4 +1,3 @@
-import { IWidgetBinding } from "./IWidgetBinding";
 import { Contract } from "../contract";
 
 /**

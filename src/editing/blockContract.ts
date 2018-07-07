@@ -20,11 +20,5 @@ export interface BlockContract extends Contract {
     anchorKey?: string;
     anchorHash?: string;
     alignment?: AlignmentContract;
-    typography?: TypographyContract
+    typography?: TypographyContract;
 }
-
-export interface HyperlinkContract extends InlineContract {
-    permalinkKey: string;
-    target: string;
-}
-

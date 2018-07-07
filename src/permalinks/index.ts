@@ -1,5 +1,4 @@
 export * from "./hyperlinkModel";
-export * from "./IHyperlink";
 export * from "./IPermalink";
 export * from "./IPermalinkResolver";
 export * from "./IPermalinkService";
