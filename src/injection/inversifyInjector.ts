@@ -74,25 +74,25 @@ export class InversifyInjector implements IInjector {
     }
 
     public bindComponent<T>(name, factory: (ctx: IInjector, params?: any) => T): void {
-        var construct: any = function () {
+        let construct: any = function () {
             this.factory = factory;
         }
         this.bindInternal(name, construct).inSingletonScope();
     }
 
     public bindFactory<T>(name, factory: (ctx: IInjector) => T): void {
-        var injector = this;
+        let injector = this;
 
-        var construct: any = function () {
+        let construct: any = function () {
             return factory(injector);
         }
         this.bindInternal(name, construct);
     }
 
     public bindSingletonFactory<T>(name, factory: (ctx: IInjector) => T): void {
-        var injector = this;
+        let injector = this;
 
-        var construct: any = function () {
+        let construct: any = function () {
             return factory(injector);
         }
         this.bindInternal(name, construct).inSingletonScope(); //TODO: Read how to bind factory

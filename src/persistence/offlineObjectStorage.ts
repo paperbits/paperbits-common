@@ -5,7 +5,7 @@ import { ProgressPromise } from "../progressPromise";
 import { IObjectStorage } from "../persistence/IObjectStorage";
 import { IEventManager } from "../events/IEventManager";
 import { LruCache } from "../caching/lruCache";
-import { IPermalinkService } from '../permalinks/IPermalinkService';
+import { IPermalinkService } from '../permalinks';
 import { IObjectStorageMiddleware } from './IObjectStorageMiddleware';
 
 

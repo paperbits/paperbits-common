@@ -14,7 +14,7 @@ interface Array<T> {
 }
 
 String.prototype.contains = function (value: string, caseInsensitive: boolean = false): boolean {
-    var originalValue: string = this;
+    let originalValue: string = this;
 
     if (caseInsensitive) {
         originalValue = originalValue.toLowerCase();
@@ -25,8 +25,8 @@ String.prototype.contains = function (value: string, caseInsensitive: boolean = 
 }
 
 String.prototype.containsOneOf = function (substrings: Array<string>): boolean {
-    var value = this;
-    var result = false;
+    let value = this;
+    let result = false;
 
     substrings.forEach(substring => {
         if (value.contains(substring))
@@ -37,9 +37,9 @@ String.prototype.containsOneOf = function (substrings: Array<string>): boolean {
 }
 
 String.prototype.format = function (...values: any[]): string {
-    var formatted = this;
-    for (var i = 0; i < values.length; i++) {
-        var regexp = new RegExp("\\{" + i + "\\}", "gi");
+    let formatted = this;
+    for (let i = 0; i < values.length; i++) {
+        let regexp = new RegExp("\\{" + i + "\\}", "gi");
 
         if (values[i])
             formatted = formatted.replace(regexp, values[i]);
@@ -58,7 +58,7 @@ String.prototype.endsWith = function (value: string): boolean {
 };
 
 String.prototype.hashCode = function (): number {
-    var hash = 0, i, chr, len;
+    let hash = 0, i, chr, len;
     if (this.length === 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
         chr = this.charCodeAt(i);
@@ -73,7 +73,7 @@ String.prototype.replaceAll = function (search: string, replacement: string): st
 };
 
 Array.prototype.remove = function <T>(item: T): void {
-    var index = this.indexOf(item);
+    let index = this.indexOf(item);
     this.splice(index, 1);
 };
 

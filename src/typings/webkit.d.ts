@@ -1,1 +1,1 @@
-﻿declare var webkitSpeechRecognition: any;
+﻿declare let webkitSpeechRecognition: any;

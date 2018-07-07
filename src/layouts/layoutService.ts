@@ -27,16 +27,16 @@ export class LayoutService implements ILayoutService {
     }
 
     public async deleteLayout(layout: LayoutContract): Promise<void> {
-        var deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
-        var deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
+        let deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
+        let deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
 
         await Promise.all([deleteContentPromise, deleteLayoutPromise]);
     }
 
     public async createLayout(title: string, description: string, uriTemplate: string): Promise<LayoutContract> {
-        var layoutId = `${layoutsPath}/${Utils.guid()}`;
+        let layoutId = `${layoutsPath}/${Utils.guid()}`;
 
-        var layout: LayoutContract = {
+        let layout: LayoutContract = {
             key: layoutId,
             title: title,
             description: description,
@@ -65,8 +65,8 @@ export class LayoutService implements ILayoutService {
         let layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
 
         if (layouts && layouts.length) {
-            var filteredLayouts = layouts.filter((lyout: LayoutContract) => {
-                var regExp = lyout.uriTemplate;
+            let filteredLayouts = layouts.filter((lyout: LayoutContract) => {
+                let regExp = lyout.uriTemplate;
                 return !!route.match(regExp);
             });
 

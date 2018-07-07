@@ -1,7 +1,10 @@
-import { IWidgetOrder } from '../editing/IWidgetOrder';
+import { IWidgetOrder } from "../editing/IWidgetOrder";
 
+/**
+ * Describes dropped content (file or URL).
+ */
 export interface IContentDescriptor {
-    title: string | KnockoutObservable<string>;
+    title: string;
     description: string;
     getWidgetOrder?(): Promise<IWidgetOrder>;
     getPreviewUrl?(): Promise<string>;

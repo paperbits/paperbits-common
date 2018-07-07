@@ -27,17 +27,17 @@ export class PageService implements IPageService {
     }
 
     public async deletePage(page: PageContract): Promise<void> {
-        var deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
-        var deletePermalinkPromise = this.objectStorage.deleteObject(page.permalinkKey);
-        var deletePagePromise = this.objectStorage.deleteObject(page.key);
+        let deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
+        let deletePermalinkPromise = this.objectStorage.deleteObject(page.permalinkKey);
+        let deletePagePromise = this.objectStorage.deleteObject(page.key);
 
         await Promise.all([deleteContentPromise, deletePermalinkPromise, deletePagePromise]);
     }
 
     public async createPage(title: string, description: string, keywords): Promise<PageContract> {
-        var key = `${pagesPath}/${Utils.guid()}`;
+        let key = `${pagesPath}/${Utils.guid()}`;
 
-        var page: PageContract = {
+        let page: PageContract = {
             key: key,
             title: title,
             description: description,

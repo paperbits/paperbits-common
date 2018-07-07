@@ -1,12 +1,9 @@
-﻿import * as Utils from '../utils';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IBlobStorage } from '../persistence/IBlobStorage';
-import { MediaContract } from './MediaContract';
-import { IMediaService } from './IMediaService';
-import { IPermalinkService } from "./../permalinks/IPermalinkService";
-import { ICreatedMedia } from './ICreatedMedia';
-import { IPermalink } from '../permalinks/IPermalink';
-import { ProgressPromise } from '../progressPromise';
+﻿import * as Utils from "../utils";
+import { IObjectStorage, IBlobStorage } from "../persistence";
+import { IMediaService, ICreatedMedia, MediaContract } from "./";
+import { IPermalinkService } from "./../permalinks";
+import { IPermalink } from "../permalinks";
+import { ProgressPromise } from "../progressPromise";
 
 const uploadsPath = "uploads";
 const permalinksPath = "permalinks";
@@ -22,7 +19,7 @@ export class MediaService implements IMediaService {
         this.permalinkService = permalinkService;
     }
 
-    public searchByProperties(propertyNames: Array<string>, propertyValue: string, startSearch: boolean): Promise<Array<MediaContract>> {
+    public searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]> {
         return this.objectStorage.searchObjects<MediaContract>(uploadsPath, propertyNames, propertyValue, startSearch);
     }
 
@@ -33,9 +30,10 @@ export class MediaService implements IMediaService {
         return this.objectStorage.getObject<MediaContract>(key);
     }
 
-    public async getMediaByPermalink(permalink: string): Promise<MediaContract> {
-        if (permalink) {
-            let iconPermalink = await this.permalinkService.getPermalinkByKey(permalink);
+    public async getMediaByPermalinkKey(permalinkKey: string): Promise<MediaContract> {
+        if (permalinkKey) {
+            const iconPermalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+
             if (iconPermalink) {
                 return this.getMediaByKey(iconPermalink.targetKey);
             }
@@ -43,12 +41,13 @@ export class MediaService implements IMediaService {
         return null;
     }
 
-    public async search(pattern: string): Promise<Array<MediaContract>> {
+    public async search(pattern: string): Promise<MediaContract[]> {
         const result = await this.searchByProperties(["filename"], pattern, true);
 
+        // tslint:disable-next-line:only-arrow-functions
         result.sort(function (x, y) {
-            var a = x.filename.toUpperCase();
-            var b = y.filename.toUpperCase();
+            const a = x.filename.toUpperCase();
+            const b = y.filename.toUpperCase();
 
             if (a > b) {
                 return 1;

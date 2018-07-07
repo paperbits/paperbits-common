@@ -18,10 +18,10 @@ export class Tutorial {
     }
 
     private completeStep(): void {
-        var currentStep = this.tutorialSteps[this.currentStepNum];
-        var currentStepText = currentStep.arrowText;
+        let currentStep = this.tutorialSteps[this.currentStepNum];
+        let currentStepText = currentStep.arrowText;
 
-        var elapsedTime = this.timestamp - (this.timestamp = new Date().getTime());
+        let elapsedTime = this.timestamp - (this.timestamp = new Date().getTime());
 
         // dataLayer.push({
         //     "event": "Tutorial",
@@ -41,7 +41,7 @@ export class Tutorial {
     }
 
     private getPageOffsetFor(element: HTMLElement) {
-        var top = 0, left = 0;
+        let top = 0, left = 0;
 
         do {
             top += element.offsetTop || 0;
@@ -61,9 +61,9 @@ export class Tutorial {
             return;
         }
 
-        var step = this.tutorialSteps[this.currentStepNum];
-        var targetElement: HTMLElement;
-        var trackedElement: HTMLElement;
+        let step = this.tutorialSteps[this.currentStepNum];
+        let targetElement: HTMLElement;
+        let trackedElement: HTMLElement;
 
         if (step.targetElementSearch) {
             targetElement = step.targetElementSearch();
@@ -89,11 +89,11 @@ export class Tutorial {
             return;
         }
 
-        var arrowRect = this.arrowElement.getBoundingClientRect();
-        var targetRect = targetElement.getBoundingClientRect();
-        var targetOffset = this.getPageOffsetFor(targetElement);
-        var arrowX: number = targetOffset.left + (targetRect.width / 2);
-        var arrowY: number = targetOffset.top + (targetRect.height / 2);
+        let arrowRect = this.arrowElement.getBoundingClientRect();
+        let targetRect = targetElement.getBoundingClientRect();
+        let targetOffset = this.getPageOffsetFor(targetElement);
+        let arrowX: number = targetOffset.left + (targetRect.width / 2);
+        let arrowY: number = targetOffset.top + (targetRect.height / 2);
 
         if (step.arrowPosition.contains("left")) {
             this.arrowElement.classList.add("arrow-left");
@@ -120,7 +120,7 @@ export class Tutorial {
     }
 
     private scrollToTarget(trackedElement: HTMLElement): void {
-        var step = this.tutorialSteps[this.currentStepNum];
+        let step = this.tutorialSteps[this.currentStepNum];
 
         // (<any>$(trackedElement)).scrollintoview({
         //     duration: 500,
@@ -135,10 +135,10 @@ export class Tutorial {
     }
 
     private findElement(searchFunction: () => HTMLElement): Promise<HTMLElement> {
-        var promise = new Promise<HTMLElement>((resolve) => {
-            var observer: MutationObserver;
-            var onDomChanged = (): void => {
-                var htmlElement = searchFunction();
+        let promise = new Promise<HTMLElement>((resolve) => {
+            let observer: MutationObserver;
+            let onDomChanged = (): void => {
+                let htmlElement = searchFunction();
                 observer.disconnect();
                 resolve(htmlElement);
             }
@@ -151,12 +151,12 @@ export class Tutorial {
     }
 
     private runCurrentStep(): void {
-        var step = this.tutorialSteps[this.currentStepNum];
+        let step = this.tutorialSteps[this.currentStepNum];
 
         //TODO: Make search and following instructions async
 
-        var targetElement: HTMLElement;
-        var trackedElement: HTMLElement;
+        let targetElement: HTMLElement;
+        let trackedElement: HTMLElement;
 
         if (step.targetElementSearch) {
             targetElement = step.targetElementSearch();
@@ -184,7 +184,7 @@ export class Tutorial {
             this.scrollToTarget(trackedElement);
         }
 
-        var mutationObserverCallback = function (mutations) {
+        let mutationObserverCallback = function (mutations) {
             if (step.isComplete(trackedElement)) {
                 trackedElementObserver.disconnect();
                 this.completeStep();
@@ -193,12 +193,12 @@ export class Tutorial {
 
         switch (step.targetEvent) {
             case "domchange":
-                var trackedElementObserver = new MutationObserver(mutationObserverCallback.bind(this));
+                let trackedElementObserver = new MutationObserver(mutationObserverCallback.bind(this));
                 trackedElementObserver.observe(trackedElement, { attributes: true, childList: true, characterData: true, subtree: true });
                 break;
 
             case "click": {
-                var clickHandler = () => {
+                let clickHandler = () => {
                     if (step.isComplete(trackedElement)) {
                         trackedElement.removeEventListener("click", clickHandler);
                         this.completeStep();
@@ -209,7 +209,7 @@ export class Tutorial {
             }
 
             case "dblclick":
-                var dblclickHandler = () => {
+                let dblclickHandler = () => {
                     if (step.isComplete(trackedElement)) {
                         trackedElement.removeEventListener("dblclick", dblclickHandler);
                         this.completeStep();
@@ -219,7 +219,7 @@ export class Tutorial {
                 break;
 
             case "mousedown":
-                var pointerdownHandler = () => {
+                let pointerdownHandler = () => {
                     if (step.isComplete(trackedElement)) {
                         trackedElement.removeEventListener("mousedown", pointerdownHandler);
                         this.completeStep();
@@ -245,7 +245,7 @@ export class Tutorial {
     }
 
     public runScenario(): void {
-        var documentObserver = new MutationObserver(this.onDocumentChange);
+        let documentObserver = new MutationObserver(this.onDocumentChange);
         documentObserver.observe(document.body, { childList: true, subtree: true, attributes: true });
 
         this.runCurrentStep();

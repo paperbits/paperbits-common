@@ -16,7 +16,7 @@ export class XmlHttpRequestClient implements IHttpClient {
             request.headers = [];
 
         return new ProgressPromise((resolve, reject, progress) => {
-            var xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest();
 
             xhr.onprogress = (progressEvent: ProgressEvent) => {
                 if (progressEvent.lengthComputable) {

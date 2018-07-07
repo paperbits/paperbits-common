@@ -1,5 +1,5 @@
 ﻿export interface ILocalCache {
-    getKeys(): Array<string>;
+    getKeys(): string[];
     setItem(key: string, value: any): void;
     getItem<T>(key: string): T;
     getOccupiedSpace(): number;

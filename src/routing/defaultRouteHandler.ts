@@ -3,7 +3,7 @@ import { IRouteHandler } from "../routing";
 
 
 export class RouteHandlerEvents {
-    static onRouteChange = "onRouteChange";
+    public static onRouteChange = "onRouteChange";
 }
 
 export class DefaultRouteHandler implements IRouteHandler {

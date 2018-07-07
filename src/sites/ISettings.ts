@@ -4,17 +4,33 @@
 }
 
 export interface ISiteSettings {
+    /**
+     * Web site title.
+     */
     title: string;
+
+    /**
+     * Web site description.
+     */
     description?: string;
+
+    /**
+     * Web site keywords.
+     */
     keywords?: string;
+
     faviconPermalinkKey?: string;
+
     author?: string;
     /**
      * Facebook Open Graph settings.
      */
     ogSiteName?: string;
+
     ogUrl?: string;
+
     ogType?: "website" | "article" | "blog";
+
     ogImagePermalinkKey?: string;
 }
 

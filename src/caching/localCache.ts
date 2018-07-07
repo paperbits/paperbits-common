@@ -1,5 +1,5 @@
-﻿import { ILocalCache } from '../caching/ILocalCache';
-import { LruCache } from '../caching/lruCache';
+﻿import { ILocalCache } from "../caching/ILocalCache";
+import { LruCache } from "../caching/lruCache";
 
 export class LocalCache implements ILocalCache {
     private lrucache: LruCache<any>;
@@ -8,17 +8,18 @@ export class LocalCache implements ILocalCache {
         this.lrucache = new LruCache<any>(10000);
     }
 
-    public getKeys(): Array<string> {
-        var keys = new Array<string>();
+    public getKeys(): string[] {
+        const keys = new Array<string>();
 
-        for (var key in window.localStorage) {
+        for (const key in window.localStorage) {
             if (window.localStorage.hasOwnProperty(key)) {
                 keys.push(key);
             }
         }
 
-        var lrucacheKeys = this.lrucache.getKeys();
-        for (var i = 0; i < lrucacheKeys.length; i++) {
+        const lrucacheKeys = this.lrucache.getKeys();
+
+        for (let i = 0; i < lrucacheKeys.length; i++) {
             keys.push(lrucacheKeys[i]);
         }
 
@@ -33,34 +34,35 @@ export class LocalCache implements ILocalCache {
     }
 
     public getItem<T>(key: string): T {
-        var content = this.lrucache.getItem(key);
+        const content = this.lrucache.getItem(key);
         return content ? content : JSON.parse(window.localStorage.getItem(key));
     }
 
     private estimateSize(object: any) {
-        var list = [];
-        var stack = [object];
-        var bytes = 0;
+        const list = [];
+        const stack = [object];
+        let bytes = 0;
 
         while (stack.length) {
-            var value = stack.pop();
+            const value = stack.pop();
+
             if (!value) {
                 continue;
             }
-            if (typeof value === 'boolean') {
+            if (typeof value === "boolean") {
                 bytes += 4;
             }
-            else if (typeof value === 'string') {
+            else if (typeof value === "string") {
                 bytes += value.length * 2;
             }
-            else if (typeof value === 'number') {
+            else if (typeof value === "number") {
                 bytes += 8;
             }
-            else if (typeof value === 'object' &&
+            else if (typeof value === "object" &&
                 list.indexOf(value) === -1
             ) {
                 list.push(value);
-                for (var i in value) {
+                for (const i in value) {
                     if (value.hasOwnProperty(i)) {
                         stack.push(value[i]);
                     }
@@ -79,7 +81,7 @@ export class LocalCache implements ILocalCache {
     }
 
     public addChangeListener(callback: () => void) {
-
+        // Do nothing
     }
 
     public removeItem(key: string): void {

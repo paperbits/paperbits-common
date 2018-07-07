@@ -1,6 +1,6 @@
 import { describe, it, assert } from "mocha";
 
-var abc = (): Promise<string> => {
+let abc = (): Promise<string> => {
     return new Promise<string>((resolve) => {
         setTimeout(() => {
             resolve("Hi!");

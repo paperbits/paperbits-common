@@ -20,5 +20,5 @@ export interface NavigationItemContract {
     /**
      * Child navigation items.
      */
-    navigationItems?: Array<NavigationItemContract>;
+    navigationItems?: NavigationItemContract[];
 }

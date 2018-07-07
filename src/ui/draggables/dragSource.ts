@@ -23,7 +23,7 @@ export class DragSource {
     }
 
     private onPointerDown(event: MouseEvent): void {
-        var targetElement = event.target as HTMLElement;
+        let targetElement = event.target as HTMLElement;
 
 
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {

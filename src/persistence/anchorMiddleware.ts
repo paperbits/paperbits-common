@@ -1,6 +1,6 @@
 import * as Utils from "../utils";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
-import { IPermalinkService } from "../permalinks/IPermalinkService";
+import { IPermalinkService } from "../permalinks";
 import { IPageService } from "../pages/IPageService";
 import { IRouteHandler } from "../routing/IRouteHandler";
 

@@ -1,6 +1,4 @@
 import { IPermalink } from "./../permalinks/IPermalink";
-import { IComponent } from "./IComponent";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 /**
  * Provider that helps to create a hyperlink out of a resource.

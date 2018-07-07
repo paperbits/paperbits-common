@@ -14,11 +14,6 @@ export interface IWidgetBinding {
     displayName?: string;
 
     /**
-    * ???
-    */
-    params?: Object;
-
-    /**
      * Callback method invoked when HTML element is created.
      */
     oncreate?: (viewModel: any) => void;
@@ -41,8 +36,11 @@ export interface IWidgetBinding {
      * Propagates changes from widget model to widget view model.
      */
     applyChanges?: () => void;
+
     readonly?: boolean;
+
     onDragOver?: (dragSession: DragSession) => boolean;
+
     onDragDrop?: (dragSession: DragSession) => void;
 
     /**

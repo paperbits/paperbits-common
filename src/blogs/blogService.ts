@@ -27,17 +27,17 @@ export class BlogService implements IBlogService {
     }
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
-        var deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
-        var deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
-        var deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
+        let deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
+        let deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
+        let deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
 
         await Promise.all([deleteContentPromise, deletePermalinkPromise, deleteBlogPostPromise]);
     }
 
     public async createBlogPost(title: string, description: string, keywords): Promise<BlogPostContract> {
-        var blogPostId = `${blogPostsPath}/${Utils.guid()}`;
+        let blogPostId = `${blogPostsPath}/${Utils.guid()}`;
 
-        var blogPost: BlogPostContract = {
+        let blogPost: BlogPostContract = {
             key: blogPostId,
             title: title,
             description: description,

@@ -8,10 +8,10 @@ export interface IFunctionBag {
 }
 
 export function createFunctionBag(): IFunctionBag {
-    var items: (() => void)[] = [];
+    let items: (() => void)[] = [];
 
-    var bag = <IFunctionBag>function () {
-        for (var i = 0; i < items.length; i++) {
+    let bag = <IFunctionBag>function () {
+        for (let i = 0; i < items.length; i++) {
             items[i]();
         }
     };
@@ -34,17 +34,17 @@ export function guid(): string {
 }
 
 export function identifier() {
-    var result = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++)
         result += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return result;
 }
 
 export function createComponent(nodeName: string, attributes: Object): HTMLElement {
-    var htmlElement = document.createElement(nodeName);
+    let htmlElement = document.createElement(nodeName);
     htmlElement.style.width = "200px";
     Object.keys(attributes).forEach(key => htmlElement.setAttribute(key, attributes[key]));
 
@@ -55,7 +55,7 @@ export function createComponent(nodeName: string, attributes: Object): HTMLEleme
 
 export function downloadFile(url: string): ProgressPromise<Uint8Array> {
     return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.responseType = "arraybuffer";
         xhr.onprogress = progressEventToProgress(percent => progress(percent));
         xhr.onload = () => resolve(new Uint8Array(xhr.response));
@@ -69,10 +69,10 @@ export function arrayBufferToBase64(buffer: Uint8Array) {
         return new Buffer(buffer).toString("base64");
     }
     else {
-        var binary = "";
-        var bytes = new Uint8Array(buffer);
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
+        let binary = "";
+        let bytes = new Uint8Array(buffer);
+        let len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
         return btoa(binary);
@@ -131,19 +131,19 @@ export function lazy<T>(factory: () => T): ILazy<T> {
 }
 
 export function getCookie(name: string) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
 export function stringToUnit8Array(content: string): Uint8Array {
-    var escstr = encodeURIComponent(content);
+    let escstr = encodeURIComponent(content);
 
-    var binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
+    let binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
         return String.fromCharCode(<any>("0x" + p1));
     });
 
-    var bytes = new Uint8Array(binstr.length);
+    let bytes = new Uint8Array(binstr.length);
 
     Array.prototype.forEach.call(binstr, (ch, i) => {
         bytes[i] = ch.charCodeAt(0);
@@ -156,7 +156,7 @@ export function uint8ArrayToString(bytes: Uint8Array): string {
     const binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join("");
 
     const content = binstr.replace(/(.)/g, (m, p) => {
-        var code = p.charCodeAt(p).toString(16).toUpperCase();
+        let code = p.charCodeAt(p).toString(16).toUpperCase();
 
         if (code.length < 2) {
             code = "0" + code;
@@ -365,7 +365,7 @@ export function getObjectAt<T>(path: string, source: Object, delimiter: string =
     const segments = path.split(delimiter);
     let segmentObject = source;
 
-    for (var i = 0; i < segments.length; i++) {
+    for (let i = 0; i < segments.length; i++) {
         segmentObject = segmentObject[segments[i]];
 
         if (!segmentObject) {

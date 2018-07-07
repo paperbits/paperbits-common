@@ -5,8 +5,8 @@
     key?: string;
 
     /**
-    * A key that is used to identify a file in blob.
-    */
+     * A key that is used to identify a file in blob.
+     */
     blobKey: string;
 
     /**
@@ -25,7 +25,7 @@
     keywords: string;
 
     /**
-     * Download URL. If available, maybe used for direct download. 
+     * Download URL. If available, maybe used for direct download.
      */
     downloadUrl?: string;
 
@@ -35,7 +35,7 @@
     permalinkKey?: string;
 
     /**
-     * Content type of a file (i.e. image/png). 
+     * Content type of a file (i.e. image/png).
      */
     contentType?: string;
 }

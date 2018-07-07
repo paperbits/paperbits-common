@@ -27,8 +27,8 @@ export class UrlService implements IUrlService {
     }
 
     public async deleteUrl(url: UrlContract): Promise<void> {
-        var deletePermalinkPromise = this.objectStorage.deleteObject(url.permalinkKey);
-        var deleteUrlPromise = this.objectStorage.deleteObject(url.key);
+        let deletePermalinkPromise = this.objectStorage.deleteObject(url.permalinkKey);
+        let deleteUrlPromise = this.objectStorage.deleteObject(url.key);
 
         await Promise.all([deletePermalinkPromise, deleteUrlPromise]);
     }

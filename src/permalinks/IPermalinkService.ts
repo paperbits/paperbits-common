@@ -1,4 +1,4 @@
-import { IPermalink } from '../permalinks/IPermalink';
+import { IPermalink } from "../permalinks/IPermalink";
 
 /**
  * Service for managing permalinks.

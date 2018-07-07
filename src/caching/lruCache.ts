@@ -17,7 +17,7 @@ export class LruCache<T> {
     }
 
     public getItem(key): T {
-        var item: ICacheItem<T> = this.nodeMap[key];
+        let item: ICacheItem<T> = this.nodeMap[key];
 
         if (!item) {
             return null;
@@ -29,7 +29,7 @@ export class LruCache<T> {
     }
 
     public setItem(key, value) {
-        var item: ICacheItem<T> = this.nodeMap[key];
+        let item: ICacheItem<T> = this.nodeMap[key];
         if (item) {
             item.value = value;
             this.pop(item);
@@ -44,12 +44,12 @@ export class LruCache<T> {
     }
 
     public removeItem(key: string) {
-        var item = this.nodeMap[key];
+        let item = this.nodeMap[key];
         this.remove(item);
     }
 
     public removeWhere(predicate: (key: string, value: T) => boolean) {
-        var item: ICacheItem<T> = this.head;
+        let item: ICacheItem<T> = this.head;
 
         if (!item) {
             return;
@@ -63,8 +63,8 @@ export class LruCache<T> {
     }
 
     public getKeys(): Array<string> {
-        var result: Array<string> = new Array<string>();
-        var item: ICacheItem<T> = this.head;
+        let result: Array<string> = new Array<string>();
+        let item: ICacheItem<T> = this.head;
 
         if (!item) {
             return result;
@@ -99,7 +99,7 @@ export class LruCache<T> {
 
     private insert(key: string, value: T): void {
         if (Object.keys(this.nodeMap).length === this.maxSize) {
-            var tail = this.tail;
+            let tail = this.tail;
             this.remove(tail);
             this.onevict(tail.key, tail.value);
         }

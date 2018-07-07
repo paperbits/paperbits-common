@@ -1,6 +1,6 @@
 import { IPermalink } from "../permalinks/IPermalink";
 import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
-import { IPermalinkService } from "../permalinks/IPermalinkService";
+import { IPermalinkService } from "../permalinks";
 import { IMediaService } from "./IMediaService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -16,7 +16,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {
             console.warn(`Permalink with key ${permalinkKey} not found.`);
@@ -48,13 +48,13 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        let media = await this.mediaService.getMediaByKey(permalink.targetKey);
+        const media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
         if (!media) {
             return null;
         }
 
-        let hyperlinkModel = new HyperlinkModel();
+        const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = media.filename;
         hyperlinkModel.target = target;
         hyperlinkModel.permalinkKey = permalink.key;

@@ -1,5 +1,5 @@
 export interface IMediaFilter {
-    propertyNames: Array<string>;
+    propertyNames: string[];
     propertyValue: string;
     startSearch: boolean;
 }
