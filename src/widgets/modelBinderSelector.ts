@@ -5,11 +5,11 @@ import { PlaceholderModel } from "./placeholder";
 export class PlaceholderModelBinder implements IModelBinder {
     constructor(public readonly message?: string) { }
 
-    public async nodeToModel(contract: Contract, message): Promise<PlaceholderModel> {
+    public async contractToModel(contract: Contract, message): Promise<PlaceholderModel> {
         return new PlaceholderModel(contract, `Could not find model binder for widget type "${contract.type}".`);
     }
 
-    public getConfig(model: PlaceholderModel): Contract {
+    public modelToContract(model: PlaceholderModel): Contract {
         return model.contract;
     }
 

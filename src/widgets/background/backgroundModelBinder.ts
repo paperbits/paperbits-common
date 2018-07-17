@@ -9,7 +9,7 @@ export class BackgroundModelBinder {
         this.permalinkResolver = permalinkResolver;
     }
 
-    public async nodeToModel(contract: BackgroundContract): Promise<BackgroundModel> {
+    public async contractToModel(contract: BackgroundContract): Promise<BackgroundModel> {
         const model = new BackgroundModel();
 
         if (contract.color) {

@@ -1,22 +1,21 @@
 import { Contract } from "../contract";
 
 /**
- * Utility for conversions between widget contracts and and widget models.
+ * Utility for conversions between contracts and models.
  */
 export interface IModelBinder {
     canHandleWidgetType(widgetType: string): boolean;
-    canHandleModel(model: Object): boolean;
+    canHandleModel(model: any): boolean;
 
     /**
-     * Converts widget model to widget contract.
-     * @param {T} model Widget model.
+     * Converts a model to a contract.
      */
-    getConfig<T>(model: T): Contract;
+    modelToContract(model: any): Contract;
 
     /**
-     * Converts widget contract to widget model.
-     * @param {Object} node Widget contract.
-     * @param params Additional parameters needed to create widget model.
+     * Converts contract to model.
+     * @param A contract.
+     * @param params Additional parameters needed to create a model.
      */
-    nodeToModel(node: Object, ...params): Promise<any>;
+    contractToModel(contract: any, ...params): Promise<any>;
 }
