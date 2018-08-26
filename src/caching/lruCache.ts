@@ -17,7 +17,7 @@ export class LruCache<T> {
     }
 
     public getItem(key): T {
-        let item: ICacheItem<T> = this.nodeMap[key];
+        const item: ICacheItem<T> = this.nodeMap[key];
 
         if (!item) {
             return null;
@@ -28,17 +28,19 @@ export class LruCache<T> {
         return item.value;
     }
 
-    public setItem(key, value) {
-        let item: ICacheItem<T> = this.nodeMap[key];
+    public setItem(key, value): void {
+        const item: ICacheItem<T> = this.nodeMap[key];
+
         if (item) {
             item.value = value;
             this.pop(item);
-        } else {
+        } 
+        else {
             this.insert(key, value);
         }
     }
 
-    public clear() {
+    public clear(): void {
         this.head = null;
         this.nodeMap = {};
     }
@@ -62,8 +64,8 @@ export class LruCache<T> {
         } while ((item = item.next) != null);
     }
 
-    public getKeys(): Array<string> {
-        let result: Array<string> = new Array<string>();
+    public getKeys(): string[] {
+        const result: string[] = new Array<string>();
         let item: ICacheItem<T> = this.head;
 
         if (!item) {
@@ -72,7 +74,8 @@ export class LruCache<T> {
 
         do {
             result.push(item.key);
-        } while ((item = item.next) != null);
+        }
+        while ((item = item.next) !== null);
 
         return result;
     }
@@ -99,7 +102,7 @@ export class LruCache<T> {
 
     private insert(key: string, value: T): void {
         if (Object.keys(this.nodeMap).length === this.maxSize) {
-            let tail = this.tail;
+            const tail = this.tail;
             this.remove(tail);
             this.onevict(tail.key, tail.value);
         }

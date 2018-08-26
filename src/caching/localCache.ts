@@ -1,4 +1,4 @@
-﻿import { ILocalCache } from "../caching/ILocalCache";
+﻿import { ILocalCache } from "../caching";
 import { LruCache } from "../caching/lruCache";
 
 export class LocalCache implements ILocalCache {
@@ -19,8 +19,8 @@ export class LocalCache implements ILocalCache {
 
         const lrucacheKeys = this.lrucache.getKeys();
 
-        for (let i = 0; i < lrucacheKeys.length; i++) {
-            keys.push(lrucacheKeys[i]);
+        for (const key of lrucacheKeys) {
+            keys.push(key);
         }
 
         return keys;

@@ -1,5 +1,5 @@
 ﻿import "reflect-metadata";
-import { IInjector, IInjectorModule } from '../injection';
+import { IInjector, IInjectorModule } from "../injection";
 import { inject, injectable, Container, decorate, interfaces } from "inversify";
 
 
@@ -14,7 +14,7 @@ export class InversifyInjector implements IInjector {
         this.bindComponent = this.bindComponent.bind(this);
     }
 
-    public getFunctionArguments(func): Array<string> {
+    public getFunctionArguments(func): string[] {
         if (!func) {
             debugger;
         }
@@ -28,11 +28,11 @@ export class InversifyInjector implements IInjector {
 
         const args = matches[1];
 
-        return args.split(',')
-            .map(function (arg) {
-                return arg.replace(/\/\*.*\*\//, '').trim();
+        return args.split(",")
+            .map((arg) => {
+                return arg.replace(/\/\*.*\*\//, "").trim();
             })
-            .filter(function (arg) {
+            .filter((arg) => {
                 return arg;
             });
     }
@@ -74,7 +74,7 @@ export class InversifyInjector implements IInjector {
     }
 
     public bindComponent<T>(name, factory: (ctx: IInjector, params?: any) => T): void {
-        let construct: any = function () {
+        const construct: any = function () {
             this.factory = factory;
         }
         this.bindInternal(name, construct).inSingletonScope();

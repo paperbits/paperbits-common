@@ -1,8 +1,8 @@
-﻿import * as Utils from '../utils';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IBlockService } from './IBlockService';
-import { Contract } from '../contract';
-import { BlockContract } from './blockContract';
+﻿import * as Utils from "../utils";
+import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IBlockService } from "./IBlockService";
+import { Contract } from "../contract";
+import { BlockContract } from "./blockContract";
 
 const blockPath = "blocks";
 
