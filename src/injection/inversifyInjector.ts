@@ -83,19 +83,19 @@ export class InversifyInjector implements IInjector {
     public bindFactory<T>(name, factory: (ctx: IInjector) => T): void {
         let injector = this;
 
-        let construct: any = function () {
+        const construct: any = function () {
             return factory(injector);
         }
         this.bindInternal(name, construct);
     }
 
     public bindSingletonFactory<T>(name, factory: (ctx: IInjector) => T): void {
-        let injector = this;
+        const injector = this;
 
-        let construct: any = function () {
+        const construct: any = function () {
             return factory(injector);
         }
-        this.bindInternal(name, construct).inSingletonScope(); //TODO: Read how to bind factory
+        this.bindInternal(name, construct).inSingletonScope(); // TODO: Read how to bind factory
     }
 
     public bindInstance<T>(name: string, instance: T): void {
@@ -107,10 +107,10 @@ export class InversifyInjector implements IInjector {
     }
 
     public resolve<TImplementationType>(runtimeIdentifier: string): TImplementationType {
-        let component = this.kernel.get<TImplementationType>(runtimeIdentifier);
+        const component = this.kernel.get<TImplementationType>(runtimeIdentifier);
 
         if (!component) {
-            throw `Component ${runtimeIdentifier} not found.`;
+            throw new Error(`Component ${runtimeIdentifier} not found.`);
         }
 
         return component;
