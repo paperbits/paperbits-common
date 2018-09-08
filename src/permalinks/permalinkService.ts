@@ -1,7 +1,6 @@
 import * as Utils from "../utils";
-import { IPermalinkService } from "../permalinks";
-import { IObjectStorage } from "../persistence/IObjectStorage";
-import { IPermalink } from "../permalinks/IPermalink";
+import { IPermalink, IPermalinkService } from "../permalinks";
+import { IObjectStorage } from "../persistence";
 
 const permalinksPath = "permalinks";
 

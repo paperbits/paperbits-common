@@ -1,6 +1,6 @@
-import { IEventManager } from "../events/IEventManager";
+import { IEventManager } from "../events";
 import { OfflineObjectStorage } from "./offlineObjectStorage";
-import { IViewManager } from "../ui/IViewManager";
+import { IViewManager } from "../ui";
 
 
 export class SavingHandler {

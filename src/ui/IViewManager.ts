@@ -1,12 +1,8 @@
-﻿import { IHighlightConfig } from "./IHighlightConfig";
-import { IContextualEditor } from "./IContextualEditor";
-import { IView } from "./IView";
-import { ProgressPromise } from '../progressPromise';
-import { DragSession } from "./draggables/dragSession";
-import { ISettings } from "../sites/ISettings";
-import { PageContract } from "../pages/pageContract";
-import { IComponent } from "./IComponent";
-import { IWidgetBinding } from "../editing/IWidgetBinding";
+﻿import { IView, IComponent, IHighlightConfig, IContextualEditor } from "./";
+import { DragSession } from "./draggables";
+import { ISettings } from "../sites";
+import { PageContract } from "../pages";
+import { IWidgetBinding } from "../editing";
 
 export enum ViewManagerMode {
     selecting,
@@ -16,12 +12,24 @@ export enum ViewManagerMode {
     pause
 }
 
+export interface ISplitterConfig {
+    element: HTMLElement;
+
+    /**
+     * Possible values: "top", "bottom", "left", "right";
+     */
+    side: string;
+
+    /**
+     * Possible values: "inside", "outside";
+     */
+    where: string;
+}
+
 export interface IViewManager {
-    addProgressIndicator(title: string, content: string);
+    addProgressIndicator(title: string, content: string): void;
 
     addPromiseProgressIndicator<T>(promise: Promise<T>, title: string, content: string): void;
-
-    openViewAsWorkshop(heading: string, componentName: string, parameters?: any): void;
 
     journeyName(): string;
 
@@ -37,37 +45,25 @@ export interface IViewManager {
 
     notifySuccess(title: string, content: string): void;
 
-    addProgressIndicator(title: string, content: string, progress?: number);
-
-    addPromiseProgressIndicator<T>(task: ProgressPromise<T>, title: string, content: string);
-
     scheduleIndicatorRemoval(indicator: any): void;
 
     updateJourneyComponent(component: IView);
 
-    clearJourney(): void;
-
-    foldWorkshops(): void;
-
-    unfoldWorkshop(): void;
-
-    foldEverything(): void;
-
     unfoldEverything(): void;
 
-    openViewAsWorkshop(componentName: string, parameters?: any): IView;
+    openViewAsWorkshop(heading: string, componentName: string, parameters?: any): IView;
 
     closeWorkshop(editor: IView | string);
 
-    openUploadDialog(): Promise<Array<File>>;
+    openUploadDialog(): Promise<File[]>;
 
     openViewAsPopup(view: IView);
 
-    openWidgetEditor(binding: IWidgetBinding): void ;
+    openWidgetEditor(binding: IWidgetBinding): void;
 
     getWidgetview(): IView;
 
-    setContextualEditor(editorName: string, contextualEditor: IContextualEditor);
+    setContextualEditor(editorName: string, contextualEditor: IContextualEditor): void;
 
     removeContextualEditor(editorName: string): void;
 
@@ -79,13 +75,11 @@ export interface IViewManager {
 
     getSelectedElement(): IHighlightConfig;
 
-    closeWidgetEditor();
-
     itemSelectorName(name: string): string;
 
     mode: ViewManagerMode;
 
-    setViewport(viewport: string);
+    setViewport(viewport: string): void;
 
     getViewport(): string;
 
@@ -99,11 +93,13 @@ export interface IViewManager {
 
     loadFavIcon(): Promise<void>;
 
-    setTitle?(settings?:ISettings, page?: PageContract): Promise<void>;
+    setTitle?(settings?: ISettings, page?: PageContract): Promise<void>;
 
     getCurrentPage(): Promise<PageContract>;
 
     addBalloon(component: IComponent): void;
 
     removeBalloon(component: IComponent): void;
+
+    setSplitter(config: ISplitterConfig): void;
 }

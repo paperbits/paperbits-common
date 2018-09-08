@@ -1,21 +1,13 @@
-﻿import { DragSource } from '../../ui/draggables/dragSource';
-import { DragTarget } from '../../ui/draggables/dragTarget';
-import { DragSession } from "../../ui/draggables/dragSession";
-import { DragSourceConfig } from '../../ui/draggables/dragSourceConfig';
-import { DragTargetConfig } from '../../ui/draggables/dragTargetConfig';
-import { IEventManager } from '../../events/IEventManager';
-import { IWidgetBinding } from '../../editing/IWidgetBinding';
-import { IViewManager, ViewManagerMode } from '../IViewManager';
-import { Box } from '../../editing/box';
+﻿import { DragSource, DragTarget, DragSourceConfig, DragTargetConfig } from "../../ui/draggables";
+import { IEventManager } from "../../events";
+import { IViewManager, ViewManagerMode } from "../IViewManager";
+import { Box } from "../../editing/box";
 
 const startDraggingTime = 300;
 const frictionCoeff = 0.85;
 const bounceCoeff = 0.4;
 
 export class DragManager {
-    private readonly eventManager: IEventManager;
-    private readonly viewManager: IViewManager;
-
     private pointerX: number;
     private pointerY: number;
     private positionX: number;
@@ -37,10 +29,10 @@ export class DragManager {
     public isDragged: boolean;
     public draggedClientRect: ClientRect;
 
-    constructor(eventManager: IEventManager, viewManager: IViewManager) {
-        this.eventManager = eventManager;
-        this.viewManager = viewManager;
-
+    constructor(
+        private readonly eventManager: IEventManager,
+        private readonly viewManager: IViewManager
+    ) {
         this.startDragging = this.startDragging.bind(this);
         this.completeDragging = this.completeDragging.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -52,8 +44,8 @@ export class DragManager {
         this.resetDraggedElementPosition = this.resetDraggedElementPosition.bind(this);
         this.inertia = this.inertia.bind(this);
 
-        eventManager.addEventListener("onPointerMove", this.onPointerMove);
-        eventManager.addEventListener("onPointerUp", this.onPointerUp);
+        this.eventManager.addEventListener("onPointerMove", this.onPointerMove);
+        this.eventManager.addEventListener("onPointerUp", this.onPointerUp);
     }
 
     private onPointerMove(event: MouseEvent): void {
@@ -63,8 +55,9 @@ export class DragManager {
         this.pointerX = event.clientX;
         this.pointerY = event.clientY;
 
-        if (!this.isDragged)
+        if (!this.isDragged) {
             return;
+        }
 
         this.positionX = this.pointerX - this.initialOffsetX;
         this.positionY = this.pointerY - this.initialOffsetY;
@@ -122,7 +115,7 @@ export class DragManager {
             left: 0,
             width: document.body.clientWidth,
             height: document.body.clientHeight
-        }
+        };
 
         // Fixating the sizes
         if (source.configuration.sticky) {

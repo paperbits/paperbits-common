@@ -1,7 +1,5 @@
-import { IPermalink } from "./IPermalink";
-import { IPermalinkResolver } from "./IPermalinkResolver";
-import { IPermalinkService } from "./IPermalinkService";
-import { HyperlinkContract } from "../editing/hyperlinkContract";
+import { IPermalink, IPermalinkResolver, IPermalinkService } from "./";
+import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 
 export class PermalinkResolver implements IPermalinkResolver {
@@ -15,13 +13,13 @@ export class PermalinkResolver implements IPermalinkResolver {
 
     public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
         if (!permalinkKey) {
-            throw "Permalink key cannot be null or empty.";
+            throw new Error("Permalink key cannot be null or empty.");
         }
 
-        let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey)
+        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {
-            throw `Could not find permalink with key ${permalinkKey}.`;
+            throw new Error(`Could not find permalink with key ${permalinkKey}.`);
         }
 
         return this.getUriByPermalink(permalink);
@@ -29,11 +27,11 @@ export class PermalinkResolver implements IPermalinkResolver {
 
     public async getUriByPermalink(permalink: IPermalink): Promise<string> {
         if (!permalink) {
-            throw "Permalink cannot be null or empty.";
+            throw new Error("Permalink cannot be null or empty.");
         }
 
-        for (let i = 0; i < this.permalinkResolvers.length; i++) {
-            let resolvedUri = await this.permalinkResolvers[i].getUriByPermalink(permalink);
+        for (const permalinkResolver of this.permalinkResolvers) {
+            const resolvedUri = await permalinkResolver.getUriByPermalink(permalink);
 
             if (resolvedUri) {
                 return resolvedUri;
@@ -46,8 +44,8 @@ export class PermalinkResolver implements IPermalinkResolver {
     public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
-        for (let i = 0; i < this.permalinkResolvers.length; i++) {
-            hyperlinkModel = await this.permalinkResolvers[i].getHyperlinkByPermalink(permalink, target);
+        for (const permalinkResolver of this.permalinkResolvers) {
+            hyperlinkModel = await permalinkResolver.getHyperlinkByPermalink(permalink, target);
 
             if (hyperlinkModel) {
                 return hyperlinkModel;
@@ -65,7 +63,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         }
 
         if (permalinkKey) {
-            let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+            const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
             if (permalink) {
                 hyperlinkModel = await this.getHyperlinkByPermalink(permalink, hyperlink.target);
@@ -75,7 +73,7 @@ export class PermalinkResolver implements IPermalinkResolver {
                     hyperlinkModel.title = permalink.uri;
                     hyperlinkModel.target = hyperlink.target || "_blank";
                     hyperlinkModel.permalinkKey = permalink.key;
-                    hyperlinkModel.href = permalink.uri
+                    hyperlinkModel.href = permalink.uri;
                     hyperlinkModel.type = "url";
                 }
 

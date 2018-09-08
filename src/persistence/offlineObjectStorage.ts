@@ -1,20 +1,12 @@
 import * as Utils from "../utils";
 import * as _ from "lodash";
-import { IViewManager } from "./../ui/IViewManager";
-import { ProgressPromise } from "../progressPromise";
 import { IObjectStorage } from "../persistence/IObjectStorage";
-import { IEventManager } from "../events/IEventManager";
-import { LruCache } from "../caching/lruCache";
-import { IPermalinkService } from '../permalinks';
-import { IObjectStorageMiddleware } from './IObjectStorageMiddleware';
+import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 
 
 export class OfflineObjectStorage implements IObjectStorage {
-    private underlyingStorage: IObjectStorage;      //for storage
-    private readonly localStorage: Storage;  //for changes
-    private readonly lruCache: LruCache<any>; //lru cache for getting objects
+    private underlyingStorage: IObjectStorage;      // for storage
     private readonly stateObject: Object;
-    private deletedObjects: Object;
     private changesObject: Object;
 
     private middlewares: IObjectStorageMiddleware[];
@@ -25,10 +17,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.stateObject = {};
         this.changesObject = {};
 
-        this.localStorage = window.sessionStorage;
         this.underlyingStorage = null;
 
-        this.lruCache = new LruCache<any>(10000);
         this.isOnline = true;
 
         document["stateObject"] = this.stateObject;
@@ -45,9 +35,9 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.middlewares.push(middleware);
     }
 
-    private convertToSearchParam(propertyNames: Array<string>, searchValue: string): Object[] {
+    private convertToSearchParam(propertyNames: string[], searchValue: string): Object[] {
         return propertyNames.map(name => {
-            let prop = {};
+            const prop = {};
             prop[name] = searchValue;
             return prop;
         });
@@ -56,8 +46,8 @@ export class OfflineObjectStorage implements IObjectStorage {
     private searchPropertyInObject(searchProps: {}[], startAtSearch: boolean, matchedObj: any) {
         return _.find(searchProps, (prop) => {
             if (startAtSearch) {
-                let propName = _.keys(prop)[0];
-                let test = matchedObj[propName];
+                const propName = _.keys(prop)[0];
+                const test = matchedObj[propName];
 
                 return test && test.toUpperCase().startsWith(prop[propName].toUpperCase());
             }
@@ -111,10 +101,10 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         if (!this.isOnline) {
-            throw "No internet connection";
+            throw new Error("No internet connection");
         }
 
-        let result = await this.underlyingStorage.getObject<T>(key);
+        const result = await this.underlyingStorage.getObject<T>(key);
 
         if (result) {
             this.setStateObjectAt(key, result);
@@ -128,28 +118,28 @@ export class OfflineObjectStorage implements IObjectStorage {
         Utils.setValue(key, this.stateObject, null);
     }
 
-    public async searchObjects<T>(path: string, propertyNames?: Array<string>, searchValue?: string, startAtSearch?: boolean): Promise<Array<T>> {
-        let resultObject = {};
-        let keys = [];
+    public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string, startAtSearch?: boolean): Promise<T[]> {
+        const resultObject = {};
+        const keys = [];
 
         Object.keys(this.stateObject).map(key => {
-            let firstLevelObject = this.stateObject[key];
+            const firstLevelObject = this.stateObject[key];
 
             Object.keys(firstLevelObject).forEach(subkey => {
-                let fullKey = `${key}/${subkey}`;
+                const fullKey = `${key}/${subkey}`;
 
                 if (fullKey.startsWith(path)) {
                     keys.push(fullKey);
                 }
             });
-        })
+        });
 
         keys.forEach(key => {
             const matchedObj = Utils.getObjectAt(key, this.stateObject);
 
             if (propertyNames && propertyNames.length && searchValue) {
-                let searchProps = this.convertToSearchParam(propertyNames, searchValue);
-                let searchProperty = this.searchPropertyInObject(searchProps, startAtSearch, matchedObj);
+                const searchProps = this.convertToSearchParam(propertyNames, searchValue);
+                const searchProperty = this.searchPropertyInObject(searchProps, startAtSearch, matchedObj);
 
                 if (searchProperty) {
                     resultObject[matchedObj["key"]] = matchedObj;
@@ -167,12 +157,12 @@ export class OfflineObjectStorage implements IObjectStorage {
                         resultObject[matchedObj["key"]] = matchedObj;
                     }
                 }
-                //}
+                // }
             }
         });
 
         if (this.isOnline) {
-            let objects = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
+            const objects = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
 
             objects.forEach(item => {
                 let key;
@@ -184,7 +174,7 @@ export class OfflineObjectStorage implements IObjectStorage {
                     key = item["key"];
 
                     if (path === "layouts") {
-                        key = `layouts/${key}`
+                        key = `layouts/${key}`;
                     }
                 }
                 this.setStateObjectAt(key, item);
@@ -198,7 +188,7 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     public async saveChanges(): Promise<void> {
         if (!this.isOnline) {
-            throw "No internet connection";
+            throw new Error("No internet connection");
         }
 
         console.log("Saving changes...");

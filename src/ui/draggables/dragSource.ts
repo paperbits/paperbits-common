@@ -1,5 +1,4 @@
-import { DragSourceConfig } from "../../ui/draggables/dragSourceConfig";
-import { DragManager } from "../../ui/draggables/dragManager";
+import { DragManager, DragSourceConfig } from "../../ui/draggables";
 
 
 export class DragSource {
@@ -23,7 +22,7 @@ export class DragSource {
     }
 
     private onPointerDown(event: MouseEvent): void {
-        let targetElement = event.target as HTMLElement;
+        const targetElement = event.target as HTMLElement;
 
 
         if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
@@ -33,10 +32,6 @@ export class DragSource {
         if (event.buttons !== 1 || event["handled"]) {
             return;
         }
-
-        // if (event.pointerType === "touch") {
-        //     debugger;
-        // }
 
         event["handled"] = true;
 

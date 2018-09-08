@@ -1,13 +1,8 @@
-﻿import { ISettingsProvider, Settings } from "./../configuration/ISettingsProvider";
-import { MediaContract } from '../media/mediaContract';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { ISiteService } from '../sites/ISiteService';
-import { ISettings } from '../sites/ISettings';
+﻿import { ISettingsProvider, Settings } from "./../configuration";
+import { IObjectStorage } from "../persistence";
+import { ISettings, ISiteService } from "../sites";
 
 const settingsPath = "settings";
-const gmapsConfigPath = "settings/config/googlemaps";
-const gtmConfigPath = "settings/config/gtm";
-const intercomConfigPath = "settings/config/intercom";
 
 export class SiteService implements ISiteService {
     private objectStorage: IObjectStorage;
@@ -26,7 +21,6 @@ export class SiteService implements ISiteService {
     }
 
     public async getSiteSettings(): Promise<ISettings> {
-
-        return await this.objectStorage.getObject<ISettings>(settingsPath);
+        return this.objectStorage.getObject<ISettings>(settingsPath);
     }
 }

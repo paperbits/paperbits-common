@@ -1,5 +1,4 @@
-﻿import { DragManager } from '../../ui/draggables/dragManager';
-import { DragTargetConfig } from '../../ui/draggables/dragTargetConfig';
+﻿import { DragManager, DragTargetConfig } from "../../ui/draggables";
 
 export class DragTarget {
     private readonly dragManager: DragManager;
@@ -20,12 +19,13 @@ export class DragTarget {
     private onPointerMove(event: MouseEvent) {
         event.stopPropagation();
 
-        if (!this.dragManager.dragged)
+        if (!this.dragManager.dragged) {
             return;
+        }
 
-        let clientRect = this.element.getBoundingClientRect();
-        let scrollY = window.scrollY | document.documentElement.scrollTop;
-        let scrollX = window.scrollX | document.documentElement.scrollLeft;
+        const clientRect = this.element.getBoundingClientRect();
+        const scrollY = window.scrollY | document.documentElement.scrollTop;
+        const scrollX = window.scrollX | document.documentElement.scrollLeft;
 
         if (!(event.pageX > (clientRect.left + scrollX) &&
             event.pageX < (clientRect.right + scrollX) &&
@@ -34,7 +34,7 @@ export class DragTarget {
             return;
         }
 
-        let readyToAccept = this.config.accept && this.config.accept(this.dragManager.payload, this.dragManager.dragged);
+        const readyToAccept = this.config.accept && this.config.accept(this.dragManager.payload, this.dragManager.dragged);
 
         if (readyToAccept) {
             let before: boolean = false;

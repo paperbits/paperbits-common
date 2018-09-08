@@ -1,9 +1,9 @@
-import { ProgressPromise } from '../progressPromise';
+import { ProgressPromise } from "../progressPromise";
 
 export interface IBlobStorage {
-    listBlobs?(): Promise<Array<string>>;
+    listBlobs?(): Promise<string[]>;
 
-    uploadBlob(blobKey: string, content: Uint8Array, contentType?:string): ProgressPromise<void>;
+    uploadBlob(blobKey: string, content: Uint8Array, contentType?: string): ProgressPromise<void>;
 
     downloadBlob?(blobKey: string): Promise<Uint8Array>;
 

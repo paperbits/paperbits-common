@@ -1,26 +1,10 @@
 ﻿import { ProgressPromise } from "./progressPromise";
 import { Object } from "es6-shim";
-import { fail } from "assert";
 
-export interface IFunctionBag {
-    (): void;
-    add(item: () => void): IFunctionBag;
-}
 
-export function createFunctionBag(): IFunctionBag {
-    let items: (() => void)[] = [];
-
-    let bag = <IFunctionBag>function () {
-        for (let i = 0; i < items.length; i++) {
-            items[i]();
-        }
-    };
-    bag.add = (item): IFunctionBag => {
-        items.push(item);
-        return bag;
-    };
-
-    return bag;
+interface Quadrant {
+    vertical: string;
+    horizontal: string;
 }
 
 export function guid(): string {
@@ -33,29 +17,20 @@ export function guid(): string {
         s4() + "-" + s4() + s4() + s4();
 }
 
-export function identifier() {
+export function identifier(): string {
     let result = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (let i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++) {
         result += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return result;
 }
 
-export function createComponent(nodeName: string, attributes: Object): HTMLElement {
-    let htmlElement = document.createElement(nodeName);
-    htmlElement.style.width = "200px";
-    Object.keys(attributes).forEach(key => htmlElement.setAttribute(key, attributes[key]));
-
-    ko.applyBindings({}, htmlElement); // VK: Required to force component view model creation and binding.
-
-    return htmlElement;
-}
-
 export function downloadFile(url: string): ProgressPromise<Uint8Array> {
     return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
-        let xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.responseType = "arraybuffer";
         xhr.onprogress = progressEventToProgress(percent => progress(percent));
         xhr.onload = () => resolve(new Uint8Array(xhr.response));
@@ -70,8 +45,8 @@ export function arrayBufferToBase64(buffer: Uint8Array) {
     }
     else {
         let binary = "";
-        let bytes = new Uint8Array(buffer);
-        let len = bytes.byteLength;
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
         for (let i = 0; i < len; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
@@ -81,7 +56,7 @@ export function arrayBufferToBase64(buffer: Uint8Array) {
 
 export function readFileAsByteArray(file: File): ProgressPromise<Uint8Array> {
     return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
-        let reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
         reader.onprogress = progressEventToProgress(progress);
         reader.readAsArrayBuffer(file);
@@ -94,7 +69,7 @@ export function readBlobAsDataUrl(blob: Blob): ProgressPromise<string> {
 
 function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressPromise<string> {
     return new ProgressPromise<string>((resolve, reject, progress) => {
-        let reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
         reader.onprogress = progressEventToProgress(progress);
         read(reader);
@@ -104,7 +79,7 @@ function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressProm
 function progressEventToProgress(progress: (precent: number) => void): (event: ProgressEvent) => void {
     return (event: ProgressEvent) => {
         if (event.lengthComputable) {
-            let percentLoaded = Math.round((event.loaded / event.total) * 100);
+            const percentLoaded = Math.round((event.loaded / event.total) * 100);
             progress(percentLoaded);
         }
     };
@@ -114,36 +89,20 @@ export function isDirectUrl(url: string): boolean {
     return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:");
 }
 
-export interface ILazy<T> {
-    (): T;
-}
-
-export function lazy<T>(factory: () => T): ILazy<T> {
-    let value: T;
-    let evaluated = false;
-    return () => {
-        if (evaluated) {
-            return value;
-        }
-        evaluated = true;
-        return value = factory();
-    }
-}
-
 export function getCookie(name: string) {
-    let value = "; " + document.cookie;
-    let parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
+    const value = "; " + document.cookie;
+    const parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 export function stringToUnit8Array(content: string): Uint8Array {
-    let escstr = encodeURIComponent(content);
+    const escstr = encodeURIComponent(content);
 
-    let binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
+    const binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
         return String.fromCharCode(<any>("0x" + p1));
     });
 
-    let bytes = new Uint8Array(binstr.length);
+    const bytes = new Uint8Array(binstr.length);
 
     Array.prototype.forEach.call(binstr, (ch, i) => {
         bytes[i] = ch.charCodeAt(0);
@@ -170,7 +129,7 @@ export function uint8ArrayToString(bytes: Uint8Array): string {
 /**
  * Remove all properties with undefined value from object.
  */
-export function cleanupObject(source: Object): void {
+export function cleanupObject(source: object): void {
     if (source instanceof Object) {
         Object.keys(source).forEach(key => {
             const child = source[key];
@@ -190,11 +149,11 @@ export function cleanupObject(source: Object): void {
  * @param item
  * @returns {boolean}
  */
-export function isObject(item) {
+export function isObject(item): boolean {
     return item !== undefined && (item && typeof item === "object" && !Array.isArray(item));
 }
 
-export function mergeDeepAt(path: String, target: any, source: any) {
+export function mergeDeepAt(path: string, target: any, source: any) {
     let updatingObject = this.setStructure(path, target);
 
     if (Array.isArray(source)) {
@@ -215,7 +174,7 @@ export function mergeDeep(target, source) {
         return JSON.parse(JSON.stringify(source));
     }
 
-    const output = Object.assign({}, target);
+    const output = { ...target };
 
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach(key => {
@@ -237,7 +196,7 @@ export function intersectDeepMany(target, nonObjectHandler: (target: any, source
     let result = target;
     sources.forEach(source => {
         result = this.intersectDeep(result, nonObjectHandler, source);
-    })
+    });
     return result;
 }
 
@@ -278,7 +237,7 @@ export function intersectDeep(target, nonObjectHandler: (target: any, source: an
  * @param ...sources
  */
 export function complementDeep(target: any, treatEmptyAsComplete: boolean, source): any {
-    let output = {};
+    const output = {};
     if (isObject(target) && isObject(source)) {
         Object.keys(target).forEach(key => {
             if (!(key in source)) {
@@ -303,7 +262,7 @@ export function complementDeep(target: any, treatEmptyAsComplete: boolean, sourc
     return output;
 }
 
-export function setStructure(path: string, target: Object, delimiter: string = "/"): Object {
+export function setStructure(path: string, target: object, delimiter: string = "/"): object {
     const segments = path.split(delimiter);
     let segmentObject = target;
 
@@ -317,8 +276,8 @@ export function setStructure(path: string, target: Object, delimiter: string = "
     return segmentObject;
 }
 
-export function replace(path: string, target: Object, value: any, delimiter: string = "/"): Object {
-    target = JSON.parse(JSON.stringify(target))
+export function replace(path: string, target: object, value: any, delimiter: string = "/"): object {
+    target = JSON.parse(JSON.stringify(target));
     const segments = path.split(delimiter);
     let segmentObject = target;
     let segment: string;
@@ -339,7 +298,7 @@ export function replace(path: string, target: Object, value: any, delimiter: str
     return target;
 }
 
-export function setValue(path: string, target: Object, value: any): void {
+export function setValue(path: string, target: object, value: any): void {
     const segments = path.split("/");
     let segmentObject = target;
 
@@ -355,7 +314,7 @@ export function setValue(path: string, target: Object, value: any): void {
     segmentObject[segments[segments.length - 1]] = value;
 }
 
-export function getObjectAt<T>(path: string, source: Object, delimiter: string = "/"): T {
+export function getObjectAt<T>(path: string, source: object, delimiter: string = "/"): T {
     if (typeof path !== "string") {
         return null;
     }
@@ -365,18 +324,18 @@ export function getObjectAt<T>(path: string, source: Object, delimiter: string =
     const segments = path.split(delimiter);
     let segmentObject = source;
 
-    for (let i = 0; i < segments.length; i++) {
-        segmentObject = segmentObject[segments[i]];
+    for (const segment of segments) {
+        segmentObject = segmentObject[segment];
 
         if (!segmentObject) {
             return null;
         }
     }
 
-    return <T>segmentObject;
+    return <any>segmentObject;
 }
 
-export function findNodesRecursively(predicate: (x: Object) => boolean, source: Object): Object[] {
+export function findNodesRecursively(predicate: (x: object) => boolean, source: object): object[] {
     const result = [];
 
     if (predicate(source)) {
@@ -409,18 +368,18 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
         return Array.prototype.slice.call(ownerDocument.msElementsFromPoint(Math.floor(x), Math.floor(y)));
     }
     else {
-        throw `Method "elementsFromPoint" not supported by browser.`
+        throw new Error(`Method "elementsFromPoint" not supported by browser.`);
     }
 }
 
 export function leaves(source: any, ignoreRoot: boolean = true): any[] {
-    let output = [];
+    const output = [];
 
     const q = [];
     if (!isObject(source)) {
         return output;
     }
-    let keys = Object.keys(source);
+    const keys = Object.keys(source);
 
     if (keys.length === 0) {
         if (ignoreRoot === false) {
@@ -429,7 +388,7 @@ export function leaves(source: any, ignoreRoot: boolean = true): any[] {
         return output;
     }
 
-    let node: any = source;
+    const node: any = source;
 
     keys.map(key => ({ key, node })).forEach(i => q.push(i));
 
@@ -460,7 +419,32 @@ export function leaves(source: any, ignoreRoot: boolean = true): any[] {
 
 export function slugify(text: string): string {
     return text.toString().toLowerCase().trim()
-        .replace(/[^\w\s-]/g, '') // remove non-word [a-z0-9_], non-whitespace, non-hyphen characters
-        .replace(/[\s_-]+/g, '-') // swap any length of whitespace, underscore, hyphen characters with a single _
-        .replace(/^-+|-+$/g, ''); // remove leading, trailing -
+        .replace(/[^\w\s-]/g, "") // remove non-word [a-z0-9_], non-whitespace, non-hyphen characters
+        .replace(/[\s_-]+/g, "-") // swap any length of whitespace, underscore, hyphen characters with a single _
+        .replace(/^-+|-+$/g, ""); // remove leading, trailing -
+}
+
+export function pointerToClientQuadrant(pointerX: number, pointerY: number, element: HTMLElement): Quadrant {
+    const rect = element.getBoundingClientRect();
+    const clientX = pointerX - rect.left;
+    const clientY = pointerY - rect.top;
+
+    let vertical;
+    let horizontal;
+
+    if (clientX > rect.width / 2) {
+        horizontal = "right";
+    }
+    else {
+        horizontal = "left";
+    }
+
+    if (clientY > rect.height / 2) {
+        vertical = "bottom";
+    }
+    else {
+        vertical = "top";
+    }
+
+    return { vertical: vertical, horizontal: horizontal };
 }

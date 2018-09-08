@@ -1,6 +1,6 @@
-import { IEventManager } from '../events/IEventManager';
-import { IHttpClient } from '../http/IHttpClient';
-import { ISettingsProvider } from '../configuration/ISettingsProvider';
+import { IEventManager } from "../events";
+import { IHttpClient } from "../http";
+import { ISettingsProvider } from "../configuration";
 
 export class SettingsProvider implements ISettingsProvider {
     private readonly httpClient: IHttpClient;
@@ -14,7 +14,7 @@ export class SettingsProvider implements ISettingsProvider {
     }
 
     public getSetting(name: string): Promise<Object> {
-        let promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise(async (resolve, reject) => {
             await this.getSettings();
 
             if (this.configuration[name]) {
@@ -22,7 +22,7 @@ export class SettingsProvider implements ISettingsProvider {
                 return;
             }
 
-            let onSettingChange = (setting) => {
+            const onSettingChange = (setting) => {
                 if (setting.name !== name) {
                     return;
                 }
@@ -38,7 +38,7 @@ export class SettingsProvider implements ISettingsProvider {
 
     public onSettingChange(name: string, eventHandler: (value) => void) {
         this.eventManager.addEventListener("onSettingChange", (setting) => {
-            if (setting.name == name) {
+            if (setting.name === name) {
                 eventHandler(setting.value);
             }
         });
@@ -58,7 +58,7 @@ export class SettingsProvider implements ISettingsProvider {
     }
 
     private async loadSettings(): Promise<Object> {
-        const response = await this.httpClient.send<any>({ url: "/config.json" })
+        const response = await this.httpClient.send<any>({ url: "/config.json" });
         const config = response.toObject();
         const tenantHostname = window.location.hostname;
         const tenantConfig = config[tenantHostname] || config["default"];

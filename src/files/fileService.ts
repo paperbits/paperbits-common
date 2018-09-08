@@ -1,8 +1,7 @@
 ﻿import { Contract } from "./../contract";
-import * as Utils from '../utils';
-import { FileContract } from '../files/IFile';
-import { IFileService } from '../files/IFileService';
-import { IObjectStorage } from '../persistence/IObjectStorage';
+import * as Utils from "../utils";
+import { IFileService, FileContract } from "../files";
+import { IObjectStorage } from "../persistence";
 
 const filesPath = "files";
 
@@ -18,7 +17,7 @@ export class FileService implements IFileService {
     }
 
     public async createFile(contentNode: FileContract): Promise<FileContract> {
-        let key = `${filesPath}/${Utils.guid()}`;
+        const key = `${filesPath}/${Utils.guid()}`;
 
         if (!contentNode["key"]) {
             contentNode["key"] = key;

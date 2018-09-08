@@ -1,5 +1,5 @@
 ﻿import * as Utils from "../utils";
-import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IObjectStorage } from "../persistence";
 import { IBlockService } from "./IBlockService";
 import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";

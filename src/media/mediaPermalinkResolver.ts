@@ -1,6 +1,4 @@
-import { IPermalink } from "../permalinks/IPermalink";
-import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
-import { IPermalinkService } from "../permalinks";
+import { IPermalink, IPermalinkResolver, IPermalinkService } from "../permalinks";
 import { IMediaService } from "./IMediaService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
