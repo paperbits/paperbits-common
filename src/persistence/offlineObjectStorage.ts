@@ -1,6 +1,7 @@
 import * as Utils from "../utils";
 import * as _ from "lodash";
 import { IObjectStorage } from "../persistence/IObjectStorage";
+import { LruCache } from "../caching/lruCache";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 
 
@@ -21,8 +22,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.isOnline = true;
 
-        document["stateObject"] = this.stateObject;
-        document["changesObject"] = this.changesObject;
+        window.document["stateObject"] = this.stateObject;
+        window.document["changesObject"] = this.changesObject;
 
         this.middlewares = [];
     }
@@ -98,10 +99,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (cachedItem) {
             return Promise.resolve<T>(cachedItem);
-        }
-
-        if (!this.isOnline) {
-            throw new Error("No internet connection");
         }
 
         const result = await this.underlyingStorage.getObject<T>(key);
@@ -187,10 +184,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async saveChanges(): Promise<void> {
-        if (!this.isOnline) {
-            throw new Error("No internet connection");
-        }
-
         console.log("Saving changes...");
 
         await this.underlyingStorage.saveChanges(this.changesObject);

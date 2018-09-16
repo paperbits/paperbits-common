@@ -43,6 +43,23 @@ export class GlobalEventHandler {
         doc.defaultView.window.addEventListener("error", this.onError.bind(this), true);
     }
 
+    public removeDocument(doc: Document): void {
+        this.documents.remove(doc);
+
+        doc.removeEventListener("keydown", this.onKeyDown);
+        doc.removeEventListener("dragenter", this.onDragEnter.bind(this), true);
+        doc.removeEventListener("dragstart", this.onDragStart.bind(this), true);
+        doc.removeEventListener("dragover", this.onDragOver.bind(this), true);
+        doc.removeEventListener("dragleave", this.onDragLeave.bind(this));
+        doc.removeEventListener("drop", this.onDragDrop.bind(this), true);
+        doc.removeEventListener("dragend", this.onDragEnd.bind(this), true);
+        doc.removeEventListener("paste", this.onPaste.bind(this), true);
+        doc.removeEventListener("mousemove", this.onPointerMove.bind(this), true);
+        doc.removeEventListener("mousedown", this.onPointerDown.bind(this), true);
+        doc.removeEventListener("mouseup", this.onPointerUp.bind(this), true);
+        doc.defaultView.window.removeEventListener("error", this.onError.bind(this), true);
+    }
+
     public onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.keyCode === Keys.S) {
             event.preventDefault();

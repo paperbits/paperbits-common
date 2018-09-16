@@ -112,18 +112,10 @@ export function stringToUnit8Array(content: string): Uint8Array {
 }
 
 export function uint8ArrayToString(bytes: Uint8Array): string {
-    const binstr = Array.prototype.map.call(bytes, (ch) => { return String.fromCharCode(ch); }).join("");
+    const encodedString = String.fromCharCode.apply(null, bytes);
+    const decodedString = decodeURIComponent(escape(encodedString));
 
-    const content = binstr.replace(/(.)/g, (m, p) => {
-        let code = p.charCodeAt(p).toString(16).toUpperCase();
-
-        if (code.length < 2) {
-            code = "0" + code;
-        }
-        return "%" + code;
-    });
-
-    return decodeURIComponent(content);
+    return decodedString;
 }
 
 /**

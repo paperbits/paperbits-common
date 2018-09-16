@@ -1,7 +1,7 @@
-import { InlineContract } from "../editing";
+import { InlineContract } from "../editing/inlineContract";
 
 /**
- * Contract describing hyperlink element.
+ * Contract describing hyperlink.
  */
 export interface HyperlinkContract extends InlineContract {
     /**

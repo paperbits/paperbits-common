@@ -5,19 +5,24 @@
 
 export interface ISiteSettings {
     /**
-     * Web site title.
+     * Website title.
      */
     title: string;
 
     /**
-     * Web site description.
+     * Website description.
      */
     description?: string;
 
     /**
-     * Web site keywords.
+     * Website keywords.
      */
     keywords?: string;
+
+    /**
+     * Website hostname, e.g. "paperbits.io".
+     */
+    hostname?: string;
 
     faviconPermalinkKey?: string;
 

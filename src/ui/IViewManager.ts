@@ -1,4 +1,4 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextualEditor } from "./";
+﻿import { IView, IComponent, IHighlightConfig, IContextualEditor, HostDocument } from "./";
 import { DragSession } from "./draggables";
 import { ISettings } from "../sites";
 import { PageContract } from "../pages";
@@ -102,4 +102,6 @@ export interface IViewManager {
     removeBalloon(component: IComponent): void;
 
     setSplitter(config: ISplitterConfig): void;
+
+    setDocument(hostDocument: HostDocument);
 }

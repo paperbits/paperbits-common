@@ -1,9 +1,7 @@
-﻿import * as Utils from '../utils';
-import { IPermalink } from '../permalinks/IPermalink';
-import { PageContract } from '../pages/pageContract';
-import { IPageService } from '../pages/IPageService';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import * as _ from 'lodash';
+﻿import * as Utils from "../utils";
+import { PageContract } from "../pages/pageContract";
+import { IPageService } from "../pages/IPageService";
+import { IObjectStorage } from "../persistence/IObjectStorage";
 
 const pagesPath = "pages";
 
@@ -14,7 +12,7 @@ export class PageService implements IPageService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<PageContract>> {
+    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<PageContract[]> {
         return await this.objectStorage.searchObjects<PageContract>(pagesPath, tags, tagValue, startAtSearch);
     }
 
@@ -22,22 +20,22 @@ export class PageService implements IPageService {
         return await this.objectStorage.getObject<PageContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<PageContract>> {
+    public search(pattern: string): Promise<PageContract[]> {
         return this.searchByTags(["title"], pattern, true);
     }
 
     public async deletePage(page: PageContract): Promise<void> {
-        let deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
-        let deletePermalinkPromise = this.objectStorage.deleteObject(page.permalinkKey);
-        let deletePagePromise = this.objectStorage.deleteObject(page.key);
+        const deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
+        const deletePermalinkPromise = this.objectStorage.deleteObject(page.permalinkKey);
+        const deletePagePromise = this.objectStorage.deleteObject(page.key);
 
         await Promise.all([deleteContentPromise, deletePermalinkPromise, deletePagePromise]);
     }
 
     public async createPage(title: string, description: string, keywords): Promise<PageContract> {
-        let key = `${pagesPath}/${Utils.guid()}`;
+        const key = `${pagesPath}/${Utils.guid()}`;
 
-        let page: PageContract = {
+        const page: PageContract = {
             key: key,
             title: title,
             description: description,

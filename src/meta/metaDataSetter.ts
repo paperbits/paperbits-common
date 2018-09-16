@@ -1,30 +1,33 @@
-export class metaDataSetter {
-    public static iconContentType = 'image/x-icon';
+export class MetaDataSetter {
+    public static iconContentType = "image/x-icon";
+
     public static setFavIcon(iconHref: string) {
-        if(!iconHref) {
+        if (!iconHref) {
             return;
         }
-        let link = <HTMLLinkElement>document.querySelector("link[rel*='icon']") || new HTMLLinkElement();
-        link.type = metaDataSetter.iconContentType;
-        link.rel = 'icon';
-        link.href = iconHref;
-        document.head.appendChild(link);
+        const link = <HTMLLinkElement>document.querySelector("link[rel*='icon']");
+
+        if (link) {
+            link.type = MetaDataSetter.iconContentType;
+            link.rel = "icon";
+            link.href = iconHref;
+        }
     }
 
     public static setKeywords(keywords: string) {
-        metaDataSetter.setMetaElement(keywords, "keywords");
+        MetaDataSetter.setMetaElement(keywords, "keywords");
     }
 
-    public static setDescription(description: string) {        
-        metaDataSetter.setMetaElement(description, "description");
+    public static setDescription(description: string) {
+        MetaDataSetter.setMetaElement(description, "description");
     }
 
     public static setAuthor(author: string) {
-        metaDataSetter.setMetaElement(author, "author");
+        MetaDataSetter.setMetaElement(author, "author");
     }
 
     public static setScriptElement(content: object, type: string) {
-        let existScript = <HTMLScriptElement>metaDataSetter.getMetaElement("type", type);
+        let existScript = <HTMLScriptElement>MetaDataSetter.getMetaElement("type", type);
         let script = existScript || document.createElement("script");
         script.setAttribute("type", type);
         script.text = JSON.stringify(content);
@@ -33,17 +36,17 @@ export class metaDataSetter {
 
     public static setMetaObject(data: object, attributeName: string) {
         Object.keys(data).forEach(attrValue => {
-            metaDataSetter.setMetaElement(data[attrValue], undefined, attributeName, attrValue);
+            MetaDataSetter.setMetaElement(data[attrValue], undefined, attributeName, attrValue);
         });
     }
 
     public static setMetaElement(content: string, name?: string, attributeName?: string, attributeValue?: string) {
-        let existMeta = name ? <HTMLMetaElement>metaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>metaDataSetter.getMetaElement(attributeName, attributeValue);
+        let existMeta = name ? <HTMLMetaElement>MetaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>MetaDataSetter.getMetaElement(attributeName, attributeValue);
         let meta = existMeta || document.createElement("meta");
-        if(name) {
+        if (name) {
             meta.name = name;
-        }        
-        if(attributeName && attributeValue) {
+        }
+        if (attributeName && attributeValue) {
             meta.setAttribute(attributeName, attributeValue);
         }
         meta.content = content;
@@ -52,7 +55,7 @@ export class metaDataSetter {
         }
     }
 
-    private static getMetaElement(attributeName: string, attributeValue:string) {
-        return attributeName && attributeValue &&  document.head.querySelector(`[${attributeName}=${attributeValue}]`)
+    private static getMetaElement(attributeName: string, attributeValue: string) {
+        return attributeName && attributeValue && document.head.querySelector(`[${attributeName}=${attributeValue}]`)
     }
 }
