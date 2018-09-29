@@ -17,14 +17,8 @@ export class OfflineObjectStorage implements IObjectStorage {
     constructor() {
         this.stateObject = {};
         this.changesObject = {};
-
         this.underlyingStorage = null;
-
         this.isOnline = true;
-
-        window.document["stateObject"] = this.stateObject;
-        window.document["changesObject"] = this.changesObject;
-
         this.middlewares = [];
     }
 
