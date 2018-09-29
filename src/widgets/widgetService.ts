@@ -16,12 +16,18 @@ export class WidgetService implements IWidgetService {
         const widgetOrders = new Array<IWidgetOrder>();
 
         const tasks = this.widgetHandlers.map(async (handler: IWidgetHandler) => {
-            const order = await handler.getWidgetOrder();
-            widgetOrders.push(order);
+            if (handler.getWidgetOrder) {
+                const order = await handler.getWidgetOrder();
+                widgetOrders.push(order);
+            }
         });
 
         await Promise.all(tasks);
 
         return widgetOrders;
+    }
+
+    public getWidgetHandler(type: any): IWidgetHandler {
+        return this.widgetHandlers.find(x => x instanceof type);
     }
 }

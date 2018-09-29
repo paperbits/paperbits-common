@@ -1,5 +1,4 @@
-import { DragSession } from "../ui/draggables/dragSession";
-import { IContextualEditor } from "../ui";
+import { DragSession } from "../ui/draggables";
 import { WidgetModel } from "../widgets";
 
 /**
@@ -39,19 +38,15 @@ export interface IWidgetBinding {
 
     readonly?: boolean;
 
-    onDragOver?: (dragSession: DragSession) => boolean;
-
-    onDragDrop?: (dragSession: DragSession) => void;
-
     /**
      * Either "box" or "fluid".
      */
     flow?: string;
 
-    getContextualEditor?: (element: HTMLElement, half?: string, placeholderElement?: HTMLElement, placeholderHalf?: string) => IContextualEditor;
-
     /**
      * List of features exposed by the container (given this widget has a container).
      */
     provides?: string[];
+
+    handler?: any;
 }

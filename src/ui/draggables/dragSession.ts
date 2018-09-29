@@ -1,4 +1,5 @@
 import { IWidgetBinding } from "../../editing/IWidgetBinding";
+import { WidgetModel } from "@paperbits/common/widgets";
 
 
 export interface DragSession {
@@ -15,7 +16,7 @@ export interface DragSession {
     /**
      * Model attached to dragged (source) element.
      */
-    sourceModel: Object;
+    sourceModel: WidgetModel;
 
     /**
      * Widget binding attached to source element.
@@ -25,7 +26,7 @@ export interface DragSession {
     /**
      * Model attached to parent of dragged element.
      */
-    parentModel?: Object;
+    parentModel?: WidgetModel;
 
     /**
      * Widget bindhing of parent widget.

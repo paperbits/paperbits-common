@@ -1,5 +1,6 @@
-﻿import { IWidgetOrder } from '../editing/IWidgetOrder';
+﻿import { IWidgetOrder, IWidgetHandler } from "../editing";
 
 export interface IWidgetService {
-    getWidgetOrders(): Promise<Array<IWidgetOrder>>;
+    getWidgetOrders(): Promise<IWidgetOrder[]>;
+    getWidgetHandler(type: any): IWidgetHandler;
 }
