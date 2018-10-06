@@ -4,6 +4,10 @@
      */
     getCurrentUrl(): string;
 
+    getCurrentUrlMetadata(): Object;
+
+    notifyListeners?: boolean;
+
     /**
      * Adds specified listener of route change event.
      * @param eventHandler Callback function.
@@ -21,5 +25,5 @@
      * @param path Relative path, i.e. /about
      * @param notifyListeners Indicates if route change event listeners should be notified. Dafault is "true".
      */
-    navigateTo(path: string, notifyListeners?: boolean): void;
+    navigateTo(path: string, metadata?: Object): void;
 }

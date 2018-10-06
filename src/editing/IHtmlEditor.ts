@@ -14,7 +14,7 @@ export interface ISelectionPosition {
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     detachFromElement(): void;
-    getSelectionState(): SelectionState;
+    getSelectionState(viewport: string): SelectionState;
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
@@ -29,10 +29,10 @@ export interface IHtmlEditor {
     toggleSize(): void;
     toggleOrderedList(): void;
     toggleUnorderedList(): void;
-    alignLeft(): void;
-    alignCenter(): void;
-    alignRight(): void;
-    justify(): void;
+    alignLeft(viewport: string): void;
+    alignCenter(viewport: string): void;
+    alignRight(viewport: string): void;
+    justify(viewport: string): void;
     setTypegraphy(font: string): void;
     resetToNormal(): void;
     setHyperlink(hyperlink: HyperlinkContract, selectionPosition?: ISelectionPosition): void;

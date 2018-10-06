@@ -14,5 +14,5 @@ export interface IViewModelBinder<TModel, TViewModel> {
      * @param readonly Tells editors if it cam be edited.
      * @param existingViewModel If view model already exists, the binder will update it.
      */
-    modelToViewModel?(model: TModel, readonly: boolean, existingViewModel?: TViewModel): TViewModel;
+    modelToViewModel?(model: TModel, existingViewModel?: TViewModel): TViewModel;
 }

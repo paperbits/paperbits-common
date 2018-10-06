@@ -356,9 +356,6 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
     if (ownerDocument.elementsFromPoint) {
         return Array.prototype.slice.call(ownerDocument.elementsFromPoint(Math.floor(x), Math.floor(y)));
     }
-    else if (ownerDocument.msElementsFromPoint) {
-        return Array.prototype.slice.call(ownerDocument.msElementsFromPoint(Math.floor(x), Math.floor(y)));
-    }
     else {
         throw new Error(`Method "elementsFromPoint" not supported by browser.`);
     }

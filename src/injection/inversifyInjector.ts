@@ -11,7 +11,6 @@ export class InversifyInjector implements IInjector {
 
         this.bindSingleton = this.bindSingleton.bind(this);
         this.bind = this.bind.bind(this);
-        this.bindComponent = this.bindComponent.bind(this);
     }
 
     public getFunctionArguments(func): string[] {
@@ -71,13 +70,6 @@ export class InversifyInjector implements IInjector {
 
     public bindSingleton(name: string, singletone: any): void {
         this.bindInternal(name, singletone).inSingletonScope();
-    }
-
-    public bindComponent<T>(name, factory: (ctx: IInjector, params?: any) => T): void {
-        const construct: any = function () {
-            this.factory = factory;
-        }
-        this.bindInternal(name, construct).inSingletonScope();
     }
 
     public bindFactory<T>(name, factory: (ctx: IInjector) => T): void {

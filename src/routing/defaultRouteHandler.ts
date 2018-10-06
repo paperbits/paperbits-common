@@ -8,7 +8,8 @@ export class RouteHandlerEvents {
 
 export class DefaultRouteHandler implements IRouteHandler {
     private path: string;
-    private notificationEnabled: boolean;
+    private metadata: Object;
+    public notifyListeners: boolean;
 
     constructor(
         private readonly eventManager: IEventManager
@@ -21,7 +22,7 @@ export class DefaultRouteHandler implements IRouteHandler {
 
         // setting up...
         this.path = "";
-        this.notificationEnabled = true;
+        this.notifyListeners = true;
 
         addEventListener("popstate", () => this.navigateTo(location.pathname));
     }
@@ -34,7 +35,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public navigateTo(url: string, notifyListeners = true): void {
+    public navigateTo(url: string, metadata: Object = null): void {
         if (!url) {
             return;
         }
@@ -46,6 +47,8 @@ export class DefaultRouteHandler implements IRouteHandler {
             window.open(url, "_blank"); // navigating external link
             return;
         }
+
+        this.metadata = metadata;
 
         const path = isFullUrl
             ? url.substring(location.origin.length)
@@ -65,21 +68,13 @@ export class DefaultRouteHandler implements IRouteHandler {
             }
         }
 
-        if (!notifyListeners) {
-            this.notificationEnabled = false;
-        }
-
         this.path = path;
 
         history.pushState(null, null, path);
 
-        if (this.notificationEnabled) {
+        if (this.notifyListeners) {
             this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
         }
-
-        setImmediate(() => {
-            this.notificationEnabled = true;
-        });
     }
 
     public getCurrentUrl(): string {
@@ -90,5 +85,9 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
 
         return permalink;
+    }
+
+    public getCurrentUrlMetadata(): Object {
+        return this.metadata;
     }
 }
