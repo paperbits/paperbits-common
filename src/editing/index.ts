@@ -14,6 +14,7 @@ export * from "./IWidgetBinding";
 export * from "./IWidgetFactoryResult";
 export * from "./IWidgetHandler";
 export * from "./IWidgetOrder";
+export * from "./widgetContext";
 export * from "./markContract";
 export * from "./mediaHandlers";
 export * from "./rangeContract";
