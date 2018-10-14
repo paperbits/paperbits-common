@@ -1,11 +1,7 @@
 ﻿import { ProgressPromise } from "./progressPromise";
+import { Quadrant } from "./ui";
 import { Object } from "es6-shim";
 
-
-interface Quadrant {
-    vertical: string;
-    horizontal: string;
-}
 
 export function guid(): string {
     function s4() {
@@ -355,6 +351,9 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
 
     if (ownerDocument.elementsFromPoint) {
         return Array.prototype.slice.call(ownerDocument.elementsFromPoint(Math.floor(x), Math.floor(y)));
+    }
+    else if (ownerDocument["msElementsFromPoint"]) {
+        return Array.prototype.slice.call(ownerDocument["msElementsFromPoint"](Math.floor(x), Math.floor(y)));
     }
     else {
         throw new Error(`Method "elementsFromPoint" not supported by browser.`);

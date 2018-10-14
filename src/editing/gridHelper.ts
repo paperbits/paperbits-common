@@ -32,13 +32,13 @@ export class GridHelper {
     }
 
     public static getParentElementWithModel<T>(element: HTMLElement): HTMLElement {
-        let parent = element.parentElement;
+        const parent = element.parentElement;
 
         if (!parent) {
             return null;
         }
 
-        let model = GridHelper.getModel(parent);
+        const model = GridHelper.getModel(parent);
 
         if (model) {
             return parent;
@@ -49,7 +49,7 @@ export class GridHelper {
 
     public static getViewModel<TViewModel>(element: Element): TViewModel {
         if (element["attachedViewModel"]) {
-            return element["attachedViewModel"]
+            return element["attachedViewModel"];
         }
         else {
             return null;
@@ -59,7 +59,7 @@ export class GridHelper {
     public static getWidgetBinding(element: Element): IWidgetBinding {
         if (element["attachedViewModel"] &&
             element["attachedViewModel"]["widgetBinding"]) {
-            return element["attachedViewModel"]["widgetBinding"]
+            return element["attachedViewModel"]["widgetBinding"];
         }
         else {
             return null;
@@ -67,7 +67,7 @@ export class GridHelper {
     }
 
     public static getModel(element: Element): any {
-        let widgetModel = GridHelper.getWidgetBinding(element);
+        const widgetModel = GridHelper.getWidgetBinding(element);
 
         if (widgetModel && widgetModel["model"]) {
             return widgetModel["model"];

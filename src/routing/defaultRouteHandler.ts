@@ -48,15 +48,15 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
-        this.metadata = metadata;
-
         const path = isFullUrl
             ? url.substring(location.origin.length)
             : url;
 
-        if (path === this.path) {
+        if (path === this.path && this.metadata === metadata) {
             return;
         }
+
+        this.metadata = metadata;
 
         if (path.contains("#")) {
             const parts = path.split("#");
