@@ -1,5 +1,6 @@
 ﻿import { ProgressPromise } from "./progressPromise";
 import { Quadrant } from "./ui";
+import { Breakpoints } from ".";
 import { Object } from "es6-shim";
 
 
@@ -435,4 +436,20 @@ export function pointerToClientQuadrant(pointerX: number, pointerY: number, elem
     }
 
     return { vertical: vertical, horizontal: horizontal };
+}
+
+export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
+    const result: Breakpoints = {};
+    let lastAssigned = null;
+
+    ["xs", "sm", "md", "lg", "xl"].forEach(breakpoint => {
+        const value = breakpoints[breakpoint];
+
+        if (value && value !== lastAssigned) {
+            result[breakpoint] = value;
+            lastAssigned = value;
+        }
+    });
+    
+    return result;
 }
