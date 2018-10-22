@@ -1,4 +1,4 @@
 export interface HostDocument {
     src: string;
-    componentName: string;
+    getLayoutViewModel?(): any;
 }

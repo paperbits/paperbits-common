@@ -49,4 +49,8 @@ export interface IWidgetBinding {
     provides?: string[];
 
     handler?: any;
+
+    onCreate?: () => void;
+
+    onDispose?: () => void;
 }
