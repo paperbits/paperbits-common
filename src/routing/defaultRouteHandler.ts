@@ -1,5 +1,6 @@
 ﻿import { IEventManager } from "../events";
 import { IRouteHandler } from "../routing";
+import { IRouteChecker } from "./IRouteChecker";
 
 
 export class RouteHandlerEvents {
@@ -7,8 +8,10 @@ export class RouteHandlerEvents {
 }
 
 export class DefaultRouteHandler implements IRouteHandler {
-    private path: string;
-    private metadata: Object;
+    protected path: string;
+    protected metadata: Object;
+    protected routeCheckers: IRouteChecker[];
+
     public notifyListeners: boolean;
 
     constructor(
@@ -16,6 +19,7 @@ export class DefaultRouteHandler implements IRouteHandler {
     ) {
         // initialization...
         this.eventManager = eventManager;
+        this.routeCheckers = [];
 
         // rebinding...
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
@@ -33,6 +37,23 @@ export class DefaultRouteHandler implements IRouteHandler {
 
     public removeRouteChangeListener(eventHandler: (args?) => void): void {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
+    }
+
+    public addRouteChecker(routeChecker: IRouteChecker) {
+        if (routeChecker) {
+            this.routeCheckers.push(routeChecker);
+        }
+    }
+
+    public removeRouteChecker(routeCheckerName: string) {
+        if (routeCheckerName) {
+            const removeIndex = this.routeCheckers.findIndex(item => item.name === routeCheckerName);
+            if (removeIndex !== -1) {
+                this.routeCheckers.splice(removeIndex, 1);
+            } else {
+                console.log(`routeChecker with name '${routeCheckerName}' was not found`);
+            }
+        }
     }
 
     public navigateTo(url: string, metadata: Object = null): void {
@@ -56,6 +77,16 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
+        if (this.routeCheckers.length > 0) {
+            this.runRouteChecks(path, metadata).then(navigatePath => {
+                this.applyNavigation(navigatePath, metadata);
+            })            
+        } else {
+            this.applyNavigation(path, metadata);
+        }
+    }
+
+    protected applyNavigation(path: string, metadata: Object) {
         this.metadata = metadata;
 
         if (path.contains("#")) {
@@ -75,6 +106,25 @@ export class DefaultRouteHandler implements IRouteHandler {
         if (this.notifyListeners) {
             this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
         }
+    }
+
+    protected async runRouteChecks(path: string, metadata?: Object): Promise<string> {
+        let resultUrl = path;
+        if (this.routeCheckers.length > 0) {
+            for (let i = 0; i < this.routeCheckers.length; i++) {
+                const item = this.routeCheckers[i];
+                try {
+                    const itemResult = await item.checkNavigatePath(path, metadata);
+                    // if path can NOT be navigated and checker returned path for redirect  
+                    if (itemResult !== resultUrl) {
+                        return Promise.resolve(itemResult);
+                    }
+                } catch(error) {
+                    throw new Error(`routeHandler checkNavigatePath item index ${i} error: ${error}`);
+                }
+            }            
+        }
+        return Promise.resolve(resultUrl);
     }
 
     public getCurrentUrl(): string {

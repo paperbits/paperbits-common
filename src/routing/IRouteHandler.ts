@@ -1,4 +1,6 @@
-﻿export interface IRouteHandler {
+﻿import { IRouteChecker } from "./IRouteChecker";
+
+export interface IRouteHandler {
     /**
      * Returns current URL.
      */
@@ -26,4 +28,16 @@
      * @param notifyListeners Indicates if route change event listeners should be notified. Dafault is "true".
      */
     navigateTo(path: string, metadata?: Object): void;
+
+    /**
+     * Adds a route checker in a pipeline to check navigation path
+     * @param routeChecker - route checker to check is navigation path can be navigated or should be redirected to a specific path.
+     */
+    addRouteChecker(routeChecker: IRouteChecker);
+    
+    /**
+     * Removes route checker from a pipeline
+     * @param routeCheckerName - route checker name that should be removed  
+     */
+    removeRouteChecker(routeCheckerName: string);
 }
