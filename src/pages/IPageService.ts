@@ -20,7 +20,7 @@ export interface IPageService {
     deletePage(page: PageContract): Promise<void>;
 
     /**
-     * Creates new page in storage and returns its contract.
+     * Creates a new page in storage and returns its contract.
      */
     createPage(title: string, description: string, keywords): Promise<PageContract>;
 
