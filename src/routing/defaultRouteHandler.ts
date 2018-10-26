@@ -11,6 +11,7 @@ export class DefaultRouteHandler implements IRouteHandler {
     protected path: string;
     protected metadata: Object;
     protected routeCheckers: IRouteChecker[];
+    protected topWindow: Window;
 
     public notifyListeners: boolean;
 
@@ -20,6 +21,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         // initialization...
         this.eventManager = eventManager;
         this.routeCheckers = [];
+        this.topWindow = window.parent || window; /* Hack to cover both design- and runtime */
 
         // rebinding...
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
@@ -28,7 +30,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.path = "";
         this.notifyListeners = true;
 
-        addEventListener("popstate", () => this.navigateTo(location.pathname));
+        addEventListener("popstate", () => this.navigateTo(this.topWindow.location.pathname));
     }
 
     public addRouteChangeListener(eventHandler: (args?) => void): void {
@@ -62,7 +64,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
 
         const isFullUrl = !url.startsWith("/");
-        const isLocalUrl = url.startsWith(location.origin);
+        const isLocalUrl = url.startsWith(this.topWindow.location.origin);
 
         if (isFullUrl && !isLocalUrl) {
             window.open(url, "_blank"); // navigating external link
@@ -70,7 +72,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
 
         const path = isFullUrl
-            ? url.substring(location.origin.length)
+            ? url.substring(this.topWindow.location.origin.length)
             : url;
 
         if (path === this.path && this.metadata === metadata) {
@@ -80,7 +82,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         if (this.routeCheckers.length > 0) {
             this.runRouteChecks(path, metadata).then(navigatePath => {
                 this.applyNavigation(navigatePath, metadata);
-            })            
+            })
         } else {
             this.applyNavigation(path, metadata);
         }
@@ -94,14 +96,14 @@ export class DefaultRouteHandler implements IRouteHandler {
             const pathname = parts[0];
             const hash = parts[1];
 
-            if (pathname === location.pathname) {
+            if (pathname === this.topWindow.location.pathname) {
                 return; // TODO: Figure out how to navigate anchors.
             }
         }
 
         this.path = path;
 
-        history.pushState(null, null, path);
+        this.topWindow.history.pushState(null, null, path);
 
         if (this.notifyListeners) {
             this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
@@ -109,20 +111,22 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     protected async runRouteChecks(path: string, metadata?: Object): Promise<string> {
-        let resultUrl = path;
+        const resultUrl = path;
+
         if (this.routeCheckers.length > 0) {
-            for (let i = 0; i < this.routeCheckers.length; i++) {
-                const item = this.routeCheckers[i];
+            for (const item of this.routeCheckers) {
                 try {
                     const itemResult = await item.checkNavigatePath(path, metadata);
+
                     // if path can NOT be navigated and checker returned path for redirect  
                     if (itemResult !== resultUrl) {
                         return Promise.resolve(itemResult);
                     }
-                } catch(error) {
-                    throw new Error(`routeHandler checkNavigatePath item index ${i} error: ${error}`);
                 }
-            }            
+                catch (error) {
+                    throw new Error(`routeHandler checkNavigatePath item error: ${error}`);
+                }
+            }
         }
         return Promise.resolve(resultUrl);
     }
@@ -131,7 +135,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         let permalink = this.path;
 
         if (permalink === "") {
-            permalink = location.pathname;
+            permalink = this.topWindow.location.pathname;
         }
 
         return permalink;
