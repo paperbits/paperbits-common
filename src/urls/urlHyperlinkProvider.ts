@@ -1,5 +1,5 @@
 import { UrlContract } from "../urls/urlContract";
-import { IPermalink } from "../permalinks/IPermalink";
+import { PermalinkContract } from "../permalinks/permalinkContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -8,7 +8,7 @@ export class UrlHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Web URL";
     public readonly componentName = "url-selector";
 
-    public canHandleHyperlink(permalink: IPermalink): boolean {
+    public canHandleHyperlink(permalink: PermalinkContract): boolean {
         return permalink.targetKey && permalink.targetKey.startsWith("urls/");
     }
 

@@ -1,7 +1,7 @@
 /**
  * Permalink contract. A stucture used for referencing content objects like pages or media files.
  */
-export interface IPermalink {
+export interface PermalinkContract {
     /**
      * Own key.
      */

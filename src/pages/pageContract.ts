@@ -14,12 +14,12 @@ export interface PageContract {
      */
     title: string;
 
-     /**
+    /**
      * Page description. This property is included in SEO attributes.
      */
     description: string;
 
-     /**
+    /**
      * Page keywords. This property is included in SEO attributes.
      */
     keywords: string;

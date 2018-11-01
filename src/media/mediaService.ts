@@ -2,7 +2,7 @@
 import { IObjectStorage, IBlobStorage } from "../persistence";
 import { IMediaService, ICreatedMedia, MediaContract } from "./";
 import { IPermalinkService } from "./../permalinks";
-import { IPermalink } from "../permalinks";
+import { PermalinkContract } from "../permalinks";
 import { ProgressPromise } from "../progressPromise";
 
 const uploadsPath = "uploads";
@@ -97,7 +97,7 @@ export class MediaService implements IMediaService {
                 contentType: contentType
             };
 
-            const permalink: IPermalink = {
+            const permalink: PermalinkContract = {
                 key: permalinkKey,
                 targetKey: mediaKey,
                 uri: `/content/${name}`

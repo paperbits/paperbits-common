@@ -1,5 +1,5 @@
 import { BlogPostContract } from "../blogs/BlogPostContract";
-import { IPermalink } from "../permalinks/IPermalink";
+import { PermalinkContract } from "../permalinks/permalinkContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -8,7 +8,7 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Blog posts";
     public readonly componentName = "blog-selector";
 
-    public canHandleHyperlink(permalink: IPermalink): boolean {
+    public canHandleHyperlink(permalink: PermalinkContract): boolean {
         return permalink.targetKey && permalink.targetKey.startsWith("posts/");
     }
 

@@ -1,4 +1,4 @@
-import { IPermalink } from "../permalinks/IPermalink";
+import { PermalinkContract } from "../permalinks/permalinkContract";
 import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
 import { IPermalinkService } from "../permalinks";
 import { IPageService } from "./IPageService";
@@ -24,11 +24,11 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         return this.getUriByPermalink(permalink);
     }
 
-    public async getUriByPermalink(permalink: IPermalink): Promise<string> {
+    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
         return permalink.uri;
     }
 
-    public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
+    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
         if (permalink.targetKey && permalink.targetKey.startsWith("pages/")) {
             const page = await this.pageService.getPageByKey(permalink.targetKey);
 

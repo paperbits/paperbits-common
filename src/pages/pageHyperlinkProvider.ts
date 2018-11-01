@@ -1,5 +1,5 @@
 import { PageContract } from "../pages/pageContract";
-import { IPermalink } from "../permalinks/IPermalink";
+import { PermalinkContract } from "../permalinks/permalinkContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -8,7 +8,7 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Pages";
     public readonly componentName = "page-selector";
 
-    public canHandleHyperlink(permalink: IPermalink): boolean {
+    public canHandleHyperlink(permalink: PermalinkContract): boolean {
         return permalink.targetKey && permalink.targetKey.startsWith("pages/");
     }
 

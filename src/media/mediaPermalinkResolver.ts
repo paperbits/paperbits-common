@@ -1,4 +1,4 @@
-import { IPermalink, IPermalinkResolver, IPermalinkService } from "../permalinks";
+import { PermalinkContract, IPermalinkResolver, IPermalinkService } from "../permalinks";
 import { IMediaService } from "./IMediaService";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -24,7 +24,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         return this.getUriByPermalink(permalink);
     }
 
-    public async getUriByPermalink(permalink: IPermalink): Promise<string> {
+    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
         if (!permalink.targetKey) {
             return null;
         }
@@ -41,7 +41,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         }
     }
 
-    public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
+    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
         if (!permalink.targetKey) {
             return null;
         }

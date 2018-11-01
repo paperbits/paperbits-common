@@ -1,4 +1,4 @@
-import { IPermalink, IPermalinkResolver, IPermalinkService } from "./";
+import { PermalinkContract, IPermalinkResolver, IPermalinkService } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 
@@ -25,7 +25,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         return this.getUriByPermalink(permalink);
     }
 
-    public async getUriByPermalink(permalink: IPermalink): Promise<string> {
+    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
         if (!permalink) {
             throw new Error("Permalink cannot be null or empty.");
         }
@@ -41,7 +41,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         return permalink.uri;
     }
 
-    public async getHyperlinkByPermalink(permalink: IPermalink, target: string): Promise<HyperlinkModel> {
+    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
         for (const permalinkResolver of this.permalinkResolvers) {

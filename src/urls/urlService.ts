@@ -1,5 +1,5 @@
 ﻿import * as Utils from '../utils';
-import { IPermalink } from '../permalinks/IPermalink';
+import { PermalinkContract } from '../permalinks/permalinkContract';
 import { UrlContract } from '../urls/urlContract';
 import { IUrlService } from '../urls/IUrlService';
 import { IObjectStorage } from '../persistence/IObjectStorage';
