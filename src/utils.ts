@@ -453,3 +453,7 @@ export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
     
     return result;
 }
+
+export function clone(obj: Object): Object {
+    return JSON.parse(JSON.stringify(obj));
+}
