@@ -40,10 +40,20 @@ export class LayoutService implements ILayoutService {
             title: title,
             description: description,
             uriTemplate: uriTemplate,
+            contentKey: documentKey
+        };
+
+        const template = {
+            object: "block",
+            nodes: [{
+                object: "block",
+                type: "page"
+            }],
+            type: "layout"
         };
 
         await this.objectStorage.addObject(layoutKey, layout);
-        await this.objectStorage.addObject(documentKey, { nodes: [] });
+        await this.objectStorage.addObject(documentKey, template);
 
         return layout;
     }
