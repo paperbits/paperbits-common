@@ -1,20 +1,17 @@
-﻿import * as _ from 'lodash';
-import * as Utils from '../utils';
-import { PermalinkContract } from '../permalinks/permalinkContract';
-import { LayoutContract } from '../layouts/layoutContract';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import { ILayoutService } from "./ILayoutService";
+﻿import * as _ from "lodash";
+import * as Utils from "../utils";
+import { LayoutContract } from "../layouts/layoutContract";
+import { IObjectStorage } from "../persistence";
+import { ILayoutService } from "./";
+import { Contract } from "..";
 
 const layoutsPath = "layouts";
+const documentsPath = "files";
 
 export class LayoutService implements ILayoutService {
-    private readonly objectStorage: IObjectStorage;
+    constructor(private readonly objectStorage: IObjectStorage) { }
 
-    constructor(objectStorage: IObjectStorage) {
-        this.objectStorage = objectStorage;
-    }
-
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<LayoutContract>> {
+    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<LayoutContract[]> {
         return await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, tags, tagValue, startAtSearch);
     }
 
@@ -22,28 +19,31 @@ export class LayoutService implements ILayoutService {
         return await this.objectStorage.getObject<LayoutContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<LayoutContract>> {
+    public search(pattern: string): Promise<LayoutContract[]> {
         return this.searchByTags(["title"], pattern, true);
     }
 
     public async deleteLayout(layout: LayoutContract): Promise<void> {
-        let deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
-        let deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
+        const deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
+        const deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
 
         await Promise.all([deleteContentPromise, deleteLayoutPromise]);
     }
 
     public async createLayout(title: string, description: string, uriTemplate: string): Promise<LayoutContract> {
-        let layoutId = `${layoutsPath}/${Utils.guid()}`;
+        const identifier = Utils.guid();
+        const layoutKey = `${layoutsPath}/${identifier}`;
+        const documentKey = `${documentsPath}/${identifier}`;
 
-        let layout: LayoutContract = {
-            key: layoutId,
+        const layout: LayoutContract = {
+            key: layoutKey,
             title: title,
             description: description,
             uriTemplate: uriTemplate,
         };
 
-        await this.objectStorage.addObject(layoutId, layout);
+        await this.objectStorage.addObject(layoutKey, layout);
+        await this.objectStorage.addObject(documentKey, { nodes: [] });
 
         return layout;
     }
@@ -53,7 +53,7 @@ export class LayoutService implements ILayoutService {
     }
 
     public async getLayoutByUriTemplate(uriTemplate: string): Promise<LayoutContract> {
-        let layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, ["uriTemplate"], uriTemplate);
+        const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, ["uriTemplate"], uriTemplate);
         return layouts.length > 0 ? layouts[0] : null;
     }
 
@@ -62,16 +62,16 @@ export class LayoutService implements ILayoutService {
             return null;
         }
 
-        let layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
+        const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
 
         if (layouts && layouts.length) {
-            let filteredLayouts = layouts.filter((lyout: LayoutContract) => {
-                let regExp = lyout.uriTemplate;
+            const filteredLayouts = layouts.filter((lyout: LayoutContract) => {
+                const regExp = lyout.uriTemplate;
                 return !!route.match(regExp);
             });
 
             if (filteredLayouts && filteredLayouts.length) {
-                let layout: LayoutContract = _.maxBy(filteredLayouts, (item: LayoutContract) => { return item.uriTemplate.length });
+                const layout: LayoutContract = _.maxBy(filteredLayouts, (item: LayoutContract) => { return item.uriTemplate.length; });
 
                 return layout;
             }
@@ -82,5 +82,15 @@ export class LayoutService implements ILayoutService {
         else {
             return null;
         }
+    }
+
+    public async getLayoutContent(layoutKey: string): Promise<Contract> {
+        const layout = await this.getLayoutByKey(layoutKey);
+        return await this.objectStorage.getObject(layout.contentKey);
+    }
+
+    public async updateLayoutContent(layoutKey: string, document: Contract): Promise<void> {
+        const layout = await this.getLayoutByKey(layoutKey);
+        this.objectStorage.updateObject(layout.contentKey, document);
     }
 }

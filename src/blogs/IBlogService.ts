@@ -1,4 +1,5 @@
-﻿import { BlogPostContract } from "../blogs/BlogPostContract";
+﻿import { Contract } from "..";
+import { BlogPostContract } from "../blogs/BlogPostContract";
 
 /**
  * Service for managing blog posts.
@@ -24,11 +25,24 @@ export interface IBlogService {
      * @param description 
      * @param keywords 
      */
-    createBlogPost(title: string, description: string, keywords): Promise<BlogPostContract>;
+    createBlogPost(url: string, title: string, description: string, keywords): Promise<BlogPostContract>;
 
     /**
      * Updates a blog post.
      * @param blogPostRef 
      */
     updateBlogPost(blogPostRef: BlogPostContract): Promise<void>;
+
+    /**
+     * Returns blog post content by specified key.
+     * @param postKey 
+     */
+    getBlogPostContent(postKey: string): Promise<Contract>;
+
+    /**
+     * Updates blog post content.
+     * @param postKey 
+     * @param document 
+     */
+    updateBlogPostContent(postKey: string, document: Contract): Promise<void>;
 }

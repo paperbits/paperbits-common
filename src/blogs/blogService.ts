@@ -1,20 +1,24 @@
-﻿import * as Utils from '../utils';
-import { PermalinkContract } from '../permalinks/permalinkContract';
-import { BlogPostContract } from '../blogs/BlogPostContract';
-import { IBlogService } from '../blogs/IBlogService';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import * as _ from 'lodash';
+﻿import * as _ from "lodash";
+import * as Utils from "../utils";
+import { BlogPostContract } from "../blogs/BlogPostContract";
+import { IBlogService } from "../blogs/IBlogService";
+import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IPermalinkService } from "../permalinks";
+import { IBlockService } from "../blocks";
+import { Contract } from "..";
 
 const blogPostsPath = "posts";
+const documentsPath = "files";
+const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
 
 export class BlogService implements IBlogService {
-    private readonly objectStorage: IObjectStorage;
+    constructor(
+        private readonly objectStorage: IObjectStorage,
+        private readonly permalinkService: IPermalinkService,
+        private readonly blockService: IBlockService
+    ) { }
 
-    constructor(objectStorage: IObjectStorage) {
-        this.objectStorage = objectStorage;
-    }
-
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<BlogPostContract>> {
+    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<BlogPostContract[]> {
         return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
     }
 
@@ -22,34 +26,54 @@ export class BlogService implements IBlogService {
         return await this.objectStorage.getObject<BlogPostContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<BlogPostContract>> {
+    public search(pattern: string): Promise<BlogPostContract[]> {
         return this.searchByTags(["title"], pattern, true);
     }
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
-        let deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
-        let deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
-        let deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
+        const deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
+        const deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
+        const deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
 
         await Promise.all([deleteContentPromise, deletePermalinkPromise, deleteBlogPostPromise]);
     }
 
-    public async createBlogPost(title: string, description: string, keywords): Promise<BlogPostContract> {
-        let blogPostId = `${blogPostsPath}/${Utils.guid()}`;
+    public async createBlogPost(url: string, title: string, description: string, keywords): Promise<BlogPostContract> {
+        const identifier = Utils.guid();
+        const postKey = `${blogPostsPath}/${identifier}`;
+        const documentKey = `${documentsPath}/${identifier}`;
 
-        let blogPost: BlogPostContract = {
-            key: blogPostId,
+        const permalink = await this.permalinkService.createPermalink(url, postKey);
+
+        const post: BlogPostContract = {
+            key: postKey,
             title: title,
             description: description,
             keywords: keywords,
+            permalinkKey: permalink.key,
+            contentKey: documentKey
         };
 
-        await this.objectStorage.addObject(blogPostId, blogPost);
+        await this.objectStorage.addObject(postKey, post);
 
-        return blogPost;
+        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+
+        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
+
+        return post;
     }
 
     public async updateBlogPost(blogPost: BlogPostContract): Promise<void> {
         await this.objectStorage.updateObject<BlogPostContract>(blogPost.key, blogPost);
+    }
+
+    public async getBlogPostContent(postKey: string): Promise<Contract> {
+        const page = await this.getBlogPostByKey(postKey);
+        return await this.objectStorage.getObject(page.contentKey);
+    }
+
+    public async updateBlogPostContent(postKey: string, document: Contract): Promise<void> {
+        const page = await this.getBlogPostByKey(postKey);
+        this.objectStorage.updateObject(page.contentKey, document);
     }
 }

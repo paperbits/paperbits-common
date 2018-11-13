@@ -1,5 +1,5 @@
 ﻿/**
- * Data structure describing a navigation items like menus.
+ * Data structure describing a navigation items, e.g. menus.
  */
 export interface NavigationItemContract {
     /**

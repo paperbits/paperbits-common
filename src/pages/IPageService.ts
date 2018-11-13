@@ -1,4 +1,5 @@
-﻿import { PageContract } from "../pages/pageContract";
+﻿import { Contract } from "../";
+import { PageContract } from "../pages/pageContract";
 
 /**
  * Service for managing pages.
@@ -10,7 +11,7 @@ export interface IPageService {
     search(pattern: string): Promise<PageContract[]>;
 
     /**
-     * Returns page by specified key;
+     * Returns page by specified key.
      */
     getPageByKey(key: string): Promise<PageContract>;
 
@@ -22,10 +23,23 @@ export interface IPageService {
     /**
      * Creates a new page in storage and returns its contract.
      */
-    createPage(title: string, description: string, keywords): Promise<PageContract>;
+    createPage(url: string, title: string, description: string, keywords): Promise<PageContract>;
 
     /**
      * Updates a page.
      */
     updatePage(page: PageContract): Promise<void>;
+
+    /**
+     * Returns page content by specified key.
+     * @param pageKey 
+     */
+    getPageContent(pageKey: string): Promise<Contract>;
+
+    /**
+     * Updates page content.
+     * @param pageKey {string} Key of the page.
+     * @param document {Contract} Content of the page.
+     */
+    updatePageContent(pageKey: string, document: Contract): Promise<void>;
 }

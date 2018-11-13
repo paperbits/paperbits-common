@@ -35,7 +35,7 @@ export interface PageContract {
     ogImagePermalinkKey?: string;
 
     /**
-     * Key of a file having page content.
+     * Key of a document containing page content.
      */
     contentKey?: string;
 

@@ -1,9 +1,8 @@
-﻿import * as Utils from '../utils';
-import { PermalinkContract } from '../permalinks/permalinkContract';
-import { UrlContract } from '../urls/urlContract';
-import { IUrlService } from '../urls/IUrlService';
-import { IObjectStorage } from '../persistence/IObjectStorage';
-import * as _ from 'lodash';
+﻿import * as Utils from "../utils";
+import { UrlContract } from "../urls/urlContract";
+import { IUrlService } from "../urls/IUrlService";
+import { IObjectStorage } from "../persistence/IObjectStorage";
+import * as _ from "lodash";
 
 const urlsPath = "urls";
 
@@ -14,7 +13,7 @@ export class UrlService implements IUrlService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByTags(tags: Array<string>, tagValue: string, startAtSearch: boolean): Promise<Array<UrlContract>> {
+    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<UrlContract[]> {
         return await this.objectStorage.searchObjects<UrlContract>(urlsPath, tags, tagValue, startAtSearch);
     }
 
@@ -22,13 +21,13 @@ export class UrlService implements IUrlService {
         return await this.objectStorage.getObject<UrlContract>(key);
     }
 
-    public search(pattern: string): Promise<Array<UrlContract>> {
+    public search(pattern: string): Promise<UrlContract[]> {
         return this.searchByTags(["title"], pattern, true);
     }
 
     public async deleteUrl(url: UrlContract): Promise<void> {
-        let deletePermalinkPromise = this.objectStorage.deleteObject(url.permalinkKey);
-        let deleteUrlPromise = this.objectStorage.deleteObject(url.key);
+        const deletePermalinkPromise = this.objectStorage.deleteObject(url.permalinkKey);
+        const deleteUrlPromise = this.objectStorage.deleteObject(url.key);
 
         await Promise.all([deletePermalinkPromise, deleteUrlPromise]);
     }
