@@ -75,19 +75,11 @@ export class LayoutService implements ILayoutService {
         const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
 
         if (layouts && layouts.length) {
-            const filteredLayouts = layouts.filter((lyout: LayoutContract) => {
-                const regExp = lyout.uriTemplate;
-                return !!route.match(regExp);
+            const layout = layouts.find((lyout: LayoutContract) => {
+                return Utils.matchUrl(route, lyout.uriTemplate) !== undefined;
             });
-
-            if (filteredLayouts && filteredLayouts.length) {
-                const layout: LayoutContract = _.maxBy(filteredLayouts, (item: LayoutContract) => { return item.uriTemplate.length; });
-
-                return layout;
-            }
-            else {
-                return null;
-            }
+            
+            return layout || layouts.find(layout => layout.uriTemplate === "/");
         }
         else {
             return null;

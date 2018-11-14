@@ -461,3 +461,48 @@ export function clone(obj: Object): Object {
 export function camelCaseToKebabCase(str: string): string {
     return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
+
+export function matchUrl(urlPath: string, urlTemplate: string): {index: number, name: string, value?: string}[] {
+    if (urlPath.charAt(0) === "/") { 
+        urlPath = urlPath.slice(1); 
+    }
+    if (urlTemplate.charAt(0) === "/") { 
+        urlTemplate = urlTemplate.slice(1); 
+    }
+
+    if (urlPath.charAt(urlPath.length - 1) === "/") { 
+        urlPath = urlPath.slice(0, -1); 
+    }
+    if (urlTemplate.charAt(urlTemplate.length - 1) === "/") { 
+        urlTemplate = urlTemplate.slice(0, -1); 
+    }
+
+    const pathSegments = urlPath.split("/");
+    const templateSegments = urlTemplate.split("/");
+    if (pathSegments.length !== templateSegments.length) {
+        return undefined;
+    }
+
+    let tokens: {index: number, name: string, value?: string}[] = [];
+    templateSegments.filter((t, index) => {
+        if(t.charAt(0) === '{') {
+            tokens.push({index: index, name: t.replace(/{|}/g, "")});
+        }
+    });
+
+    for (let i = 0; i < pathSegments.length; i++) {
+        let segment = pathSegments[i];
+        let token = tokens.find(t => t.index === i);
+        if(!token && segment === templateSegments[i]) {
+            continue;
+        } else {
+            if (token) {
+                token.value = segment;
+            } else {
+                return undefined;
+            }
+        }
+    }
+
+    return tokens;
+}
