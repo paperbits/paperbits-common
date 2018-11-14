@@ -450,10 +450,14 @@ export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
             lastAssigned = value;
         }
     });
-    
+
     return result;
 }
 
 export function clone(obj: Object): Object {
     return JSON.parse(JSON.stringify(obj));
+}
+
+export function camelCaseToKebabCase(str: string): string {
+    return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
