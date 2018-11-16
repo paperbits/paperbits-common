@@ -11,7 +11,6 @@ export class DefaultRouteHandler implements IRouteHandler {
     protected path: string;
     protected metadata: Object;
     protected routeCheckers: IRouteChecker[];
-    protected topWindow: Window;
 
     public notifyListeners: boolean;
 
@@ -21,7 +20,6 @@ export class DefaultRouteHandler implements IRouteHandler {
         // initialization...
         this.eventManager = eventManager;
         this.routeCheckers = [];
-        this.topWindow = window.parent || window; /* Hack to cover both design- and runtime */
 
         // rebinding...
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
@@ -30,7 +28,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.path = "";
         this.notifyListeners = true;
 
-        addEventListener("popstate", () => this.navigateTo(this.topWindow.location.pathname));
+        addEventListener("popstate", () => this.navigateTo(location.pathname));
     }
 
     public addRouteChangeListener(eventHandler: (args?) => void): void {
@@ -64,7 +62,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
 
         const isFullUrl = !url.startsWith("/");
-        const isLocalUrl = url.startsWith(this.topWindow.location.origin);
+        const isLocalUrl = url.startsWith(location.origin);
 
         if (isFullUrl && !isLocalUrl) {
             window.open(url, "_blank"); // navigating external link
@@ -72,7 +70,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
 
         const path = isFullUrl
-            ? url.substring(this.topWindow.location.origin.length)
+            ? url.substring(location.origin.length)
             : url;
 
         if (path === this.path && this.metadata === metadata) {
@@ -96,14 +94,14 @@ export class DefaultRouteHandler implements IRouteHandler {
             const pathname = parts[0];
             const hash = parts[1];
 
-            if (pathname === this.topWindow.location.pathname) {
+            if (pathname === location.pathname) {
                 return; // TODO: Figure out how to navigate anchors.
             }
         }
 
         this.path = path;
 
-        this.topWindow.history.pushState(null, null, path);
+        history.pushState(null, null, path);
 
         if (this.notifyListeners) {
             this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
@@ -135,7 +133,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         let permalink = this.path;
 
         if (permalink === "") {
-            permalink = this.topWindow.location.pathname;
+            permalink = location.pathname;
         }
 
         return permalink;

@@ -478,27 +478,36 @@ export function matchUrl(urlPath: string, urlTemplate: string): {index: number, 
     }
 
     const pathSegments = urlPath.split("/");
+
     const templateSegments = urlTemplate.split("/");
-    if (pathSegments.length !== templateSegments.length) {
+    if (pathSegments.length !== templateSegments.length && urlTemplate.indexOf("*") === -1) {
         return undefined;
     }
 
-    let tokens: {index: number, name: string, value?: string}[] = [];
+    const tokens: {index: number, name: string, value?: string}[] = [];
+    
     templateSegments.filter((t, index) => {
-        if(t.charAt(0) === '{') {
+        if (t.charAt(0) === "{") {
             tokens.push({index: index, name: t.replace(/{|}/g, "")});
         }
     });
 
-    for (let i = 0; i < pathSegments.length; i++) {
-        let segment = pathSegments[i];
-        let token = tokens.find(t => t.index === i);
-        if(!token && segment === templateSegments[i]) {
+    for (let i = 0; i < templateSegments.length; i++) {
+        const segment = pathSegments[i];
+        const token = tokens.find(t => t.index === i);
+
+        if (!token && (segment === templateSegments[i] || templateSegments[i] === "*")) {
+            if (templateSegments[i] === "*") {
+                return tokens;
+            }
+
             continue;
-        } else {
+        }
+        else {
             if (token) {
                 token.value = segment;
-            } else {
+            }
+            else {
                 return undefined;
             }
         }
