@@ -1,4 +1,4 @@
-﻿import { IBag } from "../IBag";
+﻿import { Bag } from "../Bag";
 
 export interface BlogPostContract {
     key?: string;
@@ -7,7 +7,7 @@ export interface BlogPostContract {
     keywords: string;
     contentKey?: string;
     permalinkKey?: string;
-    anchors?: IBag<string>;
+    anchors?: Bag<string>;
     created?: string;
     updated?: string;
     author?: string;

@@ -1,4 +1,4 @@
-﻿import { IBag } from "../IBag";
+﻿import { Bag } from "../";
 
 /**
  * Page metadata.
@@ -47,5 +47,5 @@ export interface PageContract {
     /**
      * Keys of anchors used in page content. Anchor is a special type of a permalink.
      */
-    anchors?: IBag<string>;
+    anchors?: Bag<string>;
 }
