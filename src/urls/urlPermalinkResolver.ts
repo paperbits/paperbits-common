@@ -33,7 +33,7 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
         if (permalink.targetKey && permalink.targetKey.startsWith("urls/")) {
             const url = await this.urlService.getUrlByKey(permalink.targetKey);
 
-            let hyperlinkModel = new HyperlinkModel();
+            const hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = url.title;
             hyperlinkModel.target = target;
             hyperlinkModel.permalinkKey = permalink.key;

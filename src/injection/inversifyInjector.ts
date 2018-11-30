@@ -1,16 +1,15 @@
 ﻿import "reflect-metadata";
 import { IInjector, IInjectorModule } from "../injection";
-import { inject, injectable, Container, decorate, interfaces } from "inversify";
-
+import { inject, injectable, Container, decorate, interfaces, multiInject, LazyServiceIdentifer } from "inversify";
 
 export class InversifyInjector implements IInjector {
     private kernel: Container;
 
     constructor() {
-        this.kernel = new Container();
-
         this.bindSingleton = this.bindSingleton.bind(this);
         this.bind = this.bind.bind(this);
+
+        this.kernel = new Container();
     }
 
     public getFunctionArguments(func): string[] {
@@ -36,13 +35,7 @@ export class InversifyInjector implements IInjector {
             });
     }
 
-    private bindInternal<T>(name: string, component: any): interfaces.BindingInWhenOnSyntax<T> {
-        if (this.kernel.isBound(name)) {
-            this.kernel.unbind(name);
-        }
-
-        const metaDataKeys = Reflect.getMetadataKeys(component);
-
+    private decorateComponent(name: string, component: any): void {
         try {
             decorate(injectable(), component);
         }
@@ -60,6 +53,14 @@ export class InversifyInjector implements IInjector {
                 console.warn(`Unable to decorate constructor argument "${constructorArguments[i]}" for component "${name}". ${error}`);
             }
         }
+    }
+
+    private bindInternal<T>(name: string, component: any): interfaces.BindingInWhenOnSyntax<T> {
+        if (this.kernel.isBound(name)) {
+            this.kernel.unbind(name);
+        }
+
+        this.decorateComponent(name, component);
 
         return this.kernel.bind<T>(name).to(component);
     }
@@ -110,5 +111,43 @@ export class InversifyInjector implements IInjector {
 
     public bindModule(module: IInjectorModule): void {
         module.register(this);
+    }
+
+    private collections = {};
+
+    public bindCollection(collectionName: string): void {
+        const kernel = this.kernel;
+
+        @injectable()
+        class Collection {
+            constructor() {
+                const result = [];
+
+                setImmediate(() => {
+                    const collection = kernel.getAll(collectionName + "C");
+                    result.push(...collection);
+                });
+
+                return result;
+            }
+        }
+        this.kernel.bind<any>(collectionName).to(Collection).inSingletonScope();
+    }
+
+    public bindToCollection(collectionName: string, component: any, name?: string): void {
+        this.decorateComponent(collectionName + "C", component);
+        this.kernel.bind<any>(collectionName + "C").to(component);
+
+        if (name) {
+            this.kernel.bind<any>(name).to(component);
+        }
+    }
+
+    public bindInstanceToCollection(collectionName: string, instance: any, name?: string): void {
+        this.kernel.bind<any>(collectionName + "C").toConstantValue(instance);
+
+        if (name) {
+            this.kernel.bind<any>(name).toConstantValue(instance);
+        }
     }
 }

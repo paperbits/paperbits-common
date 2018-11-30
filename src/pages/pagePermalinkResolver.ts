@@ -14,7 +14,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
     }
 
     public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {
             console.warn(`Permalink with key ${permalinkKey} not found.`);
@@ -32,7 +32,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         if (permalink.targetKey && permalink.targetKey.startsWith("pages/")) {
             const page = await this.pageService.getPageByKey(permalink.targetKey);
 
-            let hyperlinkModel = new HyperlinkModel();
+            const hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = page.title;
             hyperlinkModel.target = target;
             hyperlinkModel.permalinkKey = permalink.key;
@@ -45,9 +45,9 @@ export class PagePermalinkResolver implements IPermalinkResolver {
             const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
             const page = await this.pageService.getPageByKey(parentPermalink.targetKey);
 
-            let anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];
+            const anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];
 
-            let hyperlinkModel = new HyperlinkModel();
+            const hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = `${page.title} > ${anchorTitle}`;
             hyperlinkModel.target = target;
             hyperlinkModel.permalinkKey = permalink.key;

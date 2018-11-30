@@ -14,7 +14,7 @@ export class BlogPermalinkResolver implements IPermalinkResolver {
     }
 
     public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        let permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
 
         if (!permalink) {
             console.warn(`Permalink with key ${permalinkKey} not found.`);
@@ -32,7 +32,7 @@ export class BlogPermalinkResolver implements IPermalinkResolver {
         if (permalink.targetKey && permalink.targetKey.startsWith("posts/")) {
             const post = await this.blogService.getBlogPostByKey(permalink.targetKey);
 
-            let hyperlinkModel = new HyperlinkModel();
+            const hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = post.title;
             hyperlinkModel.target = target;
             hyperlinkModel.permalinkKey = permalink.key;
@@ -45,9 +45,9 @@ export class BlogPermalinkResolver implements IPermalinkResolver {
             const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
             const post = await this.blogService.getBlogPostByKey(parentPermalink.targetKey);
 
-            let anchorTitle = post.anchors[permalink.key.replaceAll("/", "|")];
+            const anchorTitle = post.anchors[permalink.key.replaceAll("/", "|")];
 
-            let hyperlinkModel = new HyperlinkModel();
+            const hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = anchorTitle;
             hyperlinkModel.target = target;
             hyperlinkModel.permalinkKey = permalink.key;

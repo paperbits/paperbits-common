@@ -7,5 +7,5 @@ export interface IPermalinkResolver {
     getUrlByPermalinkKey(permalinkKey: string): Promise<string>;
     getHyperlinkFromConfig?(hyperlink: HyperlinkContract): Promise<HyperlinkModel>;
     getHyperlinkByPermalink?(permalink: PermalinkContract, target: string): Promise<HyperlinkModel>;
-    getHyperlinkByPermalinkKey?(permalinkKey: string): Promise<HyperlinkModel>
+    getHyperlinkByPermalinkKey?(permalinkKey: string): Promise<HyperlinkModel>;
 }

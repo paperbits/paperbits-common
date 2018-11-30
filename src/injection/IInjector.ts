@@ -9,4 +9,7 @@ export interface IInjector {
     bindSingletonFactory<T>(name, factory: (ctx: IInjector) => T): void;
     bindModule(module: IInjectorModule): void;
     resolve<TImplementationType>(runtimeIdentifier: string): TImplementationType;
+    bindCollection<T>(collectionName: string): void;
+    bindToCollection<T>(collectionName: string, component: any, name?: string): void;
+    bindInstanceToCollection(collectionName: string, instance: any, name?: string): void;
 }

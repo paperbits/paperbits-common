@@ -23,7 +23,7 @@ export class PlaceholderModelBinder implements IModelBinder {
 }
 
 export class ModelBinderSelector {
-    constructor(private modelBinders: Array<IModelBinder>) {}
+    constructor(private modelBinders: IModelBinder[]) {}
 
     public getModelBinderByNodeType(widgetType: string): IModelBinder {
         const modelBinder = this.modelBinders.find(x => {
