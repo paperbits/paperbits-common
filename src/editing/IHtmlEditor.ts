@@ -1,4 +1,4 @@
-﻿import { HyperlinkContract } from "../editing/hyperlinkContract";
+﻿import { HyperlinkModel } from "./../permalinks";
 import { SelectionState } from "./selectionState";
 
 export let formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -14,10 +14,11 @@ export interface ISelectionPosition {
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     detachFromElement(): void;
-    getSelectionState(viewport: string): SelectionState;
+    getSelectionState(): SelectionState;
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
+    toggleParagraph(): void;
     toggleH1(): void;
     toggleH2(): void;
     toggleH3(): void;
@@ -25,21 +26,20 @@ export interface IHtmlEditor {
     toggleH5(): void;
     toggleH6(): void;
     toggleQuote(): void;
-    toggleCode(): void;
+    toggleFormatted(): void;
     toggleSize(): void;
     toggleOrderedList(): void;
     toggleUnorderedList(): void;
-    alignLeft(viewport: string): void;
-    alignCenter(viewport: string): void;
-    alignRight(viewport: string): void;
-    justify(viewport: string): void;
+    alignLeft(): void;
+    alignCenter(): void;
+    alignRight(): void;
+    justify(): void;
     setTypegraphy(font: string): void;
-    resetToNormal(): void;
-    setHyperlink(hyperlink: HyperlinkContract, selectionPosition?: ISelectionPosition): void;
+    setHyperlink(hyperlink: HyperlinkModel, selectionPosition?: ISelectionPosition): void;
     setAnchor(hash: string, anchorKey: string): void;
     removeAnchor(): void;
     removeHyperlink(): void;
-    getHyperlink(): HyperlinkContract;
+    getHyperlink(): HyperlinkModel;
     setSelection(selection: Selection): void;
     expandSelection(): void;
     getState(): Object;

@@ -1,5 +1,5 @@
-import { IHtmlEditor, formattableStates } from '../editing/IHtmlEditor';
-import { IEventManager } from '../events/IEventManager';
+import { IHtmlEditor, formattableStates } from "../editing";
+import { IEventManager } from "../events";
 
 export interface IHtmlEditorProvider {
     getCurrentHtmlEditor(): IHtmlEditor;
@@ -13,7 +13,6 @@ export class HtmlEditorProvider implements IHtmlEditorProvider {
         this.setCurrentHtmlEditor = this.setCurrentHtmlEditor.bind(this);
 
         eventManager.addEventListener("htmlEditorChanged", this.setCurrentHtmlEditor);
-        eventManager.addEventListener("enableHtmlEditor", this.setCurrentHtmlEditor);
     }
 
     private setCurrentHtmlEditor(htmlEditor: IHtmlEditor): void {
