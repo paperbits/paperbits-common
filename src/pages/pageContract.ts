@@ -32,7 +32,7 @@ export interface PageContract {
     /**
      * Facebook Open Graph: This is how you ensure that a particular thumbnail will be shown when your page is shared.
      */
-    ogImagePermalinkKey?: string;
+    ogImageSourceKey?: string;
 
     /**
      * Key of a document containing page content.

@@ -30,45 +30,22 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.type = "page";
 
         return hyperlinkModel;
-
-        // else if (permalink.parentKey) {
-        //     const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
-        //     const page = await this.pageService.getPageByKey(parentPermalink.targetKey);
-
-        //     const anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];
-
-        //     const hyperlinkModel = new HyperlinkModel();
-        //     hyperlinkModel.title = `${page.title} > ${anchorTitle}`;
-        //     hyperlinkModel.target = target;
-        //     hyperlinkModel.permalinkKey = permalink.key;
-        //     hyperlinkModel.href = permalink.uri;
-        //     hyperlinkModel.type = "anchor";
-
-        //     return hyperlinkModel;
-        // }
-
-        return null;
     }
 
-    public async getHyperlinkFromConfig(hyperlink: HyperlinkContract): Promise<HyperlinkModel> {
+    public async getHyperlinkFromConfig(hyperlinkContract: HyperlinkContract): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
-        let permalinkKey: string = null;
 
-        if (hyperlink.permalinkKey) {
-            permalinkKey = hyperlink.permalinkKey;
-        }
-
-        if (permalinkKey) {
-            const contentItem = await this.contentItemService.getContentItemByKey(permalinkKey);
+        if (hyperlinkContract.targetKey) {
+            const contentItem = await this.contentItemService.getContentItemByKey(hyperlinkContract.targetKey);
 
             if (contentItem) {
-                hyperlinkModel = await this.getHyperlinkByPermalink(contentItem, hyperlink.target);
+                hyperlinkModel = await this.getHyperlinkByPermalink(contentItem, hyperlinkContract.target);
 
                 if (!hyperlinkModel) {
                     hyperlinkModel = new HyperlinkModel();
                     hyperlinkModel.title = contentItem.title || contentItem.permalink;
-                    hyperlinkModel.target = hyperlink.target || "_blank";
+                    hyperlinkModel.target = hyperlinkContract.target || "_blank";
                     hyperlinkModel.targetKey = contentItem.key;
                     hyperlinkModel.href = contentItem.permalink;
                     hyperlinkModel.type = "url";
@@ -78,12 +55,12 @@ export class PermalinkResolver implements IPermalinkResolver {
             }
         }
 
-        if (hyperlink.href) {
+        if (hyperlinkContract.href) {
             hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = "External link";
-            hyperlinkModel.target = hyperlink.target || "_blank";
+            hyperlinkModel.target = hyperlinkContract.target || "_blank";
             hyperlinkModel.targetKey = null;
-            hyperlinkModel.href = hyperlink.href;
+            hyperlinkModel.href = hyperlinkContract.href;
             hyperlinkModel.type = "url";
 
             return hyperlinkModel;
@@ -91,7 +68,7 @@ export class PermalinkResolver implements IPermalinkResolver {
 
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
-        hyperlinkModel.target = hyperlink.target || "_blank";
+        hyperlinkModel.target = hyperlinkContract.target || "_blank";
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.type = "url";

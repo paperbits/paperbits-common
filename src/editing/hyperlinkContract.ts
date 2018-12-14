@@ -7,7 +7,7 @@ export interface HyperlinkContract extends InlineContract {
     /**
      * Key of permalink that is used to define "href" attribute of hyperlink element.
      */
-    permalinkKey?: string;
+    targetKey?: string;
 
     /**
      * Technically, we should always use only permalinks, even for external URLs;

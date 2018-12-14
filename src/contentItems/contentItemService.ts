@@ -41,10 +41,9 @@ export class ContentItemService implements IContentItemService {
 
     public async deleteContentItem(contentItem: ContentItemContract): Promise<void> {
         const deleteContentPromise = this.objectStorage.deleteObject(contentItem.contentKey);
-        const deletePermalinkPromise = this.objectStorage.deleteObject(contentItem.permalinkKey);
         const deleteContentItemPromise = this.objectStorage.deleteObject(contentItem.key);
 
-        await Promise.all([deleteContentPromise, deletePermalinkPromise, deleteContentItemPromise]);
+        await Promise.all([deleteContentPromise, deleteContentItemPromise]);
     }
 
     public async createContentItem(url: string, title: string, description: string, keywords): Promise<ContentItemContract> {

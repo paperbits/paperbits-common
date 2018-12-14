@@ -4,5 +4,5 @@ import { HyperlinkModel } from "./hyperlinkModel";
 export interface IPermalinkResolver {
     getUrlByContentItemKey(contentItemKey: string): Promise<string>;
     getHyperlinkFromConfig?(hyperlink: HyperlinkContract): Promise<HyperlinkModel>;
-    getHyperlinkByContentItemKey?(permalinkKey: string): Promise<HyperlinkModel>;
+    getHyperlinkByContentItemKey?(contentItemKey: string): Promise<HyperlinkModel>;
 }

@@ -20,12 +20,9 @@ export class BlogService implements IBlogService {
         return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
     }
 
-    public async getBlogPostByUrl(url: string): Promise<BlogPostContract> {
-        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
-        const blogKey = permalinks[0].targetKey;
-        const blogPostContract = await this.getBlogPostByKey(blogKey);
-
-        return blogPostContract;
+    public async getBlogPostByPermalink(permalink: string): Promise<BlogPostContract> {
+        const posts = await this.objectStorage.searchObjects<any>(blogPostsPath, ["permalink"], permalink);
+        return posts.length > 0 ? posts[0] : null;
     }
 
     public async getBlogPostByKey(key: string): Promise<BlogPostContract> {

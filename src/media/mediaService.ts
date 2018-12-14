@@ -14,12 +14,9 @@ export class MediaService implements IMediaService {
         this.blobStorage = blobStorage;
     }
 
-    public async getMediaByUrl(url: string): Promise<MediaContract> {
-        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
-        const mediaKey = permalinks[0].targetKey;
-        const mediaContract = await this.getMediaByKey(mediaKey);
-
-        return mediaContract;
+    public async getMediaByUrl(permalink: string): Promise<MediaContract> {
+        const uploads = await this.objectStorage.searchObjects<any>(uploadsPath, ["permalink"], permalink);
+        return uploads.length > 0 ? uploads[0] : null;
     }
 
     public searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]> {

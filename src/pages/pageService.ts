@@ -18,12 +18,9 @@ export class PageService implements IPageService {
         return await this.objectStorage.searchObjects<PageContract>(pagesPath, tags, tagValue, startAtSearch);
     }
 
-    public async getPageByUrl(url: string): Promise<PageContract> {
-        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
-        const pageKey = permalinks[0].targetKey;
-        const pageContract = await this.getPageByKey(pageKey);
-
-        return pageContract;
+    public async getPageByPermalink(permalink: string): Promise<PageContract> {
+        const pages = await this.objectStorage.searchObjects<any>(pagesPath, ["permalink"], permalink);
+        return pages.length > 0 ? pages[0] : null;
     }
 
     public async getPageByKey(key: string): Promise<PageContract> {
