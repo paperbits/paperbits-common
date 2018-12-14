@@ -15,7 +15,7 @@ export interface NavigationItemContract {
     /**
      * Key of a permalink referencing resource this navigation item is pointing to.
      */
-    permalinkKey?: string;
+    targetKey?: string;
 
     /**
      * Child navigation items.

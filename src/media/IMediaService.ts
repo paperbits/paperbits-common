@@ -1,6 +1,5 @@
 ﻿import { MediaContract } from "../media/mediaContract";
 import { ProgressPromise } from "../progressPromise";
-import { ICreatedMedia } from "../media/ICreatedMedia";
 
 /**
  * Service for managing media files.
@@ -12,11 +11,7 @@ export interface IMediaService {
      */
     getMediaByKey(key: string): Promise<MediaContract>;
 
-    /**
-     * Returns media file metadata by its permalink key.
-     * @param permalinkKey Key of permalink pointing to a media file.
-     */
-    getMediaByPermalinkKey(permalinkKey: string): Promise<MediaContract>;
+    getMediaByUrl(url: string): Promise<MediaContract>;
 
     searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]>;
 
@@ -34,7 +29,7 @@ export interface IMediaService {
      * @param content Content in form of byte array.
      * @param contentType Content type, i.e. "image/png".
      */
-    createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia>;
+    createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<MediaContract>;
 
     updateMedia(media: MediaContract): Promise<void>;
 }

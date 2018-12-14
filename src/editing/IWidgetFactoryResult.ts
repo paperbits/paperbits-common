@@ -1,4 +1,4 @@
-import { ICreatedMedia } from "./../media/ICreatedMedia";
+import { MediaContract } from "./../media";
 import { IWidgetBinding } from "./IWidgetBinding";
 
 
@@ -21,5 +21,5 @@ export interface IWidgetFactoryResult {
     /**
      * Callback method invoked when media file upload completed.
      */
-    onMediaUploadedCallback?(media: ICreatedMedia);
+    onMediaUploadedCallback?(media: MediaContract);
 }

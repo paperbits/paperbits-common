@@ -17,8 +17,5 @@ export interface UrlContract {
      */
     description?: string;
 
-    /**
-     * Key of permalink referencing this url.
-     */
-    permalinkKey?: string;
+    permalink?: string;
 }

@@ -1,48 +1,51 @@
-import { PermalinkContract } from "../permalinks/permalinkContract";
-import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
-import { IPermalinkService } from "../permalinks";
-import { IUrlService } from "./IUrlService";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
+// import { PermalinkContract } from "../permalinks/permalinkContract";
+// import { IPermalinkResolver } from "../permalinks/IPermalinkResolver";
+// import { IPermalinkService } from "../permalinks";
+// import { IUrlService } from "./IUrlService";
+// import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 
-export class UrlPermalinkResolver implements IPermalinkResolver {
-    private readonly permalinkService: IPermalinkService;
-    private readonly urlService: IUrlService;
+// export class UrlPermalinkResolver implements IPermalinkResolver {
+//     private readonly permalinkService: IPermalinkService;
+//     private readonly urlService: IUrlService;
 
-    constructor(permalinkService: IPermalinkService, urlService: IUrlService) {
-        this.permalinkService = permalinkService;
-        this.urlService = urlService;
-    }
+//     constructor(permalinkService: IPermalinkService, urlService: IUrlService) {
+//         this.permalinkService = permalinkService;
+//         this.urlService = urlService;
+//     }
 
-    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+//     public async getUrlByContentItemKey(permalinkKey: string): Promise<string> {
+//         if (!contentItemKey) {
+//             throw new Error("Permalink key cannot be null or empty.");
+//         }
 
-        if (!permalink) {
-            console.warn(`Permalink with key ${permalinkKey} not found.`);
-            return null;
-        }
+//         const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
 
-        return this.getUriByPermalink(permalink);
-    }
+//         if (!contentItem) {
+//             throw new Error(`Could not find permalink with key ${contentItemKey}.`);
+//         }
 
-    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
-        return permalink.uri;
-    }
+//         return contentItem.permalink;
+//     // }
 
-    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
-        if (permalink.targetKey && permalink.targetKey.startsWith("urls/")) {
-            const url = await this.urlService.getUrlByKey(permalink.targetKey);
+//     // public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
+//     //     return permalink.uri;
+//     // }
 
-            const hyperlinkModel = new HyperlinkModel();
-            hyperlinkModel.title = url.title;
-            hyperlinkModel.target = target;
-            hyperlinkModel.permalinkKey = permalink.key;
-            hyperlinkModel.href = permalink.uri;
-            hyperlinkModel.type = "url";
+//     public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
+//         if (permalink.targetKey && permalink.targetKey.startsWith("urls/")) {
+//             const url = await this.urlService.getUrlByKey(permalink.targetKey);
 
-            return hyperlinkModel;
-        }
+//             const hyperlinkModel = new HyperlinkModel();
+//             hyperlinkModel.title = url.title;
+//             hyperlinkModel.target = target;
+//             hyperlinkModel.permalinkKey = permalink.key;
+//             hyperlinkModel.href = permalink.uri;
+//             hyperlinkModel.type = "url";
 
-        return null;
-    }
-}
+//             return hyperlinkModel;
+//         }
+
+//         return null;
+//     }
+// }

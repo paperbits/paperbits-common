@@ -1,5 +1,3 @@
-import { PermalinkContract } from "./../permalinks/permalinkContract";
-
 /**
  * Provider that helps to create a hyperlink out of a resource.
  */
@@ -17,7 +15,7 @@ export interface IHyperlinkProvider {
     /**
      * Determines if this provider is suitable for a resource the permalink points to.
      */
-    canHandleHyperlink?(permalink: PermalinkContract): boolean;
+    canHandleHyperlink?(contentItemKey: string): boolean;
 
     /**
      * Creates hyperlink from specified resource, i.e. Page or Media.

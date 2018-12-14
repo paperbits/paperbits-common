@@ -15,7 +15,7 @@ export class HyperlinkModel {
     /**
      * Example: "pages/43i4394u3kn34j3h4gujhhfe444"
      */
-    public permalinkKey?: string;
+    public targetKey?: string;
 
     /**
      * Example: "http://external-resource"

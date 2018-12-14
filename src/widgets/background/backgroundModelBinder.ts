@@ -24,10 +24,10 @@ export class BackgroundModelBinder {
             model.position = contract.position;
         }
 
-        if (contract.picture && contract.picture.sourcePermalinkKey) {
+        if (contract.picture && contract.picture.sourceKey) {
             model.sourceType = "picture";
-            model.sourceKey = contract.picture.sourcePermalinkKey;
-            model.sourceUrl = await this.permalinkResolver.getUrlByPermalinkKey(contract.picture.sourcePermalinkKey);
+            model.sourceKey = contract.picture.sourceKey;
+            model.sourceUrl = await this.permalinkResolver.getUrlByContentItemKey(contract.picture.sourceKey);
         }
 
         return model;

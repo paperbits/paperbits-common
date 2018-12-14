@@ -1,64 +1,58 @@
-import { PermalinkContract, IPermalinkResolver, IPermalinkService } from "../permalinks";
-import { IMediaService } from "./IMediaService";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
+// import { PermalinkContract, IPermalinkResolver, IPermalinkService } from "../permalinks";
+// import { IMediaService } from "./IMediaService";
+// import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
-const DefaultSourceUrl = "http://placehold.it/800x600";
+// const DefaultSourceUrl = "http://placehold.it/800x600";
 
-export class MediaPermalinkResolver implements IPermalinkResolver {
-    private readonly permalinkService: IPermalinkService;
-    private readonly mediaService: IMediaService;
+// export class MediaPermalinkResolver implements IPermalinkResolver {
+//     constructor(private readonly mediaService: IMediaService) { }
 
-    constructor(permalinkService: IPermalinkService, mediaService: IMediaService) {
-        this.permalinkService = permalinkService;
-        this.mediaService = mediaService;
-    }
+//     public async getUrlByContentItemKey(contentItemKey: string): Promise<string> {
+//         const mediaContract = await this.mediaService.getMediaByKey(contentItemKey);
 
-    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+//         if (!mediaContract) {
+//             console.warn(`Permalink with key ${contentItemKey} not found.`);
+//             return null;
+//         }
 
-        if (!permalink) {
-            console.warn(`Permalink with key ${permalinkKey} not found.`);
-            return null;
-        }
+//         return mediaContract.permalink;
+//     }
 
-        return this.getUriByPermalink(permalink);
-    }
+//     public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
+//         if (!permalink.targetKey) {
+//             return null;
+//         }
 
-    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
-        if (!permalink.targetKey) {
-            return null;
-        }
+//         const media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
-        const media = await this.mediaService.getMediaByKey(permalink.targetKey);
+//         if (media) {
+//             return media.downloadUrl;
+//         }
+//         else {
+//             console.warn(`Media file with key ${permalink.targetKey} not found, setting default image.`);
 
-        if (media) {
-            return media.downloadUrl;
-        }
-        else {
-            console.warn(`Media file with key ${permalink.targetKey} not found, setting default image.`);
+//             return DefaultSourceUrl;
+//         }
+//     }
 
-            return DefaultSourceUrl;
-        }
-    }
+//     public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
+//         if (!permalink.targetKey) {
+//             return null;
+//         }
 
-    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
-        if (!permalink.targetKey) {
-            return null;
-        }
+//         const media = await this.mediaService.getMediaByKey(permalink.targetKey);
 
-        const media = await this.mediaService.getMediaByKey(permalink.targetKey);
+//         if (!media) {
+//             return null;
+//         }
 
-        if (!media) {
-            return null;
-        }
+//         const hyperlinkModel = new HyperlinkModel();
+//         hyperlinkModel.title = media.filename;
+//         hyperlinkModel.target = target;
+//         hyperlinkModel.permalinkKey = permalink.key;
+//         hyperlinkModel.href = permalink.uri;
+//         hyperlinkModel.type = "media";
 
-        const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = media.filename;
-        hyperlinkModel.target = target;
-        hyperlinkModel.permalinkKey = permalink.key;
-        hyperlinkModel.href = permalink.uri;
-        hyperlinkModel.type = "media";
-
-        return hyperlinkModel;
-    }
-}
+//         return hyperlinkModel;
+//     }
+// }

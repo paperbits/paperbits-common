@@ -29,13 +29,13 @@
      */
     downloadUrl?: string;
 
-    /** 
-     * Key of permalink referencing this media file.
-     */
-    permalinkKey?: string;
+    /**
+     * Permalink referencing this media.
+     */    
+    permalink?: string;
 
     /**
-     * Content type of a file (i.e. image/png).
+     * Mime type of a file (i.e. image/png).
      */
-    contentType?: string;
+    mimeType?: string;
 }

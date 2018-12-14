@@ -26,19 +26,18 @@ export class UrlService implements IUrlService {
     }
 
     public async deleteUrl(url: UrlContract): Promise<void> {
-        const deletePermalinkPromise = this.objectStorage.deleteObject(url.permalinkKey);
         const deleteUrlPromise = this.objectStorage.deleteObject(url.key);
-
-        await Promise.all([deletePermalinkPromise, deleteUrlPromise]);
+        await Promise.all([deleteUrlPromise]);
     }
 
-    public async createUrl(title: string, description?: string): Promise<UrlContract> {
+    public async createUrl(permalink: string, title: string, description?: string): Promise<UrlContract> {
         const key = `${urlsPath}/${Utils.guid()}`;
 
         const url: UrlContract = {
             key: key,
             title: title,
-            description: description
+            description: description,
+            permalink: permalink
         };
 
         await this.objectStorage.addObject(key, url);

@@ -1,4 +1,4 @@
-﻿import { UrlContract } from '../urls/urlContract';
+﻿import { UrlContract } from "../urls/urlContract";
 
 /**
  * Service for managing urls.
@@ -7,7 +7,7 @@ export interface IUrlService {
     /**
      * Searches for urls that contain specified pattern in their title, description or keywords.
      */
-    search(pattern: string): Promise<Array<UrlContract>>;
+    search(pattern: string): Promise<UrlContract[]>;
 
     /**
      * Returns a url by specified key;
@@ -22,7 +22,7 @@ export interface IUrlService {
     /**
      * Creates new url in storage and returns a contract of it.
      */
-    createUrl(title: string, description?: string): Promise<UrlContract>;
+    createUrl(permalink: string, title: string, description?: string): Promise<UrlContract>;
 
     /**
      * Updates a url.

@@ -1,22 +1,25 @@
 ﻿import * as Utils from "../utils";
 import { IObjectStorage, IBlobStorage } from "../persistence";
-import { IMediaService, ICreatedMedia, MediaContract } from "./";
-import { IPermalinkService } from "./../permalinks";
-import { PermalinkContract } from "../permalinks";
+import { IMediaService, MediaContract } from "./";
 import { ProgressPromise } from "../progressPromise";
 
 const uploadsPath = "uploads";
-const permalinksPath = "permalinks";
 
 export class MediaService implements IMediaService {
     private readonly objectStorage: IObjectStorage;
     private readonly blobStorage: IBlobStorage;
-    private readonly permalinkService: IPermalinkService;
 
-    constructor(objectStorage: IObjectStorage, blobStorage: IBlobStorage, permalinkService: IPermalinkService) {
+    constructor(objectStorage: IObjectStorage, blobStorage: IBlobStorage) {
         this.objectStorage = objectStorage;
         this.blobStorage = blobStorage;
-        this.permalinkService = permalinkService;
+    }
+
+    public async getMediaByUrl(url: string): Promise<MediaContract> {
+        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
+        const mediaKey = permalinks[0].targetKey;
+        const mediaContract = await this.getMediaByKey(mediaKey);
+
+        return mediaContract;
     }
 
     public searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]> {
@@ -28,17 +31,6 @@ export class MediaService implements IMediaService {
             return null;
         }
         return this.objectStorage.getObject<MediaContract>(key);
-    }
-
-    public async getMediaByPermalinkKey(permalinkKey: string): Promise<MediaContract> {
-        if (permalinkKey) {
-            const iconPermalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
-
-            if (iconPermalink) {
-                return this.getMediaByKey(iconPermalink.targetKey);
-            }
-        }
-        return null;
     }
 
     public async search(pattern: string): Promise<MediaContract[]> {
@@ -66,7 +58,6 @@ export class MediaService implements IMediaService {
         try {
             await this.objectStorage.deleteObject(mediaContract.key);
             await this.blobStorage.deleteBlob(mediaContract.blobKey);
-            await this.permalinkService.deletePermalinkByKey(mediaContract.permalinkKey);
         }
         catch (error) {
             // TODO: Do proper handling.
@@ -74,17 +65,16 @@ export class MediaService implements IMediaService {
         }
     }
 
-    public createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<ICreatedMedia> {
-        return new ProgressPromise<ICreatedMedia>(async (resolve, reject, progress) => {
+    public createMedia(name: string, content: Uint8Array, mimeType?: string): ProgressPromise<MediaContract> {
+        return new ProgressPromise<MediaContract>(async (resolve, reject, progress) => {
             const blobKey = Utils.guid();
 
             await this.blobStorage
-                .uploadBlob(blobKey, content, contentType)
+                .uploadBlob(blobKey, content, mimeType)
                 .progress(progress);
 
             const uri = await this.blobStorage.getDownloadUrl(blobKey);
             const mediaKey = `${uploadsPath}/${blobKey}`;
-            const permalinkKey = `${permalinksPath}/${blobKey}`;
 
             const media: MediaContract = {
                 key: mediaKey,
@@ -92,26 +82,14 @@ export class MediaService implements IMediaService {
                 blobKey: blobKey,
                 description: "",
                 keywords: "",
+                permalink: `/content/${name}`,
                 downloadUrl: uri,
-                permalinkKey: permalinkKey,
-                contentType: contentType
+                mimeType: mimeType
             };
 
-            const permalink: PermalinkContract = {
-                key: permalinkKey,
-                targetKey: mediaKey,
-                uri: `/content/${name}`
-            };
+            await this.objectStorage.addObject(mediaKey, media);
 
-            await Promise.all([
-                this.objectStorage.addObject(mediaKey, media),
-                this.objectStorage.addObject(permalinkKey, permalink)
-            ]);
-
-            resolve({
-                media: media,
-                permalink: permalink
-            });
+            resolve(media);
         });
     }
 

@@ -1,5 +1,5 @@
 export interface BackgroundPictureContract {
-    sourcePermalinkKey: string;
+    sourceKey: string;
     repeat?: string;
 }
 

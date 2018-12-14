@@ -13,6 +13,8 @@ export interface IBlogService {
      */
     getBlogPostByKey(key: string): Promise<BlogPostContract>;
 
+    getBlogPostByUrl(url: string): Promise<BlogPostContract>;
+
     /**
      * Deletes specified blog post.
      * @param blogPostRef 

@@ -40,9 +40,9 @@ export interface PageContract {
     contentKey?: string;
 
     /**
-     * Key of permalink referencing this page.
-     */
-    permalinkKey?: string;
+     * Permalink referencing this page.
+     */    
+    permalink?: string;
 
     /**
      * Keys of anchors used in page content. Anchor is a special type of a permalink.

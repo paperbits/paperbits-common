@@ -3,7 +3,6 @@ import * as Utils from "../utils";
 import { BlogPostContract } from "../blogs/BlogPostContract";
 import { IBlogService } from "../blogs/IBlogService";
 import { IObjectStorage } from "../persistence/IObjectStorage";
-import { IPermalinkService } from "../permalinks";
 import { IBlockService } from "../blocks";
 import { Contract } from "..";
 
@@ -14,12 +13,19 @@ const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
 export class BlogService implements IBlogService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly permalinkService: IPermalinkService,
         private readonly blockService: IBlockService
     ) { }
 
     private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<BlogPostContract[]> {
         return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
+    }
+
+    public async getBlogPostByUrl(url: string): Promise<BlogPostContract> {
+        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
+        const blogKey = permalinks[0].targetKey;
+        const blogPostContract = await this.getBlogPostByKey(blogKey);
+
+        return blogPostContract;
     }
 
     public async getBlogPostByKey(key: string): Promise<BlogPostContract> {
@@ -32,10 +38,9 @@ export class BlogService implements IBlogService {
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
         const deleteContentPromise = this.objectStorage.deleteObject(blogPost.contentKey);
-        const deletePermalinkPromise = this.objectStorage.deleteObject(blogPost.permalinkKey);
         const deleteBlogPostPromise = this.objectStorage.deleteObject(blogPost.key);
 
-        await Promise.all([deleteContentPromise, deletePermalinkPromise, deleteBlogPostPromise]);
+        await Promise.all([deleteContentPromise, deleteBlogPostPromise]);
     }
 
     public async createBlogPost(url: string, title: string, description: string, keywords): Promise<BlogPostContract> {
@@ -43,14 +48,12 @@ export class BlogService implements IBlogService {
         const postKey = `${blogPostsPath}/${identifier}`;
         const documentKey = `${documentsPath}/${identifier}`;
 
-        const permalink = await this.permalinkService.createPermalink(url, postKey);
-
         const post: BlogPostContract = {
             key: postKey,
             title: title,
             description: description,
             keywords: keywords,
-            permalinkKey: permalink.key,
+            permalink: url,
             contentKey: documentKey
         };
 

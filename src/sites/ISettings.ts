@@ -24,7 +24,7 @@ export interface ISiteSettings {
      */
     hostname?: string;
 
-    faviconPermalinkKey?: string;
+    faviconSourceKey?: string;
 
     author?: string;
     /**

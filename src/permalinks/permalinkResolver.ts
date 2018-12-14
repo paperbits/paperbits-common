@@ -1,56 +1,53 @@
-import { PermalinkContract, IPermalinkResolver, IPermalinkService } from "./";
+import { ContentItemContract } from "./../contentItems/contentItemContract";
+import { IContentItemService } from "../contentItems";
+import { IPermalinkResolver } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 
 export class PermalinkResolver implements IPermalinkResolver {
-    private readonly permalinkService: IPermalinkService;
-    private readonly permalinkResolvers: IPermalinkResolver[];
+    constructor(private readonly contentItemService: IContentItemService) { }
 
-    constructor(permalinkService: IPermalinkService, permalinkResolvers: IPermalinkResolver[] = []) {
-        this.permalinkService = permalinkService;
-        this.permalinkResolvers = permalinkResolvers;
-    }
-
-    public async getUrlByPermalinkKey(permalinkKey: string): Promise<string> {
-        if (!permalinkKey) {
+    public async getUrlByContentItemKey(contentItemKey: string): Promise<string> {
+        if (!contentItemKey) {
             throw new Error("Permalink key cannot be null or empty.");
         }
 
-        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+        const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
 
-        if (!permalink) {
-            throw new Error(`Could not find permalink with key ${permalinkKey}.`);
+        if (!contentItem) {
+            throw new Error(`Could not find permalink with key ${contentItemKey}.`);
         }
 
-        return this.getUriByPermalink(permalink);
+        return contentItem.permalink;
     }
 
-    public async getUriByPermalink(permalink: PermalinkContract): Promise<string> {
-        if (!permalink) {
-            throw new Error("Permalink cannot be null or empty.");
-        }
+    public async getHyperlinkByPermalink(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
+        const hyperlinkModel = new HyperlinkModel();
+        hyperlinkModel.title = contentItem.title;
+        hyperlinkModel.target = target;
+        hyperlinkModel.targetKey = contentItem.key;
+        hyperlinkModel.href = contentItem.permalink;
+        hyperlinkModel.type = "page";
 
-        for (const permalinkResolver of this.permalinkResolvers) {
-            const resolvedUri = await permalinkResolver.getUriByPermalink(permalink);
+        return hyperlinkModel;
 
-            if (resolvedUri) {
-                return resolvedUri;
-            }
-        }
+        // else if (permalink.parentKey) {
+        //     const parentPermalink = await this.permalinkService.getPermalinkByKey(permalink.parentKey);
+        //     const page = await this.pageService.getPageByKey(parentPermalink.targetKey);
 
-        return permalink.uri;
-    }
+        //     const anchorTitle = page.anchors[permalink.key.replaceAll("/", "|")];
 
-    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
-        let hyperlinkModel: HyperlinkModel;
+        //     const hyperlinkModel = new HyperlinkModel();
+        //     hyperlinkModel.title = `${page.title} > ${anchorTitle}`;
+        //     hyperlinkModel.target = target;
+        //     hyperlinkModel.permalinkKey = permalink.key;
+        //     hyperlinkModel.href = permalink.uri;
+        //     hyperlinkModel.type = "anchor";
 
-        for (const permalinkResolver of this.permalinkResolvers) {
-            hyperlinkModel = await permalinkResolver.getHyperlinkByPermalink(permalink, target);
+        //     return hyperlinkModel;
+        // }
 
-            if (hyperlinkModel) {
-                return hyperlinkModel;
-            }
-        }
+        return null;
     }
 
     public async getHyperlinkFromConfig(hyperlink: HyperlinkContract): Promise<HyperlinkModel> {
@@ -63,17 +60,17 @@ export class PermalinkResolver implements IPermalinkResolver {
         }
 
         if (permalinkKey) {
-            const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
+            const contentItem = await this.contentItemService.getContentItemByKey(permalinkKey);
 
-            if (permalink) {
-                hyperlinkModel = await this.getHyperlinkByPermalink(permalink, hyperlink.target);
+            if (contentItem) {
+                hyperlinkModel = await this.getHyperlinkByPermalink(contentItem, hyperlink.target);
 
                 if (!hyperlinkModel) {
                     hyperlinkModel = new HyperlinkModel();
-                    hyperlinkModel.title = permalink.uri;
+                    hyperlinkModel.title = contentItem.title || contentItem.permalink;
                     hyperlinkModel.target = hyperlink.target || "_blank";
-                    hyperlinkModel.permalinkKey = permalink.key;
-                    hyperlinkModel.href = permalink.uri;
+                    hyperlinkModel.targetKey = contentItem.key;
+                    hyperlinkModel.href = contentItem.permalink;
                     hyperlinkModel.type = "url";
                 }
 
@@ -85,7 +82,7 @@ export class PermalinkResolver implements IPermalinkResolver {
             hyperlinkModel = new HyperlinkModel();
             hyperlinkModel.title = "External link";
             hyperlinkModel.target = hyperlink.target || "_blank";
-            hyperlinkModel.permalinkKey = null;
+            hyperlinkModel.targetKey = null;
             hyperlinkModel.href = hyperlink.href;
             hyperlinkModel.type = "url";
 
@@ -95,16 +92,16 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlink.target || "_blank";
-        hyperlinkModel.permalinkKey = null;
+        hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.type = "url";
 
         return hyperlinkModel;
     }
 
-    public async getHyperlinkByPermalinkKey(permalinkKey: string): Promise<HyperlinkModel> {
-        const permalink = await this.permalinkService.getPermalinkByKey(permalinkKey);
-        const hyperlink = await this.getHyperlinkByPermalink(permalink, "blank");
+    public async getHyperlinkByContentItemKey(contentItemKey: string): Promise<HyperlinkModel> {
+        const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
+        const hyperlink = await this.getHyperlinkByPermalink(contentItem, "blank");
 
         return hyperlink;
     }

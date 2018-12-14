@@ -19,8 +19,6 @@ export interface BlockContract extends Contract {
      */
     description: string;
 
-    content: Contract;
-
     /**
      * Key of a document having block content.
      */

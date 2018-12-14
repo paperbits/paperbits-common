@@ -95,8 +95,6 @@ export interface IViewManager {
 
     setTitle?(settings?: ISettings, page?: PageContract): Promise<void>;
 
-    getCurrentPage(): Promise<PageContract>;
-
     addBalloon(component: IComponent): void;
 
     removeBalloon(component: IComponent): void;

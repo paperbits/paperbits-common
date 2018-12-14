@@ -15,6 +15,8 @@ export interface IPageService {
      */
     getPageByKey(key: string): Promise<PageContract>;
 
+    getPageByUrl(url: string): Promise<PageContract>;
+
     /**
      * Deletes specified page from storage.
      */
