@@ -40,11 +40,6 @@ export interface ContentItemContract {
     contentKey?: string;
 
     /**
-     * Key of permalink referencing this contentItem.
-     */
-    permalinkKey?: string;
-
-    /**
      * Permalink referencing this contentItem.
      */    
     permalink?: string;

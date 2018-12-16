@@ -8,7 +8,7 @@ import { Contract } from "..";
 
 const blogPostsPath = "posts";
 const documentsPath = "files";
-const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
+const templateBlockKey = "blocks/new-post-template";
 
 export class BlogService implements IBlogService {
     constructor(

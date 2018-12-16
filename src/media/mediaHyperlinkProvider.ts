@@ -16,6 +16,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
         hyperlinkModel.title = media.filename;
         hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = media.key;
+        hyperlinkModel.href = media.permalink;
         hyperlinkModel.type = "media";
 
         return hyperlinkModel;

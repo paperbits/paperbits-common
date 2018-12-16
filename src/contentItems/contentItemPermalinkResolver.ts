@@ -1,7 +1,5 @@
-import { PermalinkContract } from "../permalinks/permalinkContract";
 import { IPermalinkResolver } from "../permalinks";
 import { IContentItemService } from "./IContentItemService";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 export class ContentItemPermalinkResolver implements IPermalinkResolver {
     private readonly contentItemService: IContentItemService;
@@ -19,22 +17,5 @@ export class ContentItemPermalinkResolver implements IPermalinkResolver {
         }
 
         return contentItem.permalink;
-    }
-
-    public async getHyperlinkByPermalink(permalink: PermalinkContract, target: string): Promise<HyperlinkModel> {
-        if (permalink.targetKey && permalink.targetKey.startsWith("contentItems/")) {
-            const contentItem = await this.contentItemService.getContentItemByKey(permalink.targetKey);
-
-            const hyperlinkModel = new HyperlinkModel();
-            hyperlinkModel.title = contentItem.title;
-            hyperlinkModel.target = target;
-            hyperlinkModel.targetKey = permalink.key;
-            hyperlinkModel.href = permalink.uri;
-            hyperlinkModel.type = "contentItem";
-
-            return hyperlinkModel;
-        }
-
-        return null;
     }
 }

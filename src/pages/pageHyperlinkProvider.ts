@@ -16,6 +16,7 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
         hyperlinkModel.title = page.title;
         hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = page.key;
+        hyperlinkModel.href = page.permalink;
         hyperlinkModel.type = "page";
 
         return hyperlinkModel;

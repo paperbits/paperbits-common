@@ -6,7 +6,7 @@ import { Contract } from "../contract";
 
 const pagesPath = "pages";
 const documentsPath = "files";
-const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
+const templateBlockKey = "blocks/new-page-template";
 
 export class PageService implements IPageService {
     constructor(

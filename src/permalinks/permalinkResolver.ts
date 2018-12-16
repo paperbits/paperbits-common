@@ -21,7 +21,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         return contentItem.permalink;
     }
 
-    public async getHyperlinkByPermalink(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
+    public async getHyperlinkByContentType(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = contentItem.title;
         hyperlinkModel.target = target;
@@ -35,12 +35,11 @@ export class PermalinkResolver implements IPermalinkResolver {
     public async getHyperlinkFromConfig(hyperlinkContract: HyperlinkContract): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
-
         if (hyperlinkContract.targetKey) {
             const contentItem = await this.contentItemService.getContentItemByKey(hyperlinkContract.targetKey);
 
             if (contentItem) {
-                hyperlinkModel = await this.getHyperlinkByPermalink(contentItem, hyperlinkContract.target);
+                hyperlinkModel = await this.getHyperlinkByContentType(contentItem, hyperlinkContract.target);
 
                 if (!hyperlinkModel) {
                     hyperlinkModel = new HyperlinkModel();
@@ -78,7 +77,7 @@ export class PermalinkResolver implements IPermalinkResolver {
 
     public async getHyperlinkByContentItemKey(contentItemKey: string): Promise<HyperlinkModel> {
         const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
-        const hyperlink = await this.getHyperlinkByPermalink(contentItem, "blank");
+        const hyperlink = await this.getHyperlinkByContentType(contentItem, "blank");
 
         return hyperlink;
     }

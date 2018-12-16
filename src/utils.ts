@@ -2,6 +2,7 @@
 import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
 import { Object } from "es6-shim";
+import * as deepmerge from "deepmerge";
 
 
 export function guid(): string {
@@ -287,6 +288,10 @@ export function replace(path: string, target: object, value: any, delimiter: str
     return target;
 }
 
+export function assign(target, source) {
+    Object.assign(target, deepmerge(target, source));
+}
+
 export function setValue(path: string, target: object, value: any): void {
     const segments = path.split("/");
     let segmentObject = target;
@@ -462,19 +467,19 @@ export function camelCaseToKebabCase(str: string): string {
     return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-export function matchUrl(urlPath: string, urlTemplate: string): {index: number, name: string, value?: string}[] {
-    if (urlPath.charAt(0) === "/") { 
-        urlPath = urlPath.slice(1); 
+export function matchUrl(urlPath: string, urlTemplate: string): { index: number, name: string, value?: string }[] {
+    if (urlPath.charAt(0) === "/") {
+        urlPath = urlPath.slice(1);
     }
-    if (urlTemplate.charAt(0) === "/") { 
-        urlTemplate = urlTemplate.slice(1); 
+    if (urlTemplate.charAt(0) === "/") {
+        urlTemplate = urlTemplate.slice(1);
     }
 
-    if (urlPath.charAt(urlPath.length - 1) === "/") { 
-        urlPath = urlPath.slice(0, -1); 
+    if (urlPath.charAt(urlPath.length - 1) === "/") {
+        urlPath = urlPath.slice(0, -1);
     }
-    if (urlTemplate.charAt(urlTemplate.length - 1) === "/") { 
-        urlTemplate = urlTemplate.slice(0, -1); 
+    if (urlTemplate.charAt(urlTemplate.length - 1) === "/") {
+        urlTemplate = urlTemplate.slice(0, -1);
     }
 
     const pathSegments = urlPath.split("/");
@@ -484,11 +489,11 @@ export function matchUrl(urlPath: string, urlTemplate: string): {index: number, 
         return undefined;
     }
 
-    const tokens: {index: number, name: string, value?: string}[] = [];
-    
+    const tokens: { index: number, name: string, value?: string }[] = [];
+
     templateSegments.filter((t, index) => {
         if (t.charAt(0) === "{") {
-            tokens.push({index: index, name: t.replace(/{|}/g, "")});
+            tokens.push({ index: index, name: t.replace(/{|}/g, "") });
         }
     });
 

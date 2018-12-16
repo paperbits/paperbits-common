@@ -1,5 +1,5 @@
 export * from "./arrays";
-export * from "./breakpoints";
+export * from "./styles/breakpoints";
 export * from "./contract";
 export * from "./Bag";
 export * from "./keyboard";

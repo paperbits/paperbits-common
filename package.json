@@ -15,7 +15,7 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
-        "es6-shim": "^0.35.3",
+        "deepmerge": "^3.0.0",
         "firebase": "^4.3.0",
         "immutable": "^3.8.2",
         "inversify": "^4.3.0",

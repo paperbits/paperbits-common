@@ -80,8 +80,9 @@ export class DefaultRouteHandler implements IRouteHandler {
         if (this.routeCheckers.length > 0) {
             this.runRouteChecks(path, metadata).then(navigatePath => {
                 this.applyNavigation(navigatePath, metadata);
-            })
-        } else {
+            });
+        } 
+        else {
             this.applyNavigation(path, metadata);
         }
     }

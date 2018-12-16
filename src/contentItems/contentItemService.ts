@@ -6,7 +6,7 @@ import { Contract } from "../contract";
 
 const contentItemsPath = "contentItems";
 const documentsPath = "files";
-const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
+const templateBlockKey = "blocks/new-content-template";
 
 export class ContentItemService implements IContentItemService {
     constructor(
@@ -18,8 +18,8 @@ export class ContentItemService implements IContentItemService {
         return await this.objectStorage.searchObjects<ContentItemContract>(contentItemsPath, tags, tagValue, startAtSearch);
     }
 
-    public async getContentItemByUrl(url: string): Promise<ContentItemContract> {
-        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["uri"], url);
+    public async getContentItemByPermalink(url: string): Promise<ContentItemContract> {
+        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["permalink"], url);
 
         if (!permalinks || permalinks.length === 0) {
             return undefined;

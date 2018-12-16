@@ -36,7 +36,7 @@ export interface ISiteSettings {
 
     ogType?: "website" | "article" | "blog";
 
-    ogImagePermalinkKey?: string;
+    ogImageSourceKey?: string;
 }
 
 export interface IIntegrationSettings {

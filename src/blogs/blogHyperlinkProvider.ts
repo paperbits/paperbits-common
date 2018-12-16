@@ -11,11 +11,12 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
         return contentItemKey.startsWith("posts/");
     }
 
-    public getHyperlinkFromResource(blogPost: BlogPostContract): HyperlinkModel {
+    public getHyperlinkFromResource(post: BlogPostContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = blogPost.title;
+        hyperlinkModel.title = post.title;
         hyperlinkModel.target = "_blank";
-        hyperlinkModel.targetKey = blogPost.key;
+        hyperlinkModel.targetKey = post.key;
+        hyperlinkModel.href = post.permalink;
         hyperlinkModel.type = "post";
 
         return hyperlinkModel;

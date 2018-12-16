@@ -15,7 +15,7 @@ export interface IContentItemService {
      */
     getContentItemByKey(key: string): Promise<ContentItemContract>;
 
-    getContentItemByUrl(url: string): Promise<ContentItemContract>;
+    getContentItemByPermalink(permalink: string): Promise<ContentItemContract>;
 
     /**
      * Deletes specified contentItem from storage.
