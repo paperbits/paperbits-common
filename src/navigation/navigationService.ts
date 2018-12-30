@@ -1,8 +1,8 @@
-﻿import { IObjectStorage } from '../persistence/IObjectStorage';
-import { IEventManager } from '../events/IEventManager';
-import { INavigationService } from '../navigation/INavigationService';
-import { NavigationItemContract } from '../navigation/navigationItemContract';
-import { NavigationEvents } from '../navigation/navigationEvents';
+﻿import { IObjectStorage } from "../persistence";
+import { IEventManager } from "../events";
+import { INavigationService } from "../navigation";
+import { NavigationItemContract } from "../navigation/navigationItemContract";
+import { NavigationEvents } from "../navigation/navigationEvents";
 
 const navigationItemsPath = "navigationItems";
 
@@ -19,12 +19,12 @@ export class NavigationService implements INavigationService {
     }
 
     private find(items: NavigationItemContract[], key: string): NavigationItemContract {
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].key == key) {
-                return items[i];
+        for (const item of items) {
+            if (item.key === key) {
+                return item;
             }
-            else if (items[i].navigationItems) {
-                const child = this.find(items[i].navigationItems, key);
+            else if (item.navigationItems) {
+                const child = this.find(item.navigationItems, key);
 
                 if (child) {
                     return child;
@@ -39,7 +39,7 @@ export class NavigationService implements INavigationService {
         return this.find(items, navigationItemKey);
     }
 
-    public getNavigationItems(): Promise<Array<NavigationItemContract>> {
+    public getNavigationItems(): Promise<NavigationItemContract[]> {
         return this.objectStorage.searchObjects<NavigationItemContract>(navigationItemsPath);
     }
 
@@ -56,6 +56,6 @@ export class NavigationService implements INavigationService {
 
         navigationItems.forEach(navigationItem => {
             this.eventManager.dispatchEvent(NavigationEvents.onNavigationItemUpdate, navigationItem);
-        })
+        });
     }
 }

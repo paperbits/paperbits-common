@@ -8,7 +8,7 @@ import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 export class OfflineObjectStorage implements IObjectStorage {
     private underlyingStorage: IObjectStorage;      // for storage
     private readonly stateObject: Object;
-    private changesObject: Object;
+    private readonly changesObject: Object;
 
     private middlewares: IObjectStorageMiddleware[];
 
@@ -53,13 +53,12 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     private setStateObjectAt(key: string, source: Object): void {
-        Utils.mergeDeepAt(key, this.stateObject, source);
+        Utils.mergeDeepAt(key, this.stateObject, Utils.clone(source));
     }
 
     private setChangesObjectAt(key: string, source: Object): void {
         Utils.cleanupObject(source);
-
-        Utils.mergeDeepAt(key, this.changesObject, source);
+        Utils.mergeDeepAt(key, this.changesObject, Utils.clone(source));
     }
 
     public async addObject(key: string, dataObject: Object): Promise<void> {
@@ -69,6 +68,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject);
+
+        this.saveChanges();
     }
 
     public async updateObject<T>(key: string, dataObject: T): Promise<void> {
@@ -77,11 +78,12 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         // const promises = this.middlewares.map(x => x.applyChanges(key, dataObject));
-
         // await Promise.all(promises);
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject);
+
+        this.saveChanges();
     }
 
     public async getObject<T>(key: string): Promise<T> {
@@ -107,83 +109,30 @@ export class OfflineObjectStorage implements IObjectStorage {
     public async deleteObject(key: string): Promise<void> {
         Utils.setValue(key, this.changesObject, null);
         Utils.setValue(key, this.stateObject, null);
+
+        this.saveChanges();
     }
 
     public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string, startAtSearch?: boolean): Promise<T[]> {
-        const resultObject = {};
-        const keys = [];
-
-        Object.keys(this.stateObject).map(key => {
-            const firstLevelObject = this.stateObject[key];
-
-            Object.keys(firstLevelObject).forEach(subkey => {
-                const fullKey = `${key}/${subkey}`;
-
-                if (fullKey.startsWith(path)) {
-                    keys.push(fullKey);
-                }
-            });
-        });
-
-        keys.forEach(key => {
-            const matchedObj = Utils.getObjectAt(key, this.stateObject);
-
-            if (propertyNames && propertyNames.length && searchValue) {
-                const searchProps = this.convertToSearchParam(propertyNames, searchValue);
-                const searchProperty = this.searchPropertyInObject(searchProps, startAtSearch, matchedObj);
-
-                if (searchProperty) {
-                    resultObject[matchedObj["key"]] = matchedObj;
-                }
-            }
-            else {
-                // if (path === "navigationItems" && key === "navigationItems") {
-                //     resultObject[matchedObj["key"]] = matchedObj;
-                // }
-                // else {
-                if (matchedObj) {
-                    const searchId = matchedObj["key"];
-
-                    if (searchId && key.endsWith(searchId)) {
-                        resultObject[matchedObj["key"]] = matchedObj;
-                    }
-                }
-                // }
-            }
-        });
+        let resultObject = {};
 
         if (this.isOnline) {
-            const objects = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
+            const searchResultObject = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
 
-            objects.forEach(item => {
-                let key;
+            Utils.mergeDeep(searchResultObject, Utils.clone(this.changesObject));
+            Utils.mergeDeep(this.stateObject, Utils.clone(searchResultObject));
 
-                if (path === "navigationItems") {
-                    key = path;
-                }
-                else {
-                    key = item["key"];
+            Utils.cleanupObject(searchResultObject);
 
-                    if (path === "layouts") {
-                        key = `layouts/${key}`;
-                    }
-                }
-                this.setStateObjectAt(key, item);
-
-                resultObject[item["key"]] = item;
-            });
+            resultObject = Utils.getObjectAt(path, searchResultObject);
         }
 
         return Object.keys(resultObject).map(x => resultObject[x]);
     }
 
     public async saveChanges(): Promise<void> {
-        console.log("Saving changes...");
-
         await this.underlyingStorage.saveChanges(this.changesObject);
-
-        this.changesObject = {};
-
+        Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
         console.log("Saved.");
     }
 }

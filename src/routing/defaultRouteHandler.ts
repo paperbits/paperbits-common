@@ -73,15 +73,11 @@ export class DefaultRouteHandler implements IRouteHandler {
             ? url.substring(location.origin.length)
             : url;
 
-        if (path === this.path && this.metadata === metadata) {
-            return;
-        }
-
         if (this.routeCheckers.length > 0) {
             this.runRouteChecks(path, metadata).then(navigatePath => {
                 this.applyNavigation(navigatePath, metadata);
             });
-        } 
+        }
         else {
             this.applyNavigation(path, metadata);
         }

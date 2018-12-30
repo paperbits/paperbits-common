@@ -144,42 +144,39 @@ export function isObject(item): boolean {
 }
 
 export function mergeDeepAt(path: string, target: any, source: any) {
-    let updatingObject = this.setStructure(path, target);
+    const updatingObject = this.setStructure(path, target);
 
     if (Array.isArray(source)) {
         this.setValue(path, target, source);
     }
     else {
-        updatingObject = this.mergeDeep(updatingObject, source);
+        this.mergeDeep(updatingObject, source);
         this.setValue(path, target, updatingObject);
     }
 }
 /**
  * Deep merge two objects.
- * @param target
+ * @param result
  * @param ...sources
  */
-export function mergeDeep(target, source) {
-    if (!isObject(target)) {
-        return JSON.parse(JSON.stringify(source));
-    }
-
-    const output = { ...target };
-
+export function mergeDeep(target, source): void {
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = mergeDeep(target[key], source[key]);
+            const sourceProperty = source[key];
+
+            if (isObject(sourceProperty)) {
+                if (target[key] !== undefined && target[key] !== null) { 
+                    mergeDeep(target[key], sourceProperty);
                 }
-            } else {
-                Object.assign(output, { [key]: source[key] });
+                else { // if not present in target, safely assign whole source.
+                    target[key] = sourceProperty;
+                }
+            }
+            else { // if value or array, just assign as is.
+                target[key] = sourceProperty;
             }
         });
     }
-    return output;
 }
 
 export function intersectDeepMany(target, nonObjectHandler: (target: any, source: any, key: string) => any, ...sources: any[]) {

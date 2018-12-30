@@ -28,6 +28,9 @@
     "devDependencies": {
         "@types/es6-shim": "^0.31.34",
         "@types/knockout": "^3.4.53",
-        "@types/node": "^9.6.6"
+        "@types/node": "^9.6.6",
+        "@types/mocha": "^5.2.5",
+        "mocha": "^5.2.0",
+        "chai": "^4.2.0"
     }
 }
