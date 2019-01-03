@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "deepmerge": "^3.0.0",
-        "firebase": "^4.3.0",
         "immutable": "^3.8.2",
         "inversify": "^4.3.0",
         "lity": "^2.3.0",
@@ -26,7 +25,6 @@
         "xhr2": "^0.1.4"
     },
     "devDependencies": {
-        "@types/es6-shim": "^0.31.34",
         "@types/knockout": "^3.4.53",
         "@types/node": "^9.6.6",
         "@types/mocha": "^5.2.5",

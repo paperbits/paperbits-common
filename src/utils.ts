@@ -1,7 +1,6 @@
 ﻿import { ProgressPromise } from "./progressPromise";
 import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
-import { Object } from "es6-shim";
 import * as deepmerge from "deepmerge";
 
 
