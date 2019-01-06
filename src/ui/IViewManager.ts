@@ -101,5 +101,5 @@ export interface IViewManager {
 
     setSplitter(config: ISplitterConfig): void;
 
-    setDocument(hostDocument: HostDocument);
+    setHost(component: IComponent);
 }

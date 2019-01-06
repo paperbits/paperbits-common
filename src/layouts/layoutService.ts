@@ -67,6 +67,97 @@ export class LayoutService implements ILayoutService {
         return layouts.length > 0 ? layouts[0] : null;
     }
 
+    private sort(patterns: string[]): string[] {
+        const result = [];
+
+        function compare(a, b) {
+            if (a.score < b.score) {
+                return 1;
+            }
+
+            if (a.score > b.score) {
+                return -1;
+            }
+
+            return 0;
+        }
+
+        for (const pattern of patterns) {
+            const segments = pattern.split("/").filter(x => !!x);
+
+            let score = 0;
+
+            for (let i = 0; i < segments.length; i++) {
+                const segment = segments[i];
+                let weight;
+
+                if (segment.startsWith("{")) { // variable
+                    weight = 2;
+                }
+                else if (segment === "*") { // wildcard
+                    weight = 1;
+                }
+                else { // constant
+                    weight = 3;
+                }
+
+                score += weight / (i + 1);
+            }
+
+            result.push({ score: score, pattern: pattern });
+        }
+
+        return result.sort(compare).map(x => x.pattern);
+    }
+
+    private matchPermalink(permalink: string, template: string): any {
+        const tokens: { index: number, name: string, value?: string }[] = [];
+
+        const permalinkSegments: string[] = permalink.split("/");
+        const templateSegments: string[] = template.split("/");
+
+        if (permalinkSegments.length !== templateSegments.length && template.indexOf("*") === -1) {
+            return {
+                match: false,
+                tokens: tokens
+            };
+        }
+
+        for (let i = 0; i < templateSegments.length; i++) {
+            const permalinkSegment: string = permalinkSegments[i];
+            const templateSegment: string = templateSegments[i];
+
+            if (templateSegment === "*") { // wildcard
+                if (permalinkSegment !== "" && permalinkSegment !== undefined) {
+                    return {
+                        match: true,
+                        tokens: tokens
+                    };
+                }
+                else {
+                    return {
+                        match: false,
+                        tokens: []
+                    };
+                }
+            }
+            else if (templateSegment.startsWith("{")) { // variable
+                tokens.push({ index: i, name: templateSegment.replace(/{|}/g, "") });
+            }
+            else if (permalinkSegment !== templateSegment) { // constant
+                return {
+                    match: false,
+                    tokens: []
+                };
+            }
+        }
+
+        return {
+            match: true,
+            tokens: tokens
+        };
+    }
+
     public async getLayoutByRoute(route: string): Promise<LayoutContract> {
         if (!route) {
             return null;
@@ -75,11 +166,14 @@ export class LayoutService implements ILayoutService {
         const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
 
         if (layouts && layouts.length) {
-            const layout = layouts.find((lyout: LayoutContract) => {
-                return Utils.matchUrl(route, lyout.uriTemplate) !== undefined;
+            let templates = layouts.map(x => x.uriTemplate);
+            templates = this.sort(templates);
+
+            const matchingTemplate = templates.find(template => {
+                return this.matchPermalink(route, template).match;
             });
-            
-            return layout || layouts.find(layout => layout.uriTemplate === "/");
+
+            return layouts.find(x => x.uriTemplate === (matchingTemplate || "/"));
         }
         else {
             return null;

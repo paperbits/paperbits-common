@@ -1,32 +1,71 @@
+import * as ko from "knockout";
 import { IWidgetBinding } from "@paperbits/common/editing";
 
 export class GridHelper {
-    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding {
-        while (element) {
-            element = element.parentElement;
+    private static GetSelfAndParentViewModels(element) {
+        const context = ko.contextFor(element);
 
-            const binding = GridHelper.getWidgetBinding(element);
-
-            if (binding) {
-                return binding;
-            }
+        if (!context) {
+            return [];
         }
 
-        return null;
+        const viewModels = [];
+
+        let current = null;
+
+        context.$parents.forEach(viewModel => {
+            if (viewModel && viewModel !== current) {
+                viewModels.push(viewModel);
+                current = viewModel;
+            }
+        });
+
+        return viewModels;
+    }
+
+    private static GetParentViewModels(element) {
+        const context = ko.contextFor(element);
+
+        if (!context) {
+            return [];
+        }
+
+        const viewModels = [];
+
+        let current = context.$data;
+
+        context.$parents.forEach(viewModel => {
+            if (viewModel && viewModel !== current) {
+                viewModels.push(viewModel);
+                current = viewModel;
+            }
+        });
+
+        return viewModels;
+    }
+
+    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding {
+        const viewModels = this.GetParentViewModels(element);
+
+        if (viewModels.length === 0) {
+            return null;
+        }
+
+        const parentViewModel = viewModels[0];
+        return parentViewModel["widgetBinding"];
     }
 
     public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding[] {
         const bindings = [];
+        const parentViewModels = this.GetParentViewModels(element);
 
-        while (element) {
-            const binding = GridHelper.getWidgetBinding(element);
+        parentViewModels.forEach(x => {
+            const binding = x["widgetBinding"];
 
             if (binding) {
                 bindings.push(binding);
             }
-
-            element = element.parentElement;
-        }
+        });
 
         return bindings;
     }
@@ -47,19 +86,27 @@ export class GridHelper {
         return GridHelper.getParentElementWithModel(parent);
     }
 
-    public static getViewModel<TViewModel>(element: Element): TViewModel {
-        if (element["attachedViewModel"]) {
-            return element["attachedViewModel"];
-        }
-        else {
-            return null;
-        }
+    public static getComponentRoots(elements: Element[]): any[] {
+        let current = null;
+        const roots = [];
+
+        elements.reverse().forEach(x => {
+            const context = ko.contextFor(x);
+
+            if (context && context !== current) {
+                roots.push(x);
+                current = context;
+            }
+        });
+
+        return roots.reverse();
     }
 
     public static getWidgetBinding(element: Element): IWidgetBinding {
-        if (element["attachedViewModel"] &&
-            element["attachedViewModel"]["widgetBinding"]) {
-            return element["attachedViewModel"]["widgetBinding"];
+        const viewModels = this.GetSelfAndParentViewModels(element);
+
+        if (viewModels.length > 0) {
+            return viewModels[0]["widgetBinding"];
         }
         else {
             return null;

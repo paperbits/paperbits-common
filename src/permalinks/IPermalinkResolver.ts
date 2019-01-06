@@ -2,7 +2,7 @@ import { HyperlinkContract } from "../editing/hyperlinkContract";
 import { HyperlinkModel } from "./hyperlinkModel";
 
 export interface IPermalinkResolver {
-    getUrlByContentItemKey(contentItemKey: string): Promise<string>;
+    getUrlByTargetKey(contentItemKey: string): Promise<string>;
     getHyperlinkFromConfig?(hyperlink: HyperlinkContract): Promise<HyperlinkModel>;
-    getHyperlinkByContentItemKey?(contentItemKey: string): Promise<HyperlinkModel>;
+    getHyperlinkByTargetKey?(contentItemKey: string): Promise<HyperlinkModel>;
 }

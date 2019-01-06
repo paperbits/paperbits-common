@@ -7,15 +7,15 @@ import { HyperlinkModel } from "./hyperlinkModel";
 export class PermalinkResolver implements IPermalinkResolver {
     constructor(private readonly contentItemService: IContentItemService) { }
 
-    public async getUrlByContentItemKey(contentItemKey: string): Promise<string> {
-        if (!contentItemKey) {
-            throw new Error("Permalink key cannot be null or empty.");
+    public async getUrlByTargetKey(targetKey: string): Promise<string> {
+        if (!targetKey) {
+            throw new Error("Target key cannot be null or empty.");
         }
 
-        const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
+        const contentItem = await this.contentItemService.getContentItemByKey(targetKey);
 
         if (!contentItem) {
-            throw new Error(`Could not find permalink with key ${contentItemKey}.`);
+            throw new Error(`Could not find permalink with key ${targetKey}.`);
         }
 
         return contentItem.permalink;
@@ -75,8 +75,8 @@ export class PermalinkResolver implements IPermalinkResolver {
         return hyperlinkModel;
     }
 
-    public async getHyperlinkByContentItemKey(contentItemKey: string): Promise<HyperlinkModel> {
-        const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
+    public async getHyperlinkByTargetKey(targetKey: string): Promise<HyperlinkModel> {
+        const contentItem = await this.contentItemService.getContentItemByKey(targetKey);
         const hyperlink = await this.getHyperlinkByContentType(contentItem, "blank");
 
         return hyperlink;

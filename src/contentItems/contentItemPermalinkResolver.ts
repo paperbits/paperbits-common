@@ -8,7 +8,7 @@ export class ContentItemPermalinkResolver implements IPermalinkResolver {
         this.contentItemService = contentItemService;
     }
 
-    public async getUrlByContentItemKey(contentItemKey: string): Promise<string> {
+    public async getUrlByTargetKey(contentItemKey: string): Promise<string> {
         const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
 
         if (!contentItem) {
