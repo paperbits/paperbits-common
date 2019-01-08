@@ -3,11 +3,7 @@ import { IWidgetHandler } from "../editing/IWidgetHandler";
 import { IWidgetOrder } from "../editing/IWidgetOrder";
 
 export class WidgetService implements IWidgetService {
-    private readonly widgetHandlers: IWidgetHandler[];
-
-    constructor(widgetHandlers: IWidgetHandler[]) {
-        this.widgetHandlers = widgetHandlers;
-
+    constructor(private readonly widgetHandlers: IWidgetHandler[]) {
         // rebinding...
         this.getWidgetOrders = this.getWidgetOrders.bind(this);
     }
