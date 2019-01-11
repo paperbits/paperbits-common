@@ -1,4 +1,4 @@
-﻿export interface IHttpHeader {
+﻿export interface HttpHeader {
     name: string;
     value: string;
 }

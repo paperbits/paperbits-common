@@ -5,20 +5,20 @@ export interface ISettingsProvider {
     /**
      * Returns all settings.
      */
-    getSettings(): Promise<Object>;
+    getSettings<T>(): Promise<T>;
 
     /**
      * Returns a setting by name.
      * @param name 
      */
-    getSetting(name: string): Promise<Object>;
+    getSetting<T>(name: string): Promise<T>;
 
     /**
      * Creates/updates a setting.
      * @param name {string} Setting name.
      * @param value {any} Setting value.
      */
-    setSetting(name: string, value: Object): void;
+    setSetting<T>(name: string, value: T): void;
 
     onSettingChange?(name: string, eventHandler: (value) => void);
 }

@@ -1,16 +1,23 @@
 import { IEventManager } from "../events";
-import { IHttpClient } from "../http";
+import { HttpClient } from "../http";
 import { ISettingsProvider } from "../configuration";
 
 export class SettingsProvider implements ISettingsProvider {
-    private readonly httpClient: IHttpClient;
+    private readonly httpClient: HttpClient;
     private readonly eventManager: IEventManager;
     private configuration: Object;
     private loadingPromise: Promise<Object>;
 
-    constructor(httpClient: IHttpClient, eventManager: IEventManager) {
+    constructor(httpClient: HttpClient, eventManager: IEventManager) {
         this.httpClient = httpClient;
         this.eventManager = eventManager;
+    }
+
+    private async loadSettings(): Promise<Object> {
+        const response = await this.httpClient.send<any>({ url: "/config.json" });
+        this.configuration =  response.toObject();
+
+        return this.configuration;
     }
 
     public getSetting(name: string): Promise<Object> {
@@ -55,16 +62,5 @@ export class SettingsProvider implements ISettingsProvider {
         }
 
         return this.loadingPromise;
-    }
-
-    private async loadSettings(): Promise<Object> {
-        const response = await this.httpClient.send<any>({ url: "/config.json" });
-        const config = response.toObject();
-        const tenantHostname = window.location.hostname;
-        const tenantConfig = config[tenantHostname] || config["default"];
-
-        this.configuration = tenantConfig;
-
-        return tenantConfig;
     }
 }
