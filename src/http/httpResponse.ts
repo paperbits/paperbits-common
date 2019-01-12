@@ -1,17 +1,21 @@
+import { HttpHeader } from "./httpHeader";
 export class HttpResponse<T> {
-    private response: Uint8Array;
+    public body: Uint8Array;
+    public statusCode: number;
+    public statusText: string;
+    public headers: HttpHeader[];
 
-    constructor(response: any) {
-        this.response = new Uint8Array(response);
+    constructor() {
+        this.headers = [];
     }
 
     public toByteArray(): Uint8Array {
-        return this.response;
+        return this.body;
     }
 
     public toObject(): T {
         try {
-            const decodedString = this.utf8ArrayToStr(this.response);
+            const decodedString = this.utf8ArrayToStr(this.body);
             return JSON.parse(decodedString.trim());
         }
         catch (error) {
@@ -20,7 +24,7 @@ export class HttpResponse<T> {
     }
 
     public toText(): string {
-        const decodedString = this.utf8ArrayToStr(this.response);
+        const decodedString = this.utf8ArrayToStr(this.body);
         return decodedString.trim();
     }
 
