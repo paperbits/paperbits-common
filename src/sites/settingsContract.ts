@@ -1,9 +1,9 @@
-﻿export interface ISettings {
-    integration?: IIntegrationSettings;
-    site: ISiteSettings;
+﻿export interface SettingsContract {
+    integration?: IntegrationSettingsContract;
+    site: SiteSettingsContract;
 }
 
-export interface ISiteSettings {
+export interface SiteSettingsContract {
     /**
      * Website title.
      */
@@ -39,17 +39,22 @@ export interface ISiteSettings {
     ogImageSourceKey?: string;
 }
 
-export interface IIntegrationSettings {
-    googlemaps?: IGMapsConfig;
-    gtm?: IGtmConfig;
+export interface IntegrationSettingsContract {
+    googleMaps?: GoogleMapsConfig;
+    gtm?: GoogleTagManagerConfig;
+    googleFonts?: GoogleFontsConfig;
     intercom?: IIntercomConfig;
 }
 
-export interface IGMapsConfig {
+export interface GoogleMapsConfig {
     apiKey: string;
 }
 
-export interface IGtmConfig {
+export interface GoogleFontsConfig {
+    apiKey: string;
+}
+
+export interface GoogleTagManagerConfig {
     containerId: string;
     dataLayerName?: string;
 }

@@ -70,22 +70,6 @@ export class GridHelper {
         return bindings;
     }
 
-    public static getParentElementWithModel<T>(element: HTMLElement): HTMLElement {
-        const parent = element.parentElement;
-
-        if (!parent) {
-            return null;
-        }
-
-        const model = GridHelper.getModel(parent);
-
-        if (model) {
-            return parent;
-        }
-
-        return GridHelper.getParentElementWithModel(parent);
-    }
-
     public static getComponentRoots(elements: Element[]): any[] {
         let current = null;
         const roots = [];

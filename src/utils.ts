@@ -164,7 +164,7 @@ export function mergeDeep(target, source): void {
             const sourceProperty = source[key];
 
             if (isObject(sourceProperty)) {
-                if (target[key] !== undefined && target[key] !== null) { 
+                if (target[key] !== undefined && target[key] !== null) {
                     mergeDeep(target[key], sourceProperty);
                 }
                 else { // if not present in target, safely assign whole source.

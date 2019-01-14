@@ -1,4 +1,5 @@
-﻿import * as Utils from "../utils";
+﻿import { Bag } from "./../bag";
+import * as Utils from "../utils";
 import { IObjectStorage, IBlobStorage } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 import { ProgressPromise } from "../progressPromise";
@@ -6,32 +7,37 @@ import { ProgressPromise } from "../progressPromise";
 const uploadsPath = "uploads";
 
 export class MediaService implements IMediaService {
-    private readonly objectStorage: IObjectStorage;
-    private readonly blobStorage: IBlobStorage;
-
-    constructor(objectStorage: IObjectStorage, blobStorage: IBlobStorage) {
-        this.objectStorage = objectStorage;
-        this.blobStorage = blobStorage;
-    }
+    constructor(
+        private readonly objectStorage: IObjectStorage,
+        private readonly blobStorage: IBlobStorage
+    ) { }
 
     public async getMediaByUrl(permalink: string): Promise<MediaContract> {
-        const uploads = await this.objectStorage.searchObjects<any>(uploadsPath, ["permalink"], permalink);
+        if (!permalink) {
+            throw new Error(`Parameter "permalink" not specified.`);
+        }
+
+        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(uploadsPath, ["permalink"], permalink);
+        const uploads = Object.keys(result).map(key => result[key]);
+
         return uploads.length > 0 ? uploads[0] : null;
     }
 
-    public searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]> {
-        return this.objectStorage.searchObjects<MediaContract>(uploadsPath, propertyNames, propertyValue, startSearch);
+    public async searchByProperties(propertyNames: string[], propertyValue: string): Promise<MediaContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(uploadsPath, propertyNames, propertyValue);
+        return Object.keys(result).map(key => result[key]);
     }
 
     public getMediaByKey(key: string): Promise<MediaContract> {
-        if (!key.startsWith(uploadsPath)) {
-            return null;
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
         }
+
         return this.objectStorage.getObject<MediaContract>(key);
     }
 
     public async search(pattern: string): Promise<MediaContract[]> {
-        const result = await this.searchByProperties(["filename"], pattern, true);
+        const result = await this.searchByProperties(["filename"], pattern);
 
         // tslint:disable-next-line:only-arrow-functions
         result.sort(function (x, y) {
@@ -51,10 +57,14 @@ export class MediaService implements IMediaService {
         return result;
     }
 
-    public async deleteMedia(mediaContract: MediaContract): Promise<void> {
+    public async deleteMedia(media: MediaContract): Promise<void> {
+        if (!media) {
+            throw new Error(`Parameter "media" not specified.`);
+        }
+
         try {
-            await this.objectStorage.deleteObject(mediaContract.key);
-            await this.blobStorage.deleteBlob(mediaContract.blobKey);
+            await this.objectStorage.deleteObject(media.key);
+            await this.blobStorage.deleteBlob(media.blobKey);
         }
         catch (error) {
             // TODO: Do proper handling.
@@ -91,6 +101,10 @@ export class MediaService implements IMediaService {
     }
 
     public updateMedia(media: MediaContract): Promise<void> {
+        if (!media) {
+            throw new Error(`Parameter "media" not specified.`);
+        }
+
         return this.objectStorage.updateObject(media.key, media);
     }
 }

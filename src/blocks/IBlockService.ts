@@ -7,13 +7,15 @@ import { Contract } from "../contract";
 export interface IBlockService {
     /**
      * Searches for design blocks that contain specified pattern in their title, description.
+     * @param pattern {string}
      */
     search(pattern?: string): Promise<BlockContract[]>;
 
     /**
      * Returns a design block by specified key;
+     * @param blockKey {string}
      */
-    getBlockByKey(key: string): Promise<BlockContract>;
+    getBlockByKey(blockKey: string): Promise<BlockContract>;
 
     /**
      * Deletes a specified design block from storage.
@@ -29,4 +31,10 @@ export interface IBlockService {
      * Updates specified design block.
      */
     updateBlock(block: BlockContract): Promise<void>;
+
+    /**
+     * Returns block content by specified key.
+     * @param blockKey {string}
+     */
+    getBlockContent?(blockKey: string): Promise<Contract>;
 }

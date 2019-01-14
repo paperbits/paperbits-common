@@ -9,7 +9,7 @@ export interface ISettingsProvider {
 
     /**
      * Returns a setting by name.
-     * @param name 
+     * @param name {string} Name for a setting.
      */
     getSetting<T>(name: string): Promise<T>;
 
@@ -20,13 +20,14 @@ export interface ISettingsProvider {
      */
     setSetting<T>(name: string, value: T): void;
 
-    onSettingChange?(name: string, eventHandler: (value) => void);
+    onSettingChange?<T>(name: string, eventHandler: (value: T) => void);
 }
 
 export module Settings {
     export module Config {
-        export const GMaps = "googlemaps";
+        export const GMaps = "googleMaps";
         export const Gtm = "gtm";
         export const Intercom = "intercom";
+        export const GoogleFonts = "googleFonts";
     }
 }

@@ -1,6 +1,6 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextualEditor, HostDocument } from "./";
+﻿import { IView, IComponent, IHighlightConfig, IContextualEditor } from "./";
 import { DragSession } from "./draggables";
-import { ISettings } from "../sites";
+import { SettingsContract } from "../sites";
 import { PageContract } from "../pages";
 import { IWidgetBinding } from "../editing";
 
@@ -93,7 +93,7 @@ export interface IViewManager {
 
     loadFavIcon(): Promise<void>;
 
-    setTitle?(settings?: ISettings, page?: PageContract): Promise<void>;
+    setTitle?(settings?: SettingsContract, page?: PageContract): Promise<void>;
 
     addBalloon(component: IComponent): void;
 

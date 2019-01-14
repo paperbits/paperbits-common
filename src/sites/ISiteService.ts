@@ -1,14 +1,14 @@
-﻿import { ISettings } from "../sites";
+﻿import { SettingsContract } from "../sites";
 
 export interface ISiteService {
     /**
      * Updated site settings.
      * @param settings
      */
-    setSiteSettings(settings: ISettings): Promise<void>;
+    setSiteSettings(settings: SettingsContract): Promise<void>;
 
     /**
      * Return current site settings.
      */
-    getSiteSettings(): Promise<ISettings>;
+    getSiteSettings(): Promise<SettingsContract>;
 }

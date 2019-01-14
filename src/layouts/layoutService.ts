@@ -1,5 +1,6 @@
 ﻿import * as _ from "lodash";
 import * as Utils from "../utils";
+import { Bag } from "./../bag";
 import { LayoutContract } from "../layouts/layoutContract";
 import { IObjectStorage } from "../persistence";
 import { ILayoutService } from "./";
@@ -11,19 +12,28 @@ const documentsPath = "files";
 export class LayoutService implements ILayoutService {
     constructor(private readonly objectStorage: IObjectStorage) { }
 
-    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<LayoutContract[]> {
-        return await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, tags, tagValue, startAtSearch);
+    private async searchByProperties(properties: string[], value: string): Promise<LayoutContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, properties, value);
+        return Object.keys(result).map(key => result[key]);
     }
 
     public async getLayoutByKey(key: string): Promise<LayoutContract> {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
         return await this.objectStorage.getObject<LayoutContract>(key);
     }
 
     public search(pattern: string): Promise<LayoutContract[]> {
-        return this.searchByTags(["title"], pattern, true);
+        return this.searchByProperties(["title"], pattern);
     }
 
     public async deleteLayout(layout: LayoutContract): Promise<void> {
+        if (!layout) {
+            throw new Error(`Parameter "layout" not specified.`);
+        }
+
         const deleteContentPromise = this.objectStorage.deleteObject(layout.contentKey);
         const deleteLayoutPromise = this.objectStorage.deleteObject(layout.key);
 
@@ -59,11 +69,20 @@ export class LayoutService implements ILayoutService {
     }
 
     public async updateLayout(layout: LayoutContract): Promise<void> {
+        if (!layout) {
+            throw new Error(`Parameter "layout" not specified.`);
+        }
+
         await this.objectStorage.updateObject<LayoutContract>(layout.key, layout);
     }
 
     public async getLayoutByUriTemplate(uriTemplate: string): Promise<LayoutContract> {
-        const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, ["uriTemplate"], uriTemplate);
+        if (!uriTemplate) {
+            throw new Error(`Parameter "uriTemplate" not specified.`);
+        }
+
+        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, ["uriTemplate"], uriTemplate);
+        const layouts = Object.keys(result).map(key => result[key]);
         return layouts.length > 0 ? layouts[0] : null;
     }
 
@@ -163,7 +182,8 @@ export class LayoutService implements ILayoutService {
             return null;
         }
 
-        const layouts = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
+        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath);
+        const layouts = Object.keys(result).map(key => result[key]);
 
         if (layouts && layouts.length) {
             let templates = layouts.map(x => x.uriTemplate);
@@ -181,12 +201,24 @@ export class LayoutService implements ILayoutService {
     }
 
     public async getLayoutContent(layoutKey: string): Promise<Contract> {
+        if (!layoutKey) {
+            throw new Error(`Parameter "layoutKey" not specified.`);
+        }
+
         const layout = await this.getLayoutByKey(layoutKey);
         return await this.objectStorage.getObject(layout.contentKey);
     }
 
-    public async updateLayoutContent(layoutKey: string, document: Contract): Promise<void> {
+    public async updateLayoutContent(layoutKey: string, content: Contract): Promise<void> {
+        if (!layoutKey) {
+            throw new Error(`Parameter "layoutKey" not specified.`);
+        }
+
+        if (!content) {
+            throw new Error(`Parameter "content" not specified.`);
+        }
+
         const layout = await this.getLayoutByKey(layoutKey);
-        this.objectStorage.updateObject(layout.contentKey, document);
+        this.objectStorage.updateObject(layout.contentKey, content);
     }
 }

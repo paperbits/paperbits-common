@@ -1,7 +1,7 @@
+import { Bag } from "./../bag";
 import * as Utils from "../utils";
 import * as _ from "lodash";
 import { IObjectStorage } from "../persistence/IObjectStorage";
-import { LruCache } from "../caching/lruCache";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 
 
@@ -28,28 +28,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     public registerMiddleware(middleware: IObjectStorageMiddleware): void {
         this.middlewares.push(middleware);
-    }
-
-    private convertToSearchParam(propertyNames: string[], searchValue: string): Object[] {
-        return propertyNames.map(name => {
-            const prop = {};
-            prop[name] = searchValue;
-            return prop;
-        });
-    }
-
-    private searchPropertyInObject(searchProps: {}[], startAtSearch: boolean, matchedObj: any) {
-        return _.find(searchProps, (prop) => {
-            if (startAtSearch) {
-                const propName = _.keys(prop)[0];
-                const test = matchedObj[propName];
-
-                return test && test.toUpperCase().startsWith(prop[propName].toUpperCase());
-            }
-            else {
-                return _.isMatch(matchedObj, prop);
-            }
-        });
     }
 
     private setStateObjectAt(key: string, source: Object): void {
@@ -113,21 +91,20 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.saveChanges();
     }
 
-    public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string, startAtSearch?: boolean): Promise<T[]> {
+    public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string): Promise<T> {
         let resultObject = {};
 
         if (this.isOnline) {
-            const searchResultObject = await this.underlyingStorage.searchObjects<T>(path, propertyNames, searchValue, startAtSearch);
+            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, propertyNames, searchValue);
 
             Utils.mergeDeep(searchResultObject, Utils.clone(this.changesObject));
             Utils.mergeDeep(this.stateObject, Utils.clone(searchResultObject));
-
             Utils.cleanupObject(searchResultObject);
 
             resultObject = Utils.getObjectAt(path, searchResultObject);
         }
 
-        return Object.keys(resultObject).map(x => resultObject[x]);
+        return <T>resultObject;
     }
 
     public async saveChanges(): Promise<void> {

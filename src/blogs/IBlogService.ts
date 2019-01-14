@@ -8,12 +8,16 @@ export interface IBlogService {
     search(pattern: string): Promise<BlogPostContract[]>;
 
     /**
-     * Returns blog post by specified key;
+     * Returns blog post by specified key.
      * @param key 
      */
     getBlogPostByKey(key: string): Promise<BlogPostContract>;
 
-    getBlogPostByPermalink(url: string): Promise<BlogPostContract>;
+    /**
+     * Returns blog post by specfied key.
+     * @param permalink
+     */
+    getBlogPostByPermalink(permalink: string): Promise<BlogPostContract>;
 
     /**
      * Deletes specified blog post.

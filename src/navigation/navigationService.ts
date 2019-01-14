@@ -1,4 +1,5 @@
-﻿import { IObjectStorage } from "../persistence";
+﻿import { Bag } from "./../bag";
+import { IObjectStorage } from "../persistence";
 import { IEventManager } from "../events";
 import { INavigationService } from "../navigation";
 import { NavigationItemContract } from "../navigation/navigationItemContract";
@@ -39,8 +40,9 @@ export class NavigationService implements INavigationService {
         return this.find(items, navigationItemKey);
     }
 
-    public getNavigationItems(): Promise<NavigationItemContract[]> {
-        return this.objectStorage.searchObjects<NavigationItemContract>(navigationItemsPath);
+    public async getNavigationItems(): Promise<NavigationItemContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<NavigationItemContract>>(navigationItemsPath);
+        return Object.keys(result).map(key => result[key]);
     }
 
     public async updateNavigationItem(navigationItem: NavigationItemContract): Promise<void> {

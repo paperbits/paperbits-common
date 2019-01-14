@@ -1,5 +1,6 @@
 ﻿import * as _ from "lodash";
 import * as Utils from "../utils";
+import { Bag } from "./../bag";
 import { BlogPostContract } from "../blogs/BlogPostContract";
 import { IBlogService } from "../blogs/IBlogService";
 import { IObjectStorage } from "../persistence/IObjectStorage";
@@ -16,12 +17,14 @@ export class BlogService implements IBlogService {
         private readonly blockService: IBlockService
     ) { }
 
-    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<BlogPostContract[]> {
-        return await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, tags, tagValue, startAtSearch);
+    private async searchByProperties(properties: string[], value: string): Promise<BlogPostContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<BlogPostContract>>(blogPostsPath, properties, value);
+        return Object.keys(result).map(key => result[key]);
     }
 
     public async getBlogPostByPermalink(permalink: string): Promise<BlogPostContract> {
-        const posts = await this.objectStorage.searchObjects<any>(blogPostsPath, ["permalink"], permalink);
+        const result = await this.objectStorage.searchObjects<Bag<BlogPostContract>>(blogPostsPath, ["permalink"], permalink);
+        const posts = Object.keys(result).map(key => result[key]);
         return posts.length > 0 ? posts[0] : null;
     }
 
@@ -30,7 +33,7 @@ export class BlogService implements IBlogService {
     }
 
     public search(pattern: string): Promise<BlogPostContract[]> {
-        return this.searchByTags(["title"], pattern, true);
+        return this.searchByProperties(["title"], pattern);
     }
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {
@@ -72,8 +75,16 @@ export class BlogService implements IBlogService {
         return await this.objectStorage.getObject(page.contentKey);
     }
 
-    public async updateBlogPostContent(postKey: string, document: Contract): Promise<void> {
+    public async updateBlogPostContent(postKey: string, content: Contract): Promise<void> {
+        if (!postKey) {
+            throw new Error(`Parameter "postKey" not specified.`);
+        }
+
+        if (!content) {
+            throw new Error(`Parameter "content" not specified.`);
+        }
+
         const page = await this.getBlogPostByKey(postKey);
-        this.objectStorage.updateObject(page.contentKey, document);
+        this.objectStorage.updateObject(page.contentKey, content);
     }
 }

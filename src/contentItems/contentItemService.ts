@@ -1,4 +1,5 @@
-﻿import * as Utils from "../utils";
+﻿import { Bag } from "./../bag";
+import * as Utils from "../utils";
 import { ContentItemContract, IContentItemService } from "../contentItems";
 import { IObjectStorage } from "../persistence";
 import { IBlockService } from "../blocks";
@@ -14,21 +15,26 @@ export class ContentItemService implements IContentItemService {
         private readonly blockService: IBlockService
     ) { }
 
-    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<ContentItemContract[]> {
-        return await this.objectStorage.searchObjects<ContentItemContract>(contentItemsPath, tags, tagValue, startAtSearch);
+    private async searchByProperties(properties: string[], value: string): Promise<ContentItemContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<ContentItemContract>>(contentItemsPath, properties, value);
+        return Object.keys(result).map(key => result[key]);
     }
 
-    public async getContentItemByPermalink(url: string): Promise<ContentItemContract> {
-        const permalinks = await this.objectStorage.searchObjects<any>("permalinks", ["permalink"], url);
+    public async getContentItemByPermalink(permalink: string): Promise<ContentItemContract> {
+        return null;
 
-        if (!permalinks || permalinks.length === 0) {
-            return undefined;
-        }
+        // const result = await this.objectStorage.searchObjects<Bag<ContentItemContract>>("contentItem", ["permalink"], permalink);
 
-        const contentItemKey = permalinks[0].targetKey;
-        const contentItemContract = await this.getContentItemByKey(contentItemKey);
+        // const permalinks = Object.keys(result).map(key => result[key]);
 
-        return contentItemContract;
+        // if (!permalinks || permalinks.length === 0) {
+        //     return undefined;
+        // }
+
+        // const contentItemKey = permalinks[0].targetKey;
+        // const contentItemContract = await this.getContentItemByKey(contentItemKey);
+
+        // return contentItemContract;
     }
 
     public async getContentItemByKey(key: string): Promise<ContentItemContract> {
@@ -36,7 +42,7 @@ export class ContentItemService implements IContentItemService {
     }
 
     public search(pattern: string): Promise<ContentItemContract[]> {
-        return this.searchByTags(["title"], pattern, true);
+        return this.searchByProperties(["title"], pattern);
     }
 
     public async deleteContentItem(contentItem: ContentItemContract): Promise<void> {

@@ -7,13 +7,15 @@ import { PageContract } from "../pages/pageContract";
 export interface IPageService {
     /**
      * Searches for pages that contain specified pattern in their title, description or keywords.
+     * @param pattern {string}
      */
     search(pattern: string): Promise<PageContract[]>;
 
     /**
      * Returns page by specified key.
+     * @param pageKey {string}
      */
-    getPageByKey(key: string): Promise<PageContract>;
+    getPageByKey(pageKey: string): Promise<PageContract>;
 
     getPageByPermalink(url: string): Promise<PageContract>;
 
@@ -34,7 +36,7 @@ export interface IPageService {
 
     /**
      * Returns page content by specified key.
-     * @param pageKey 
+     * @param pageKey {string}
      */
     getPageContent(pageKey: string): Promise<Contract>;
 

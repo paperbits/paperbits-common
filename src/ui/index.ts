@@ -9,5 +9,4 @@ export * from "./IResourceSelector";
 export * from "./IView";
 export * from "./IViewManager";
 export * from "./lityLightbox";
-export * from "./hostDocument";
 export * from "./quadrant";
