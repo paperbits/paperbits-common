@@ -22,7 +22,7 @@ export interface LayoutContract extends Contract {
     /**
      * Template of URL where layout needs to be applied.
      */
-    uriTemplate: string;
+    permalinkTemplate: string;
 
     /**
      * Key of the document describing content.

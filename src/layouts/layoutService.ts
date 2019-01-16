@@ -40,7 +40,7 @@ export class LayoutService implements ILayoutService {
         await Promise.all([deleteContentPromise, deleteLayoutPromise]);
     }
 
-    public async createLayout(title: string, description: string, uriTemplate: string): Promise<LayoutContract> {
+    public async createLayout(title: string, description: string, permalinkTemplate: string): Promise<LayoutContract> {
         const identifier = Utils.guid();
         const layoutKey = `${layoutsPath}/${identifier}`;
         const documentKey = `${documentsPath}/${identifier}`;
@@ -49,7 +49,7 @@ export class LayoutService implements ILayoutService {
             key: layoutKey,
             title: title,
             description: description,
-            uriTemplate: uriTemplate,
+            permalinkTemplate: permalinkTemplate,
             contentKey: documentKey
         };
 
@@ -76,12 +76,12 @@ export class LayoutService implements ILayoutService {
         await this.objectStorage.updateObject<LayoutContract>(layout.key, layout);
     }
 
-    public async getLayoutByUriTemplate(uriTemplate: string): Promise<LayoutContract> {
-        if (!uriTemplate) {
-            throw new Error(`Parameter "uriTemplate" not specified.`);
+    public async getLayoutByUriTemplate(permalinkTemplate: string): Promise<LayoutContract> {
+        if (!permalinkTemplate) {
+            throw new Error(`Parameter "permalinkTemplate" not specified.`);
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, ["uriTemplate"], uriTemplate);
+        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, ["permalinkTemplate"], permalinkTemplate);
         const layouts = Object.keys(result).map(key => result[key]);
         return layouts.length > 0 ? layouts[0] : null;
     }
@@ -186,14 +186,14 @@ export class LayoutService implements ILayoutService {
         const layouts = Object.keys(result).map(key => result[key]);
 
         if (layouts && layouts.length) {
-            let templates = layouts.map(x => x.uriTemplate);
+            let templates = layouts.map(x => x.permalinkTemplate);
             templates = this.sort(templates);
 
             const matchingTemplate = templates.find(template => {
                 return this.matchPermalink(route, template).match;
             });
 
-            return layouts.find(x => x.uriTemplate === (matchingTemplate || "/"));
+            return layouts.find(x => x.permalinkTemplate === (matchingTemplate || "/"));
         }
         else {
             return null;
