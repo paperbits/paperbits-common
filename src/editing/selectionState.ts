@@ -3,6 +3,7 @@ export class SelectionState {
     public bold: boolean;
     public italic: boolean;
     public underlined: boolean;
+    public highlighted: boolean;
     public hyperlink: boolean;
     public anchorKey: string;
     public orderedList: boolean;

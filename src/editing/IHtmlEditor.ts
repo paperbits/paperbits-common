@@ -1,7 +1,7 @@
 ﻿import { HyperlinkModel } from "./../permalinks";
 import { SelectionState } from "./selectionState";
 
-export let formattableStates = ["bold", "italic", "underlined", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
+export let formattableStates = ["bold", "italic", "underlined", "highlighted", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
 
 export interface ISelectionPosition {
@@ -18,6 +18,7 @@ export interface IHtmlEditor {
     toggleBold(): void;
     toggleItalic(): void;
     toggleUnderlined(): void;
+    toggleHighlighted(): void;
     toggleParagraph(): void;
     toggleH1(): void;
     toggleH2(): void;
