@@ -7,4 +7,5 @@ export interface StyleConfig {
 export interface IStyleService {
     getClassNameByStyleKey(key: string): string;
     getClassNamesByStyleConfig(styleConfig: StyleConfig): string;
+    getClassNameByColorKey(colorKey: string): string;
 }

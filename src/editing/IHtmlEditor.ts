@@ -40,6 +40,8 @@ export interface IHtmlEditor {
     setAnchor(hash: string, anchorKey: string): void;
     removeAnchor(): void;
     removeHyperlink(): void;
+    setColor(colorKey: string): void;
+    removeColor(): void;
     getHyperlink(): HyperlinkModel;
     expandSelection(): void;
     getState(): Object;
