@@ -73,29 +73,33 @@ export class MediaService implements IMediaService {
     }
 
     public createMedia(name: string, content: Uint8Array, mimeType?: string): ProgressPromise<MediaContract> {
+        const blobKey = Utils.guid();
+        const mediaKey = `${uploadsPath}/${blobKey}`;
+        const media: MediaContract = {
+            key: mediaKey,
+            filename: name,
+            blobKey: blobKey,
+            description: "",
+            keywords: "",
+            permalink: `/content/${name}`,
+            mimeType: mimeType
+        };
+        return this.uploadContent(content, media);
+    }
+
+    private uploadContent(content: Uint8Array, media: MediaContract): ProgressPromise<MediaContract> {
         return new ProgressPromise<MediaContract>(async (resolve, reject, progress) => {
-            const blobKey = Utils.guid();
-
             await this.blobStorage
-                .uploadBlob(blobKey, content, mimeType)
+                .uploadBlob(media.blobKey, content, media.mimeType)
                 .progress(progress);
-
-            const uri = await this.blobStorage.getDownloadUrl(blobKey);
-            const mediaKey = `${uploadsPath}/${blobKey}`;
-
-            const media: MediaContract = {
-                key: mediaKey,
-                filename: name,
-                blobKey: blobKey,
-                description: "",
-                keywords: "",
-                permalink: `/content/${name}`,
-                downloadUrl: uri,
-                mimeType: mimeType
-            };
-
-            await this.objectStorage.addObject(mediaKey, media);
-
+            const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+            if (!media.downloadUrl) {
+                media.downloadUrl = uri;
+                await this.objectStorage.addObject(media.key, media);
+            } else {
+                media.downloadUrl = uri;
+                await this.objectStorage.updateObject(media.key, media);
+            }
             resolve(media);
         });
     }
@@ -106,5 +110,16 @@ export class MediaService implements IMediaService {
         }
 
         return this.objectStorage.updateObject(media.key, media);
+    }
+
+    public updateMediaContent(media: MediaContract, content: Uint8Array): ProgressPromise<MediaContract> {
+        if (!media) {
+            throw new Error(`Parameter "media" not specified.`);
+        }
+        if (!content) {
+            throw new Error(`Parameter "content" not specified.`);
+        }
+
+        return this.uploadContent(content, media);
     }
 }

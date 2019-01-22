@@ -32,4 +32,12 @@ export interface IMediaService {
     createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<MediaContract>;
 
     updateMedia(media: MediaContract): Promise<void>;
+
+    /**
+     * Update media file content.
+     * @param media metadata to Update
+     * @param content New content in form of byte array.
+     * @param contentType Content type, i.e. "image/png".
+     */
+    updateMediaContent(media: MediaContract, content: Uint8Array): ProgressPromise<MediaContract>;
 }
