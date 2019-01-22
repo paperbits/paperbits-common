@@ -146,11 +146,11 @@ export function mergeDeepAt(path: string, target: any, source: any) {
     const updatingObject = this.setStructure(path, target);
 
     if (Array.isArray(source)) {
-        this.setValue(path, target, source);
+        this.setValueAt(path, target, source);
     }
     else {
         this.mergeDeep(updatingObject, source);
-        this.setValue(path, target, updatingObject);
+        this.setValueAt(path, target, updatingObject);
     }
 }
 /**
@@ -288,7 +288,7 @@ export function assign(target, source) {
     Object.assign(target, deepmerge(target, source));
 }
 
-export function setValue(path: string, target: object, value: any): void {
+export function setValueAt(path: string, target: object, value: any): void {
     const segments = path.split("/");
     let segmentObject = target;
 
@@ -302,6 +302,24 @@ export function setValue(path: string, target: object, value: any): void {
     }
 
     segmentObject[segments[segments.length - 1]] = value;
+}
+
+export function deleteNodeAt(path: string, target: object): void {
+    const segments = path.split("/");
+    let segmentObject = target;
+
+    for (let i = 0; i < segments.length - 1; i++) {
+        const segment = segments[i];
+
+        if (!segmentObject[segment]) {
+            segmentObject[segment] = {};
+        }
+        segmentObject = segmentObject[segment];
+    }
+
+    delete segmentObject[segments[segments.length - 1]];
+
+    // TODO: Try to delete entire trail, if empty
 }
 
 export function getObjectAt<T>(path: string, source: object, delimiter: string = "/"): T {

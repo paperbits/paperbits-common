@@ -113,8 +113,6 @@ export class InversifyInjector implements IInjector {
         module.register(this);
     }
 
-    private collections = {};
-
     public bindCollection(collectionName: string): void {
         const kernel = this.kernel;
 

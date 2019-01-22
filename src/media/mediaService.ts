@@ -38,9 +38,9 @@ export class MediaService implements IMediaService {
 
     public async search(pattern: string): Promise<MediaContract[]> {
         const result = await this.searchByProperties(["filename"], pattern);
+        return Object.keys(result).map(key => result[key]);
 
-        // tslint:disable-next-line:only-arrow-functions
-        result.sort(function (x, y) {
+        result.sort((x, y) => {
             const a = x.filename.toUpperCase();
             const b = y.filename.toUpperCase();
 

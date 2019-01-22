@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { IWidgetBinding } from "@paperbits/common/editing";
+import { IWidgetBinding } from "../editing";
 
 export class GridHelper {
     private static GetSelfAndParentViewModels(element) {

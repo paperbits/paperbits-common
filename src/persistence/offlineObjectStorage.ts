@@ -46,8 +46,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject);
-
-        this.saveChanges();
     }
 
     public async updateObject<T>(key: string, dataObject: T): Promise<void> {
@@ -60,8 +58,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject);
-
-        this.saveChanges();
     }
 
     public async getObject<T>(key: string): Promise<T> {
@@ -85,10 +81,8 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async deleteObject(key: string): Promise<void> {
-        Utils.setValue(key, this.changesObject, null);
-        Utils.setValue(key, this.stateObject, null);
-
-        this.saveChanges();
+        Utils.setValueAt(key, this.changesObject, null);
+        Utils.setValueAt(key, this.stateObject, null);
     }
 
     public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string): Promise<T> {
@@ -101,7 +95,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Utils.mergeDeep(this.stateObject, Utils.clone(searchResultObject));
             Utils.cleanupObject(searchResultObject);
 
-            resultObject = Utils.getObjectAt(path, searchResultObject);
+            resultObject = searchResultObject;
         }
 
         return <T>resultObject;

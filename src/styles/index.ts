@@ -1,2 +1,2 @@
-export * from "./IStyleService";
+export * from "./IStyleCompiler";
 export * from "./breakpoints";

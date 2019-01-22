@@ -3,19 +3,18 @@ import { HttpClient } from "../http";
 import { ISettingsProvider } from "../configuration";
 
 export class SettingsProvider implements ISettingsProvider {
-    private readonly httpClient: HttpClient;
-    private readonly eventManager: IEventManager;
     private configuration: Object;
     private loadingPromise: Promise<Object>;
 
-    constructor(httpClient: HttpClient, eventManager: IEventManager) {
-        this.httpClient = httpClient;
-        this.eventManager = eventManager;
+    constructor(
+        private readonly httpClient: HttpClient,
+        private readonly eventManager: IEventManager
+    ) {
     }
 
     private async loadSettings(): Promise<Object> {
         const response = await this.httpClient.send<any>({ url: "/config.json" });
-        this.configuration =  response.toObject();
+        this.configuration = response.toObject();
 
         return this.configuration;
     }
