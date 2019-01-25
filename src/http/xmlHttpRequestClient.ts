@@ -53,15 +53,41 @@ export class XmlHttpRequestClient implements HttpClient {
                     progress(percentComplete);
                 }
             };
-            xhr.responseType = "arraybuffer";
-            xhr.onload = () => {
+
+            const onRequestTimeout = () => {
+                reject({
+                    message: `Request timed out. Please try again later.`,
+                    code: "RequestError",
+                    details: []
+                });
+            };
+
+            const onStateChange = () => {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+
+                if (xhr.status === 0) {
+                    reject({
+                        message: `Could not complete the request. Please try again later.`,
+                        code: "RequestError",
+                        details: []
+                    });
+                    return;
+                }
+
                 const response = new HttpResponse<T>();
                 response.statusCode = xhr.status;
                 response.statusText = xhr.statusText;
                 response.headers = this.parseHeaderString(xhr.getAllResponseHeaders());
                 response.body = new Uint8Array(xhr.response);
+
                 resolve(response);
             };
+
+            xhr.responseType = "arraybuffer";
+            xhr.onreadystatechange = onStateChange.bind(this);
+            xhr.ontimeout = onRequestTimeout.bind(this);
 
             xhr.open(request.method, request.url, true);
 
