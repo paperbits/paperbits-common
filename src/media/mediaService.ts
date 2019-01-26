@@ -28,12 +28,19 @@ export class MediaService implements IMediaService {
         return Object.keys(result).map(key => result[key]);
     }
 
-    public getMediaByKey(key: string): Promise<MediaContract> {
+    public async getMediaByKey(key: string): Promise<MediaContract> {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        return this.objectStorage.getObject<MediaContract>(key);
+        const media = await this.objectStorage.getObject<MediaContract>(key);
+        const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+
+        if (uri) {
+            media.downloadUrl = uri;
+        }
+
+        return media;
     }
 
     public async search(pattern: string): Promise<MediaContract[]> {
@@ -92,14 +99,18 @@ export class MediaService implements IMediaService {
             await this.blobStorage
                 .uploadBlob(media.blobKey, content, media.mimeType)
                 .progress(progress);
+
             const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+
             if (!media.downloadUrl) {
                 media.downloadUrl = uri;
                 await this.objectStorage.addObject(media.key, media);
-            } else {
+            }
+            else {
                 media.downloadUrl = uri;
                 await this.objectStorage.updateObject(media.key, media);
             }
+
             resolve(media);
         });
     }
