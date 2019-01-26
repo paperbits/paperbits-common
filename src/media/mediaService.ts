@@ -34,10 +34,13 @@ export class MediaService implements IMediaService {
         }
 
         const media = await this.objectStorage.getObject<MediaContract>(key);
-        const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
 
-        if (uri) {
-            media.downloadUrl = uri;
+        if (media.blobKey) {
+            const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+
+            if (uri) {
+                media.downloadUrl = uri;
+            }
         }
 
         return media;
