@@ -1,4 +1,5 @@
-﻿import { HttpHeader } from "./httpHeader";
+﻿import * as XMLHttpRequest from "xhr2";
+import { HttpHeader } from "./httpHeader";
 import { HttpClient, HttpRequest } from "../http";
 import { ProgressPromise } from "../progressPromise";
 import { HttpResponse } from "./httpResponse";

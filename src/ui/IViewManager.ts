@@ -61,7 +61,7 @@ export interface IViewManager {
 
     openWidgetEditor(binding: IWidgetBinding): void;
 
-    getWidgetview(): IView;
+    getOpenView(): IView;
 
     setContextualEditor(editorName: string, contextualEditor: IContextualEditor): void;
 
@@ -102,4 +102,6 @@ export interface IViewManager {
     setSplitter(config: ISplitterConfig): void;
 
     setHost(component: IComponent);
+
+    getHostDocument(): Document;
 }
