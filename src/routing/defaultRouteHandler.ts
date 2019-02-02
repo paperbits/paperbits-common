@@ -25,10 +25,18 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
 
         // setting up...
-        this.path = "";
+        this.initPath();
         this.notifyListeners = true;
 
         addEventListener("popstate", () => this.navigateTo(location.pathname));
+    }
+
+    private initPath() {
+        if (location.pathname.length > 1) {
+            this.path = location.hash ? location.pathname.replace(/\/$/, "") + location.hash : location.pathname;
+        } else {
+            this.path = "";
+        }
     }
 
     public addRouteChangeListener(eventHandler: (args?) => void): void {
@@ -86,15 +94,15 @@ export class DefaultRouteHandler implements IRouteHandler {
     protected applyNavigation(path: string, metadata: Object) {
         this.metadata = metadata;
 
-        if (path.contains("#")) {
-            const parts = path.split("#");
-            const pathname = parts[0];
-            const hash = parts[1];
+        // if (path.contains("#")) {
+        //     const parts = path.split("#");
+        //     const pathname = parts[0];
+        //     const hash = parts[1];
 
-            if (pathname === location.pathname) {
-                return; // TODO: Figure out how to navigate anchors.
-            }
-        }
+        //     if (pathname === location.pathname) {
+        //         return; // TODO: Figure out how to navigate anchors.
+        //     }
+        // }
 
         this.path = path;
 

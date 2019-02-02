@@ -481,6 +481,13 @@ export function camelCaseToKebabCase(str: string): string {
     return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
+export function getUrlHashPart(urlPath: string) : string {
+    if (urlPath.indexOf("#") !== -1) {
+        return urlPath.split("#")[1];
+    }
+    return undefined;
+}
+
 export function matchUrl(urlPath: string, urlTemplate: string): { index: number, name: string, value?: string }[] {
     if (urlPath.charAt(0) === "/") {
         urlPath = urlPath.slice(1);
@@ -521,12 +528,23 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
             }
 
             continue;
-        }
-        else {
+        } else {
             if (token) {
-                token.value = segment;
-            }
-            else {
+                const hashIndex =segment.indexOf("#");
+                if (hashIndex === 0) {
+                    token.value = segment.substring(1);
+                } else {
+                    if (hashIndex > 0) {
+                        return undefined;
+                    } else {
+                        token.value = segment;
+                    }
+                }
+            } else {                              
+                if (templateSegments.length - 1 - i <= 1 && segment.indexOf("#") > 0) {
+                    tokens.push({ index: -1, name: "#", value: segment.split("#")[1]});
+                    return tokens;
+                }
                 return undefined;
             }
         }
