@@ -473,6 +473,20 @@ export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
     return result;
 }
 
+export function getClosestBreakpoint(source: Breakpoints, current: string): string {
+    const breakpoints = ["xs", "sm", "md", "lg", "xl"];
+    let index = breakpoints.indexOf(current);
+    let breakpoint = null;
+
+    do {
+        breakpoint = breakpoints[index];
+        index--;
+    }
+    while (!source[breakpoint] && index >= 0);
+
+    return breakpoint;
+}
+
 export function clone(obj: Object): Object {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -481,7 +495,7 @@ export function camelCaseToKebabCase(str: string): string {
     return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-export function getUrlHashPart(urlPath: string) : string {
+export function getUrlHashPart(urlPath: string): string {
     if (urlPath.indexOf("#") !== -1) {
         return urlPath.split("#")[1];
     }
@@ -530,7 +544,7 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
             continue;
         } else {
             if (token) {
-                const hashIndex =segment.indexOf("#");
+                const hashIndex = segment.indexOf("#");
                 if (hashIndex === 0) {
                     token.value = segment.substring(1);
                 } else {
@@ -540,9 +554,9 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
                         token.value = segment;
                     }
                 }
-            } else {                              
+            } else {
                 if (templateSegments.length - 1 - i <= 1 && segment.indexOf("#") > 0) {
-                    tokens.push({ index: -1, name: "#", value: segment.split("#")[1]});
+                    tokens.push({ index: -1, name: "#", value: segment.split("#")[1] });
                     return tokens;
                 }
                 return undefined;

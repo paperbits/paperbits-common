@@ -1,3 +1,5 @@
+import { Breakpoints } from "../";
+
 export class SelectionState {
     public block: string;
     public bold: boolean;
@@ -12,9 +14,16 @@ export class SelectionState {
     /**
      * Alignment of a block in current viewport.
      */
-    public alignment: string;
+    public alignment: Breakpoints;
 
     constructor() {
         this.block = "paragraph";
     }
 }
+
+export const alignmentStyleKeys = {
+    left: "utils/text/alignLeft",
+    center: "utils/text/alignCenter",
+    right: "utils/text/alignRight",
+    justify: "utils/text/justify"
+};
