@@ -1,10 +1,10 @@
-﻿import { Bag } from "./../bag";
-import * as Utils from "../utils";
+﻿import * as Utils from "../utils";
+import * as Constants from "./constants";
 import { IObjectStorage, IBlobStorage } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 import { ProgressPromise } from "../progressPromise";
+import { Bag } from "./../bag";
 
-const uploadsPath = "uploads";
 
 export class MediaService implements IMediaService {
     constructor(
@@ -17,14 +17,14 @@ export class MediaService implements IMediaService {
             throw new Error(`Parameter "permalink" not specified.`);
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(uploadsPath, ["permalink"], permalink);
+        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(Constants.mediaRoot, ["permalink"], permalink);
         const uploads = Object.keys(result).map(key => result[key]);
 
         return uploads.length > 0 ? uploads[0] : null;
     }
 
     public async searchByProperties(propertyNames: string[], propertyValue: string): Promise<MediaContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(uploadsPath, propertyNames, propertyValue);
+        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(Constants.mediaRoot, propertyNames, propertyValue);
         return Object.keys(result).map(key => result[key]);
     }
 
@@ -89,7 +89,7 @@ export class MediaService implements IMediaService {
 
     public createMedia(name: string, content: Uint8Array, mimeType?: string): ProgressPromise<MediaContract> {
         const blobKey = Utils.guid();
-        const mediaKey = `${uploadsPath}/${blobKey}`;
+        const mediaKey = `${Constants.mediaRoot}/${blobKey}`;
         const media: MediaContract = {
             key: mediaKey,
             filename: name,

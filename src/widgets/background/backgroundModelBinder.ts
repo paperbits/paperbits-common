@@ -3,11 +3,7 @@ import { BackgroundContract } from "../../ui/background";
 import { IPermalinkResolver } from "../../permalinks";
 
 export class BackgroundModelBinder {
-    private readonly permalinkResolver: IPermalinkResolver;
-
-    constructor(permalinkResolver: IPermalinkResolver) {
-        this.permalinkResolver = permalinkResolver;
-    }
+    constructor(private readonly mediaPermalinkResolver: IPermalinkResolver) { }
 
     public async contractToModel(contract: BackgroundContract): Promise<BackgroundModel> {
         const model = new BackgroundModel();
@@ -27,7 +23,7 @@ export class BackgroundModelBinder {
         if (contract.picture && contract.picture.sourceKey) {
             model.sourceType = "picture";
             model.sourceKey = contract.picture.sourceKey;
-            model.sourceUrl = await this.permalinkResolver.getUrlByTargetKey(contract.picture.sourceKey);
+            model.sourceUrl = await this.mediaPermalinkResolver.getUrlByTargetKey(contract.picture.sourceKey);
         }
 
         return model;

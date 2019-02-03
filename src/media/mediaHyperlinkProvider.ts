@@ -1,6 +1,7 @@
 import { MediaContract } from "../media/mediaContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
+import * as Constants from "./constants";
 
 
 export class MediaHyperlinkProvider implements IHyperlinkProvider {
@@ -8,7 +9,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
     public readonly componentName = "media-selector";
 
     public canHandleHyperlink(contentItemKey: string): boolean {
-        return contentItemKey.startsWith("uploads/");
+        return contentItemKey.startsWith(`${Constants.mediaRoot}/`);
     }
 
     public getHyperlinkFromResource(media: MediaContract): HyperlinkModel {
