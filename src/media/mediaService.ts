@@ -35,17 +35,21 @@ export class MediaService implements IMediaService {
 
         const media = await this.objectStorage.getObject<MediaContract>(key);
 
-        if (media.blobKey) {
-            try {
+        if (!media) {
+            console.warn(`Media with key ${key} not found`);
+        }
+
+        try {
+            if (media.blobKey) {
                 const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
 
                 if (uri) {
                     media.downloadUrl = uri;
                 }
             }
-            catch (error) {
-                // TODO: Check for 404
-            }
+        }
+        catch (error) {
+            // TODO: Check for 404
         }
 
         return media;

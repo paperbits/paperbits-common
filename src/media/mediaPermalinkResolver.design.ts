@@ -4,12 +4,12 @@ import { IPermalinkResolver } from "../permalinks";
 export class MediaPermalinkResolver implements IPermalinkResolver {
     constructor(private readonly mediaService: IMediaService) { }
 
-    public async getUrlByTargetKey(targetKey: string): Promise<string> {
-        if (!targetKey) {
-            throw new Error("Target key cannot be null or empty.");
+    public async getUrlByTargetKey(mediaKey: string): Promise<string> {
+        if (!mediaKey) {
+            throw new Error(`Parameter "mediaKey" not specified.`);
         }
 
-        const media = await this.mediaService.getMediaByKey(targetKey);
+        const media = await this.mediaService.getMediaByKey(mediaKey);
 
         if (media) {
             return media.downloadUrl;
