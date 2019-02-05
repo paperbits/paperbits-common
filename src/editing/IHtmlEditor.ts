@@ -14,6 +14,8 @@ export interface ISelectionPosition {
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     detachFromElement(): void;
+    enable(): void;
+    disable(): void;
     getSelectionState(): SelectionState;
     toggleBold(): void;
     toggleItalic(): void;
