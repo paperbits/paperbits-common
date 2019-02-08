@@ -1,4 +1,4 @@
-import { BlogPostContract } from "../blogs/BlogPostContract";
+import { BlogPostContract } from "../blogs/blogPostContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 

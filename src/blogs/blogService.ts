@@ -1,7 +1,7 @@
 ﻿import * as _ from "lodash";
 import * as Utils from "../utils";
 import { Bag } from "./../bag";
-import { BlogPostContract } from "../blogs/BlogPostContract";
+import { BlogPostContract } from "../blogs/blogPostContract";
 import { IBlogService } from "../blogs/IBlogService";
 import { IObjectStorage } from "../persistence/IObjectStorage";
 import { IBlockService } from "../blocks";

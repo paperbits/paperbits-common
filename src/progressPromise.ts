@@ -2,7 +2,7 @@ export class ProgressPromise<T> implements Promise<T> {
     private inner: Promise<any>;
     private progressCallbacks: ((percent: number) => void)[];
 
-    readonly [Symbol.toStringTag]: 'Promise';
+    readonly [Symbol.toStringTag]: "Promise";
 
     constructor(callback: (resolve: (value?: T | PromiseLike<T>) => void, reject: (error?: any) => void, progress: (percent: number) => void) => void) {
         this.progressCallbacks = [];
@@ -39,5 +39,9 @@ export class ProgressPromise<T> implements Promise<T> {
                 percent => progress(percent / 2)
             );
         });
+    }
+
+    public finally(onfinally?: (() => void) | undefined | null): Promise<T> {
+        return this.inner.finally(onfinally);
     }
 }

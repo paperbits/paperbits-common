@@ -1,4 +1,4 @@
-﻿import { Bag } from "./../bag";
+﻿import { Bag } from "../bag";
 import * as Utils from "../utils";
 import { UrlContract } from "../urls/urlContract";
 import { IUrlService } from "../urls/IUrlService";

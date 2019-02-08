@@ -1,4 +1,4 @@
-import { StyleConfig } from "./StyleConfig";
+import { StyleConfig } from "./styleConfig";
 
 export interface IStyleCompiler {
     getClassNameByStyleKey(key: string): string;

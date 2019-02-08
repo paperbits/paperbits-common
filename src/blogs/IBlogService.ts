@@ -1,5 +1,5 @@
 ﻿import { Contract } from "..";
-import { BlogPostContract } from "../blogs/BlogPostContract";
+import { BlogPostContract } from "../blogs/blogPostContract";
 
 /**
  * Service for managing blog posts.

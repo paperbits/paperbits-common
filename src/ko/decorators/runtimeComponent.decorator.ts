@@ -9,7 +9,7 @@ export function RuntimeComponent(config) {
                 super();
                 const element = <any>this;
                 setTimeout(() => {
-                     ko.applyBindingsToNode(element, { component: { name: config.selector, viewModel: target } });
+                     ko.applyBindingsToNode(element, { component: { name: config.selector, viewModel: target } }, null);
                 }, 10);
             }
         }
