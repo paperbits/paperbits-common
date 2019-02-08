@@ -6,6 +6,10 @@ export interface IRouteHandler {
      */
     getCurrentUrl(): string;
 
+    getPath(): string;
+
+    getHash(): string;
+
     getCurrentUrlMetadata(): Object;
 
     notifyListeners?: boolean;
@@ -23,11 +27,13 @@ export interface IRouteHandler {
     removeRouteChangeListener(eventHandler: (args?) => void): void;
 
     /**
+     * 
      * Changes current route to a specified URL.
      * @param path Relative path, i.e. /about
-     * @param notifyListeners Indicates if route change event listeners should be notified. Dafault is "true".
+     * @param title 
+     * @param metadata 
      */
-    navigateTo(path: string, metadata?: Object): void;
+    navigateTo(path: string, title?: string, metadata?: Object): void;
 
     /**
      * Adds a route checker in a pipeline to check navigation path

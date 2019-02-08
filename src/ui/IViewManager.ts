@@ -93,8 +93,6 @@ export interface IViewManager {
 
     loadFavIcon(): Promise<void>;
 
-    setTitle?(settings?: SettingsContract, page?: PageContract): Promise<void>;
-
     addBalloon(component: IComponent): void;
 
     removeBalloon(component: IComponent): void;

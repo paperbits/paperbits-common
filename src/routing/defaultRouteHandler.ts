@@ -8,9 +8,12 @@ export class RouteHandlerEvents {
 }
 
 export class DefaultRouteHandler implements IRouteHandler {
-    protected path: string;
-    protected metadata: Object;
-    protected routeCheckers: IRouteChecker[];
+    private metadata: Object;
+    private routeCheckers: IRouteChecker[];
+    private path: string;
+    private hash: string;
+
+    private originalPushState: (data, title: string, url: string) => void;
 
     public notifyListeners: boolean;
 
@@ -25,17 +28,27 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
 
         // setting up...
-        this.initPath();
         this.notifyListeners = true;
+
+        this.originalPushState = history.pushState;
+        history.pushState = this.pushState.bind(this);
+
+        this.path = location.pathname;
+        this.hash = location.hash;
 
         addEventListener("popstate", () => this.navigateTo(location.pathname));
     }
 
-    private initPath() {
-        if (location.pathname.length > 1) {
-            this.path = location.hash ? location.pathname.replace(/\/$/, "") + location.hash : location.pathname;
-        } else {
-            this.path = "";
+    private pushState(data, title: string, url: string): void {
+        const parts = url.split("#");
+
+        this.path = parts[0];
+        this.hash = parts.length > 1 ? parts[1] : "";
+
+        this.originalPushState.call(history, data, title, url);
+
+        if (this.notifyListeners) {
+            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
         }
     }
 
@@ -64,53 +77,36 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
     }
 
-    public navigateTo(url: string, metadata: Object = null): void {
-        if (!url) {
+    public navigateTo(permalink: string, title: string = null, metadata: Object = null): void {
+        if (!permalink) {
             return;
         }
 
-        const isFullUrl = !url.startsWith("/");
-        const isLocalUrl = url.startsWith(location.origin);
+        const isFullUrl = !permalink.startsWith("/");
+        const isLocalUrl = permalink.startsWith(location.origin);
 
         if (isFullUrl && !isLocalUrl) {
-            window.open(url, "_blank"); // navigating external link
+            window.open(permalink, "_blank"); // navigating external link
             return;
         }
 
         const path = isFullUrl
-            ? url.substring(location.origin.length)
-            : url;
+            ? permalink.substring(location.origin.length)
+            : permalink;
 
         if (this.routeCheckers.length > 0) {
             this.runRouteChecks(path, metadata).then(navigatePath => {
-                this.applyNavigation(navigatePath, metadata);
+                this.applyNavigation(navigatePath, title, metadata);
             });
         }
         else {
-            this.applyNavigation(path, metadata);
+            this.applyNavigation(path, title, metadata);
         }
     }
 
-    protected applyNavigation(path: string, metadata: Object) {
+    protected applyNavigation(path: string, title: string, metadata: Object) {
         this.metadata = metadata;
-
-        // if (path.contains("#")) {
-        //     const parts = path.split("#");
-        //     const pathname = parts[0];
-        //     const hash = parts[1];
-
-        //     if (pathname === location.pathname) {
-        //         return; // TODO: Figure out how to navigate anchors.
-        //     }
-        // }
-
-        this.path = path;
-
-        history.pushState(null, null, path);
-
-        if (this.notifyListeners) {
-            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
-        }
+        this.pushState(null, title, path);
     }
 
     protected async runRouteChecks(path: string, metadata?: Object): Promise<string> {
@@ -137,8 +133,10 @@ export class DefaultRouteHandler implements IRouteHandler {
     public getCurrentUrl(): string {
         let permalink = this.path;
 
-        if (permalink === "") {
-            permalink = location.pathname;
+        const hash = this.getHash();
+        
+        if (this.hash) {
+            permalink += "#" + hash;
         }
 
         return permalink;
@@ -146,5 +144,13 @@ export class DefaultRouteHandler implements IRouteHandler {
 
     public getCurrentUrlMetadata(): Object {
         return this.metadata;
+    }
+
+    public getPath(): string {
+        return this.path;
+    }
+
+    public getHash(): string {
+        return this.hash.startsWith("#") ? this.hash.slice(1) : this.hash;
     }
 }
