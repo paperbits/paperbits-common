@@ -1,4 +1,4 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextualEditor } from "./";
+﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet } from "./";
 import { DragSession } from "./draggables";
 import { SettingsContract } from "../sites";
 import { PageContract } from "../pages";
@@ -63,7 +63,7 @@ export interface IViewManager {
 
     getOpenView(): IView;
 
-    setContextualEditor(editorName: string, contextualEditor: IContextualEditor): void;
+    setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
 
     removeContextualEditor(editorName: string): void;
 
@@ -71,7 +71,7 @@ export interface IViewManager {
 
     setHighlight(config: IHighlightConfig): void;
 
-    setSelectedElement(config: IHighlightConfig, ce: IContextualEditor): void;
+    setSelectedElement(config: IHighlightConfig, ce: IContextCommandSet): void;
 
     getSelectedElement(): IHighlightConfig;
 
