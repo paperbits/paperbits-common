@@ -1,15 +1,16 @@
-import { IEventManager } from '../events/IEventManager';
-import { Keys } from '../keyboard';
+import { IEventManager } from "../events";
+import { Keys } from "../keyboard";
 
 export class GlobalEventHandler {
     private readonly eventManager: IEventManager;
-    private readonly documents: Document[]
+    private readonly documents: Document[];
 
     constructor(eventManager: IEventManager) {
         this.eventManager = eventManager;
 
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onCtrlS = this.onCtrlS.bind(this);
+        this.onCtrlZ = this.onCtrlZ.bind(this);
         this.onEscape = this.onEscape.bind(this);
 
         this.addDragStartListener = this.addDragStartListener.bind(this);
@@ -66,6 +67,16 @@ export class GlobalEventHandler {
             this.onCtrlS();
         }
 
+        if (event.ctrlKey && event.keyCode === Keys.Z) {
+            event.preventDefault();
+            this.onCtrlZ();
+        }
+
+        if (event.ctrlKey && event.keyCode === Keys.Y) {
+            event.preventDefault();
+            this.onCtrlY();
+        }
+
         if (event.ctrlKey && event.keyCode === Keys.P) {
             event.preventDefault();
             this.onCtrlP();
@@ -79,6 +90,14 @@ export class GlobalEventHandler {
 
     private onCtrlS(): void {
         this.eventManager.dispatchEvent("onSaveChanges");
+    }
+
+    private onCtrlZ(): void {
+        this.eventManager.dispatchEvent("onUndo");
+    }
+
+    private onCtrlY(): void {
+        this.eventManager.dispatchEvent("onRedo");
     }
 
     private onCtrlP(): void {

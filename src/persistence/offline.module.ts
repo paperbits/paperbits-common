@@ -1,4 +1,4 @@
-import { IObjectStorage, OfflineObjectStorage } from "../persistence";
+import { IObjectStorage, OfflineObjectStorage, SavingHandler } from "../persistence";
 import { IInjector, IInjectorModule } from "../injection";
 
 
@@ -22,5 +22,7 @@ export class OfflineModule implements IInjectorModule {
 
             return offlineObjectStorage;
         });
+
+        injector.bindToCollection("autostart", SavingHandler);
     }
 }

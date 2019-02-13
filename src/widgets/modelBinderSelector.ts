@@ -1,4 +1,4 @@
-import { IModelBinder } from "./../editing/IModelBinder";
+import { IModelBinder } from "./../editing";
 import { Contract } from "./../contract";
 import { PlaceholderModel } from "./placeholder";
 

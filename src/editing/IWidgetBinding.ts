@@ -34,7 +34,7 @@ export interface IWidgetBinding {
     /**
      * Propagates changes from widget model to widget view model.
      */
-    applyChanges?: () => void;
+    applyChanges?: (changes?: any) => void;
 
     readonly?: boolean;
 

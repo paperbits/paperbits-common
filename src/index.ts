@@ -5,3 +5,4 @@ export * from "./bag";
 export * from "./keyboard";
 export * from "./progressPromise";
 export * from "./utils";
+export * from "./objects";

@@ -1,4 +1,4 @@
-import { IHtmlEditor, formattableStates } from "../editing";
+import { IHtmlEditor } from "../editing";
 import { IEventManager } from "../events";
 
 export interface IHtmlEditorProvider {

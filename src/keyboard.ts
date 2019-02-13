@@ -4,5 +4,7 @@ export const Keys = {
     Space: 32,
     Delete: 46,
     P: 80,
-    S: 83
-}
+    S: 83,
+    Y: 89,
+    Z: 90
+};

@@ -17,7 +17,7 @@ export class PageService implements IPageService {
 
     private async searchByProperties(properties: string[], value: string): Promise<PageContract[]> {
         const result = await this.objectStorage.searchObjects<Bag<PageContract>>(pagesPath, properties, value);
-        return Object.keys(result).map(key => result[key]);
+        return Object.values(result);
     }
 
     public async getPageByPermalink(permalink: string): Promise<PageContract> {

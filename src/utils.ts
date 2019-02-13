@@ -64,7 +64,7 @@ export function readBlobAsDataUrl(blob: Blob): ProgressPromise<string> {
     return readDataUrlFromReader(reader => reader.readAsDataURL(blob));
 }
 
-function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressPromise<string> {
+export function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressPromise<string> {
     return new ProgressPromise<string>((resolve, reject, progress) => {
         const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
@@ -73,7 +73,7 @@ function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressProm
     });
 }
 
-function progressEventToProgress(progress: (precent: number) => void): (event: ProgressEvent) => void {
+export function progressEventToProgress(progress: (precent: number) => void): (event: ProgressEvent) => void {
     return (event: ProgressEvent) => {
         if (event.lengthComputable) {
             const percentLoaded = Math.round((event.loaded / event.total) * 100);
@@ -115,151 +115,12 @@ export function uint8ArrayToString(bytes: Uint8Array): string {
     return decodedString;
 }
 
-/**
- * Remove all properties with undefined value from object.
- */
-export function cleanupObject(source: object): void {
-    if (source instanceof Object) {
-        Object.keys(source).forEach(key => {
-            const child = source[key];
-
-            if (child instanceof Object) {
-                this.cleanupObject(child);
-            }
-            else if (child === undefined || child === null) {
-                delete source[key];
-            }
-        });
-    }
-}
-
-/**
- * Simple object check.
- * @param item
- * @returns {boolean}
- */
-export function isObject(item): boolean {
-    return item !== undefined && (item && typeof item === "object" && !Array.isArray(item));
-}
-
-export function mergeDeepAt(path: string, target: any, source: any) {
-    const updatingObject = this.setStructure(path, target);
-
-    if (Array.isArray(source)) {
-        this.setValueAt(path, target, source);
-    }
-    else {
-        this.mergeDeep(updatingObject, source);
-        this.setValueAt(path, target, updatingObject);
-    }
-}
-/**
- * Deep merge two objects.
- * @param result
- * @param ...sources
- */
-export function mergeDeep(target, source): void {
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            const sourceProperty = source[key];
-
-            if (isObject(sourceProperty)) {
-                if (target[key] !== undefined && target[key] !== null) {
-                    mergeDeep(target[key], sourceProperty);
-                }
-                else { // if not present in target, safely assign whole source.
-                    target[key] = sourceProperty;
-                }
-            }
-            else { // if value or array, just assign as is.
-                target[key] = sourceProperty;
-            }
-        });
-    }
-}
-
 export function intersectDeepMany(target, nonObjectHandler: (target: any, source: any, key: string) => any, ...sources: any[]) {
     let result = target;
     sources.forEach(source => {
         result = this.intersectDeep(result, nonObjectHandler, source);
     });
     return result;
-}
-
-/**
- * Deep merge two objects.
- * @param target
- * @param ...sources
- */
-export function intersectDeep(target, nonObjectHandler: (target: any, source: any, key: string) => any, source: any) {
-    let output: any = null;
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if ((key in target)) {
-                    const intersection = intersectDeep(target[key], nonObjectHandler, source[key]);
-                    if (intersection && Object.keys(intersection).length > 0) {
-                        output = output || {};
-                        output[key] = intersection;
-                    }
-                }
-            } else {
-                if (nonObjectHandler) {
-                    const value = nonObjectHandler(target, source, key);
-                    if (value !== undefined) {
-                        output = output || {};
-                        output[key] = value;
-                    }
-                }
-            }
-        });
-    }
-    return output;
-}
-
-/**
- * Deep merge two objects.
- * @param target
- * @param ...sources
- */
-export function complementDeep(target: any, treatEmptyAsComplete: boolean, source): any {
-    const output = {};
-    if (isObject(target) && isObject(source)) {
-        Object.keys(target).forEach(key => {
-            if (!(key in source)) {
-                Object.assign(output, { [key]: target[key] });
-            } else if (isObject(target[key])) {
-                const value = complementDeep(target[key], treatEmptyAsComplete, source[key]);
-                if (value) {
-                    output[key] = value;
-                }
-            }
-        });
-    } else if (isObject(target)) {
-        if (!treatEmptyAsComplete) {
-            Object.keys(target).forEach(key => {
-                Object.assign(output, { [key]: target[key] });
-            });
-        }
-    }
-    if (isObject(output) && Object.keys(output).length === 0) {
-        return null;
-    }
-    return output;
-}
-
-export function setStructure(path: string, target: object, delimiter: string = "/"): object {
-    const segments = path.split(delimiter);
-    let segmentObject = target;
-
-    segments.forEach(segment => {
-        if (!segmentObject[segment]) {
-            segmentObject[segment] = {};
-        }
-        segmentObject = segmentObject[segment];
-    });
-
-    return segmentObject;
 }
 
 export function replace(path: string, target: object, value: any, delimiter: string = "/"): object {
@@ -286,61 +147,6 @@ export function replace(path: string, target: object, value: any, delimiter: str
 
 export function assign(target, source) {
     Object.assign(target, deepmerge(target, source));
-}
-
-export function setValueAt(path: string, target: object, value: any): void {
-    const segments = path.split("/");
-    let segmentObject = target;
-
-    for (let i = 0; i < segments.length - 1; i++) {
-        const segment = segments[i];
-
-        if (!segmentObject[segment]) {
-            segmentObject[segment] = {};
-        }
-        segmentObject = segmentObject[segment];
-    }
-
-    segmentObject[segments[segments.length - 1]] = value;
-}
-
-export function deleteNodeAt(path: string, target: object): void {
-    const segments = path.split("/");
-    let segmentObject = target;
-
-    for (let i = 0; i < segments.length - 1; i++) {
-        const segment = segments[i];
-
-        if (!segmentObject[segment]) {
-            segmentObject[segment] = {};
-        }
-        segmentObject = segmentObject[segment];
-    }
-
-    delete segmentObject[segments[segments.length - 1]];
-
-    // TODO: Try to delete entire trail, if empty
-}
-
-export function getObjectAt<T>(path: string, source: object, delimiter: string = "/"): T {
-    if (typeof path !== "string") {
-        return null;
-    }
-    if (typeof source !== "object") {
-        return null;
-    }
-    const segments = path.split(delimiter);
-    let segmentObject = source;
-
-    for (const segment of segments) {
-        segmentObject = segmentObject[segment];
-
-        if (!segmentObject) {
-            return null;
-        }
-    }
-
-    return <any>segmentObject;
 }
 
 export function findNodesRecursively(predicate: (x: object) => boolean, source: object): object[] {
@@ -378,51 +184,6 @@ export function elementsFromPoint(ownerDocument: Document, x: number, y: number)
     else {
         throw new Error(`Method "elementsFromPoint" not supported by browser.`);
     }
-}
-
-export function leaves(source: any, ignoreRoot: boolean = true): any[] {
-    const output = [];
-
-    const q = [];
-    if (!isObject(source)) {
-        return output;
-    }
-    const keys = Object.keys(source);
-
-    if (keys.length === 0) {
-        if (ignoreRoot === false) {
-            output.push(source);
-        }
-        return output;
-    }
-
-    const node: any = source;
-
-    keys.map(key => ({ key, node })).forEach(i => q.push(i));
-
-    let iterator = q.pop();
-    while (iterator) {
-        const node = iterator.node[iterator.key];
-
-        if (!isObject(node)) {
-            if (q.length > 0) {
-                iterator = q.pop();
-                continue;
-            } else {
-                return output;
-            }
-        }
-
-        if (node.fullId) {
-            output.push(node);
-        } else {
-            Object.keys(node).map(key => ({ key, node })).forEach(i => q.push(i));
-        }
-
-        iterator = q.pop();
-    }
-
-    return output;
 }
 
 export function slugify(text: string): string {
@@ -485,10 +246,6 @@ export function getClosestBreakpoint(source: Breakpoints, current: string): stri
     while (!source[breakpoint] && index >= 0);
 
     return breakpoint;
-}
-
-export function clone(obj: Object): Object {
-    return JSON.parse(JSON.stringify(obj));
 }
 
 export function camelCaseToKebabCase(str: string): string {
