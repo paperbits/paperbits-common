@@ -39,7 +39,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     private setStateObjectAt(key: string, source: Object, recordHistory: boolean = false): void {
         const updates = Objects.clone(source);
-        // Objects.setValueAt(key, this.stateObject, updates, true);
 
         if (recordHistory) {
             this.setValueAt(key, this.stateObject, updates, true);
@@ -122,7 +121,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     public async saveChanges(): Promise<void> {
         await this.underlyingStorage.saveChanges(this.changesObject);
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
-        console.log("Saved.");
     }
 
     public setValueAt(path: string, target: object, value: object, cleanNulls: boolean = true): void {
@@ -185,8 +183,6 @@ export class OfflineObjectStorage implements IObjectStorage {
         if (this.past.length > 10) {
             this.past.shift();
         }
-
-        console.log("Do " + this.past.length);
     }
 
     public undo(): void {
@@ -199,7 +195,6 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.future.push(record);
 
         this.eventManager.dispatchEvent("onDataPush");
-        console.log("Undo " + this.past.length);
     }
 
     public redo(): void {
@@ -212,6 +207,5 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.past.push(record);
 
         this.eventManager.dispatchEvent("onDataPush");
-        console.log("Redo " + this.past.length);
     }
 }
