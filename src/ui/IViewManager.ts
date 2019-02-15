@@ -33,7 +33,7 @@ export interface IViewManager {
     foldWorkshops(): void;
     unfoldWorkshop(): void;
     clearJourney(): void;
-    closeWidgetEditor(): void;
+    closeView(): void;
     notifyInfo(title: string, content: string): void;
     notifySuccess(title: string, content: string): void;
     notifyError(title: string, content: string): void;
