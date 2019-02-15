@@ -7,7 +7,7 @@ export class SavingHandler {
     constructor(eventManager: IEventManager, offlineObjectStorage: OfflineObjectStorage, viewManager: IViewManager) {
         eventManager.addEventListener("onSaveChanges", async () => {
             const saveChangesPromise = offlineObjectStorage.saveChanges();
-            viewManager.addPromiseProgressIndicator(saveChangesPromise, "Changes saved", "All changes were pushed to server");
+            viewManager.notifyProgress(saveChangesPromise, "Changes saved", "All changes were pushed to server");
         });
     }
 }

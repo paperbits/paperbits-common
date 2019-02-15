@@ -10,6 +10,6 @@ export class UnhandledErrorHandler {
     }
 
     public handlerError(event: ErrorEvent): void {
-        this.viewManager.notifySuccess("Oops. Something went wrong", event.message);
+        this.viewManager.notifyError("Oops. Something went wrong", event.message);
     }
 }
