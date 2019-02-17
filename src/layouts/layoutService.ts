@@ -2,7 +2,7 @@
 import * as Utils from "../utils";
 import { Bag } from "./../bag";
 import { LayoutContract } from "../layouts/layoutContract";
-import { IObjectStorage } from "../persistence";
+import { IObjectStorage, Query, Operator } from "../persistence";
 import { ILayoutService } from "./";
 import { Contract } from "..";
 
@@ -12,11 +12,6 @@ const documentsPath = "files";
 export class LayoutService implements ILayoutService {
     constructor(private readonly objectStorage: IObjectStorage) { }
 
-    private async searchByProperties(properties: string[], value: string): Promise<LayoutContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, properties, value);
-        return Object.keys(result).map(key => result[key]);
-    }
-
     public async getLayoutByKey(key: string): Promise<LayoutContract> {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
@@ -25,8 +20,14 @@ export class LayoutService implements ILayoutService {
         return await this.objectStorage.getObject<LayoutContract>(key);
     }
 
-    public search(pattern: string): Promise<LayoutContract[]> {
-        return this.searchByProperties(["title"], pattern);
+    public async search(pattern: string): Promise<LayoutContract[]> {
+        const query = Query
+            .from<LayoutContract>()
+            .where("title", Operator.contains, pattern);
+
+        const result = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, query);
+
+        return Object.keys(result).map(key => result[key]);
     }
 
     public async deleteLayout(layout: LayoutContract): Promise<void> {
@@ -81,7 +82,11 @@ export class LayoutService implements ILayoutService {
             throw new Error(`Parameter "permalinkTemplate" not specified.`);
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath, ["permalinkTemplate"], permalinkTemplate);
+        const query = Query
+            .from<LayoutContract>()
+            .where("permalinkTemplate", Operator.equals, permalinkTemplate);
+
+        const result = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath, query);
         const layouts = Object.keys(result).map(key => result[key]);
         return layouts.length > 0 ? layouts[0] : null;
     }
@@ -182,7 +187,7 @@ export class LayoutService implements ILayoutService {
             return null;
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<LayoutContract>>(layoutsPath);
+        const result = await this.objectStorage.searchObjects<LayoutContract>(layoutsPath);
         const layouts = Object.keys(result).map(key => result[key]);
 
         if (layouts && layouts.length) {

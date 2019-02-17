@@ -13,9 +13,7 @@ export interface IMediaService {
 
     getMediaByUrl(url: string): Promise<MediaContract>;
 
-    searchByProperties(propertyNames: string[], propertyValue: string, startSearch: boolean): Promise<MediaContract[]>;
-
-    search(pattern?: string): Promise<MediaContract[]>;
+    search(pattern?: string, mimeType?: string): Promise<MediaContract[]>;
 
     /**
      * Deletes specified media file.

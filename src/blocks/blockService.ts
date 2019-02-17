@@ -1,6 +1,5 @@
-﻿import { Bag } from "./../bag";
-import * as Utils from "../utils";
-import { IObjectStorage } from "../persistence";
+﻿import * as Utils from "../utils";
+import { IObjectStorage, Query, Operator } from "../persistence";
 import { IBlockService } from "./IBlockService";
 import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";
@@ -24,8 +23,14 @@ export class BlockService implements IBlockService {
     }
 
     public async search(pattern: string): Promise<BlockContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<BlockContract>>(blockPath, ["title"], pattern);
-        return Object.keys(result).map(key => result[key]);
+        const query = Query
+            .from<BlockContract>()
+            .where("title", Operator.contains, pattern)
+            .orderBy("title");
+
+        const result = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
+        
+        return Object.values(result);
     }
 
     public async deleteBlock(block: BlockContract): Promise<void> {

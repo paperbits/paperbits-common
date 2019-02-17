@@ -1,4 +1,4 @@
-import { Contract } from "@paperbits/common/contract";
+import { Contract } from "../contract";
 import { MarkContract } from "./markContract";
 
 export interface InlineContract extends Contract {

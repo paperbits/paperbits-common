@@ -1,8 +1,7 @@
-﻿import { Bag } from "../bag";
-import * as Utils from "../utils";
+﻿import * as Utils from "../utils";
 import { UrlContract } from "../urls/urlContract";
 import { IUrlService } from "../urls/IUrlService";
-import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IObjectStorage, Query, Operator } from "../persistence";
 import * as _ from "lodash";
 
 const urlsPath = "urls";
@@ -14,17 +13,19 @@ export class UrlService implements IUrlService {
         this.objectStorage = objectStorage;
     }
 
-    private async searchByProperties(properties: string[], value: string): Promise<UrlContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<UrlContract>>(urlsPath, properties, value);
-        return Object.keys(result).map(key => result[key]);
-    }
-
     public async getUrlByKey(key: string): Promise<UrlContract> {
         return await this.objectStorage.getObject<UrlContract>(key);
     }
 
-    public search(pattern: string): Promise<UrlContract[]> {
-        return this.searchByProperties(["title"], pattern);
+    public async search(pattern: string): Promise<UrlContract[]> {
+        const query = Query
+            .from<UrlContract>()
+            .where("title", Operator.contains, pattern)
+            .orderBy("title");
+
+        const result = await this.objectStorage.searchObjects<UrlContract>(urlsPath, query);
+
+        return Object.values(result);
     }
 
     public async deleteUrl(url: UrlContract): Promise<void> {

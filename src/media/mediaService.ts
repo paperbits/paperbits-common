@@ -1,9 +1,8 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "./constants";
-import { IObjectStorage, IBlobStorage } from "../persistence";
+import { IObjectStorage, IBlobStorage, Query, Operator } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 import { ProgressPromise } from "../progressPromise";
-import { Bag } from "./../bag";
 
 
 export class MediaService implements IMediaService {
@@ -17,15 +16,14 @@ export class MediaService implements IMediaService {
             throw new Error(`Parameter "permalink" not specified.`);
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(Constants.mediaRoot, ["permalink"], permalink);
-        const uploads = Object.keys(result).map(key => result[key]);
+        const query = Query
+            .from<MediaContract>()
+            .where("permalink", Operator.equals, permalink);
+
+        const result = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
+        const uploads = Object.values(result);
 
         return uploads.length > 0 ? uploads[0] : null;
-    }
-
-    public async searchByProperties(propertyNames: string[], propertyValue: string): Promise<MediaContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<MediaContract>>(Constants.mediaRoot, propertyNames, propertyValue);
-        return Object.keys(result).map(key => result[key]);
     }
 
     public async getMediaByKey(key: string): Promise<MediaContract> {
@@ -55,25 +53,19 @@ export class MediaService implements IMediaService {
         return media;
     }
 
-    public async search(pattern: string): Promise<MediaContract[]> {
-        const result = await this.searchByProperties(["filename"], pattern);
-        return Object.keys(result).map(key => result[key]);
+    public async search(pattern: string, mimeType: string): Promise<MediaContract[]> {
+        let query = Query
+            .from<MediaContract>()
+            .where("filename", Operator.contains, pattern)
+            .orderBy("filename");
 
-        result.sort((x, y) => {
-            const a = x.filename.toUpperCase();
-            const b = y.filename.toUpperCase();
+        if (mimeType) {
+            query = query.where("mimeType", Operator.contains, mimeType);
+        }
 
-            if (a > b) {
-                return 1;
-            }
+        const result = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
 
-            if (a < b) {
-                return -1;
-            }
-            return 0;
-        });
-
-        return result;
+        return Object.values(result);
     }
 
     public async deleteMedia(media: MediaContract): Promise<void> {

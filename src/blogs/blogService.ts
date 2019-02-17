@@ -3,7 +3,7 @@ import * as Utils from "../utils";
 import { Bag } from "./../bag";
 import { BlogPostContract } from "../blogs/blogPostContract";
 import { IBlogService } from "../blogs/IBlogService";
-import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IObjectStorage, Query, Operator } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "..";
 
@@ -17,14 +17,18 @@ export class BlogService implements IBlogService {
         private readonly blockService: IBlockService
     ) { }
 
-    private async searchByProperties(properties: string[], value: string): Promise<BlogPostContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<BlogPostContract>>(blogPostsPath, properties, value);
-        return Object.keys(result).map(key => result[key]);
-    }
-
     public async getBlogPostByPermalink(permalink: string): Promise<BlogPostContract> {
-        const result = await this.objectStorage.searchObjects<Bag<BlogPostContract>>(blogPostsPath, ["permalink"], permalink);
-        const posts = Object.keys(result).map(key => result[key]);
+        if (!permalink) {
+            throw new Error(`Parameter "permalink" not specified.`);
+        }
+
+        const query = Query
+            .from<BlogPostContract>()
+            .where("permalink", Operator.equals, permalink);
+
+        const result = await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, query);
+        const posts = Object.values(result);
+
         return posts.length > 0 ? posts[0] : null;
     }
 
@@ -32,8 +36,15 @@ export class BlogService implements IBlogService {
         return await this.objectStorage.getObject<BlogPostContract>(key);
     }
 
-    public search(pattern: string): Promise<BlogPostContract[]> {
-        return this.searchByProperties(["title"], pattern);
+    public async search(pattern: string): Promise<BlogPostContract[]> {
+        const query = Query
+            .from<BlogPostContract>()
+            .where("title", Operator.contains, pattern)
+            .orderBy("title");
+
+        const result = await this.objectStorage.searchObjects<BlogPostContract>(blogPostsPath, query);
+
+        return Object.values(result);
     }
 
     public async deleteBlogPost(blogPost: BlogPostContract): Promise<void> {

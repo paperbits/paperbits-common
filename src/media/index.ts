@@ -1,4 +1,3 @@
-export * from "./IMediaFilter";
 export * from "./IMediaService";
 export * from "./mediaContract";
 export * from "./mediaHyperlinkProvider";
