@@ -1,7 +1,6 @@
-﻿import { Bag } from "./../bag";
-import * as Utils from "../utils";
+﻿import * as Utils from "../utils";
 import { PageContract, IPageService } from "../pages";
-import { IObjectStorage } from "../persistence";
+import { IObjectStorage, Operator, Query } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
 
@@ -15,18 +14,17 @@ export class PageService implements IPageService {
         private readonly blockService: IBlockService
     ) { }
 
-    private async searchByProperties(properties: string[], value: string): Promise<PageContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<PageContract>>(pagesPath, properties, value);
-        return Object.values(result);
-    }
-
     public async getPageByPermalink(permalink: string): Promise<PageContract> {
         if (!permalink) {
             throw new Error(`Parameter "permalink" not specified.`);
         }
 
-        const result = await this.objectStorage.searchObjects<Bag<PageContract>>(pagesPath, ["permalink"], permalink);
-        const pages = Object.keys(result).map(key => result[key]);
+        const query = Query
+            .from<PageContract>()
+            .where("permalink", Operator.equals, permalink);
+
+        const result = await this.objectStorage.searchObjects<PageContract>(pagesPath, query);
+        const pages = Object.values(result);
 
         return pages.length > 0 ? pages[0] : null;
     }
@@ -39,8 +37,15 @@ export class PageService implements IPageService {
         return await this.objectStorage.getObject<PageContract>(key);
     }
 
-    public search(pattern: string): Promise<PageContract[]> {
-        return this.searchByProperties(["title"], pattern);
+    public async search(pattern: string): Promise<PageContract[]> {
+        const query = Query
+            .from<PageContract>()
+            .where("title", Operator.contains, pattern)
+            .orderBy("title");
+
+        const result = await this.objectStorage.searchObjects<PageContract>(pagesPath, query);
+        
+        return Object.values(result);
     }
 
     public async deletePage(page: PageContract): Promise<void> {

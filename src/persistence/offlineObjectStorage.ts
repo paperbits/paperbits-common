@@ -1,7 +1,7 @@
 import * as Objects from "../objects";
 import * as _ from "lodash";
 import { Bag } from "./../bag";
-import { IObjectStorage } from "../persistence/IObjectStorage";
+import { IObjectStorage, Query } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IEventManager } from "../events";
 
@@ -97,11 +97,11 @@ export class OfflineObjectStorage implements IObjectStorage {
         Objects.setValueAt(key, this.changesObject, null, false);
     }
 
-    public async searchObjects<T>(path: string, propertyNames?: string[], searchValue?: string): Promise<T> {
+    public async searchObjects<T>(path: string, query: Query<T>): Promise<Bag<T>> {
         let resultObject = {};
 
         if (this.isOnline) {
-            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, propertyNames, searchValue);
+            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
             const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
 
             if (changesAt) {
@@ -115,7 +115,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             resultObject = searchResultObject;
         }
 
-        return <T>resultObject;
+        return resultObject;
     }
 
     public async saveChanges(): Promise<void> {

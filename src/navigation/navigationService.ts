@@ -36,13 +36,12 @@ export class NavigationService implements INavigationService {
 
     public async getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract> {
         const items = await this.getNavigationItems();
-
         return this.find(items, navigationItemKey);
     }
 
     public async getNavigationItems(): Promise<NavigationItemContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<NavigationItemContract>>(navigationItemsPath);
-        return Object.keys(result).map(key => result[key]);
+        const result = await this.objectStorage.searchObjects<NavigationItemContract>(navigationItemsPath);
+        return Object.values(result);
     }
 
     public async updateNavigationItem(navigationItem: NavigationItemContract): Promise<void> {

@@ -1,3 +1,6 @@
+import { Query } from "../persistence/query";
+import { Bag } from "../bag";
+
 export interface IObjectStorage {
     /**
      * Creates object with specified key in storage.
@@ -28,7 +31,7 @@ export interface IObjectStorage {
      */
     updateObject<T>(key: string, dataObject: T): Promise<void>;
 
-    searchObjects<T>(key: string, propertyNames?: string[], searchValue?: string): Promise<T>;
+    searchObjects<T>(key: string, query?: Query<T>): Promise<Bag<T>>;
 
     saveChanges?(delta: Object): Promise<void>;
 }

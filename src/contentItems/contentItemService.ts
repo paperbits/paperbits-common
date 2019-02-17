@@ -1,7 +1,6 @@
-﻿import { Bag } from "./../bag";
-import * as Utils from "../utils";
+﻿import * as Utils from "../utils";
 import { ContentItemContract, IContentItemService } from "../contentItems";
-import { IObjectStorage } from "../persistence";
+import { IObjectStorage, Query, Operator } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
 
@@ -14,11 +13,6 @@ export class ContentItemService implements IContentItemService {
         private readonly objectStorage: IObjectStorage,
         private readonly blockService: IBlockService
     ) { }
-
-    private async searchByProperties(properties: string[], value: string): Promise<ContentItemContract[]> {
-        const result = await this.objectStorage.searchObjects<Bag<ContentItemContract>>(contentItemsPath, properties, value);
-        return Object.keys(result).map(key => result[key]);
-    }
 
     public async getContentItemByPermalink(permalink: string): Promise<ContentItemContract> {
         return null;
@@ -41,8 +35,14 @@ export class ContentItemService implements IContentItemService {
         return await this.objectStorage.getObject<ContentItemContract>(key);
     }
 
-    public search(pattern: string): Promise<ContentItemContract[]> {
-        return this.searchByProperties(["title"], pattern);
+    public async search(pattern: string): Promise<ContentItemContract[]> {
+        const query = Query
+            .from<ContentItemContract>()
+            .where("title", Operator.contains, pattern)
+            .orderBy("title");
+
+        const result = await this.objectStorage.searchObjects<ContentItemContract>(contentItemsPath, query);
+        return Object.values(result);
     }
 
     public async deleteContentItem(contentItem: ContentItemContract): Promise<void> {

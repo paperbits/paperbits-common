@@ -1,5 +1,5 @@
 import { InlineContract } from "./inlineContract";
-import { Contract } from "@paperbits/common/contract";
+import { Contract } from "../contract";
 
 export interface TypographyContract {
     font?: string;

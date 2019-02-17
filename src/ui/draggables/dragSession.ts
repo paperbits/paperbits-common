@@ -1,5 +1,5 @@
-import { IWidgetBinding } from "../../editing/IWidgetBinding";
-import { WidgetModel } from "@paperbits/common/widgets";
+import { IWidgetBinding } from "../../editing";
+import { WidgetModel } from "../../widgets";
 
 
 export interface DragSession {
