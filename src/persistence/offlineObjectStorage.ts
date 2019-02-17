@@ -50,10 +50,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     private setChangesObjectAt(key: string, source: Object): void {
         const updates = Objects.clone(source);
         Objects.setValueAt(key, this.changesObject, updates, false);
-
-        if (this.autosave) {
-            this.saveChanges();
-        }
     }
 
     public async addObject(key: string, dataObject: Object): Promise<void> {
@@ -63,6 +59,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject, true);
+
+        if (this.autosave) {
+            this.saveChanges();
+        }
     }
 
     public async updateObject<T>(key: string, dataObject: T): Promise<void> {
@@ -76,6 +76,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         this.setChangesObjectAt(key, dataObject);
         this.setStateObjectAt(key, dataObject, true);
+
+        if (this.autosave) {
+            this.saveChanges();
+        }
     }
 
     public async getObject<T>(key: string): Promise<T> {
