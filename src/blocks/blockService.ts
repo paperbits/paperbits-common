@@ -61,4 +61,13 @@ export class BlockService implements IBlockService {
 
         return this.objectStorage.updateObject(block.key, block);
     }
+
+    public async getBlockContent(key: string): Promise<Contract> {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
+        const page = await this.getBlockByKey(key);
+        return await this.objectStorage.getObject(page.contentKey);
+    }
 }

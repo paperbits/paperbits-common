@@ -75,9 +75,9 @@ export class PageService implements IPageService {
 
         await this.objectStorage.addObject(pageKey, page);
 
-        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+        const template = await this.blockService.getBlockContent(templateBlockKey);
 
-        await this.objectStorage.addObject(contentKey, { nodes: [contentTemplate.content] });
+        await this.objectStorage.addObject(contentKey, template);
 
         return page;
     }
