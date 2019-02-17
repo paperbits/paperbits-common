@@ -1,4 +1,3 @@
-
 export enum Operator {
     equals,
     contains
@@ -57,11 +56,3 @@ export class Query<T> {
         return new Query<T>();
     }
 }
-
-
-
-// export interface 
-// citiesRef.where("state", "==", "CA")
-// citiesRef.where("population", "<", 100000)
-// citiesRef.where("name", ">=", "San Francisco")
-// citiesRef.orderBy("name", "desc").limit(3)
