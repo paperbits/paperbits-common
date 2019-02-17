@@ -55,7 +55,7 @@ export class ContentItemService implements IContentItemService {
     public async createContentItem(url: string, title: string, description: string, keywords): Promise<ContentItemContract> {
         const identifier = Utils.guid();
         const contentItemKey = `${contentItemsPath}/${identifier}`;
-        const documentKey = `${documentsPath}/${identifier}`;
+        const contentKey = `${documentsPath}/${identifier}`;
 
         const contentItem: ContentItemContract = {
             key: contentItemKey,
@@ -63,14 +63,14 @@ export class ContentItemService implements IContentItemService {
             description: description,
             keywords: keywords,
             permalink: url,
-            contentKey: documentKey
+            contentKey: contentKey
         };
 
         await this.objectStorage.addObject(contentItemKey, contentItem);
 
-        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+        const template = await this.blockService.getBlockContent(templateBlockKey);
 
-        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
+        await this.objectStorage.addObject(contentKey, template);
 
         return contentItem;
     }

@@ -5,6 +5,7 @@ import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";
 
 const blockPath = "blocks";
+const documentsPath = "files";
 
 export class BlockService implements IBlockService {
     constructor(
@@ -42,16 +43,19 @@ export class BlockService implements IBlockService {
     }
 
     public async createBlock(title: string, description: string, content: Contract): Promise<void> {
-        const key = `${blockPath}/${Utils.guid()}`;
+        const identifier = Utils.guid();
+        const blockKey = `${blockPath}/${Utils.guid()}`;
+        const contentKey = `${documentsPath}/${identifier}`;
 
         const block: BlockContract = {
-            key: key,
+            key: blockKey,
             title: title,
             description: description,
-            content: content
+            contentKey: contentKey
         };
 
-        await this.objectStorage.updateObject(key, block);
+        await this.objectStorage.addObject(blockKey, block);
+        await this.objectStorage.addObject(contentKey, content);
     }
 
     public updateBlock(block: BlockContract): Promise<void> {
@@ -67,7 +71,7 @@ export class BlockService implements IBlockService {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        const page = await this.getBlockByKey(key);
-        return await this.objectStorage.getObject(page.contentKey);
+        const block = await this.getBlockByKey(key);
+        return await this.objectStorage.getObject(block.contentKey);
     }
 }

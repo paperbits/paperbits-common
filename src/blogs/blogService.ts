@@ -57,7 +57,7 @@ export class BlogService implements IBlogService {
     public async createBlogPost(url: string, title: string, description: string, keywords): Promise<BlogPostContract> {
         const identifier = Utils.guid();
         const postKey = `${blogPostsPath}/${identifier}`;
-        const documentKey = `${documentsPath}/${identifier}`;
+        const contentKey = `${documentsPath}/${identifier}`;
 
         const post: BlogPostContract = {
             key: postKey,
@@ -65,14 +65,14 @@ export class BlogService implements IBlogService {
             description: description,
             keywords: keywords,
             permalink: url,
-            contentKey: documentKey
+            contentKey: contentKey
         };
 
         await this.objectStorage.addObject(postKey, post);
 
-        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+        const template = await this.blockService.getBlockContent(templateBlockKey);
 
-        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
+        await this.objectStorage.addObject(contentKey, template);
 
         return post;
     }
