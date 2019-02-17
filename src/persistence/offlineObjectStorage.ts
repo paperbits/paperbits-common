@@ -62,7 +62,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         this.setChangesObjectAt(key, dataObject);
-        this.setStateObjectAt(key, dataObject);
+        this.setStateObjectAt(key, dataObject, true);
     }
 
     public async updateObject<T>(key: string, dataObject: T): Promise<void> {
@@ -92,7 +92,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         const result = await this.underlyingStorage.getObject<T>(key);
 
         if (result) {
-            this.setStateObjectAt(key, result);
+            this.setStateObjectAt(key, result, false);
         }
 
         return result;

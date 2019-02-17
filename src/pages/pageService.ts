@@ -62,7 +62,7 @@ export class PageService implements IPageService {
     public async createPage(url: string, title: string, description: string, keywords): Promise<PageContract> {
         const identifier = Utils.guid();
         const pageKey = `${pagesPath}/${identifier}`;
-        const documentKey = `${documentsPath}/${identifier}`;
+        const contentKey = `${documentsPath}/${identifier}`;
 
         const page: PageContract = {
             key: pageKey,
@@ -70,14 +70,14 @@ export class PageService implements IPageService {
             description: description,
             keywords: keywords,
             permalink: url,
-            contentKey: documentKey
+            contentKey: contentKey
         };
 
         await this.objectStorage.addObject(pageKey, page);
 
         const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
 
-        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
+        await this.objectStorage.addObject(contentKey, { nodes: [contentTemplate.content] });
 
         return page;
     }

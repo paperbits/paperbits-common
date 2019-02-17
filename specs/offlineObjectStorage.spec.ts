@@ -64,6 +64,19 @@ describe("Offline object storage", async () => {
         expect(changesObject.address.streetNumber).equal(2000);
     });
 
+    it("Can apply chages and undo them.", async () => {
+        const obs = new OfflineObjectStorage();
+        const changesObject: any = obs["changesObject"];
+        const stateObject: any = obs["stateObject"];
+        Object.assign(stateObject, initialData); // assigning initial state
+
+        await obs.updateObject("address", { streetNumber: undefined });
+        expect(stateObject.address.streetNumber).equal(undefined);
+
+        obs.undo();
+        expect(stateObject.address.streetNumber).equal(2000);
+    });
+
     it("Can do search taking changes into account.", async () => {
         const underlyingStorage: any = new MockStorage();
         const obs = new OfflineObjectStorage();
