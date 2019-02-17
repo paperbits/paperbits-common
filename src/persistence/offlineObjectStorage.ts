@@ -111,7 +111,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    public async searchObjects<T>(path: string, query: Query<T>): Promise<Bag<T>> {
+    public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
         let resultObject = {};
 
         if (this.isOnline) {
@@ -199,7 +199,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    private undo(): void {
+    public undo(): void {
         if (this.past.length === 0) {
             return;
         }
@@ -208,10 +208,12 @@ export class OfflineObjectStorage implements IObjectStorage {
         record.undo();
         this.future.push(record);
 
-        this.eventManager.dispatchEvent("onDataPush");
+        if (this.eventManager) {
+            this.eventManager.dispatchEvent("onDataPush");
+        }
     }
 
-    private redo(): void {
+    public redo(): void {
         if (this.future.length === 0) {
             return;
         }
@@ -220,6 +222,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         record.do();
         this.past.push(record);
 
-        this.eventManager.dispatchEvent("onDataPush");
+        if (this.eventManager) {
+            this.eventManager.dispatchEvent("onDataPush");
+        }
     }
 }

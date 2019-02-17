@@ -40,7 +40,7 @@ export class NavigationService implements INavigationService {
     }
 
     public async getNavigationItems(): Promise<NavigationItemContract[]> {
-        const result = await this.objectStorage.searchObjects<NavigationItemContract>(navigationItemsPath);
+        const result = await this.objectStorage.getObject<NavigationItemContract>(navigationItemsPath);
         return Object.values(result);
     }
 
