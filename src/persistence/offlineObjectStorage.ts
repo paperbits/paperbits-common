@@ -15,12 +15,14 @@ export class OfflineObjectStorage implements IObjectStorage {
     private readonly middlewares: IObjectStorageMiddleware[];
 
     public isOnline: boolean;
+    public autosave: boolean;
 
     constructor(private readonly eventManager?: IEventManager) {
         this.stateObject = {};
         this.changesObject = {};
         this.underlyingStorage = null;
         this.isOnline = true;
+        this.autosave = false;
         this.middlewares = [];
 
         if (eventManager) {
@@ -48,6 +50,10 @@ export class OfflineObjectStorage implements IObjectStorage {
     private setChangesObjectAt(key: string, source: Object): void {
         const updates = Objects.clone(source);
         Objects.setValueAt(key, this.changesObject, updates, false);
+
+        if (this.autosave) {
+            this.saveChanges();
+        }
     }
 
     public async addObject(key: string, dataObject: Object): Promise<void> {
@@ -95,6 +101,10 @@ export class OfflineObjectStorage implements IObjectStorage {
     public async deleteObject(key: string): Promise<void> {
         Objects.deleteNodeAt(key, this.stateObject);
         Objects.setValueAt(key, this.changesObject, null, false);
+
+        if (this.autosave) {
+            this.saveChanges();
+        }
     }
 
     public async searchObjects<T>(path: string, query: Query<T>): Promise<Bag<T>> {
@@ -123,7 +133,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
     }
 
-    public setValueAt(path: string, target: object, value: object, cleanNulls: boolean = true): void {
+    private setValueAt(path: string, target: object, value: object, cleanNulls: boolean = true): void {
         let compensation;
 
         const doCommand = () => {
@@ -138,7 +148,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.do(doCommand, undoCommand);
     }
 
-    public merge(target: Object, changes: Object, stepCompleteCallback?: () => void): void {
+    private merge(target: Object, changes: Object, stepCompleteCallback?: () => void): void {
         let compensation;
 
         const doCommand = () => {
@@ -160,7 +170,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.do(doCommand, undoCommand);
     }
 
-    public applyChangesAt(path: string, target: Object, changes: Object): void {
+    private applyChangesAt(path: string, target: Object, changes: Object): void {
         let compensation;
 
         const doCommand = () => {
@@ -174,7 +184,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.do(doCommand, undoCommand);
     }
 
-    public do(doCommand, undoCommand): void {
+    private do(doCommand, undoCommand): void {
         const record = { do: doCommand, undo: undoCommand };
         record.do();
 
@@ -185,7 +195,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    public undo(): void {
+    private undo(): void {
         if (this.past.length === 0) {
             return;
         }
@@ -197,7 +207,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.eventManager.dispatchEvent("onDataPush");
     }
 
-    public redo(): void {
+    private redo(): void {
         if (this.future.length === 0) {
             return;
         }
