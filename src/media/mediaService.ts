@@ -35,6 +35,7 @@ export class MediaService implements IMediaService {
 
         if (!media) {
             console.warn(`Media with key ${key} not found`);
+            return null;
         }
 
         try {
