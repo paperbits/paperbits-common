@@ -68,13 +68,18 @@ describe("Offline object storage", async () => {
         const obs = new OfflineObjectStorage();
         const changesObject: any = obs["changesObject"];
         const stateObject: any = obs["stateObject"];
+
         Object.assign(stateObject, initialData); // assigning initial state
+        expect(stateObject.address.streetNumber).equal(2000);
+        expect(changesObject.address, "When no changes has been made yet, changesObject should be empty").equals(undefined);
+
 
         await obs.updateObject("address", { streetNumber: undefined });
         expect(stateObject.address.streetNumber).equal(undefined);
 
         obs.undo();
         expect(stateObject.address.streetNumber).equal(2000);
+        expect(changesObject.address, "Undo should rollback changesObject as well").equals(undefined);
     });
 
     it("Can do search taking changes into account.", async () => {

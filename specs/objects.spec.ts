@@ -11,7 +11,7 @@ function removeFromArray(array, item) {
 }
 
 describe("Objects", async () => {
-    it("Can apply chages and undo them.", async () => {
+    it("Merge deep. Can apply chages and undo them.", async () => {
         const target = {
             firstName: "John",
             lastName: "Doe",
@@ -41,7 +41,7 @@ describe("Objects", async () => {
         expect(originalSnapshot).equal(finalSnapshot);
     });
 
-    it("Arrays.", async () => {
+    it("Merge deep. Arrays.", async () => {
         const target = {
             sections: [{
                 rows: [{
@@ -71,11 +71,9 @@ describe("Objects", async () => {
 
         Objects.mergeDeep(row, rowDelta);
         Objects.mergeDeep(target, targetDelta);
-
-        // console.log(JSON.stringify(target));
     });
 
-    it("Can merge at objects at any level.", async () => {
+    it("Merge deep. Can merge at objects at any level.", async () => {
         const target1 = { parent: { child: { property1: "value1", property2: "value2" } } };
         const source1 = { property2: null };
         Objects.mergeDeepAt("parent/child", target1, source1, false);
@@ -85,5 +83,16 @@ describe("Objects", async () => {
         const source2 = { property2: null };
         Objects.mergeDeepAt("parent/child", target2, source2, true);
         expect(target2.parent.child.property2).equal(undefined);
+    });
+
+
+    it("Set value at specific path.", () => {
+        const target: any = { address: { street: "South Eads" } };
+        const compensation1: any = Objects.setValueAt("address/streetNumber", target, 2000);
+        const compensation2: any = Objects.setValueAt("address/street", target, "S Eads");
+
+        expect(target.address.streetNumber).equal(2000);
+        expect(compensation1).equals(undefined);
+        expect(compensation2).equals("South Eads");
     });
 });

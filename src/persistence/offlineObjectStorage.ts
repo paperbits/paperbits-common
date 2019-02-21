@@ -39,43 +39,86 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.middlewares.push(middleware);
     }
 
-    private setStateObjectAt(key: string, source: Object, recordHistory: boolean = false): void {
-        const updates = Objects.clone(source);
-
-        if (recordHistory) {
-            this.setValueAt(key, this.stateObject, updates, true);
-        }
-    }
-
-    private setChangesObjectAt(key: string, source: Object): void {
-        const updates = Objects.clone(source);
-        Objects.setValueAt(key, this.changesObject, updates, false);
-    }
-
-    public async addObject(key: string, dataObject: Object): Promise<void> {
-        if (!key) {
+    public async addObject(path: string, dataObject: Object): Promise<void> {
+        if (!path) {
             throw new Error("Could not add object: Key is undefined.");
         }
 
-        this.setChangesObjectAt(key, dataObject);
-        this.setStateObjectAt(key, dataObject, true);
+        const dataObjectClone = Objects.clone(dataObject); // To drop any object references
+
+        let compensationOfState;
+        let compensationOfChanges;
+
+        const doCommand = () => {
+            /* Writing state */
+            compensationOfState = Objects.setValueAt(path, this.stateObject, dataObjectClone);
+
+            /* Writng changes */
+            compensationOfChanges = Objects.setValueAt(path, this.changesObject, dataObjectClone);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject, true);
+        };
+
+        const undoCommand = () => {
+            /* Undoing state */
+            Objects.setValueAt(path, this.stateObject, compensationOfState);
+
+            /* Undoinf changes */
+            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject, true);
+        };
+
+        this.do(doCommand, undoCommand);
 
         if (this.autosave) {
             this.saveChanges();
         }
     }
 
-    public async updateObject<T>(key: string, dataObject: T): Promise<void> {
-        if (!key) {
-            throw new Error(`Could not update object: Key is undefined.`);
+    public async patchObject<T>(path: string, dataObject: T): Promise<void> {
+        throw new Error("Not implemented");
+    }
+
+    public async updateObject<T>(path: string, dataObject: T): Promise<void> {
+        if (!path) {
+            throw new Error(`Parameter "path" not specified.`);
         }
 
         if (!!!dataObject) {
             throw new Error(`Parameter "dataObject" not specified.`);
         }
 
-        this.setChangesObjectAt(key, dataObject);
-        this.setStateObjectAt(key, dataObject, true);
+        const dataObjectClone = Objects.clone(dataObject); // To drop any object references
+
+        let compensationOfState;
+        let compensationOfChanges;
+
+        const doCommand = () => {
+            /* Writing state */
+            compensationOfState = Objects.setValueAt(path, this.stateObject, dataObjectClone);
+
+            /* Writng changes */
+            compensationOfChanges = Objects.setValueAt(path, this.changesObject, dataObjectClone);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject);
+        };
+
+        const undoCommand = () => {
+            /* Undoing state */
+            Objects.setValueAt(path, this.stateObject, compensationOfState);
+
+            /* Undoinf changes */
+            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject);
+        };
+
+        this.do(doCommand, undoCommand);
 
         if (this.autosave) {
             this.saveChanges();
@@ -96,96 +139,43 @@ export class OfflineObjectStorage implements IObjectStorage {
         const result = await this.underlyingStorage.getObject<T>(key);
 
         if (result) {
-            this.setStateObjectAt(key, result, false);
+            // this.setStateObjectAt(key, result, false);
         }
 
         return result;
     }
 
-    public async deleteObject(key: string): Promise<void> {
-        Objects.deleteNodeAt(key, this.stateObject);
-        Objects.setValueAt(key, this.changesObject, null, false);
+    public async deleteObject(path: string): Promise<void> {
+        let compensationOfState;
+        let compensationOfChanges;
+
+        const doCommand = () => {
+            /* Writing state */
+            compensationOfState = Objects.setValueAt(path, this.stateObject, null);
+
+            /* Writng changes */
+            compensationOfChanges = Objects.setValueAt(path, this.changesObject, null);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject);
+        };
+
+        const undoCommand = () => {
+            /* Undoing state */
+            Objects.setValueAt(path, this.stateObject, compensationOfState);
+
+            /* Undoinf changes */
+            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+
+            Objects.cleanupObject(this.stateObject, true);
+            Objects.cleanupObject(this.changesObject);
+        };
+
+        this.do(doCommand, undoCommand);
 
         if (this.autosave) {
             this.saveChanges();
         }
-    }
-
-    public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
-        let resultObject = {};
-
-        if (this.isOnline) {
-            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
-            const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
-
-            if (changesAt) {
-                /* If there are changes at the same path, apply them to search result */
-                Objects.mergeDeep(searchResultObject, changesAt);
-            }
-
-            /* Complement stateObject with new objects from search result, if any */
-            Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject));
-
-            resultObject = searchResultObject;
-        }
-
-        return resultObject;
-    }
-
-    public async saveChanges(): Promise<void> {
-        await this.underlyingStorage.saveChanges(this.changesObject);
-        Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
-    }
-
-    private setValueAt(path: string, target: object, value: object, cleanNulls: boolean = true): void {
-        let compensation;
-
-        const doCommand = () => {
-            compensation = Objects.getObjectAt(path, target);
-            Objects.setValueAt(path, target, value);
-        };
-
-        const undoCommand = () => {
-            Objects.setValueAt(path, target, compensation);
-        };
-
-        this.do(doCommand, undoCommand);
-    }
-
-    private merge(target: Object, changes: Object, stepCompleteCallback?: () => void): void {
-        let compensation;
-
-        const doCommand = () => {
-            compensation = Objects.mergeDeep(target, changes);
-
-            if (stepCompleteCallback) {
-                stepCompleteCallback();
-            }
-        };
-
-        const undoCommand = () => {
-            Objects.mergeDeep(target, compensation);
-
-            if (stepCompleteCallback) {
-                stepCompleteCallback();
-            }
-        };
-
-        this.do(doCommand, undoCommand);
-    }
-
-    private applyChangesAt(path: string, target: Object, changes: Object): void {
-        let compensation;
-
-        const doCommand = () => {
-            compensation = Objects.mergeDeepAt(path, target, changes);
-        };
-
-        const undoCommand = () => {
-            Objects.mergeDeep(target, compensation);
-        };
-
-        this.do(doCommand, undoCommand);
     }
 
     private do(doCommand, undoCommand): void {
@@ -225,5 +215,31 @@ export class OfflineObjectStorage implements IObjectStorage {
         if (this.eventManager) {
             this.eventManager.dispatchEvent("onDataPush");
         }
+    }
+
+    public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
+        let resultObject = {};
+
+        if (this.isOnline) {
+            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
+            const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
+
+            if (changesAt) {
+                /* If there are changes at the same path, apply them to search result */
+                Objects.mergeDeep(searchResultObject, changesAt);
+            }
+
+            /* Complement stateObject with new objects from search result, if any */
+            Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject));
+
+            resultObject = searchResultObject;
+        }
+
+        return resultObject;
+    }
+
+    public async saveChanges(): Promise<void> {
+        await this.underlyingStorage.saveChanges(this.changesObject);
+        Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
     }
 }

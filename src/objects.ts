@@ -5,12 +5,6 @@ export function isObject(item): boolean {
 }
 
 export function getObjectAt<T>(path: string, source: object, delimiter: string = "/"): T {
-    if (typeof path !== "string") {
-        return null;
-    }
-    if (typeof source !== "object") {
-        return null;
-    }
     const segments = path.split(delimiter);
     let segmentObject = source;
 
@@ -18,7 +12,7 @@ export function getObjectAt<T>(path: string, source: object, delimiter: string =
         segmentObject = segmentObject[segment];
 
         if (!segmentObject) {
-            return null;
+            return undefined;
         }
     }
 
@@ -100,22 +94,28 @@ export function setStructure(path: string, target: object, delimiter: string = "
 /**
  * Remove all properties with undefined value from object.
  */
-export function cleanupObject(source: object): void {
+export function cleanupObject(source: object, includingNulls: boolean = false): void {
     if (source instanceof Object) {
         Object.keys(source).forEach(key => {
             const child = source[key];
 
             if (child instanceof Object) {
-                cleanupObject(child);
+                cleanupObject(child, includingNulls);
+
+                if (Object.keys(child).length === 0) {
+                    delete source[key];
+                }
             }
-            else if (child === undefined || child === null) {
+            else if (child === undefined || (includingNulls && child === null)) {
                 delete source[key];
             }
         });
     }
 }
 
-export function setValueAt(path: string, target: object, value: any, cleanNulls: boolean = true): void {
+export function setValueAt(path: string, target: object, value: any): object {
+    const compensation = getObjectAt(path, clone(target));
+
     const segments = path.split("/");
     let segmentObject = target;
 
@@ -129,6 +129,11 @@ export function setValueAt(path: string, target: object, value: any, cleanNulls:
     }
 
     segmentObject[segments[segments.length - 1]] = value;
+
+    /* Ensure all "undefined" are cleanedup */
+    cleanupObject(target);
+
+    return compensation;
 }
 
 export function deleteNodeAt(path: string, target: object): void {
@@ -149,6 +154,6 @@ export function deleteNodeAt(path: string, target: object): void {
     // TODO: Try to delete entire trail, if empty
 }
 
-export function clone(obj: Object): Object {
-    return CJSON.parse(CJSON.stringify(obj));
+export function clone<T>(obj: Object): T {
+    return <T>CJSON.parse(CJSON.stringify(obj));
 }
