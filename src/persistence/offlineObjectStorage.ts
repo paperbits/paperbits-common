@@ -72,10 +72,6 @@ export class OfflineObjectStorage implements IObjectStorage {
         };
 
         this.do(doCommand, undoCommand);
-
-        if (this.autosave) {
-            this.saveChanges();
-        }
     }
 
     public async patchObject<T>(path: string, dataObject: T): Promise<void> {
@@ -111,7 +107,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Undoing state */
             Objects.setValueAt(path, this.stateObject, compensationOfState);
 
-            /* Undoinf changes */
+            /* Undoing changes */
             Objects.setValueAt(path, this.changesObject, compensationOfChanges);
 
             Objects.cleanupObject(this.stateObject, true);
@@ -119,27 +115,23 @@ export class OfflineObjectStorage implements IObjectStorage {
         };
 
         this.do(doCommand, undoCommand);
-
-        if (this.autosave) {
-            this.saveChanges();
-        }
     }
 
-    public async getObject<T>(key: string): Promise<T> {
-        if (!key) {
+    public async getObject<T>(path: string): Promise<T> {
+        if (!path) {
             throw new Error(`Path is undefined.`);
         }
 
-        const cachedItem = Objects.getObjectAt<T>(key, this.stateObject);
+        const cachedItem = Objects.getObjectAt<T>(path, this.stateObject);
 
         if (cachedItem) {
             return Promise.resolve<T>(cachedItem);
         }
 
-        const result = await this.underlyingStorage.getObject<T>(key);
+        const result = await this.underlyingStorage.getObject<T>(path);
 
         if (result) {
-            // this.setStateObjectAt(key, result, false);
+            Objects.setValueAt(path, this.stateObject, Objects.clone(result));
         }
 
         return result;
@@ -172,10 +164,6 @@ export class OfflineObjectStorage implements IObjectStorage {
         };
 
         this.do(doCommand, undoCommand);
-
-        if (this.autosave) {
-            this.saveChanges();
-        }
     }
 
     private do(doCommand, undoCommand): void {
@@ -186,6 +174,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (this.past.length > 10) {
             this.past.shift();
+        }
+
+        if (this.autosave) {
+            this.saveChanges();
         }
     }
 
@@ -200,6 +192,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (this.eventManager) {
             this.eventManager.dispatchEvent("onDataPush");
+        }
+
+        if (this.autosave) {
+            this.saveChanges();
         }
     }
 
