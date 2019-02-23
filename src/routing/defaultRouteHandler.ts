@@ -36,7 +36,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.path = location.pathname;
         this.hash = location.hash;
 
-        addEventListener("popstate", () => this.navigateTo(location.pathname));
+        addEventListener("popstate", () => this.navigateTo(location.href));
     }
 
     private pushState(data, title: string, url: string): void {
