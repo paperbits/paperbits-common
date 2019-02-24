@@ -19,27 +19,9 @@ export class SettingsProvider implements ISettingsProvider {
         return this.configuration;
     }
 
-    public getSetting(name: string): Promise<Object> {
-        const promise = new Promise(async (resolve, reject) => {
-            await this.getSettings();
-
-            if (this.configuration[name]) {
-                resolve(this.configuration[name]);
-                return;
-            }
-
-            const onSettingChange = (setting) => {
-                if (setting.name !== name) {
-                    return;
-                }
-
-                resolve(this.configuration[name]);
-                this.eventManager.removeEventListener("onSettingChange", onSettingChange);
-            };
-            this.eventManager.addEventListener("onSettingChange", onSettingChange);
-        });
-
-        return promise;
+    public async getSetting(name: string): Promise<Object> {
+        await this.getSettings();
+        return this.configuration[name];
     }
 
     public onSettingChange(name: string, eventHandler: (value) => void) {
