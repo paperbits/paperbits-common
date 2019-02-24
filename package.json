@@ -15,7 +15,6 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
-        "circular-json": "^0.5.9",
         "deepmerge": "^3.0.0",
         "immutable": "^3.8.2",
         "inversify": "^4.3.0",

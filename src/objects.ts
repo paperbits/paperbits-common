@@ -1,5 +1,3 @@
-import * as CJSON from "circular-json";
-
 export function isObject(item): boolean {
     return item !== undefined && (item && typeof item === "object" && !Array.isArray(item));
 }
@@ -155,5 +153,5 @@ export function deleteNodeAt(path: string, target: object): void {
 }
 
 export function clone<T>(obj: Object): T {
-    return <T>CJSON.parse(CJSON.stringify(obj));
+    return <T>JSON.parse(JSON.stringify(obj));
 }
