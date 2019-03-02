@@ -6,6 +6,7 @@ export * from "./IHighlightConfig";
 export * from "./IHyperlinkProvider";
 export * from "./ILightbox";
 export * from "./IResourceSelector";
+export * from "./IWorkshopSection";
 export * from "./IView";
 export * from "./IViewManager";
 export * from "./lityLightbox";
