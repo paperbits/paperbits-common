@@ -34,10 +34,8 @@ export class Hinter {
 
         this.noHints = true;
 
-
         const url = this.routeHandler.getPath();
         const layoutContract = await this.layoutService.getLayoutByRoute(url);
-        // this.viewManager.notifyInfo("Layouts", `This is part of <b>${layoutContract.title}</b> layout. Would you like to open this layout for editing?`);
 
         this.viewManager.notifyInfo("Did you know?", `This section is a part of "<b>${layoutContract.title}</b>" layout. Would you like to open it for editing?`, [{
             title: "Edit layout",
