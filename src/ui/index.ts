@@ -9,5 +9,6 @@ export * from "./IResourceSelector";
 export * from "./IWorkshopSection";
 export * from "./IView";
 export * from "./IViewManager";
+export * from "./ICommand";
 export * from "./lityLightbox";
 export * from "./quadrant";

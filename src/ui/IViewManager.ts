@@ -1,7 +1,5 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet } from "./";
+﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet, ICommand } from "./";
 import { DragSession } from "./draggables";
-import { SettingsContract } from "../sites";
-import { PageContract } from "../pages";
 import { IWidgetBinding } from "../editing";
 
 export enum ViewManagerMode {
@@ -34,7 +32,7 @@ export interface IViewManager {
     unfoldWorkshop(): void;
     clearJourney(): void;
     closeView(): void;
-    notifyInfo(title: string, content: string): void;
+    notifyInfo(title: string, content: string, commands?: ICommand[]): void;
     notifySuccess(title: string, content: string): void;
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
