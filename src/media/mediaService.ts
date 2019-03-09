@@ -54,7 +54,7 @@ export class MediaService implements IMediaService {
         return media;
     }
 
-    public async search(pattern: string, mimeType: string): Promise<MediaContract[]> {
+    public async search(pattern: string = "", mimeType: string): Promise<MediaContract[]> {
         let query = Query
             .from<MediaContract>()
             .where("filename", Operator.contains, pattern)
