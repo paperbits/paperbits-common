@@ -55,9 +55,7 @@ export class LayoutService implements ILayoutService {
         };
 
         const template = {
-            object: "block",
             nodes: [{
-                object: "block",
                 type: "page"
             }],
             type: "layout"

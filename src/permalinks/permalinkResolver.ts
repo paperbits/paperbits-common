@@ -54,22 +54,12 @@ export class PermalinkResolver implements IPermalinkResolver {
             }
         }
 
-        if (hyperlinkContract.href) {
-            hyperlinkModel = new HyperlinkModel();
-            hyperlinkModel.title = "External link";
-            hyperlinkModel.target = hyperlinkContract.target || "_blank";
-            hyperlinkModel.targetKey = null;
-            hyperlinkModel.href = hyperlinkContract.href;
-            hyperlinkModel.type = "url";
-
-            return hyperlinkModel;
-        }
-
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlinkContract.target || "_blank";
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
+        hyperlinkModel.anchor = hyperlinkContract.anchor;
         hyperlinkModel.type = "url";
 
         return hyperlinkModel;
@@ -77,6 +67,9 @@ export class PermalinkResolver implements IPermalinkResolver {
 
     public async getHyperlinkByTargetKey(targetKey: string): Promise<HyperlinkModel> {
         const contentItem = await this.contentItemService.getContentItemByKey(targetKey);
+        if (!contentItem) {
+            return null;
+        }
         const hyperlink = await this.getHyperlinkByContentType(contentItem, "blank");
 
         return hyperlink;

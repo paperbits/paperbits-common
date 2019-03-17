@@ -1,4 +1,3 @@
-import { PageContract } from "../pages/pageContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
 import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
@@ -11,14 +10,7 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
         return contentItemKey.startsWith("pages/");
     }
 
-    public getHyperlinkFromResource(page: PageContract): HyperlinkModel {
-        const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = page.title;
-        hyperlinkModel.target = "_blank";
-        hyperlinkModel.targetKey = page.key;
-        hyperlinkModel.href = page.permalink;
-        hyperlinkModel.type = "page";
-
+    public getHyperlinkFromResource(hyperlinkModel: HyperlinkModel): HyperlinkModel {
         return hyperlinkModel;
     }
 }

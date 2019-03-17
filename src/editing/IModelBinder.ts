@@ -4,7 +4,7 @@ import { Contract } from "../contract";
  * Utility for conversions between contracts and models.
  */
 export interface IModelBinder {
-    canHandleWidgetType(widgetType: string): boolean;
+    canHandleContract(contract: Contract): boolean;
     canHandleModel(model: any): boolean;
 
     /**

@@ -17,21 +17,21 @@ export class PlaceholderModelBinder implements IModelBinder {
         return model instanceof PlaceholderModel;
     }
 
-    public canHandleWidgetType(widgetType: string): boolean {
+    public canHandleContract(contract: Contract): boolean {
         throw new Error("Not implemented");
     }
 }
 
 export class ModelBinderSelector {
-    constructor(private modelBinders: IModelBinder[]) {}
+    constructor(private modelBinders: IModelBinder[]) { }
 
-    public getModelBinderByNodeType(widgetType: string): IModelBinder {
+    public getModelBinderByContract(contract: Contract): IModelBinder {
         const modelBinder = this.modelBinders.find(x => {
-            if (!x || !x.canHandleWidgetType) {
+            if (!x || !x.canHandleContract) {
                 debugger;
             }
 
-            return x.canHandleWidgetType(widgetType);
+            return x.canHandleContract(contract);
         });
 
         if (!modelBinder) {

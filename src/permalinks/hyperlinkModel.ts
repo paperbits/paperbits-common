@@ -23,7 +23,12 @@ export class HyperlinkModel {
     public href: string;
 
     /**
-     * Allowed values: "media", "page", "post", "url", "anchor".
+     * Example: "http://external-resource#anchor"
+     */
+    public anchor: string;
+
+    /**
+     * Allowed values: "media", "page", "post", "url".
      */
     public type: string;
 }
