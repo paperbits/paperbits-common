@@ -5,7 +5,7 @@ import { PlaceholderModel } from "./placeholder";
 export class PlaceholderModelBinder implements IModelBinder {
     constructor(public readonly message?: string) { }
 
-    public async contractToModel(contract: Contract, message): Promise<PlaceholderModel> {
+    public async contractToModel(contract: Contract): Promise<PlaceholderModel> {
         return new PlaceholderModel(contract, `Could not find model binder for widget type "${contract.type}".`);
     }
 
@@ -26,13 +26,7 @@ export class ModelBinderSelector {
     constructor(private modelBinders: IModelBinder[]) { }
 
     public getModelBinderByContract(contract: Contract): IModelBinder {
-        const modelBinder = this.modelBinders.find(x => {
-            if (!x || !x.canHandleContract) {
-                debugger;
-            }
-
-            return x.canHandleContract(contract);
-        });
+        const modelBinder = this.modelBinders.find(x => x && x.canHandleContract ? x.canHandleContract(contract) : false);
 
         if (!modelBinder) {
             return new PlaceholderModelBinder();
