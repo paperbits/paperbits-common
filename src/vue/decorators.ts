@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 declare var Vue;
 
 export interface ComponentConfig {

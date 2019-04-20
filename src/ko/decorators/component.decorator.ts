@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import * as ko from "knockout";
 
 export interface ComponentConfig {

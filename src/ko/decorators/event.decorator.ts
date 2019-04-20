@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 export function Event(name?: string): PropertyDecorator {
     return function (target: any, propertyKey: string) {
         let props: string[] = Reflect.getMetadata("events", target.constructor);
