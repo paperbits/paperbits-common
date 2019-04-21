@@ -26,12 +26,12 @@ export interface DragSession {
     /**
      * Model attached to parent of dragged element.
      */
-    parentModel?: WidgetModel;
+    sourceParentModel?: WidgetModel;
 
     /**
-     * Widget bindhing of parent widget.
+     * A binding of parent widget.
      */
-    parentBinding?: IWidgetBinding;
+    sourceParentBinding?: IWidgetBinding;
 
     /**
      * Where to insert element in parent?
