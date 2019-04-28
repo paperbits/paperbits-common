@@ -4,13 +4,6 @@ import { SelectionState } from "./selectionState";
 export let formattableStates = ["bold", "italic", "underlined", "highlighted", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
 
-export interface ISelectionPosition {
-    anchorKey: string;
-    anchorOffset: number;
-    focusKey: string;
-    focusOffset: number;
-}
-
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     detachFromElement(): void;
@@ -38,7 +31,7 @@ export interface IHtmlEditor {
     alignRight(viewport?: string): void;
     justify(viewport?: string): void;
     setTypegraphy(font: string): void;
-    setHyperlink(hyperlink: HyperlinkModel, selectionPosition?: ISelectionPosition): void;
+    setHyperlink(hyperlink: HyperlinkModel): void;
     setAnchor(hash: string, anchorKey: string): void;
     removeAnchor(): void;
     removeHyperlink(): void;

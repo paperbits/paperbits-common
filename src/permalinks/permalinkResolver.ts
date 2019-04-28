@@ -3,9 +3,12 @@ import { IContentItemService } from "../contentItems";
 import { IPermalinkResolver } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
+import { IHyperlinkProvider } from "../ui";
 
 export class PermalinkResolver implements IPermalinkResolver {
-    constructor(private readonly contentItemService: IContentItemService) { }
+    private hyperlinkTypes: object;
+    constructor(private readonly contentItemService: IContentItemService,
+                private readonly resourcePickers: IHyperlinkProvider[]) { }
 
     public async getUrlByTargetKey(targetKey: string): Promise<string> {
         if (!targetKey) {
@@ -21,13 +24,36 @@ export class PermalinkResolver implements IPermalinkResolver {
         return contentItem.permalink;
     }
 
+    private getHyperlinkTypeByKey(key: string): string {
+        if (this.hyperlinkTypes) {
+            let result = this.hyperlinkTypes[key];
+            if (!result) {
+                const hyperlinkProvider = this.resourcePickers.find(x => x.canHandleHyperlink(key));
+                if (hyperlinkProvider) {
+                    this.hyperlinkTypes[key] = hyperlinkProvider.componentName.split("-")[0];
+                    result = this.hyperlinkTypes[key];
+                }
+            }
+            return result;
+        } else {
+            this.hyperlinkTypes = {};
+            const hyperlinkProvider = this.resourcePickers.find(x => x.canHandleHyperlink(key));
+            if (hyperlinkProvider) {
+                this.hyperlinkTypes[key] = hyperlinkProvider.componentName.split("-")[0];
+                return this.hyperlinkTypes[key];
+            } else {
+                console.error("not supported hyperlink type for key: ", key);
+            }
+        }
+    }
+
     public async getHyperlinkByContentType(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = contentItem.title;
         hyperlinkModel.target = target;
         hyperlinkModel.targetKey = contentItem.key;
         hyperlinkModel.href = contentItem.permalink;
-        hyperlinkModel.type = "page";
+        hyperlinkModel.type = this.getHyperlinkTypeByKey(contentItem.key);
 
         return hyperlinkModel;
     }
@@ -47,7 +73,6 @@ export class PermalinkResolver implements IPermalinkResolver {
                     hyperlinkModel.target = hyperlinkContract.target || "_blank";
                     hyperlinkModel.targetKey = contentItem.key;
                     hyperlinkModel.href = contentItem.permalink;
-                    hyperlinkModel.type = "url";
                 }
 
                 return hyperlinkModel;

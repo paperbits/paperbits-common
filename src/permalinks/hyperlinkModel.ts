@@ -26,6 +26,11 @@ export class HyperlinkModel {
      * Example: "http://external-resource#anchor"
      */
     public anchor: string;
+    
+    /**
+     * Example: "Anchor name"
+     */
+    public anchorName: string;
 
     /**
      * Allowed values: "media", "page", "post", "url".

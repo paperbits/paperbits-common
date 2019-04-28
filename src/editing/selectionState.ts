@@ -7,6 +7,7 @@ export class SelectionState {
     public underlined: boolean;
     public highlighted: boolean;
     public hyperlink: boolean;
+    public colorKey: string;
     public anchorKey: string;
     public orderedList: boolean;
     public bulletedList: boolean;
