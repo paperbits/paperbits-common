@@ -49,11 +49,11 @@ export class PermalinkResolver implements IPermalinkResolver {
 
     public async getHyperlinkByContentType(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = contentItem.title;
         hyperlinkModel.target = target;
         hyperlinkModel.targetKey = contentItem.key;
         hyperlinkModel.href = contentItem.permalink;
         hyperlinkModel.type = this.getHyperlinkTypeByKey(contentItem.key);
+        hyperlinkModel.title = hyperlinkModel.type === "media" ? contentItem["filename"] : contentItem.title;
 
         return hyperlinkModel;
     }
