@@ -14,7 +14,7 @@ export class MediaHyperlinkProvider implements IHyperlinkProvider {
 
     public getHyperlinkFromResource(media: MediaContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = media.filename;
+        hyperlinkModel.title = media.fileName;
         hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = media.key;
         hyperlinkModel.href = media.permalink;

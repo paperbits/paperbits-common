@@ -53,7 +53,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.targetKey = contentItem.key;
         hyperlinkModel.href = contentItem.permalink;
         hyperlinkModel.type = this.getHyperlinkTypeByKey(contentItem.key);
-        hyperlinkModel.title = hyperlinkModel.type === "media" ? contentItem["filename"] : contentItem.title;
+        hyperlinkModel.title = hyperlinkModel.type === "media" ? contentItem["fileName"] : contentItem.title;
 
         return hyperlinkModel;
     }

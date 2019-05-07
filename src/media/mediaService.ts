@@ -57,8 +57,8 @@ export class MediaService implements IMediaService {
     public async search(pattern: string = "", mimeType: string): Promise<MediaContract[]> {
         let query = Query
             .from<MediaContract>()
-            .where("filename", Operator.contains, pattern)
-            .orderBy("filename");
+            .where("fileName", Operator.contains, pattern)
+            .orderBy("fileName");
 
         if (mimeType) {
             query = query.where("mimeType", Operator.contains, mimeType);
@@ -89,7 +89,7 @@ export class MediaService implements IMediaService {
         const mediaKey = `${Constants.mediaRoot}/${blobKey}`;
         const media: MediaContract = {
             key: mediaKey,
-            filename: name,
+            fileName: name,
             blobKey: blobKey,
             description: "",
             keywords: "",

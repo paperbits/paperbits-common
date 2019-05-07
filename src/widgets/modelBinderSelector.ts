@@ -6,11 +6,11 @@ export class PlaceholderModelBinder implements IModelBinder {
     constructor(public readonly message?: string) { }
 
     public async contractToModel(contract: Contract): Promise<PlaceholderModel> {
-        return new PlaceholderModel(contract, `Could not find model binder for widget type "${contract.type}".`);
+        return new PlaceholderModel(`Could not find model binder for widget type "${contract.type}".`);
     }
 
     public modelToContract(model: PlaceholderModel): Contract {
-        return model.contract;
+        return { type: "placeholder" };
     }
 
     public canHandleModel(model: Object): boolean {

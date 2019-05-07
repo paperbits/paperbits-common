@@ -12,7 +12,7 @@
     /**
      * Display name of a file (i.e. picture.png). It is used to name target file during publishing.
      */
-    filename: string;
+    fileName: string;
 
     /**
      * File description. Used as additional information for authors.
@@ -25,7 +25,7 @@
     keywords: string;
 
     /**
-     * Download URL. If available, maybe used for direct download.
+     * Download URL. If available, can be used for direct download.
      */
     downloadUrl?: string;
 

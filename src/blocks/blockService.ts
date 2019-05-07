@@ -48,6 +48,7 @@ export class BlockService implements IBlockService {
         const contentKey = `${documentsPath}/${identifier}`;
 
         const block: BlockContract = {
+            type: "block",
             key: blockKey,
             title: title,
             description: description,
