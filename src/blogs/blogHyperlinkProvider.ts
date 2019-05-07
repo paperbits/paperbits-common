@@ -17,7 +17,6 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
         hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = post.key;
         hyperlinkModel.href = post.permalink;
-        hyperlinkModel.type = "post";
 
         return hyperlinkModel;
     }
