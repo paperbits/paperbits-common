@@ -25,6 +25,7 @@ export interface ISplitterConfig {
 }
 
 export interface IViewManager {
+    initialize(): Promise<void>;
     addToast(title: string, content: string): void;
     journeyName(): string;
     foldEverything(): void;
@@ -37,12 +38,12 @@ export interface IViewManager {
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
     scheduleToastRemoval(toast: any): void;
-    updateJourneyComponent(component: IView);
+    updateJourneyComponent(component: IView): void;
     unfoldEverything(): void;
     openViewAsWorkshop(heading: string, componentName: string, parameters?: any): IView;
-    closeWorkshop(editor: IView | string);
+    closeWorkshop(editor: IView | string): void;
     openUploadDialog(): Promise<File[]>;
-    openViewAsPopup(view: IView);
+    openViewAsPopup(view: IView): void;
     openWidgetEditor(binding: IWidgetBinding): void;
     getOpenView(): IView;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
@@ -59,11 +60,11 @@ export interface IViewManager {
     removeShutter(): void;
     beginDrag(session: DragSession): void;
     getDragSession(): DragSession;
-    loadFavIcon(): Promise<void>;
+    loadFavIcon(faviconUrl: string): Promise<void>;
     addBalloon(component: IComponent): void;
     removeBalloon(component: IComponent): void;
     setSplitter(config: ISplitterConfig): void;
-    setHost(component: IComponent);
+    setHost(component: IComponent): void;
     getHost(): IComponent;
     getHostDocument(): Document;
 }

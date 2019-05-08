@@ -218,6 +218,11 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (this.isOnline) {
             const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
+
+            if (!searchResultObject || Object.keys(searchResultObject).length === 0) {
+                return resultObject;
+            }
+
             const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
 
             if (changesAt) {
