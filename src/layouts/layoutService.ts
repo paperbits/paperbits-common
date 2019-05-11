@@ -47,6 +47,7 @@ export class LayoutService implements ILayoutService {
         const documentKey = `${documentsPath}/${identifier}`;
 
         const layout: LayoutContract = {
+            type: "layout",
             key: layoutKey,
             title: title,
             description: description,

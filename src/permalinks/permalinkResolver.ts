@@ -6,9 +6,7 @@ import { HyperlinkModel } from "./hyperlinkModel";
 import { IHyperlinkProvider } from "../ui";
 
 export class PermalinkResolver implements IPermalinkResolver {
-    private hyperlinkTypes: object;
-    constructor(private readonly contentItemService: IContentItemService,
-                private readonly resourcePickers: IHyperlinkProvider[]) { }
+    constructor(private readonly contentItemService: IContentItemService) { }
 
     public async getUrlByTargetKey(targetKey: string): Promise<string> {
         if (!targetKey) {
@@ -24,36 +22,12 @@ export class PermalinkResolver implements IPermalinkResolver {
         return contentItem.permalink;
     }
 
-    private getHyperlinkTypeByKey(key: string): string {
-        if (this.hyperlinkTypes) {
-            let result = this.hyperlinkTypes[key];
-            if (!result) {
-                const hyperlinkProvider = this.resourcePickers.find(x => x.canHandleHyperlink(key));
-                if (hyperlinkProvider) {
-                    this.hyperlinkTypes[key] = hyperlinkProvider.componentName.split("-")[0];
-                    result = this.hyperlinkTypes[key];
-                }
-            }
-            return result;
-        } else {
-            this.hyperlinkTypes = {};
-            const hyperlinkProvider = this.resourcePickers.find(x => x.canHandleHyperlink(key));
-            if (hyperlinkProvider) {
-                this.hyperlinkTypes[key] = hyperlinkProvider.componentName.split("-")[0];
-                return this.hyperlinkTypes[key];
-            } else {
-                console.error("not supported hyperlink type for key: ", key);
-            }
-        }
-    }
-
     public async getHyperlinkByContentType(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.target = target;
         hyperlinkModel.targetKey = contentItem.key;
         hyperlinkModel.href = contentItem.permalink;
-        hyperlinkModel.type = this.getHyperlinkTypeByKey(contentItem.key);
-        hyperlinkModel.title = hyperlinkModel.type === "media" ? contentItem["filename"] : contentItem.title;
+        hyperlinkModel.title = contentItem.title || contentItem["fileName"]; // TODO: Get rid of content item display name guessing.
 
         return hyperlinkModel;
     }
@@ -85,13 +59,13 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = hyperlinkContract.anchor;
-        hyperlinkModel.type = "url";
 
         return hyperlinkModel;
     }
 
     public async getHyperlinkByTargetKey(targetKey: string): Promise<HyperlinkModel> {
         const contentItem = await this.contentItemService.getContentItemByKey(targetKey);
+        
         if (!contentItem) {
             return null;
         }

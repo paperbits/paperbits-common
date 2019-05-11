@@ -1,4 +1,5 @@
-﻿import { HyperlinkModel } from "./../permalinks";
+﻿import { BlockModel } from "../text/models/blockModel";
+import { HyperlinkModel } from "../permalinks";
 import { SelectionState } from "./selectionState";
 
 export let formattableStates = ["bold", "italic", "underlined", "highlighted", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -39,8 +40,8 @@ export interface IHtmlEditor {
     removeColor(): void;
     getHyperlink(): HyperlinkModel;
     expandSelection(): void;
-    getState(): Object;
-    setState(state: Object): void;
+    getState(): BlockModel[];
+    setState(state: BlockModel[]): void;
     getSelectionText(): string;
     increaseIndent(): void;
     decreaseIndent(): void;

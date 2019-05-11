@@ -31,9 +31,4 @@ export class HyperlinkModel {
      * Example: "Anchor name"
      */
     public anchorName: string;
-
-    /**
-     * Allowed values: "media", "page", "post", "url".
-     */
-    public type: string;
 }

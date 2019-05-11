@@ -1,6 +1,4 @@
-﻿import { Bag } from "../";
-
-/**
+﻿/**
  * Page metadata.
  */
 export interface PageContract {
@@ -43,9 +41,4 @@ export interface PageContract {
      * Permalink referencing this page.
      */    
     permalink?: string;
-
-    /**
-     * Keys of anchors used in page content. Anchor is a special type of a permalink.
-     */
-    anchors?: Bag<string>;
 }

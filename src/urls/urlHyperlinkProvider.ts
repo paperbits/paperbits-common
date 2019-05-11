@@ -17,7 +17,6 @@ export class UrlHyperlinkProvider implements IHyperlinkProvider {
         hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = url.key;
         hyperlinkModel.href = url.permalink;
-        hyperlinkModel.type = "url";
 
         return hyperlinkModel;
     }

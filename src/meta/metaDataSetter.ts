@@ -27,8 +27,8 @@ export class MetaDataSetter {
     }
 
     public static setScriptElement(content: object, type: string) {
-        let existScript = <HTMLScriptElement>MetaDataSetter.getMetaElement("type", type);
-        let script = existScript || document.createElement("script");
+        const existScript = <HTMLScriptElement>MetaDataSetter.getMetaElement("type", type);
+        const script = existScript || document.createElement("script");
         script.setAttribute("type", type);
         script.text = JSON.stringify(content);
         document.head.appendChild(script);
@@ -41,8 +41,8 @@ export class MetaDataSetter {
     }
 
     public static setMetaElement(content: string, name?: string, attributeName?: string, attributeValue?: string) {
-        let existMeta = name ? <HTMLMetaElement>MetaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>MetaDataSetter.getMetaElement(attributeName, attributeValue);
-        let meta = existMeta || document.createElement("meta");
+        const existMeta = name ? <HTMLMetaElement>MetaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>MetaDataSetter.getMetaElement(attributeName, attributeValue);
+        const meta = existMeta || document.createElement("meta");
         if (name) {
             meta.name = name;
         }
@@ -56,6 +56,6 @@ export class MetaDataSetter {
     }
 
     private static getMetaElement(attributeName: string, attributeValue: string) {
-        return attributeName && attributeValue && document.head.querySelector(`[${attributeName}=${attributeValue}]`)
+        return attributeName && attributeValue && document.head.querySelector(`[${attributeName}=${attributeValue}]`);
     }
 }
