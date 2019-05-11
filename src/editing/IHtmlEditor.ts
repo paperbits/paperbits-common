@@ -45,6 +45,7 @@ export interface IHtmlEditor {
     getSelectionText(): string;
     increaseIndent(): void;
     decreaseIndent(): void;
+    setTextStyle(textStyleKey: string, viewport?: string): void;
 
     /* Events */
     addSelectionChangeListener(callback: () => void): void;
