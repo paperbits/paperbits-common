@@ -17,6 +17,12 @@ export class SelectionState {
      */
     public alignment: Breakpoints;
 
+    /**
+     * Text style of a block in current viewport.
+     */
+    // public appearance: Breakpoints;
+    public appearance: string;
+
     constructor() {
         this.block = "paragraph";
     }
