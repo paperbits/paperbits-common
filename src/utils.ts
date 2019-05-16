@@ -218,8 +218,8 @@ export function pointerToClientQuadrant(pointerX: number, pointerY: number, elem
     return { vertical: vertical, horizontal: horizontal };
 }
 
-export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
-    const result: Breakpoints = {};
+export function optimizeBreakpoints(breakpoints: Breakpoints<any>): Breakpoints<any> {
+    const result: Breakpoints<any> = {};
     let lastAssigned = null;
 
     ["xs", "sm", "md", "lg", "xl"].forEach(breakpoint => {
@@ -234,7 +234,7 @@ export function optimizeBreakpoints(breakpoints: Breakpoints): Breakpoints {
     return result;
 }
 
-export function getClosestBreakpoint(source: Breakpoints, current: string): string {
+export function getClosestBreakpoint(source: Breakpoints<any>, current: string): string {
     const breakpoints = ["xs", "sm", "md", "lg", "xl"];
     let index = breakpoints.indexOf(current);
     let breakpoint = null;

@@ -8,4 +8,5 @@
     ondragstart?: (payload: any, dragged: HTMLElement) => HTMLElement;
     ondragend?: (payload: any, dragged: HTMLElement) => void;
     preventDragging?: (candidate: HTMLElement) => boolean;
+    inertia?: boolean;
 }

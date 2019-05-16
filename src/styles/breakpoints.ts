@@ -1,31 +1,31 @@
 /**
  * Responsive grid break points.
  */
-export interface Breakpoints {
+export interface Breakpoints<T = any> {
     /**
      * Extra small.
      */
-    xs?: any;
+    xs?: T;
 
     /**
      * Small.
      */
-    sm?: any;
+    sm?: T;
 
     /**
      * Medium.
      */
-    md?: any;
+    md?: T;
 
     /**
      * Large.
      */
-    lg?: any;
+    lg?: T;
 
     /**
      * Extra large.
      */
-    xl?: any;
+    xl?: T;
 }
 
 export const BreakpointValues = {

@@ -14,11 +14,11 @@ export class HistoryService {
 
         const doCommand = () => {
             compensation = Objects.getObjectAt(path, target);
-            Objects.setValueAt(path, target, value);
+            Objects.setValue(path, target, value);
         };
 
         const undoCommand = () => {
-            Objects.setValueAt(path, target, compensation);
+            Objects.setValue(path, target, compensation);
         };
 
         this.do(doCommand, undoCommand);

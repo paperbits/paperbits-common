@@ -73,8 +73,7 @@ describe("Offline object storage", async () => {
         expect(stateObject.address.streetNumber).equal(2000);
         expect(changesObject.address, "When no changes has been made yet, changesObject should be empty").equals(undefined);
 
-
-        await obs.updateObject("address", { streetNumber: undefined });
+        await obs.updateObject("address/streetNumber", null);
         expect(stateObject.address.streetNumber).equal(undefined);
 
         obs.undo();

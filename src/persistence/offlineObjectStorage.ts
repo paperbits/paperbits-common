@@ -51,10 +51,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const doCommand = () => {
             /* Writing state */
-            compensationOfState = Objects.setValueAt(path, this.stateObject, dataObjectClone);
+            compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone);
 
             /* Writng changes */
-            compensationOfChanges = Objects.setValueAt(path, this.changesObject, dataObjectClone);
+            compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
@@ -62,10 +62,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const undoCommand = () => {
             /* Undoing state */
-            Objects.setValueAt(path, this.stateObject, compensationOfState);
+            Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
             /* Undoinf changes */
-            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+            Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
@@ -83,21 +83,22 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error(`Parameter "path" not specified.`);
         }
 
-        if (!!!dataObject) {
+        if (dataObject === undefined) { // Note: "null" is acceptable.
             throw new Error(`Parameter "dataObject" not specified.`);
         }
 
-        const dataObjectClone = Objects.clone(dataObject); // To drop any object references
+        const dataObjectClone1 = Objects.clone(dataObject); // To drop any object references
+        const dataObjectClone2 = Objects.clone(dataObject); // To drop any object references
 
         let compensationOfState;
         let compensationOfChanges;
 
         const doCommand = () => {
             /* Writing state */
-            compensationOfState = Objects.setValueAt(path, this.stateObject, dataObjectClone);
+            compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone1);
 
             /* Writng changes */
-            compensationOfChanges = Objects.setValueAt(path, this.changesObject, dataObjectClone);
+            compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone2);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
@@ -105,10 +106,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const undoCommand = () => {
             /* Undoing state */
-            Objects.setValueAt(path, this.stateObject, compensationOfState);
+            Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
             /* Undoing changes */
-            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+            Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
@@ -131,7 +132,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         const result = await this.underlyingStorage.getObject<T>(path);
 
         if (result) {
-            Objects.setValueAt(path, this.stateObject, Objects.clone(result));
+            Objects.setValueWithCompensation(path, this.stateObject, Objects.clone(result));
         }
 
         return result;
@@ -143,10 +144,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const doCommand = () => {
             /* Writing state */
-            compensationOfState = Objects.setValueAt(path, this.stateObject, null);
+            compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, null);
 
             /* Writng changes */
-            compensationOfChanges = Objects.setValueAt(path, this.changesObject, null);
+            compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, null);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
@@ -154,10 +155,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const undoCommand = () => {
             /* Undoing state */
-            Objects.setValueAt(path, this.stateObject, compensationOfState);
+            Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
             /* Undoinf changes */
-            Objects.setValueAt(path, this.changesObject, compensationOfChanges);
+            Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);

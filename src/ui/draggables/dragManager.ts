@@ -164,19 +164,24 @@ export class DragManager {
 
         this.dragged.classList.remove("dragged");
 
+        if (this.source.configuration.ondragend) {
+            this.source.configuration.ondragend(this.source.configuration.payload, this.source.element);
+            this.eventManager.dispatchEvent("virtualDragEnd");
+        }
+
         if (this.source.configuration.sticky) {
             this.dragged.style.removeProperty("left");
             this.dragged.style.removeProperty("top");
             this.dragged.style.removeProperty("width");
             this.dragged.style.removeProperty("height");
         }
-        else {
+        else if (this.source.configuration.inertia) {
             this.inertia();
         }
 
-        if (this.source.configuration.ondragend) {
-            this.source.configuration.ondragend(this.source.configuration.payload, this.source.element);
-        }
+        // if (this.source.configuration.ondragend) {
+        //     this.source.configuration.ondragend(this.source.configuration.payload, this.source.element);
+        // }
 
         this.payload = null;
         // this.dragged = null;

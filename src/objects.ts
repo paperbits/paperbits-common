@@ -67,7 +67,7 @@ export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean
 
 export function mergeDeepAt(path: string, target: any, source: any, cleanNulls: boolean = true) {
     if (Array.isArray(source)) {
-        setValueAt(path, target, source);
+        setValueWithCompensation(path, target, source);
     }
     else {
         const updatingObject = setStructure(path, target);
@@ -97,7 +97,18 @@ export function cleanupObject(source: object, includingNulls: boolean = false): 
         Object.keys(source).forEach(key => {
             const child = source[key];
 
-            if (child instanceof Object) {
+            if (Array.isArray(child)) {
+                child.forEach(x => cleanupObject(x, includingNulls));
+
+                if (child.length === 0) {
+                    source[key] = null;
+
+                    if (includingNulls) {
+                        delete source[key];
+                    }
+                }
+            }
+            else if (child instanceof Object) {
                 cleanupObject(child, includingNulls);
 
                 if (Object.keys(child).length === 0) {
@@ -111,9 +122,29 @@ export function cleanupObject(source: object, includingNulls: boolean = false): 
     }
 }
 
-export function setValueAt(path: string, target: object, value: any): object {
-    const compensation = getObjectAt(path, clone(target));
 
+/**
+ * Sets value in an object tree and returns compensation tree.
+ * @param path Object tree path.
+ * @param target Object tree root.
+ * @param value 
+ */
+export function setValueWithCompensation(path: string, target: object, value: any): object {
+    const original = clone(target);
+    const compensation = getObjectAt(path, original);
+
+    setValue(path, target, value);
+
+    return compensation;
+}
+
+/**
+ * Sets value in an object tree.
+ * @param path Object tree path.
+ * @param target Object tree root.
+ * @param value 
+ */
+export function setValue(path: string, target: object, value: any): void {
     const segments = path.split("/");
     let segmentObject = target;
 
@@ -127,11 +158,6 @@ export function setValueAt(path: string, target: object, value: any): object {
     }
 
     segmentObject[segments[segments.length - 1]] = value;
-
-    /* Ensure all "undefined" are cleanedup */
-    cleanupObject(target);
-
-    return compensation;
 }
 
 export function deleteNodeAt(path: string, target: object): void {

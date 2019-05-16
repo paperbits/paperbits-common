@@ -15,7 +15,7 @@ export class SelectionState {
     /**
      * Alignment of a block in current viewport.
      */
-    public alignment: Breakpoints;
+    public alignment: Breakpoints<string>;
 
     /**
      * Text style of a block in current viewport.
