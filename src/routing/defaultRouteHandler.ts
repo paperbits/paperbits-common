@@ -1,29 +1,24 @@
 ﻿import { IEventManager } from "../events";
 import { IRouteHandler } from "../routing";
-import { IRouteChecker } from "./IRouteChecker";
+import { IRouteGuard } from "./IRouteGuard";
 
 
 export class RouteHandlerEvents {
-    public static onRouteChange = "onRouteChange";
+    public static onRouteChange: string = "onRouteChange";
 }
 
 export class DefaultRouteHandler implements IRouteHandler {
     private metadata: Object;
-    private routeCheckers: IRouteChecker[];
     private path: string;
     private hash: string;
-
-    private originalPushState: (data, title: string, url: string) => void;
+    private originalPushState: (data: any, title: string, url: string) => void;
 
     public notifyListeners: boolean;
 
     constructor(
+        private readonly routeGuards: IRouteGuard[],
         private readonly eventManager: IEventManager
     ) {
-        // initialization...
-        this.eventManager = eventManager;
-        this.routeCheckers = [];
-
         // rebinding...
         this.getCurrentUrl = this.getCurrentUrl.bind(this);
 
@@ -39,7 +34,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         addEventListener("popstate", () => this.navigateTo(location.href));
     }
 
-    private pushState(data, title: string, url: string): void {
+    private pushState(data: any, title: string, url: string): void {
         const parts = url.split("#");
 
         this.path = parts[0];
@@ -52,32 +47,15 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
     }
 
-    public addRouteChangeListener(eventHandler: (args?) => void): void {
+    public addRouteChangeListener(eventHandler: (args?: any) => void): void {
         this.eventManager.addEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public removeRouteChangeListener(eventHandler: (args?) => void): void {
+    public removeRouteChangeListener(eventHandler: (args?: any) => void): void {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public addRouteChecker(routeChecker: IRouteChecker) {
-        if (routeChecker) {
-            this.routeCheckers.push(routeChecker);
-        }
-    }
-
-    public removeRouteChecker(routeCheckerName: string) {
-        if (routeCheckerName) {
-            const removeIndex = this.routeCheckers.findIndex(item => item.name === routeCheckerName);
-            if (removeIndex !== -1) {
-                this.routeCheckers.splice(removeIndex, 1);
-            } else {
-                console.log(`routeChecker with name '${routeCheckerName}' was not found`);
-            }
-        }
-    }
-
-    public navigateTo(permalink: string, title: string = null, metadata: Object = null): void {
+    public async navigateTo(permalink: string, title: string = null, metadata: Object = null): Promise<void> {
         if (!permalink) {
             return;
         }
@@ -94,47 +72,41 @@ export class DefaultRouteHandler implements IRouteHandler {
             ? permalink.substring(location.origin.length)
             : permalink;
 
-        if (this.routeCheckers.length > 0) {
-            this.runRouteChecks(path, metadata).then(navigatePath => {
-                this.applyNavigation(navigatePath, title, metadata);
-            });
-        }
-        else {
+        const canActivate = await this.canActivate(path, metadata);
+
+        if (canActivate) {
             this.applyNavigation(path, title, metadata);
         }
     }
 
-    protected applyNavigation(path: string, title: string, metadata: Object) {
+    protected applyNavigation(path: string, title: string, metadata: Object): void {
         this.metadata = metadata;
         this.pushState(null, title, path);
     }
 
-    protected async runRouteChecks(path: string, metadata?: Object): Promise<string> {
-        const resultUrl = path;
+    protected async canActivate(path: string, metadata?: Object): Promise<boolean> {
+        for (const guard of this.routeGuards) {
+            try {
+                const canActivate = await guard.canActivate(path, metadata);
 
-        if (this.routeCheckers.length > 0) {
-            for (const item of this.routeCheckers) {
-                try {
-                    const itemResult = await item.checkNavigatePath(path, metadata);
-
-                    // if path can NOT be navigated and checker returned path for redirect  
-                    if (itemResult !== resultUrl) {
-                        return Promise.resolve(itemResult);
-                    }
-                }
-                catch (error) {
-                    throw new Error(`routeHandler checkNavigatePath item error: ${error}`);
+                if (!canActivate) {
+                    return false;
                 }
             }
+            catch (error) {
+                throw new Error(`Unable to invoke route a guard: ${error}`);
+                return false;
+            }
         }
-        return Promise.resolve(resultUrl);
+
+        return true;
     }
 
     public getCurrentUrl(): string {
         let permalink = this.path;
 
         const hash = this.getHash();
-        
+
         if (this.hash) {
             permalink += "#" + hash;
         }

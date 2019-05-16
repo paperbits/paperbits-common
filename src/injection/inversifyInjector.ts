@@ -115,21 +115,30 @@ export class InversifyInjector implements IInjector {
 
     public bindCollection(collectionName: string): void {
         const kernel = this.kernel;
+        const result = [];
+
+        @injectable()
+        class Placeholder {}
 
         @injectable()
         class Collection {
             constructor() {
-                const result = [];
-
                 setImmediate(() => {
-                    const collection = kernel.getAll(collectionName + "C");
-                    result.push(...collection);
+                    try {
+                        const collection = kernel.getAll(collectionName + "C");
+                        
+                        result.push(...collection.slice(1));
+                    }
+                    catch (error) {
+                        throw new Error(`Unable to resolve collection ${collectionName}: ${error}`);
+                    }
                 });
 
                 return result;
             }
         }
         this.kernel.bind<any>(collectionName).to(Collection).inSingletonScope();
+        this.kernel.bind<any>(collectionName + "C").to(Placeholder);
     }
 
     public bindToCollection(collectionName: string, component: any, name?: string): void {

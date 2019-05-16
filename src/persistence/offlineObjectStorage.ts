@@ -166,7 +166,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.do(doCommand, undoCommand);
     }
 
-    private do(doCommand, undoCommand): void {
+    private do(doCommand: () => void, undoCommand: () => void): void {
         const record = { do: doCommand, undo: undoCommand };
         record.do();
 
@@ -237,6 +237,15 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         return resultObject;
+    }
+
+    public hasUnsavedChanges(): boolean {
+        return Object.keys(this.changesObject).length > 0;
+    }
+
+    public async discardChanges(): Promise<void> {
+        Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
+        Object.keys(this.stateObject).forEach(key => delete this.stateObject[key]);
     }
 
     public async saveChanges(): Promise<void> {

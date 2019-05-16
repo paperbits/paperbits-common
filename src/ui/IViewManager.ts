@@ -1,6 +1,7 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet, ICommand } from "./";
+﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet, ICommand, Toast } from "./";
 import { DragSession } from "./draggables";
 import { IWidgetBinding } from "../editing";
+
 
 export enum ViewManagerMode {
     selecting,
@@ -26,7 +27,8 @@ export interface ISplitterConfig {
 
 export interface IViewManager {
     initialize(): Promise<void>;
-    addToast(title: string, content: string): void;
+    addToast(title: string, content: string, commands?: ICommand[]): Toast;
+    removeToast(toast: Toast): void;
     journeyName(): string;
     foldEverything(): void;
     foldWorkshops(): void;
@@ -37,7 +39,6 @@ export interface IViewManager {
     notifySuccess(title: string, content: string): void;
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
-    scheduleToastRemoval(toast: any): void;
     updateJourneyComponent(component: IView): void;
     unfoldEverything(): void;
     openViewAsWorkshop(heading: string, componentName: string, parameters?: any): IView;

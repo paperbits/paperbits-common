@@ -1,30 +1,40 @@
-﻿import { IRouteChecker } from "./IRouteChecker";
-
-export interface IRouteHandler {
+﻿export interface IRouteHandler {
     /**
      * Returns current URL.
      */
     getCurrentUrl(): string;
 
+    /**
+     * Returns path of the current URL.
+     */
     getPath(): string;
 
+    /**
+     * Return hash of the current URL.
+     */
     getHash(): string;
 
+    /**
+     * Returns metadata associates with current route.
+     */
     getCurrentUrlMetadata(): Object;
 
+    /**
+     * Indicates whether route handler listeners need to be notified.
+     */
     notifyListeners?: boolean;
 
     /**
      * Adds specified listener of route change event.
      * @param eventHandler Callback function.
      */
-    addRouteChangeListener(eventHandler: (args?) => void): void;
+    addRouteChangeListener(eventHandler: (args?: any) => void): void;
 
     /**
      * Removes specified listener of route change event.
      * @param eventHandler Callback function.
      */
-    removeRouteChangeListener(eventHandler: (args?) => void): void;
+    removeRouteChangeListener(eventHandler: (args?: any) => void): void;
 
     /**
      * 
@@ -33,17 +43,5 @@ export interface IRouteHandler {
      * @param title 
      * @param metadata 
      */
-    navigateTo(path: string, title?: string, metadata?: Object): void;
-
-    /**
-     * Adds a route checker in a pipeline to check navigation path
-     * @param routeChecker - route checker to check is navigation path can be navigated or should be redirected to a specific path.
-     */
-    addRouteChecker(routeChecker: IRouteChecker);
-    
-    /**
-     * Removes route checker from a pipeline
-     * @param routeCheckerName - route checker name that should be removed  
-     */
-    removeRouteChecker(routeCheckerName: string);
+    navigateTo(path: string, title?: string, metadata?: Object): Promise<void>;
 }
