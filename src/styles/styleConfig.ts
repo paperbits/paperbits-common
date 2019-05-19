@@ -1,5 +1,7 @@
 import { Breakpoints } from "./breakpoints";
 
-export interface StyleConfig {
-    [category: string]: string | Breakpoints;
+export interface StyleContract {
+    // [category: string]: string | Breakpoints<any>;
+
+    [key: string]: any;
 }

@@ -1,4 +1,6 @@
+import { Bag } from "..";
 import { Contract } from "../contract";
+
 
 /**
  * Utility for conversions between contracts and models.
@@ -17,5 +19,5 @@ export interface IModelBinder {
      * @param A contract.
      * @param params Additional parameters needed to create a model.
      */
-    contractToModel(contract: any, ...params): Promise<any>;
+    contractToModel(contract: any, bindingContext?: Bag<any>): Promise<any>;
 }

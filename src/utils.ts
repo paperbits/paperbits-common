@@ -25,6 +25,18 @@ export function identifier(): string {
     return result;
 }
 
+
+export function randomClassName(): string {
+    let result = "";
+    const possible = "abcdefghijklmnopqrstuvwxyz";
+
+    for (let i = 0; i < 10; i++) {
+        result += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return result;
+}
+
 export function downloadFile(url: string): ProgressPromise<Uint8Array> {
     return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
         const xhr = new XMLHttpRequest();
@@ -36,7 +48,7 @@ export function downloadFile(url: string): ProgressPromise<Uint8Array> {
     });
 }
 
-export function arrayBufferToBase64(buffer: Uint8Array) {
+export function arrayBufferToBase64(buffer: Uint8Array): string {
     if (Buffer) {
         return new Buffer(buffer).toString("base64");
     }

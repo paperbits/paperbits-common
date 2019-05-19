@@ -181,3 +181,22 @@ export function deleteNodeAt(path: string, target: object): void {
 export function clone<T>(obj: Object): T {
     return <T>JSON.parse(JSON.stringify(obj));
 }
+
+export function findObjects(source: object, predicate: (node: object) => boolean): object[] {
+    let result = [];
+    const keys = Object.keys(source);
+
+    for (const key of keys) {
+        const node = source[key];
+
+        if (predicate(node)) {
+            result.push(node);
+        }
+        else {
+            const childResult = findObjects(node, predicate);
+            result = result.concat(childResult);
+        }
+    }
+
+    return result;
+}

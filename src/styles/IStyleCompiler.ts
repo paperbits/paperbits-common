@@ -1,18 +1,19 @@
-import { StyleConfig } from "./styleConfig";
+import { StyleContract } from "./styleConfig";
 
-export interface StyleCompilation {
+export interface StyleModel {
+    key: string;
     classNames: string;
     css: string;
 }
 
 export interface IStyleCompiler {
     getClassNameByStyleKey(key: string): string;
-    getClassNamesByStyleConfig(styleConfig: StyleConfig): string;
+    getClassNamesByStyleConfig(styleConfig: StyleContract): string;
     getClassNameByColorKey(colorKey: string): string;
     getClassNameByStyleKeyAsync(key: string): Promise<string>;
-    getClassNamesByStyleConfigAsync(styleConfig: StyleConfig): Promise<string>;
-    getClassNamesByStyleConfigAsync2(styleConfig: StyleConfig): Promise<StyleCompilation>;
-    getVariationClasses(variationConfig: StyleConfig, componentName: string, variationName?: string, isNested?: boolean): Promise<object>;
+    getClassNamesByStyleConfigAsync(styleConfig: StyleContract): Promise<string>;
+    getClassNamesByStyleConfigAsync2(styleConfig: StyleContract): Promise<StyleModel>;
+    getVariationClasses(variationConfig: StyleContract, componentName: string, variationName?: string, isNested?: boolean): Promise<object>;
     jssToCss?(jssObject: object): string;
-    getVariationClassNames(variationConfig: StyleConfig, componentName: string, variationName?: string): string[];
+    getVariationClassNames(variationConfig: StyleContract, componentName: string, variationName?: string): string[];
 }
