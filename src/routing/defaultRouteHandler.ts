@@ -60,7 +60,7 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
-        const isFullUrl = !permalink.startsWith("/");
+        const isFullUrl = permalink && permalink.charAt(0) !== "/" && permalink.charAt(0) !== "#";
         const isLocalUrl = permalink.startsWith(location.origin);
 
         if (isFullUrl && !isLocalUrl) {
