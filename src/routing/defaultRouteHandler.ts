@@ -7,9 +7,16 @@ export class RouteHandlerEvents {
     public static onRouteChange: string = "onRouteChange";
 }
 
+export interface Route {
+    path: string;
+    previousPath: string;
+    metadata: Object;
+}
+
 export class DefaultRouteHandler implements IRouteHandler {
     private metadata: Object;
     private path: string;
+    private previousPath: string;
     private hash: string;
     private originalPushState: (data: any, title: string, url: string) => void;
 
@@ -29,6 +36,7 @@ export class DefaultRouteHandler implements IRouteHandler {
         history.pushState = this.pushState.bind(this);
 
         this.path = location.pathname;
+        this.previousPath = this.path;
         this.hash = location.hash;
 
         addEventListener("popstate", () => this.navigateTo(location.href));
@@ -37,13 +45,19 @@ export class DefaultRouteHandler implements IRouteHandler {
     private pushState(data: any, title: string, url: string): void {
         const parts = url.split("#");
 
+        this.previousPath = this.path;
         this.path = parts[0];
         this.hash = parts.length > 1 ? parts[1] : "";
 
         this.originalPushState.call(history, data, title, url);
 
         if (this.notifyListeners) {
-            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange);
+            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange, {
+                path: this.path,
+                previousPath: this.previousPath,
+                metadata: this.metadata,
+                hash: this.getHash()
+            });
         }
     }
 
@@ -55,22 +69,28 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
     }
 
-    public async navigateTo(permalink: string, title: string = null, metadata: Object = null): Promise<void> {
-        if (!permalink) {
+    /**
+     * Navigates to specified URL.
+     * @param url Absolute or relative path, i.e. https://paperbits.io or /about
+     * @param title Destination title
+     * @param metadata Associated metadata
+     */
+    public async navigateTo(url: string, title: string = null, metadata: Object = null): Promise<void> {
+        if (!url) {
             return;
         }
 
-        const isFullUrl = permalink && permalink.charAt(0) !== "/" && permalink.charAt(0) !== "#";
-        const isLocalUrl = permalink.startsWith(location.origin);
+        const isFullUrl = url && (url.startsWith("http://") || url.startsWith("https://"));
+        const isLocalUrl = url.startsWith(location.origin);
 
         if (isFullUrl && !isLocalUrl) {
-            window.open(permalink, "_blank"); // navigating external link
+            window.open(url, "_blank"); // navigating external link
             return;
         }
 
         const path = isFullUrl
-            ? permalink.substring(location.origin.length)
-            : permalink;
+            ? url.substring(location.origin.length)
+            : url;
 
         const canActivate = await this.canActivate(path, metadata);
 
@@ -123,6 +143,6 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public getHash(): string {
-        return this.hash.startsWith("#") ? this.hash.slice(1) : this.hash;
+        return this.hash && this.hash.startsWith("#") ? this.hash.slice(1) : this.hash;
     }
 }

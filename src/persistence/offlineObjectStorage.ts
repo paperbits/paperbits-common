@@ -64,7 +64,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Undoing state */
             Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
-            /* Undoinf changes */
+            /* Undoing changes */
             Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
             Objects.cleanupObject(this.stateObject, true);

@@ -59,7 +59,7 @@ export class PageService implements IPageService {
         await Promise.all([deleteContentPromise, deletePagePromise]);
     }
 
-    public async createPage(url: string, title: string, description: string, keywords): Promise<PageContract> {
+    public async createPage(url: string, title: string, description: string, keywords: string): Promise<PageContract> {
         const identifier = Utils.guid();
         const pageKey = `${pagesPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;

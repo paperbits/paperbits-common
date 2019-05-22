@@ -37,11 +37,10 @@
     removeRouteChangeListener(eventHandler: (args?: any) => void): void;
 
     /**
-     * 
-     * Changes current route to a specified URL.
-     * @param path Relative path, i.e. /about
-     * @param title 
-     * @param metadata 
+     * Navigates to specified URL.
+     * @param url Absolute or relative path, i.e. https://paperbits.io or /about
+     * @param title Destination title
+     * @param metadata Associated metadata
      */
-    navigateTo(path: string, title?: string, metadata?: Object): Promise<void>;
+    navigateTo(url: string, title?: string, metadata?: Object): Promise<void>;
 }
