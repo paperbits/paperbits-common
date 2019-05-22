@@ -43,11 +43,11 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     private pushState(data: any, title: string, url: string): void {
-        const parts = url.split("#");
+        const urlParts = url.split("#");
 
         this.previousPath = this.path;
-        this.path = parts[0];
-        this.hash = parts.length > 1 ? parts[1] : "";
+        this.path = urlParts.length > 1 ? urlParts[0] || this.path : urlParts[0];
+        this.hash = urlParts.length > 1 ? urlParts[1] : "";
 
         this.originalPushState.call(history, data, title, url);
 
