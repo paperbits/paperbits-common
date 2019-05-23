@@ -14,25 +14,30 @@ export class InversifyInjector implements IInjector {
 
     public getFunctionArguments(func): string[] {
         if (!func) {
-            debugger;
+            throw new Error(`Parameter "func" cannot be empty`);
+        }
+
+        if (typeof func !== "function") {
+            throw new Error(`Parameter "func" is not a function.`);
         }
 
         const signature = func.toString();
-        const matches = signature.match(/function.*?\(([^)]*)\)/);
 
-        if (!matches || matches.length < 2) {
-            throw new Error(`Unable to parse function signature: ${signature}`);
+        const classMatches = signature.match(/constructor.*?\(([^)]*)\)/);
+
+        if (classMatches && classMatches.length >= 1) {
+            const args = classMatches[1];
+            return args.split(",").map((arg) => arg.replace(/\/\*.*\*\//, "").trim()).filter((arg) => arg);
         }
 
-        const args = matches[1];
+        const functionMatches = signature.match(/function.*?\(([^)]*)\)/);
 
-        return args.split(",")
-            .map((arg) => {
-                return arg.replace(/\/\*.*\*\//, "").trim();
-            })
-            .filter((arg) => {
-                return arg;
-            });
+        if (functionMatches && functionMatches.length >= 1) {
+            const args = functionMatches[1];
+            return args.split(",").map((arg) => arg.replace(/\/\*.*\*\//, "").trim()).filter((arg) => arg);
+        }
+
+        return [];
     }
 
     private decorateComponent(name: string, component: any): void {
@@ -118,7 +123,7 @@ export class InversifyInjector implements IInjector {
         const result = [];
 
         @injectable()
-        class Placeholder {}
+        class Placeholder { }
 
         @injectable()
         class Collection {
@@ -126,7 +131,7 @@ export class InversifyInjector implements IInjector {
                 setImmediate(() => {
                     try {
                         const collection = kernel.getAll(collectionName + "C");
-                        
+
                         result.push(...collection.slice(1));
                     }
                     catch (error) {

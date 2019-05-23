@@ -1,7 +1,6 @@
 ﻿import * as XMLHttpRequest from "xhr2";
 import { HttpHeader } from "./httpHeader";
 import { HttpClient, HttpRequest } from "../http";
-import { ProgressPromise } from "../progressPromise";
 import { HttpResponse } from "./httpResponse";
 
 
@@ -36,7 +35,7 @@ export class XmlHttpRequestClient implements HttpClient {
         return headers;
     }
 
-    public send<T>(request: HttpRequest): ProgressPromise<HttpResponse<T>> {
+    public send<T>(request: HttpRequest): Promise<HttpResponse<T>> {
         if (!request.method) {
             request.method = "GET";
         }
@@ -45,15 +44,8 @@ export class XmlHttpRequestClient implements HttpClient {
             request.headers = [];
         }
 
-        return new ProgressPromise((resolve, reject, progress) => {
+        return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-
-            xhr.onprogress = (progressEvent: ProgressEvent) => {
-                if (progressEvent.lengthComputable) {
-                    const percentComplete = (progressEvent.loaded / progressEvent.total) * 100;
-                    progress(percentComplete);
-                }
-            };
 
             const onRequestTimeout = () => {
                 reject({

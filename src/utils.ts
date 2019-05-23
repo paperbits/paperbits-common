@@ -1,5 +1,4 @@
-﻿import { ProgressPromise } from "./progressPromise";
-import { Quadrant } from "./ui";
+﻿import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
 import * as deepmerge from "deepmerge";
 
@@ -37,11 +36,10 @@ export function randomClassName(): string {
     return result;
 }
 
-export function downloadFile(url: string): ProgressPromise<Uint8Array> {
-    return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
+export function downloadFile(url: string): Promise<Uint8Array> {
+    return new Promise<Uint8Array>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = "arraybuffer";
-        xhr.onprogress = progressEventToProgress(percent => progress(percent));
         xhr.onload = () => resolve(new Uint8Array(xhr.response));
         xhr.open("GET", url);
         xhr.send();
@@ -63,24 +61,22 @@ export function arrayBufferToBase64(buffer: Uint8Array): string {
     }
 }
 
-export function readFileAsByteArray(file: File): ProgressPromise<Uint8Array> {
-    return new ProgressPromise<Uint8Array>((resolve, reject, progress) => {
+export function readFileAsByteArray(file: File): Promise<Uint8Array> {
+    return new Promise<Uint8Array>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
-        reader.onprogress = progressEventToProgress(progress);
         reader.readAsArrayBuffer(file);
     });
 }
 
-export function readBlobAsDataUrl(blob: Blob): ProgressPromise<string> {
+export function readBlobAsDataUrl(blob: Blob): Promise<string> {
     return readDataUrlFromReader(reader => reader.readAsDataURL(blob));
 }
 
-export function readDataUrlFromReader(read: (reader: FileReader) => void): ProgressPromise<string> {
-    return new ProgressPromise<string>((resolve, reject, progress) => {
+export function readDataUrlFromReader(read: (reader: FileReader) => void): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
-        reader.onprogress = progressEventToProgress(progress);
         read(reader);
     });
 }

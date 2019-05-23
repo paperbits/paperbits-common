@@ -2,7 +2,6 @@
 import * as Constants from "./constants";
 import { IObjectStorage, IBlobStorage, Query, Operator } from "../persistence";
 import { IMediaService, MediaContract } from "./";
-import { ProgressPromise } from "../progressPromise";
 
 
 export class MediaService implements IMediaService {
@@ -84,7 +83,7 @@ export class MediaService implements IMediaService {
         }
     }
 
-    public createMedia(name: string, content: Uint8Array, mimeType?: string): ProgressPromise<MediaContract> {
+    public createMedia(name: string, content: Uint8Array, mimeType?: string): Promise<MediaContract> {
         const blobKey = Utils.guid();
         const mediaKey = `${Constants.mediaRoot}/${blobKey}`;
         const media: MediaContract = {
@@ -99,11 +98,10 @@ export class MediaService implements IMediaService {
         return this.uploadContent(content, media);
     }
 
-    private uploadContent(content: Uint8Array, media: MediaContract): ProgressPromise<MediaContract> {
-        return new ProgressPromise<MediaContract>(async (resolve, reject, progress) => {
+    private uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
+        return new Promise<MediaContract>(async (resolve, reject) => {
             await this.blobStorage
-                .uploadBlob(media.blobKey, content, media.mimeType)
-                .progress(progress);
+                .uploadBlob(media.blobKey, content, media.mimeType);
 
             const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
 
@@ -128,7 +126,7 @@ export class MediaService implements IMediaService {
         return this.objectStorage.updateObject(media.key, media);
     }
 
-    public updateMediaContent(media: MediaContract, content: Uint8Array): ProgressPromise<MediaContract> {
+    public updateMediaContent(media: MediaContract, content: Uint8Array): Promise<MediaContract> {
         if (!media) {
             throw new Error(`Parameter "media" not specified.`);
         }

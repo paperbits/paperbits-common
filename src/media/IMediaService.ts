@@ -1,5 +1,5 @@
 ﻿import { MediaContract } from "../media/mediaContract";
-import { ProgressPromise } from "../progressPromise";
+
 
 /**
  * Service for managing media files.
@@ -27,7 +27,7 @@ export interface IMediaService {
      * @param content Content in form of byte array.
      * @param contentType Content type, i.e. "image/png".
      */
-    createMedia(name: string, content: Uint8Array, contentType?: string): ProgressPromise<MediaContract>;
+    createMedia(name: string, content: Uint8Array, contentType?: string): Promise<MediaContract>;
 
     updateMedia(media: MediaContract): Promise<void>;
 
@@ -37,5 +37,5 @@ export interface IMediaService {
      * @param content New content in form of byte array.
      * @param contentType Content type, i.e. "image/png".
      */
-    updateMediaContent(media: MediaContract, content: Uint8Array): ProgressPromise<MediaContract>;
+    updateMediaContent(media: MediaContract, content: Uint8Array): Promise<MediaContract>;
 }
