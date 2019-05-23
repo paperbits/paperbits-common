@@ -1,7 +1,7 @@
 import * as Objects from "../objects";
 import * as _ from "lodash";
 import { Bag } from "./../bag";
-import { IObjectStorage, Query } from "../persistence";
+import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IEventManager } from "../events";
 
@@ -214,8 +214,88 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
+    private async searchLocalState<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
+        const searchResultObject: Bag<T> = {};
+        const data = this.stateObject;
+
+        if (!data) {
+            return searchResultObject;
+        }
+
+        const searchObj = Objects.getObjectAt(path, data);
+
+        if (!searchObj) {
+            return searchResultObject;
+        }
+
+        let collection = Object.values(searchObj);
+
+        if (query) {
+            if (query.filters.length > 0) {
+                collection = collection.filter(x => {
+                    let meetsCriteria = true;
+
+                    for (const filter of query.filters) {
+                        const left = x[filter.left].toUpperCase();
+                        const right = filter.right.toUpperCase();
+                        const operator = filter.operator;
+
+                        switch (operator) {
+                            case Operator.contains:
+                                if (!left.contains(right)) {
+                                    meetsCriteria = false;
+                                }
+                                break;
+
+                            case Operator.equals:
+                                if (left !== right) {
+                                    meetsCriteria = false;
+                                }
+                                break;
+
+                            default:
+                                throw new Error("Cannot translate operator into Firebase Realtime Database query.");
+                        }
+                    }
+
+                    return meetsCriteria;
+                });
+            }
+
+            if (query.orderingBy) {
+                const property = query.orderingBy;
+
+                collection = collection.sort((x, y) => {
+                    const a = x[property].toUpperCase();
+                    const b = y[property].toUpperCase();
+                    const modifier = query.orderDirection === OrderDirection.accending ? 1 : -1;
+
+                    if (a > b) {
+                        return modifier;
+                    }
+
+                    if (a < b) {
+                        return -modifier;
+                    }
+
+                    return 0;
+                });
+            }
+        }
+
+        collection.forEach(item => {
+            const segments = item.key.split("/");
+            const key = segments[1];
+
+            Objects.setValue(key, searchResultObject, item);
+            Objects.cleanupObject(item); // Ensure all "undefined" are cleaned up
+        });
+
+        return searchResultObject;
+    }
+
     public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
-        let resultObject = {};
+        const resultObject = await this.searchLocalState(path, query);
 
         if (this.isOnline) {
             const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
@@ -234,7 +314,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Complement stateObject with new objects from search result, if any */
             Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject));
 
-            resultObject = searchResultObject;
+            Objects.mergeDeep(resultObject, searchResultObject);
         }
 
         return resultObject;
