@@ -236,6 +236,13 @@ export class OfflineObjectStorage implements IObjectStorage {
                     let meetsCriteria = true;
 
                     for (const filter of query.filters) {
+                        const property = x[filter.left];
+
+                        if (!property) {
+                            meetsCriteria = false;
+                            continue;
+                        }
+
                         const left = x[filter.left].toUpperCase();
                         const right = filter.right.toUpperCase();
                         const operator = filter.operator;
