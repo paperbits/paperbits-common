@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import { IWidgetBinding } from "../editing";
 
 export class GridHelper {
-    private static GetSelfAndParentViewModels(element) {
+    private static GetSelfAndParentViewModels(element: HTMLElement): any[] {
         const context = ko.contextFor(element);
 
         if (!context) {
@@ -23,7 +23,7 @@ export class GridHelper {
         return viewModels;
     }
 
-    private static GetParentViewModels(element) {
+    private static GetParentViewModels(element: HTMLElement): any[] {
         const context = ko.contextFor(element);
 
         if (!context) {
@@ -86,7 +86,7 @@ export class GridHelper {
         return roots.reverse();
     }
 
-    public static getWidgetBinding(element: Element): IWidgetBinding {
+    public static getWidgetBinding(element: HTMLElement): IWidgetBinding {
         const viewModels = this.GetSelfAndParentViewModels(element);
 
         if (viewModels.length > 0) {
@@ -97,7 +97,7 @@ export class GridHelper {
         }
     }
 
-    public static getModel(element: Element): any {
+    public static getModel(element: HTMLElement): any {
         const widgetModel = GridHelper.getWidgetBinding(element);
 
         if (widgetModel && widgetModel["model"]) {

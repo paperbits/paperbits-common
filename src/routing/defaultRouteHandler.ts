@@ -1,23 +1,15 @@
 ﻿import { IEventManager } from "../events";
 import { IRouteHandler } from "../routing";
 import { IRouteGuard } from "./IRouteGuard";
+import { Route } from "./route";
 
 
 export class RouteHandlerEvents {
     public static onRouteChange: string = "onRouteChange";
 }
 
-export interface Route {
-    path: string;
-    previousPath: string;
-    metadata: Object;
-}
-
 export class DefaultRouteHandler implements IRouteHandler {
-    private metadata: Object;
-    private path: string;
-    private previousPath: string;
-    private hash: string;
+    private currentRoute: Route;
     private originalPushState: (data: any, title: string, url: string) => void;
 
     public notifyListeners: boolean;
@@ -26,38 +18,30 @@ export class DefaultRouteHandler implements IRouteHandler {
         private readonly routeGuards: IRouteGuard[],
         private readonly eventManager: IEventManager
     ) {
-        // rebinding...
-        this.getCurrentUrl = this.getCurrentUrl.bind(this);
-
         // setting up...
         this.notifyListeners = true;
 
         this.originalPushState = history.pushState;
         history.pushState = this.pushState.bind(this);
 
-        this.path = location.pathname;
-        this.previousPath = this.path;
-        this.hash = location.hash;
+        const route: Route = {
+            url: location.pathname,
+            path: location.pathname,
+            metadata: {},
+            hash: location.hash,
+            previous: null
+        };
+
+        this.currentRoute = route;
 
         addEventListener("popstate", () => this.navigateTo(location.href));
     }
 
-    private pushState(data: any, title: string, url: string): void {
-        const urlParts = url.split("#");
-
-        this.previousPath = this.path;
-        this.path = urlParts.length > 1 ? urlParts[0] || this.path : urlParts[0];
-        this.hash = urlParts.length > 1 ? urlParts[1] : "";
-
-        this.originalPushState.call(history, data, title, url);
+    private pushState(route: Route): void {
+        this.originalPushState.call(history, route, route.title, route.url);
 
         if (this.notifyListeners) {
-            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange, {
-                path: this.path,
-                previousPath: this.previousPath,
-                metadata: this.metadata,
-                hash: this.getHash()
-            });
+            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange, route);
         }
     }
 
@@ -75,7 +59,7 @@ export class DefaultRouteHandler implements IRouteHandler {
      * @param title Destination title
      * @param metadata Associated metadata
      */
-    public async navigateTo(url: string, title: string = null, metadata: Object = null): Promise<void> {
+    public async navigateTo(url: string, title: string = null, metadata: Object = {}): Promise<void> {
         if (!url) {
             return;
         }
@@ -88,20 +72,27 @@ export class DefaultRouteHandler implements IRouteHandler {
             return;
         }
 
-        const path = isFullUrl
+        url = isFullUrl
             ? url.substring(location.origin.length)
             : url;
 
-        const canActivate = await this.canActivate(path, metadata);
+        const parts = url.split("#");
+
+        const route: Route = {
+            url: url,
+            path: parts.length > 1 ? parts[0] || url : parts[0],
+            title: title,
+            metadata: metadata,
+            hash: parts.length > 1 ? parts[1] : "",
+            previous: this.currentRoute
+        };
+
+        const canActivate = await this.canActivate(url, metadata);
 
         if (canActivate) {
-            this.applyNavigation(path, title, metadata);
+            this.currentRoute = route;
+            this.pushState(route);
         }
-    }
-
-    protected applyNavigation(path: string, title: string, metadata: Object): void {
-        this.metadata = metadata;
-        this.pushState(null, title, path);
     }
 
     protected async canActivate(path: string, metadata?: Object): Promise<boolean> {
@@ -123,11 +114,11 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public getCurrentUrl(): string {
-        let permalink = this.path;
+        let permalink = this.currentRoute.path;
 
         const hash = this.getHash();
 
-        if (this.hash) {
+        if (this.currentRoute.hash) {
             permalink += "#" + hash;
         }
 
@@ -135,14 +126,20 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public getCurrentUrlMetadata(): Object {
-        return this.metadata;
+        return this.currentRoute.metadata;
     }
 
     public getPath(): string {
-        return this.path;
+        return this.currentRoute.path;
     }
 
     public getHash(): string {
-        return this.hash && this.hash.startsWith("#") ? this.hash.slice(1) : this.hash;
+        return this.currentRoute.hash && this.currentRoute.hash.startsWith("#")
+            ? this.currentRoute.hash.slice(1)
+            : this.currentRoute.hash;
+    }
+
+    public getCurrentRoute(): Route {
+        return this.currentRoute;
     }
 }

@@ -1,4 +1,6 @@
-﻿export interface IRouteHandler {
+﻿import { Route } from "./route";
+
+export interface IRouteHandler {
     /**
      * Returns current URL.
      */
@@ -43,4 +45,6 @@
      * @param metadata Associated metadata
      */
     navigateTo(url: string, title?: string, metadata?: Object): Promise<void>;
+
+    getCurrentRoute(): Route;
 }

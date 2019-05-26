@@ -41,7 +41,7 @@ export class Hinter {
             title: "Edit layout",
             iconClass: "paperbits-edit-72",
             action: async () => {
-                this.routeHandler.navigateTo(url, "", { usePagePlaceholder: true });
+                this.routeHandler.navigateTo(url, "", { routeKind: "layout" });
             }
         }]);
 
