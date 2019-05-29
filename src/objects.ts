@@ -130,12 +130,12 @@ export function cleanupObject(source: object, includingNulls: boolean = false): 
  * @param value 
  */
 export function setValueWithCompensation(path: string, target: object, value: any): object {
-    const original = clone(target);
+    const original: any = clone(target);
     const compensation = getObjectAt(path, original);
 
     setValue(path, target, value);
 
-    return compensation;
+    return <any>compensation;
 }
 
 /**
