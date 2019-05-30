@@ -5,7 +5,7 @@ import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 export class UrlHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Web URL";
-    public readonly componentName = "url-selector";
+    public readonly componentName: string = "url-selector";
 
     public canHandleHyperlink(contentItemKey: string): boolean {
         return contentItemKey.startsWith("urls/");
