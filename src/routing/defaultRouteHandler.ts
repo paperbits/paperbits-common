@@ -24,11 +24,15 @@ export class DefaultRouteHandler implements IRouteHandler {
         this.originalPushState = history.pushState;
         history.pushState = this.pushState.bind(this);
 
+        const path = location.pathname;
+        const hash = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
+        const url =  location.pathname + hash;
+        
         const route: Route = {
-            url: location.pathname,
-            path: location.pathname,
+            url: url,
+            path: path,
             metadata: {},
-            hash: location.hash,
+            hash: hash,
             previous: null
         };
 
@@ -134,9 +138,7 @@ export class DefaultRouteHandler implements IRouteHandler {
     }
 
     public getHash(): string {
-        return this.currentRoute.hash && this.currentRoute.hash.startsWith("#")
-            ? this.currentRoute.hash.slice(1)
-            : this.currentRoute.hash;
+        return this.currentRoute.hash;
     }
 
     public getCurrentRoute(): Route {
