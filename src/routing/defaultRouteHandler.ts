@@ -84,7 +84,7 @@ export class DefaultRouteHandler implements IRouteHandler {
 
         const route: Route = {
             url: url,
-            path: parts.length > 1 ? parts[0] || location.pathname : parts[0],
+            path: parts.shift(),
             title: title,
             metadata: metadata,
             hash: parts.length > 1 ? parts[1] : "",
