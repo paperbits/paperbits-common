@@ -3,7 +3,6 @@ import { IContentItemService } from "../contentItems";
 import { IPermalinkResolver } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
-import { IHyperlinkProvider } from "../ui";
 
 export class PermalinkResolver implements IPermalinkResolver {
     constructor(private readonly contentItemService: IContentItemService) { }
@@ -22,9 +21,8 @@ export class PermalinkResolver implements IPermalinkResolver {
         return contentItem.permalink;
     }
 
-    public async getHyperlinkByContentType(contentItem: ContentItemContract, target: string): Promise<HyperlinkModel> {
+    public async getHyperlinkByContentType(contentItem: ContentItemContract): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.target = target;
         hyperlinkModel.targetKey = contentItem.key;
         hyperlinkModel.href = contentItem.permalink;
         hyperlinkModel.title = contentItem.title || contentItem["fileName"]; // TODO: Get rid of content item display name guessing.
@@ -39,12 +37,12 @@ export class PermalinkResolver implements IPermalinkResolver {
             const contentItem = await this.contentItemService.getContentItemByKey(hyperlinkContract.targetKey);
 
             if (contentItem) {
-                hyperlinkModel = await this.getHyperlinkByContentType(contentItem, hyperlinkContract.target);
+                hyperlinkModel = await this.getHyperlinkByContentType(contentItem);
 
                 if (!hyperlinkModel) {
                     hyperlinkModel = new HyperlinkModel();
                     hyperlinkModel.title = contentItem.title || contentItem.permalink;
-                    hyperlinkModel.target = hyperlinkContract.target || "_blank";
+                    hyperlinkModel.target = hyperlinkContract.target;
                     hyperlinkModel.targetKey = contentItem.key;
                     hyperlinkModel.href = contentItem.permalink;
                 }
@@ -55,7 +53,7 @@ export class PermalinkResolver implements IPermalinkResolver {
 
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
-        hyperlinkModel.target = hyperlinkContract.target || "_blank";
+        hyperlinkModel.target = hyperlinkContract.target;
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = hyperlinkContract.anchor;
@@ -69,7 +67,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         if (!contentItem) {
             return null;
         }
-        const hyperlink = await this.getHyperlinkByContentType(contentItem, "blank");
+        const hyperlink = await this.getHyperlinkByContentType(contentItem);
 
         return hyperlink;
     }

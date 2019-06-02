@@ -14,7 +14,6 @@ export class UrlHyperlinkProvider implements IHyperlinkProvider {
     public getHyperlinkFromResource(url: UrlContract): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = url.title;
-        hyperlinkModel.target = "_blank";
         hyperlinkModel.targetKey = url.key;
         hyperlinkModel.href = url.permalink;
 

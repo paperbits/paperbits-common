@@ -13,7 +13,7 @@ export interface HyperlinkContract {
     anchor?: string;
 
     /**
-     * Parameter used to define "target" attribute of hyperlink element. Allowed values: "blank", "blank", "self", "parent", "top".
+     * Parameter used to define "target" attribute of hyperlink element. Allowed values: "_blank", "_self", "_parent".
      */
     target: string;
 }
