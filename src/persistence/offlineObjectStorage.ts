@@ -147,8 +147,11 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (!result && this.isOnline) {
             const underlyingStorageResult = await this.underlyingStorage.getObject<T>(path);
-            result = Objects.clone(underlyingStorageResult);
-            Objects.setValue(path, this.stateObject, result);
+
+            if (underlyingStorageResult) {
+                result = Objects.clone(underlyingStorageResult);
+                Objects.setValue(path, this.stateObject, result);
+            }
         }
 
         return result;
