@@ -2,7 +2,7 @@ import { IModelBinder } from "./../editing";
 import { Contract } from "./../contract";
 import { PlaceholderModel } from "./placeholder";
 
-export class PlaceholderModelBinder implements IModelBinder {
+export class PlaceholderModelBinder implements IModelBinder<PlaceholderModel> {
     constructor(public readonly message?: string) { }
 
     public async contractToModel(contract: Contract): Promise<PlaceholderModel> {
@@ -23,19 +23,19 @@ export class PlaceholderModelBinder implements IModelBinder {
 }
 
 export class ModelBinderSelector {
-    constructor(private modelBinders: IModelBinder[]) { }
+    constructor(private modelBinders: IModelBinder<any>[]) { }
 
-    public getModelBinderByContract(contract: Contract): IModelBinder {
+    public getModelBinderByContract<TModel>(contract: Contract): IModelBinder<TModel> {
         const modelBinder = this.modelBinders.find(x => x && x.canHandleContract ? x.canHandleContract(contract) : false);
 
         if (!modelBinder) {
-            return new PlaceholderModelBinder();
+            return <any>(new PlaceholderModelBinder());
         }
 
         return modelBinder;
     }
 
-    public getModelBinderByModel(model: Object): IModelBinder {
+    public getModelBinderByModel(model: Object): IModelBinder<any> {
         const modelBinder = this.modelBinders.find(x => x.canHandleModel(model));
 
         if (!modelBinder) {

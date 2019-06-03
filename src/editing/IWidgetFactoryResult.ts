@@ -2,7 +2,7 @@ import { MediaContract } from "./../media";
 import { IWidgetBinding } from "./IWidgetBinding";
 
 
-export interface IWidgetFactoryResult {
+export interface IWidgetFactoryResult<TModel> {
     /**
      * HTML element created by widget order (element is used only in virtual dragging).
      */
@@ -16,10 +16,10 @@ export interface IWidgetFactoryResult {
     /**
      * Widget binding created by widget order.
      */
-    widgetBinding?: IWidgetBinding;
+    widgetBinding?: IWidgetBinding<TModel>;
 
     /**
      * Callback method invoked when media file upload completed.
      */
-    onMediaUploadedCallback?(media: MediaContract);
+    onMediaUploadedCallback?(media: MediaContract): void;
 }

@@ -9,8 +9,8 @@ export function getObjectAt<T>(path: string, source: object, delimiter: string =
     for (const segment of segments) {
         segmentObject = segmentObject[segment];
 
-        if (!segmentObject) {
-            return undefined;
+        if (segmentObject === null || segmentObject === undefined) {
+            return <any>segmentObject;
         }
     }
 
@@ -65,7 +65,7 @@ export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean
     return reverseChangeset;
 }
 
-export function mergeDeepAt(path: string, target: any, source: any, cleanNulls: boolean = true) {
+export function mergeDeepAt(path: string, target: any, source: any, cleanNulls: boolean = true): void {
     if (Array.isArray(source)) {
         setValueWithCompensation(path, target, source);
     }

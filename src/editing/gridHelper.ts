@@ -44,7 +44,7 @@ export class GridHelper {
         return viewModels;
     }
 
-    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding {
+    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
         const viewModels = this.GetParentViewModels(element);
 
         if (viewModels.length === 0) {
@@ -55,7 +55,7 @@ export class GridHelper {
         return parentViewModel["widgetBinding"];
     }
 
-    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding[] {
+    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding<any>[] {
         const bindings = [];
         const parentViewModels = this.GetParentViewModels(element);
 
@@ -86,7 +86,7 @@ export class GridHelper {
         return roots.reverse();
     }
 
-    public static getWidgetBinding(element: HTMLElement): IWidgetBinding {
+    public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
         const viewModels = this.GetSelfAndParentViewModels(element);
 
         if (viewModels.length > 0) {

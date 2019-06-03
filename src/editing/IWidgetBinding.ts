@@ -1,16 +1,13 @@
-import { DragSession } from "../ui/draggables";
-import { WidgetModel } from "../widgets";
-
 /**
  * Structure that binds widget view model to widget HTML element.
  */
-export interface IWidgetBinding {
+export interface IWidgetBinding<TModel> {
     name?: string;
 
     /**
      * Widget display name.
      */
-    displayName?: string;
+    displayName: string;
 
     /**
      * Callback method invoked when HTML element is created.
@@ -20,7 +17,7 @@ export interface IWidgetBinding {
     /**
      * Widget model.
      */
-    model?: WidgetModel;
+    model?: TModel;
 
     /**
      * Registration name (tag name) of editor component.
@@ -34,9 +31,9 @@ export interface IWidgetBinding {
     /**
      * Propagates changes from widget model to widget view model.
      */
-    applyChanges?: (changes?: any) => void;
+    applyChanges?: (changes?: TModel) => void;
 
-    readonly?: boolean;
+    readonly: boolean;
 
     /**
      * Either "box" or "fluid".

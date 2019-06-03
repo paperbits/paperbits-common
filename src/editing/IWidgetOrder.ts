@@ -22,7 +22,7 @@ export interface IWidgetOrder {
     /**
      * Widget factory method.
      */
-    createWidget?(): IWidgetFactoryResult;
+    createWidget?(): IWidgetFactoryResult<any>;
 
     /**
      * Widget model factory method.

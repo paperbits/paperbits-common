@@ -5,13 +5,18 @@ import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence"
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IEventManager } from "../events";
 
+interface HistoryRecord {
+    do: () => void;
+    undo: () => void;
+}
+
 
 export class OfflineObjectStorage implements IObjectStorage {
     private underlyingStorage: IObjectStorage;      // for storage
     private readonly stateObject: Object;
     private readonly changesObject: Object;
-    private readonly past = [];
-    private readonly future = [];
+    private readonly past: HistoryRecord[];
+    private readonly future: HistoryRecord[];
     private readonly middlewares: IObjectStorageMiddleware[];
 
     public isOnline: boolean;
@@ -24,6 +29,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.isOnline = true;
         this.autosave = false;
         this.middlewares = [];
+        this.past = [];
+        this.future = [];
 
         if (eventManager) {
             this.eventManager.addEventListener("onUndo", () => this.undo());
@@ -123,16 +130,25 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error(`Path is undefined.`);
         }
 
-        const cachedItem = Objects.getObjectAt<T>(path, this.stateObject);
+        const clonedChanges = <any>Objects.clone(this.changesObject);
+        const changesAt = Objects.getObjectAt(path, clonedChanges);
 
-        if (cachedItem) {
-            return Promise.resolve<T>(cachedItem);
+        if (changesAt === null) {
+            /*
+               Note: "null" (not undefined) in changesObject specifically means that this object
+               has been deleted locally (but not yet saved to underlying). Hence, no need to check
+               neither local nor underlying storage.
+            */
+
+            return undefined;
         }
 
-        const result = await this.underlyingStorage.getObject<T>(path);
+        let result = Objects.getObjectAt<T>(path, this.stateObject);
 
-        if (result) {
-            Objects.setValueWithCompensation(path, this.stateObject, Objects.clone(result));
+        if (!result && this.isOnline) {
+            const underlyingStorageResult = await this.underlyingStorage.getObject<T>(path);
+            result = Objects.clone(underlyingStorageResult);
+            Objects.setValue(path, this.stateObject, result);
         }
 
         return result;

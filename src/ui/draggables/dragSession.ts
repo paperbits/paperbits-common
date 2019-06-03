@@ -21,7 +21,7 @@ export interface DragSession {
     /**
      * Widget binding attached to source element.
      */
-    sourceBinding?: IWidgetBinding;
+    sourceBinding?: IWidgetBinding<any>;
 
     /**
      * Model attached to parent of dragged element.
@@ -31,7 +31,7 @@ export interface DragSession {
     /**
      * A binding of parent widget.
      */
-    sourceParentBinding?: IWidgetBinding;
+    sourceParentBinding?: IWidgetBinding<any>;
 
     /**
      * Where to insert element in parent?
@@ -46,5 +46,5 @@ export interface DragSession {
     /**
      * Widget binding of accepting element.
      */
-    targetBinding?: IWidgetBinding;
+    targetBinding?: IWidgetBinding<any>;
 }

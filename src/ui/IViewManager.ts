@@ -45,7 +45,7 @@ export interface IViewManager {
     closeWorkshop(editor: IView | string): void;
     openUploadDialog(): Promise<File[]>;
     openViewAsPopup(view: IView): void;
-    openWidgetEditor(binding: IWidgetBinding): void;
+    openWidgetEditor(binding: IWidgetBinding<any>): void;
     getOpenView(): IView;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
     removeContextualEditor(editorName: string): void;

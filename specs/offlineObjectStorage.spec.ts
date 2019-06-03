@@ -14,19 +14,33 @@ const initialData = {
 };
 
 class MockStorage {
-    private data = {
+    private data: any = {
         employees: {
-            employee1: { firstName: "John" },
-            employee2: { firstName: "Janne" }
+            employee1: {
+                key: "employees/employee1",
+                firstName: "John"
+            },
+            employee2: {
+                key: "employees/employee1",
+                firstName: "Janne"
+            }
         },
         files: {
-            file1: {},
-            file2: {}
+            file1: {
+                key: "files/file1",
+            },
+            file2: {
+                key: "files/file1",
+            }
         }
     };
 
-    public searchObjects(key) {
+    public searchObjects(key: string): any {
         return Objects.getObjectAt(key, this.data);
+    }
+
+    public async getObject<T>(path: string): Promise<T> {
+        return Objects.getObjectAt(path, Objects.clone(this.data));
     }
 }
 
@@ -90,23 +104,46 @@ describe("Offline object storage", async () => {
         const stateObject: any = obs["stateObject"];
 
         await obs.deleteObject("employees/employee1");
-        await obs.updateObject("employees/employee2", { firstName: "Janne", lastName: "Doe" });
+        await obs.updateObject("employees/employee2", {
+            key: "employees/employee2",
+            firstName: "Janne",
+            lastName: "Doe"
+        });
 
-        const result1 = await obs.searchObjects<any>("employees");
+        const searchResult1 = await obs.searchObjects<any>("employees");
 
-        assert.isUndefined(result1.employee1);
-        assert.isNotNull(result1.employee2);
-        expect(result1.employee2.lastName).equals("Doe");
-        
-        const result2 = await obs.searchObjects<any>("files");
-        assert.isNotNull(result2.file1);
-        assert.isNotNull(result2.file2);
-        assert.isUndefined(result2.employees); // Ensure not previous results mixed in.
+        assert.isUndefined(searchResult1.employee1);
+        assert.isNotNull(searchResult1.employee2);
+        expect(searchResult1.employee2.lastName).equals("Doe");
+
+        const searchResult2 = await obs.searchObjects<any>("files");
+        assert.isNotNull(searchResult2.file1);
+        assert.isNotNull(searchResult2.file2);
+        assert.isUndefined(searchResult2.employees); // Ensure not previous results mixed in.
 
         assert.isUndefined(stateObject.employees.employee1);
         assert.isNotNull(stateObject.employees.employee2);
         assert.isNotNull(stateObject.files.file1);
         assert.isNotNull(stateObject.files.file2);
         assert.isNull(changesObject.employees.employee1);
+    });
+
+    it("Performs getObject taking changes into account.", async () => {
+        const underlyingStorage: any = new MockStorage();
+        const obs = new OfflineObjectStorage();
+        obs.registerUnderlyingStorage(underlyingStorage);
+        obs.isOnline = true;
+        const changesObject: any = obs["changesObject"];
+        const stateObject: any = obs["stateObject"];
+
+        await obs.deleteObject("employees/employee1");
+
+        const getObjectResult = await obs.getObject<any>("employees/employee1");
+
+        debugger;
+
+        expect(getObjectResult).equals(undefined);
+
+        
     });
 });
