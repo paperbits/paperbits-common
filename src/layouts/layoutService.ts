@@ -1,6 +1,5 @@
 ﻿import * as _ from "lodash";
 import * as Utils from "../utils";
-import { Bag } from "./../bag";
 import { LayoutContract } from "../layouts/layoutContract";
 import { IObjectStorage, Query, Operator } from "../persistence";
 import { ILayoutService } from "./";
@@ -47,7 +46,6 @@ export class LayoutService implements ILayoutService {
         const documentKey = `${documentsPath}/${identifier}`;
 
         const layout: LayoutContract = {
-            type: "layout",
             key: layoutKey,
             title: title,
             description: description,

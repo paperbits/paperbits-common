@@ -1,9 +1,7 @@
-﻿import { Contract } from "../contract";
-
-/**
+﻿/**
  * Layout metadata.
  */
-export interface LayoutContract extends Contract {
+export interface LayoutContract {
     /**
      * Own key.
      */
