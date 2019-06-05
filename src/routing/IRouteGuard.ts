@@ -1,5 +1,8 @@
 import { Route } from "./route";
 
+/**
+ * Route guard gets invoked by route handler before navigating to a route.
+ */
 export interface IRouteGuard {
     /**
      * Checks if current route can be activated.
