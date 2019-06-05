@@ -1,7 +1,7 @@
 import * as Utils from "../utils";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IPageService } from "../pages/IPageService";
-import { IRouteHandler } from "../routing/IRouteHandler";
+import { RouteHandler } from "../routing/routeHandler";
 
 /**
  * We have to use middleware because anchors might be inserted/deleted as part of larger text block (copy-pasting).
@@ -9,7 +9,7 @@ import { IRouteHandler } from "../routing/IRouteHandler";
 export class AnchorMiddleware implements IObjectStorageMiddleware {
     constructor(
         private readonly pageService: IPageService,
-        private readonly routeHandler: IRouteHandler
+        private readonly routeHandler: RouteHandler
     ) { }
 
     public async applyChanges(key: string, changesObject: Object): Promise<void> {

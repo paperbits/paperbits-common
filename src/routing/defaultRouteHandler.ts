@@ -1,6 +1,6 @@
 ﻿import { IEventManager } from "../events";
-import { IRouteHandler } from "../routing";
-import { IRouteGuard } from "./IRouteGuard";
+import { RouteHandler } from "./routeHandler";
+import { RouteGuard } from "./routeGuard";
 import { Route } from "./route";
 
 
@@ -8,14 +8,14 @@ export class RouteHandlerEvents {
     public static onRouteChange: string = "onRouteChange";
 }
 
-export class DefaultRouteHandler implements IRouteHandler {
+export class DefaultRouteHandler implements RouteHandler {
     private currentRoute: Route;
     private originalPushState: (data: any, title: string, url: string) => void;
 
     public notifyListeners: boolean;
 
     constructor(
-        private readonly routeGuards: IRouteGuard[],
+        private readonly routeGuards: RouteGuard[],
         private readonly eventManager: IEventManager
     ) {
         // setting up...

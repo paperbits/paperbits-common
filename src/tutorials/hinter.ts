@@ -1,5 +1,5 @@
 import { ILayoutService } from "../layouts";
-import { IRouteHandler } from "./../routing/IRouteHandler";
+import { RouteHandler } from "../routing/routeHandler";
 import { IViewManager } from "./../ui/IViewManager";
 import { IEventManager } from "../events";
 
@@ -9,7 +9,7 @@ export class Hinter {
     constructor(
         private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager,
-        private readonly routeHandler: IRouteHandler,
+        private readonly routeHandler: RouteHandler,
         private readonly layoutService: ILayoutService,
     ) {
         this.noHints = false;

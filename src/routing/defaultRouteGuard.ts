@@ -1,7 +1,7 @@
-import { IRouteGuard } from ".";
+import { Route, RouteGuard } from ".";
 
-export class DefaultRouteGuard implements IRouteGuard {
-    public async canActivate(route: string, metadata?: Object): Promise<boolean> {
+export class DefaultRouteGuard implements RouteGuard {
+    public async canActivate(route: Route): Promise<boolean> {
         return true;
     }
 }

@@ -1,6 +1,6 @@
 ﻿import { Route } from "./route";
 
-export interface IRouteHandler {
+export interface RouteHandler {
     /**
      * Returns current URL.
      */
