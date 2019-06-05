@@ -91,7 +91,7 @@ export class DefaultRouteHandler implements IRouteHandler {
             previous: this.currentRoute
         };
 
-        const canActivate = await this.canActivate(url, metadata);
+        const canActivate = await this.canActivate(route);
 
         if (canActivate) {
             this.currentRoute = route;
@@ -99,10 +99,10 @@ export class DefaultRouteHandler implements IRouteHandler {
         }
     }
 
-    protected async canActivate(path: string, metadata?: Object): Promise<boolean> {
-        for (const guard of this.routeGuards) {
+    protected async canActivate(route: Route): Promise<boolean> {
+        for (const routeGuard of this.routeGuards) {
             try {
-                const canActivate = await guard.canActivate(path, metadata);
+                const canActivate = await routeGuard.canActivate(route);
 
                 if (!canActivate) {
                     return false;
