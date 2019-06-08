@@ -1,16 +1,29 @@
 import * as ko from "knockout";
-// import "@webcomponents/webcomponentsjs/custom-elements-es5-adapter";
-// import "@webcomponents/webcomponentsjs/webcomponents-bundle";
 
-export function RuntimeComponent(config) {
+export function RuntimeComponent(config: any) {
     return (target) => {
+
+        let onDispose: () => void;
+
         class RuntimeComponentProxy extends HTMLElement {
-            constructor() {
-                super();
+            public connectedCallback(): void {
                 const element = <any>this;
-                setTimeout(() => {
-                     ko.applyBindingsToNode(element, { component: { name: config.selector, viewModel: target } }, null);
-                }, 10);
+
+                ko.applyBindingsToNode(element, {
+                    component: {
+                        name: config.selector,
+                        viewModel: target,
+                        oncreate: (viewModelInstance) => {
+                            onDispose = viewModelInstance.dispose;
+                        }
+                    }
+                }, null);
+            }
+
+            public disconnectedCallback(): void {
+                if (onDispose) {
+                    onDispose();
+                }
             }
         }
 
