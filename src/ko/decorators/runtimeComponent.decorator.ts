@@ -1,23 +1,30 @@
 import * as ko from "knockout";
 
-export function RuntimeComponent(config: any) {
+export function RuntimeComponent(config: any): (target: Function) => void {
     return (target) => {
 
         let onDispose: () => void;
 
         class RuntimeComponentProxy extends HTMLElement {
-            public connectedCallback(): void {
+            constructor() {
+                super();
                 const element = <any>this;
 
-                ko.applyBindingsToNode(element, {
-                    component: {
-                        name: config.selector,
-                        viewModel: target,
-                        oncreate: (viewModelInstance) => {
-                            onDispose = viewModelInstance.dispose;
+                setTimeout(() => {
+                    ko.applyBindingsToNode(element, {
+                        component: {
+                            name: config.selector,
+                            viewModel: target,
+                            oncreate: (viewModelInstance) => {
+                                onDispose = viewModelInstance.dispose;
+                            }
                         }
-                    }
-                }, null);
+                    }, null);
+                }, 10);
+            }
+
+            public connectedCallback(): void { 
+                // Not implemented
             }
 
             public disconnectedCallback(): void {
