@@ -350,6 +350,10 @@ export class OfflineObjectStorage implements IObjectStorage {
         return Object.keys(this.changesObject).length > 0;
     }
 
+    public hasUnsavedChangesAt(key: string): boolean {
+        return !!Objects.getObjectAt(key, this.changesObject);
+    }
+
     public async discardChanges(): Promise<void> {
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
         Object.keys(this.stateObject).forEach(key => delete this.stateObject[key]);

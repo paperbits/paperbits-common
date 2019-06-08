@@ -1,6 +1,6 @@
 ﻿import { Route } from "./route";
 
-export interface RouteHandler {
+export interface Router {
     /**
      * Returns current URL.
      */
