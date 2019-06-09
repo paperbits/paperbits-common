@@ -12,7 +12,10 @@ export class DefaultRouter implements Router {
     ) {
         // setting up...
         this.notifyListeners = true;
+        this.currentRoute = this.getRouteFromLocation();
+    }
 
+    public getRouteFromLocation(): Route {
         const path = location.pathname;
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
         const url = location.pathname + hash;
@@ -25,7 +28,7 @@ export class DefaultRouter implements Router {
             previous: null
         };
 
-        this.currentRoute = route;
+        return route;
     }
 
     public addRouteChangeListener(eventHandler: (args?: any) => void): void {

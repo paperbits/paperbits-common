@@ -1,11 +1,22 @@
-import { Router, Route } from ".";
+import { Route, Router } from ".";
 
 export class LocationRouteHandler {
-    constructor(router: Router) {
+    constructor(private readonly router: Router) {
+        window.addEventListener("popstate", this.onPopState.bind(this));
         router.addRouteChangeListener(this.onRouteChange);
     }
 
+    private onPopState(event: PopStateEvent): void {
+        const url = location.pathname + location.hash;
+        this.router.navigateTo(url);
+    }
+
     private onRouteChange(route: Route): void {
-        location.assign(route.url);
+        if (route.path !== location.pathname) {
+            location.assign(route.url);
+        }
+        else {
+            history.pushState(null, null, route.url);
+        }
     }
 }
