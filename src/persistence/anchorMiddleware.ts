@@ -1,7 +1,7 @@
 import * as Utils from "../utils";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { IPageService } from "../pages/IPageService";
-import { RouteHandler } from "../routing/routeHandler";
+import { Router } from "../routing/Router";
 
 /**
  * We have to use middleware because anchors might be inserted/deleted as part of larger text block (copy-pasting).
@@ -9,14 +9,14 @@ import { RouteHandler } from "../routing/routeHandler";
 export class AnchorMiddleware implements IObjectStorageMiddleware {
     constructor(
         private readonly pageService: IPageService,
-        private readonly routeHandler: RouteHandler
+        private readonly router: Router
     ) { }
 
     public async applyChanges(key: string, changesObject: Object): Promise<void> {
         // console.log("Calling middleware...");
         // // console.log(changesObject);
 
-        // let currentUrl = this.routeHandler.getCurrentUrl();
+        // let currentUrl = this.router.getCurrentUrl();
         // let permalink = await this.permalinkService.getPermalinkByUrl(currentUrl);
         // let pageKey = permalink.targetKey;
         // let pageContract = await this.pageService.getPageByKey(pageKey);

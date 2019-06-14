@@ -1,17 +1,9 @@
 ﻿import { IEventManager } from "../events";
-import { RouteHandler } from "./routeHandler";
-import { RouteGuard } from "./routeGuard";
-import { Route } from "./route";
+import { Router, RouterEvents, Route, RouteGuard } from ".";
 
 
-export class RouteHandlerEvents {
-    public static onRouteChange: string = "onRouteChange";
-}
-
-export class DefaultRouteHandler implements RouteHandler {
-    private currentRoute: Route;
-    private originalPushState: (data: any, title: string, url: string) => void;
-
+export class DefaultRouter implements Router {
+    public currentRoute: Route;
     public notifyListeners: boolean;
 
     constructor(
@@ -20,14 +12,14 @@ export class DefaultRouteHandler implements RouteHandler {
     ) {
         // setting up...
         this.notifyListeners = true;
+        this.currentRoute = this.getRouteFromLocation();
+    }
 
-        this.originalPushState = history.pushState;
-        history.pushState = this.pushState.bind(this);
-
+    public getRouteFromLocation(): Route {
         const path = location.pathname;
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
-        const url =  location.pathname + hash;
-        
+        const url = location.pathname + hash;
+
         const route: Route = {
             url: url,
             path: path,
@@ -36,25 +28,15 @@ export class DefaultRouteHandler implements RouteHandler {
             previous: null
         };
 
-        this.currentRoute = route;
-
-        addEventListener("popstate", () => this.navigateTo(location.href));
-    }
-
-    private pushState(route: Route): void {
-        this.originalPushState.call(history, route, route.title, route.url);
-
-        if (this.notifyListeners) {
-            this.eventManager.dispatchEvent(RouteHandlerEvents.onRouteChange, route);
-        }
+        return route;
     }
 
     public addRouteChangeListener(eventHandler: (args?: any) => void): void {
-        this.eventManager.addEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
+        this.eventManager.addEventListener(RouterEvents.onRouteChange, eventHandler);
     }
 
     public removeRouteChangeListener(eventHandler: (args?: any) => void): void {
-        this.eventManager.removeEventListener(RouteHandlerEvents.onRouteChange, eventHandler);
+        this.eventManager.removeEventListener(RouterEvents.onRouteChange, eventHandler);
     }
 
     /**
@@ -95,7 +77,10 @@ export class DefaultRouteHandler implements RouteHandler {
 
         if (canActivate) {
             this.currentRoute = route;
-            this.pushState(route);
+
+            if (this.notifyListeners) {
+                this.eventManager.dispatchEvent(RouterEvents.onRouteChange, route);
+            }
         }
     }
 

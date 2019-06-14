@@ -1,5 +1,5 @@
 import { ILayoutService } from "../layouts";
-import { RouteHandler } from "../routing/routeHandler";
+import { Router } from "../routing/Router";
 import { IViewManager } from "./../ui/IViewManager";
 import { IEventManager } from "../events";
 
@@ -9,7 +9,7 @@ export class Hinter {
     constructor(
         private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager,
-        private readonly routeHandler: RouteHandler,
+        private readonly router: Router,
         private readonly layoutService: ILayoutService,
     ) {
         this.noHints = false;
@@ -34,14 +34,14 @@ export class Hinter {
 
         this.noHints = true;
 
-        const url = this.routeHandler.getPath();
+        const url = this.router.getPath();
         const layoutContract = await this.layoutService.getLayoutByRoute(url);
 
         this.viewManager.notifyInfo("Did you know?", `This section is a part of "<b>${layoutContract.title}</b>" layout. Would you like to open it for editing?`, [{
             title: "Edit layout",
             iconClass: "paperbits-edit-72",
             action: async () => {
-                this.routeHandler.navigateTo(url, "", { routeKind: "layout" });
+                this.router.navigateTo(url, "", { routeKind: "layout" });
             }
         }]);
 
