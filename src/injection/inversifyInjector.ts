@@ -23,10 +23,10 @@ export class InversifyInjector implements IInjector {
 
         const signature = func.toString();
 
-        const classMatches = signature.match(/^constructor.*?\(([^)]*)\)/);
+        const classMatches = signature.match(/(constructor.*?\(([^)]*)\))/);
 
         if (classMatches && classMatches.length >= 1) {
-            const args = classMatches[1];
+            const args = classMatches[2];
             return args.split(",").map((arg) => arg.replace(/\/\*.*\*\//, "").trim()).filter((arg) => arg);
         }
 
