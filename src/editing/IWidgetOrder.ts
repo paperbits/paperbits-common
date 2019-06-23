@@ -15,6 +15,11 @@ export interface IWidgetOrder {
     displayName: string;
 
     /**
+     * Category of the widget.
+     */
+    category?: string;
+
+    /**
      * Icon CSS class.
      */
     iconClass?: string;
