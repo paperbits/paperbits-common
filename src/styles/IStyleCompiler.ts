@@ -1,4 +1,5 @@
 import { StyleContract } from "./styleConfig";
+import { Style } from "./styles";
 
 export interface StyleModel {
     key: string;
@@ -12,8 +13,8 @@ export interface IStyleCompiler {
     getClassNameByColorKey(colorKey: string): string;
     getClassNameByStyleKeyAsync(key: string): Promise<string>;
     getClassNamesByStyleConfigAsync(styleConfig: StyleContract): Promise<string>;
-    getClassNamesByStyleConfigAsync2(styleConfig: StyleContract): Promise<StyleModel>;
-    getVariationClasses(variationConfig: StyleContract, componentName: string, variationName?: string, isNested?: boolean): Promise<object>;
+    getStyleModelAsync(styleConfig: StyleContract): Promise<StyleModel>;
+    getVariationStyle(variationConfig: StyleContract, componentName: string, variationName?: string, isNested?: boolean): Promise<Style>;
     jssToCss?(jssObject: object): string;
     getVariationClassNames(variationConfig: StyleContract, componentName: string, variationName?: string): string[];
 }
