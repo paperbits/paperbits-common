@@ -15,6 +15,4 @@ export interface IStyleCompiler {
     getClassNamesByStyleConfigAsync(styleConfig: StyleContract): Promise<string>;
     getStyleModelAsync(styleConfig: StyleContract): Promise<StyleModel>;
     getVariationStyle(variationConfig: StyleContract, componentName: string, variationName?: string, isNested?: boolean): Promise<Style>;
-    jssToCss?(jssObject: object): string;
-    getVariationClassNames(variationConfig: StyleContract, componentName: string, variationName?: string): string[];
 }
