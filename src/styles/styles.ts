@@ -30,6 +30,24 @@ export class StyleMediaQuery {
     }
 }
 
+export class FontFace {
+    public fontFamily: string;
+    public src: string;
+    public fontStyle: string;
+    public fontWeight: number | string;
+
+    public toJssString(): string {
+        const jssString = `{
+            "fontFamily": "${this.fontFamily}",
+            "src": "url(${this.src})",
+            "fontStyle": "${this.fontStyle}",
+            "fontWeight": "${this.fontWeight}"
+        }`;
+
+        return jssString;
+    }
+}
+
 export class Style {
     public readonly selector: string;
     public readonly rules: StyleRule[];
@@ -73,10 +91,12 @@ export class Style {
 export class StyleSheet {
     public styles: Style[];
     public mediaQueries: StyleMediaQuery[];
+    public fontFaces: FontFace[];
 
     constructor() {
         this.styles = [];
         this.mediaQueries = [];
+        this.fontFaces = [];
     }
 
     private flattenMediaQueries(styles: Style[]): StyleMediaQuery[] {
@@ -97,12 +117,12 @@ export class StyleSheet {
     }
 
     public toJssString(): string {
+        const fontFacesJssString = `"@font-face":[${this.fontFaces.map(x => x.toJssString()).join(",")}]`;
         const stylesJssString = this.styles.map(style => style.toJssString()).filter(x => !!x).join(",");
         const mediaQueries = this.flattenMediaQueries(this.styles);
         const mediaQueriesJssString = mediaQueries.map(x => x.toJssString()).filter(x => !!x).join(",");
-        const result = [stylesJssString, mediaQueriesJssString].filter(x => !!x).join(",");
+        const result = [fontFacesJssString, stylesJssString, mediaQueriesJssString].filter(x => !!x).join(",");
 
         return `{${result}}`;
     }
-
 }
