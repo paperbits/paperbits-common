@@ -61,7 +61,7 @@ export class Style {
     // adjacent sibling selector (+)
     // general sibling selector (~)
 
-    constructor(selector?: string) {
+    constructor(selector: string) {
         this.selector = Utils.camelCaseToKebabCase(selector);
         this.rules = [];
         this.nestedStyles = [];
