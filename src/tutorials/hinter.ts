@@ -1,6 +1,6 @@
 import { ILayoutService } from "../layouts";
-import { Router } from "../routing/Router";
-import { IViewManager } from "./../ui/IViewManager";
+import { Router } from "../routing";
+import { IViewManager } from "./../ui";
 import { IEventManager } from "../events";
 
 export class Hinter {

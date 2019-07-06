@@ -1,7 +1,7 @@
 import * as Utils from "../utils";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
-import { IPageService } from "../pages/IPageService";
-import { Router } from "../routing/Router";
+import { IPageService } from "../pages";
+import { Router } from "../routing/router";
 
 /**
  * We have to use middleware because anchors might be inserted/deleted as part of larger text block (copy-pasting).
