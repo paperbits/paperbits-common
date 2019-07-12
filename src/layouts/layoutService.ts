@@ -74,7 +74,7 @@ export class LayoutService implements ILayoutService {
         await this.objectStorage.updateObject<LayoutContract>(layout.key, layout);
     }
 
-    public async getLayoutByUriTemplate(permalinkTemplate: string): Promise<LayoutContract> {
+    public async getLayoutByPermalinkTemplate(permalinkTemplate: string): Promise<LayoutContract> {
         if (!permalinkTemplate) {
             throw new Error(`Parameter "permalinkTemplate" not specified.`);
         }
@@ -179,8 +179,8 @@ export class LayoutService implements ILayoutService {
         };
     }
 
-    public async getLayoutByRoute(route: string): Promise<LayoutContract> {
-        if (!route) {
+    public async getLayoutByPermalink(permalink: string): Promise<LayoutContract> {
+        if (!permalink) {
             return null;
         }
 
@@ -192,7 +192,7 @@ export class LayoutService implements ILayoutService {
             templates = this.sort(templates);
 
             const matchingTemplate = templates.find(template => {
-                return this.matchPermalink(route, template).match;
+                return this.matchPermalink(permalink, template).match;
             });
 
             return layouts.find(x => x.permalinkTemplate === (matchingTemplate || "/"));
