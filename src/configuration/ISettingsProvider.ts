@@ -20,7 +20,7 @@ export interface ISettingsProvider {
      */
     setSetting<T>(name: string, value: T): void;
 
-    onSettingChange?<T>(name: string, eventHandler: (value: T) => void);
+    onSettingChange?<T>(name: string, eventHandler: (value: T) => void): void;
 }
 
 export module Settings {

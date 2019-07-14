@@ -24,7 +24,7 @@ export class SettingsProvider implements ISettingsProvider {
         return this.configuration[name];
     }
 
-    public onSettingChange(name: string, eventHandler: (value) => void) {
+    public onSettingChange<T>(name: string, eventHandler: (value: T) => void): void {
         this.eventManager.addEventListener("onSettingChange", (setting) => {
             if (setting.name === name) {
                 eventHandler(setting.value);
