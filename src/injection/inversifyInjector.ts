@@ -12,7 +12,7 @@ export class InversifyInjector implements IInjector {
         this.conatainer = new Container();
     }
 
-    public getFunctionArguments(func): string[] {
+    public getFunctionArguments(func: Function): string[] {
         if (!func) {
             throw new Error(`Parameter "func" cannot be empty`);
         }
@@ -22,15 +22,14 @@ export class InversifyInjector implements IInjector {
         }
 
         const signature = func.toString();
-
-        const classMatches = signature.match(/(constructor.*?\(([^)]*)\))/);
+        const classMatches = signature.match(/(constructor\s*\(([^\(\)]*)\))/);
 
         if (classMatches && classMatches.length >= 1) {
             const args = classMatches[2];
             return args.split(",").map((arg) => arg.replace(/\/\*.*\*\//, "").trim()).filter((arg) => arg);
         }
 
-        const functionMatches = signature.match(/^function.*?\(([^)]*)\)/);
+        const functionMatches = signature.match(/^function.*?\(([^\(\)]*)\)/);
 
         if (functionMatches && functionMatches.length >= 1) {
             const args = functionMatches[1];
