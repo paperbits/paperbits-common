@@ -64,6 +64,7 @@ export class XmlHttpRequestClient implements HttpClient {
                     reject({
                         message: `Could not complete the request. Please try again later.`,
                         code: "RequestError",
+                        requestedUrl: request.url,
                         details: []
                     });
                     return;

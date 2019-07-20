@@ -8,7 +8,7 @@ export interface ComponentConfig {
     postprocess?: (element: Node, viewModel) => void;
 }
 
-export function Component(config: ComponentConfig) {
+export function Component(config: ComponentConfig): ClassDecorator {
     return function (target) {
         ko.components.register(config.selector, {
             template: config.template,
