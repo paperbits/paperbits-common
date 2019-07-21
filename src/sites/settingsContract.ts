@@ -41,7 +41,7 @@ export interface SiteSettingsContract {
 
 export interface IntegrationSettingsContract {
     googleMaps?: GoogleMapsConfig;
-    gtm?: GoogleTagManagerConfig;
+    googleTagManager?: GoogleTagManagerConfig;
     googleFonts?: GoogleFontsConfig;
     intercom?: IIntercomConfig;
 }

@@ -25,8 +25,8 @@ export interface ISettingsProvider {
 
 export module Settings {
     export module Config {
-        export const GMaps = "googleMaps";
-        export const Gtm = "gtm";
+        export const GoogleMaps = "googleMaps";
+        export const GoogleTagManager = "gtm";
         export const Intercom = "intercom";
         export const GoogleFonts = "googleFonts";
     }

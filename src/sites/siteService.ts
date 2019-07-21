@@ -15,8 +15,8 @@ export class SiteService implements ISiteService {
 
     public async setSiteSettings(settings: SettingsContract): Promise<void> {
         await this.objectStorage.updateObject(settingsPath, settings);
-        await this.settingsProvider.setSetting(Settings.Config.Gtm, settings.integration.gtm);
-        await this.settingsProvider.setSetting(Settings.Config.GMaps, settings.integration.googleMaps);
+        await this.settingsProvider.setSetting(Settings.Config.GoogleTagManager, settings.integration.googleTagManager);
+        await this.settingsProvider.setSetting(Settings.Config.GoogleMaps, settings.integration.googleMaps);
         await this.settingsProvider.setSetting(Settings.Config.Intercom, settings.integration.intercom);
         await this.settingsProvider.setSetting(Settings.Config.GoogleFonts, settings.integration.googleFonts);
     }
