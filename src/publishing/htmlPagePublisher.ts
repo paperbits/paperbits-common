@@ -27,7 +27,7 @@ export class HtmlPagePublisher {
         document.head.insertAdjacentElement("afterbegin", faviconLinkElement);
     }
 
-    public async createHtml(page: HtmlPage): Promise<string> {
+    public async renderHtml(page: HtmlPage): Promise<string> {
         const document = this.htmlDocumentProvider.createDocument(template);
         document.title = page.title;
 
