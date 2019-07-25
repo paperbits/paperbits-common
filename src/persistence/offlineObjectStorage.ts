@@ -38,6 +38,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
+    public canUndo(): boolean {
+        return this.past.length > 0;
+    }
+
+    public canRedo(): boolean {
+        return this.future.length > 0;
+    }
+
     public registerUnderlyingStorage(underlyingStorage: IObjectStorage): void {
         this.underlyingStorage = underlyingStorage;
     }
@@ -199,10 +207,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         if (this.autosave) {
             this.saveChanges();
         }
+
+        if (this.eventManager) {
+            this.eventManager.dispatchEvent("onDataChange");
+        }
     }
 
     public undo(): void {
-        if (this.past.length === 0) {
+        if (!this.canUndo()) {
             return;
         }
 
@@ -210,17 +222,18 @@ export class OfflineObjectStorage implements IObjectStorage {
         record.undo();
         this.future.push(record);
 
-        if (this.eventManager) {
-            this.eventManager.dispatchEvent("onDataPush");
-        }
-
         if (this.autosave) {
             this.saveChanges();
+        }
+
+        if (this.eventManager) {
+            this.eventManager.dispatchEvent("onDataPush");
+            this.eventManager.dispatchEvent("onDataChange");
         }
     }
 
     public redo(): void {
-        if (this.future.length === 0) {
+        if (!this.canRedo()) {
             return;
         }
 
@@ -230,6 +243,7 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         if (this.eventManager) {
             this.eventManager.dispatchEvent("onDataPush");
+            this.eventManager.dispatchEvent("onDataChange");
         }
     }
 
@@ -362,5 +376,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     public async saveChanges(): Promise<void> {
         await this.underlyingStorage.saveChanges(this.changesObject);
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
+        this.eventManager.dispatchEvent("onDataChange");
     }
 }

@@ -162,39 +162,39 @@ export class GlobalEventHandler {
         this.eventManager.dispatchEvent("onError", event);
     }
 
-    public addDragStartListener(callback): void {
+    public addDragStartListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragStart", callback);
     }
 
-    public addDragEnterListener(callback): void {
+    public addDragEnterListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragEnter", callback);
     }
 
-    public addDragOverListener(callback): void {
+    public addDragOverListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragOver", callback);
     }
 
-    public addDragLeaveListener(callback): void {
+    public addDragLeaveListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragLeave", callback);
     }
 
-    public addDragLeaveScreenListener(callback): void {
+    public addDragLeaveScreenListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragLeaveScreen", callback);
     }
 
-    public addDragDropListener(callback): void {
+    public addDragDropListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragDrop", callback);
     }
 
-    public addDragEndListener(callback): void {
+    public addDragEndListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onDragEnd", callback);
     }
 
-    public addPasteListener(callback): void {
+    public addPasteListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onPaste", callback);
     }
 
-    public addPointerMoveEventListener(callback): void {
+    public addPointerMoveEventListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onPointerMove", callback);
     }
 }
