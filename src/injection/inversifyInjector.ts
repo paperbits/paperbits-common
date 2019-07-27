@@ -1,6 +1,6 @@
 ﻿import "reflect-metadata";
 import { IInjector, IInjectorModule } from "../injection";
-import { inject, injectable, Container, decorate, interfaces, multiInject, LazyServiceIdentifer } from "inversify";
+import { inject, injectable, Container, decorate, interfaces, multiInject, LazyServiceIdentifer, METADATA_KEY } from "inversify";
 
 export class InversifyInjector implements IInjector {
     private conatainer: Container;
@@ -40,6 +40,10 @@ export class InversifyInjector implements IInjector {
     }
 
     private decorateComponent(name: string, component: any): void {
+        if (Reflect.hasOwnMetadata(METADATA_KEY.PARAM_TYPES, component)) {
+            return;
+        }
+
         try {
             decorate(injectable(), component);
         }
