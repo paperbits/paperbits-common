@@ -1,3 +1,5 @@
+import { HyperlinkModel } from "../permalinks";
+
 /**
  * Provider that helps to create a hyperlink out of a resource.
  */
@@ -20,5 +22,5 @@ export interface IHyperlinkProvider {
     /**
      * Creates hyperlink from specified resource, i.e. Page or Media.
      */
-    getHyperlinkFromResource(resource: any);
+    getHyperlinkFromResource(resource: any): HyperlinkModel;
 }

@@ -1,11 +1,6 @@
 import { StyleContract } from "./styleConfig";
 import { Style } from "./styles";
-
-export interface StyleModel {
-    key: string;
-    classNames: string;
-    css: string;
-}
+import { StyleModel } from "./styleModel";
 
 
 /**
@@ -26,21 +21,21 @@ export interface IStyleCompiler {
     
     /**
      * Returns CSS class name(s) for style contract.
-     * @param styleConfig 
+     * @param contract 
      */
-    getClassNamesByStyleConfigAsync(styleConfig: StyleContract): Promise<string>;
+    getClassNamesByStyleConfigAsync(contract: StyleContract): Promise<string>;
 
     /**
-     * Converts variation style contract into style model.
-     * @param styleConfig 
+     * Converts style contract into style model.
+     * @param contract {StyleContract} Style contract.
      */
-    getStyleModelAsync(styleConfig: StyleContract): Promise<StyleModel>;
+    getStyleModelAsync(contract: StyleContract): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
-     * @param variationStyleContract 
-     * @param componentName 
-     * @param variationName 
+     * @param contract {StyleContract} Variation style contract.
+     * @param componentName {string} Component name, e.g. "button".
+     * @param variationName {string} Style variation name, e.g. "primary".
      */
-    getVariationStyle(variationStyleContract: StyleContract, componentName: string, variationName?: string): Promise<Style>;
+    getVariationStyle(contract: StyleContract, componentName: string, variationName?: string): Promise<Style>;
 }
