@@ -5,7 +5,7 @@ export interface IView {
      * View heading, e.g. "Picture editor".
      */
     heading?: string;
-    
+
     /**
      * Definition of a UI component behind this view.
      */
@@ -15,4 +15,9 @@ export interface IView {
      * Allowed values: "vertically", "horizontally".
      */
     resize?: string;
+
+    /**
+     * Help text.
+     */
+    helpText?: string;
 }

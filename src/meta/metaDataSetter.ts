@@ -1,32 +1,33 @@
 export class MetaDataSetter {
-    public static iconContentType = "image/x-icon";
+    public static iconContentType: string = "image/x-icon";
 
-    public static setFavIcon(iconHref: string) {
-        if (!iconHref) {
+    public static setFavIcon(iconUrl: string): void {
+        if (!iconUrl) {
             return;
         }
+        
         const link = <HTMLLinkElement>document.querySelector("link[rel*='icon']");
 
         if (link) {
             link.type = MetaDataSetter.iconContentType;
             link.rel = "icon";
-            link.href = iconHref;
+            link.href = iconUrl;
         }
     }
 
-    public static setKeywords(keywords: string) {
+    public static setKeywords(keywords: string): void {
         MetaDataSetter.setMetaElement(keywords, "keywords");
     }
 
-    public static setDescription(description: string) {
+    public static setDescription(description: string): void {
         MetaDataSetter.setMetaElement(description, "description");
     }
 
-    public static setAuthor(author: string) {
+    public static setAuthor(author: string): void {
         MetaDataSetter.setMetaElement(author, "author");
     }
 
-    public static setScriptElement(content: object, type: string) {
+    public static setScriptElement(content: object, type: string): void {
         const existScript = <HTMLScriptElement>MetaDataSetter.getMetaElement("type", type);
         const script = existScript || document.createElement("script");
         script.setAttribute("type", type);
@@ -34,13 +35,13 @@ export class MetaDataSetter {
         document.head.appendChild(script);
     }
 
-    public static setMetaObject(data: object, attributeName: string) {
+    public static setMetaObject(data: object, attributeName: string): void {
         Object.keys(data).forEach(attrValue => {
             MetaDataSetter.setMetaElement(data[attrValue], undefined, attributeName, attrValue);
         });
     }
 
-    public static setMetaElement(content: string, name?: string, attributeName?: string, attributeValue?: string) {
+    public static setMetaElement(content: string, name?: string, attributeName?: string, attributeValue?: string): void {
         const existMeta = name ? <HTMLMetaElement>MetaDataSetter.getMetaElement("name", name) : <HTMLMetaElement>MetaDataSetter.getMetaElement(attributeName, attributeValue);
         const meta = existMeta || document.createElement("meta");
         if (name) {
@@ -55,7 +56,7 @@ export class MetaDataSetter {
         }
     }
 
-    private static getMetaElement(attributeName: string, attributeValue: string) {
+    private static getMetaElement(attributeName: string, attributeValue: string): Element {
         return attributeName && attributeValue && document.head.querySelector(`[${attributeName}=${attributeValue}]`);
     }
 }

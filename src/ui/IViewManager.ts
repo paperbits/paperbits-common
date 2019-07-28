@@ -41,7 +41,7 @@ export interface IViewManager {
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
     updateJourneyComponent(component: IView): void;
     unfoldEverything(): void;
-    openViewAsWorkshop(heading: string, componentName: string, parameters?: any): IView;
+    openViewAsWorkshop(view: IView): void;
     closeWorkshop(editor: IView | string): void;
     openUploadDialog(): Promise<File[]>;
     openViewAsPopup(view: IView): void;
@@ -61,7 +61,6 @@ export interface IViewManager {
     removeShutter(): void;
     beginDrag(session: DragSession): void;
     getDragSession(): DragSession;
-    loadFavIcon(faviconUrl: string): Promise<void>;
     addBalloon(component: IComponent): void;
     removeBalloon(component: IComponent): void;
     setSplitter(config: ISplitterConfig): void;
