@@ -26,13 +26,11 @@ export interface ISplitterConfig {
 }
 
 export interface IViewManager {
-    initialize(): Promise<void>;
     addToast(title: string, content: string, commands?: ICommand[]): Toast;
     removeToast(toast: Toast): void;
     journeyName(): string;
-    foldEverything(): void;
-    foldWorkshops(): void;
-    unfoldWorkshop(): void;
+    hideToolboxes(): void;
+    showToolboxes(): void;
     clearJourney(): void;
     closeView(): void;
     notifyInfo(title: string, content: string, commands?: ICommand[]): void;
@@ -40,20 +38,18 @@ export interface IViewManager {
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
     updateJourneyComponent(component: IView): void;
-    unfoldEverything(): void;
+    openViewAsPopup(view: IView): void;
     openViewAsWorkshop(view: IView): void;
+    getOpenView(): IView;
     closeWorkshop(editor: IView | string): void;
     openUploadDialog(): Promise<File[]>;
-    openViewAsPopup(view: IView): void;
     openWidgetEditor(binding: IWidgetBinding<any>): void;
-    getOpenView(): IView;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
     removeContextualEditor(editorName: string): void;
     clearContextualEditors(): void;
     setHighlight(config: IHighlightConfig): void;
     setSelectedElement(config: IHighlightConfig, ce: IContextCommandSet): void;
     getSelectedElement(): IHighlightConfig;
-    itemSelectorName(name: string): string;
     mode: ViewManagerMode;
     setViewport(viewport: string): void;
     getViewport(): string;
