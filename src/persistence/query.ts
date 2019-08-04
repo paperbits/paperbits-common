@@ -8,14 +8,14 @@ export enum OrderDirection {
     descending
 }
 
-export interface Filter<T> {
-    left: T;
+export interface Filter<TLeftOperand, TRightOperand> {
+    left: TLeftOperand;
     operator: Operator;
-    right: T;
+    right: TRightOperand;
 }
 
 export class Query<T> {
-    public filters: Filter<any>[] = [];
+    public filters: Filter<any, any>[] = [];
     public skipping: number;
     public taking: number;
     public orderingBy: string;
@@ -25,7 +25,7 @@ export class Query<T> {
         this.orderDirection = OrderDirection.accending;
     }
 
-    public where<TOperand>(left: TOperand, operator, right: TOperand): Query<T> {
+    public where<TLeftOperand, TRightOperand>(left: TLeftOperand, operator: Operator, right: TRightOperand): Query<T> {
         this.filters.push({ left, operator, right });
         return this;
     }
