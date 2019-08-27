@@ -14,6 +14,8 @@ export interface IHyperlinkProvider {
      */
     componentName: string;
 
+    iconClass: string;
+
     /**
      * Determines if this provider is suitable for a resource the permalink points to.
      */

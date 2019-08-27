@@ -1,4 +1,4 @@
 export interface IResourceSelector<T> {
     onSelect: (resource: T) => void;
-    selectResource?(resource: T);
+    selectResource?(resource: T): void;
 }

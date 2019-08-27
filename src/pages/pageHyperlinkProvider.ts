@@ -4,7 +4,8 @@ import { HyperlinkModel } from "../permalinks/hyperlinkModel";
 
 export class PageHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Pages";
-    public readonly componentName = "page-selector";
+    public readonly componentName: string = "page-selector";
+    public readonly iconClass: string = "paperbits-icon paperbits-single-content-03";
 
     public canHandleHyperlink(contentItemKey: string): boolean {
         return contentItemKey.startsWith("pages/");
