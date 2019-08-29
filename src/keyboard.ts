@@ -1,4 +1,5 @@
 export const Keys = {
+    Tab: 9,
     Enter: 13,
     Esc: 27,
     Space: 32,
