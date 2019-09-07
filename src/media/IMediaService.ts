@@ -11,7 +11,11 @@ export interface IMediaService {
      */
     getMediaByKey(key: string): Promise<MediaContract>;
 
-    getMediaByUrl(url: string): Promise<MediaContract>;
+    /**
+     * Return media file metadata by permalink.
+     * @param permalink {string} Permanent link of the media.
+     */
+    getMediaByPermalink(permalink: string): Promise<MediaContract>;
 
     search(pattern?: string, mimeType?: string): Promise<MediaContract[]>;
 

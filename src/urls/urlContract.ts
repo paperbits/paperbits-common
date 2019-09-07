@@ -1,5 +1,5 @@
 ﻿/**
- * Url metadata.
+ * URL metadata.
  */
 export interface UrlContract {
     /**
@@ -8,14 +8,17 @@ export interface UrlContract {
     key?: string;
 
     /**
-     * Url title.
+     * URL title.
      */
     title: string;
 
     /**
-     * Url description.
+     * URL description.
      */
     description?: string;
 
+    /**
+     * Permalink of a resource.
+     */
     permalink?: string;
 }

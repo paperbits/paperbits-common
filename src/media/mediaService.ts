@@ -10,7 +10,7 @@ export class MediaService implements IMediaService {
         private readonly blobStorage: IBlobStorage
     ) { }
 
-    public async getMediaByUrl(permalink: string): Promise<MediaContract> {
+    public async getMediaByPermalink(permalink: string): Promise<MediaContract> {
         if (!permalink) {
             throw new Error(`Parameter "permalink" not specified.`);
         }

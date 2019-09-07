@@ -46,5 +46,8 @@ export interface Router {
      */
     navigateTo(url: string, title?: string, metadata?: Object): Promise<void>;
 
+    /**
+     * Returns current route.
+     */
     getCurrentRoute(): Route;
 }
