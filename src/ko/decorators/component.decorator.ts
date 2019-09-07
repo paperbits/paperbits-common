@@ -6,6 +6,7 @@ export interface ComponentConfig {
     template: string;
     injectable?: string;
     postprocess?: (element: Node, viewModel) => void;
+    encapsulation?: "none" | "shadowDom"; 
 }
 
 export function Component(config: ComponentConfig): ClassDecorator {
@@ -14,7 +15,8 @@ export function Component(config: ComponentConfig): ClassDecorator {
             template: config.template,
             viewModel: { injectable: config.injectable || target.name },
             postprocess: config.postprocess,
-            synchrounous: true
+            synchrounous: true,
+            encapsulation: config.encapsulation
         });
 
         Reflect.defineMetadata("knockout-component", { name: config.selector, constructor: target }, target);
