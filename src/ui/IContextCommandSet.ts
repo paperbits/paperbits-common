@@ -4,7 +4,7 @@ export interface IContextCommandSet {
     color?: string;
     element?: HTMLElement;
     hoverCommand?: IContextCommand;
-    selectionCommands?: IContextCommand[];
+    selectCommands?: IContextCommand[];
     deleteCommand?: IContextCommand;
 }
 
