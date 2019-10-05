@@ -8,12 +8,6 @@ export interface INavigationService {
     getNavigationItem(navigationItemKey: string): Promise<NavigationItemContract>;
 
     /**
-     * Updates specified navigation item in storage.
-     * @param navigationItem Navigation item contract.
-     */
-    updateNavigationItem(navigationItem: NavigationItemContract): Promise<void>;
-
-    /**
      * Returns top-level navigation items.
      */
     getNavigationItems(): Promise<NavigationItemContract[]>;

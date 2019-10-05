@@ -1,23 +1,11 @@
-﻿import { Bag } from "./../bag";
-import { IObjectStorage } from "../persistence";
-import { IEventManager } from "../events";
+﻿import { IObjectStorage } from "../persistence";
 import { INavigationService } from "../navigation";
 import { NavigationItemContract } from "../navigation/navigationItemContract";
-import { NavigationEvents } from "../navigation/navigationEvents";
 
 const navigationItemsPath = "navigationItems";
 
 export class NavigationService implements INavigationService {
-    private readonly eventManager: IEventManager;
-    private readonly objectStorage: IObjectStorage;
-
-    constructor(eventManager: IEventManager, objectStorage: IObjectStorage) {
-        this.eventManager = eventManager;
-        this.objectStorage = objectStorage;
-
-        // rebinding....
-        this.getNavigationItem = this.getNavigationItem.bind(this);
-    }
+    constructor(private readonly objectStorage: IObjectStorage) { }
 
     private find(items: NavigationItemContract[], key: string): NavigationItemContract {
         for (const item of items) {
@@ -44,19 +32,7 @@ export class NavigationService implements INavigationService {
         return result ? Object.values(result) : [];
     }
 
-    public async updateNavigationItem(navigationItem: NavigationItemContract): Promise<void> {
-        const path = navigationItem.key;
-
-        await this.objectStorage.updateObject(`${navigationItemsPath}/${path}`, navigationItem);
-
-        this.eventManager.dispatchEvent(NavigationEvents.onNavigationItemUpdate, navigationItem);
-    }
-
     public async updateNavigation(navigationItems: NavigationItemContract[]): Promise<void> {
         await this.objectStorage.updateObject(`${navigationItemsPath}`, navigationItems);
-
-        navigationItems.forEach(navigationItem => {
-            this.eventManager.dispatchEvent(NavigationEvents.onNavigationItemUpdate, navigationItem);
-        });
     }
 }

@@ -16,7 +16,7 @@ export class DragTarget {
         element.addEventListener("mousemove", this.onPointerMove, false);
     }
 
-    private onPointerMove(event: MouseEvent) {
+    private onPointerMove(event: MouseEvent): void {
         event.stopPropagation();
 
         if (!this.dragManager.dragged) {
@@ -34,7 +34,7 @@ export class DragTarget {
             return;
         }
 
-        const readyToAccept = this.config.accept && this.config.accept(this.dragManager.payload, this.dragManager.dragged);
+        const readyToAccept = this.config.accept && this.config.accept(this.dragManager.sourceData, this.dragManager.dragged);
 
         if (readyToAccept) {
             let before: boolean = false;
@@ -43,11 +43,11 @@ export class DragTarget {
                 before = (event.pageY + clientRect.height / 2) < clientRect.bottom;
 
                 if (before && this.config.onacceptbefore) {
-                    this.config.onacceptbefore(this.dragManager.dragged, this.element, this.dragManager.payload);
+                    this.config.onacceptbefore(this.dragManager.dragged, this.element, this.dragManager.sourceData);
                 }
 
                 if (!before && this.config.onacceptafter) {
-                    this.config.onacceptafter(this.dragManager.dragged, this.element, this.dragManager.payload);
+                    this.config.onacceptafter(this.dragManager.dragged, this.element, this.dragManager.sourceData);
                 }
             }
 
@@ -55,11 +55,11 @@ export class DragTarget {
                 before = (event.pageX + clientRect.width / 2) < clientRect.right;
 
                 if (before && this.config.onacceptbefore) {
-                    this.config.onacceptbefore(this.dragManager.dragged, this.element, this.dragManager.payload);
+                    this.config.onacceptbefore(this.dragManager.dragged, this.element, this.dragManager.sourceData);
                 }
 
                 if (!before && this.config.onacceptafter) {
-                    this.config.onacceptafter(this.dragManager.dragged, this.element, this.dragManager.payload);
+                    this.config.onacceptafter(this.dragManager.dragged, this.element, this.dragManager.sourceData);
                 }
             }
 
