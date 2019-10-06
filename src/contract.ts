@@ -8,4 +8,9 @@ export interface Contract {
      * Child nodes of the widget.
      */
     nodes?: Contract[];
+
+    /**
+     * Is item system.
+     */
+    buildIn?: boolean;
 }

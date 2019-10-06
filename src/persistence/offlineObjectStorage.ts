@@ -261,6 +261,11 @@ export class OfflineObjectStorage implements IObjectStorage {
             return searchResultObject;
         }
 
+        return this.searchInResult<T>(searchObj, query);
+    }
+
+    private searchInResult<T>(searchObj: unknown, query?: Query<T>): Bag<T> {
+        const searchResultObject: Bag<T> = {};
         let collection = Object.values(searchObj);
 
         if (query) {
@@ -271,6 +276,20 @@ export class OfflineObjectStorage implements IObjectStorage {
                     for (const filter of query.filters) {
                         const property = x[filter.left];
 
+                        if(typeof filter.right === "boolean") {
+                            if (filter.operator !== Operator.equals) {
+                                console.warn("Boolean query operator can be only equals");
+                                meetsCriteria = false;
+                                return;
+                            }
+
+                            if (((property === undefined || property === false) && filter.right === true) ||
+                                ((filter.right === undefined || filter.right === false) && property === true)) {
+                                meetsCriteria = false;
+                            }
+                            continue;
+                        }
+                        
                         if (!property) {
                             meetsCriteria = false;
                             continue;
@@ -338,7 +357,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         const resultObject = await this.searchLocalState(path, query);
 
         if (this.isOnline) {
-            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
+            let searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
 
             if (!searchResultObject || Object.keys(searchResultObject).length === 0) {
                 return resultObject;

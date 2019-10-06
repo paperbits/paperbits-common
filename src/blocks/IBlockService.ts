@@ -7,9 +7,10 @@ import { Contract } from "../contract";
 export interface IBlockService {
     /**
      * Searches for design blocks that contain specified pattern in their title, description.
+     * @param blockType {"email" | "page"}
      * @param pattern {string}
      */
-    search(pattern?: string): Promise<BlockContract[]>;
+    search(blockType: "email" | "page", pattern: string): Promise<BlockContract[]>;
 
     /**
      * Returns a design block by specified key;
@@ -24,8 +25,9 @@ export interface IBlockService {
 
     /**
      * Creates new design block in storage and returns a contract of it.
+     * Block can be used in a page or email. 
      */
-    createBlock(title: string, description: string, content: Contract): Promise<void>;
+    createBlock(title: string, description: string, content: Contract, blockType: "email" | "page"): Promise<void>;
 
     /**
      * Updates specified design block.
