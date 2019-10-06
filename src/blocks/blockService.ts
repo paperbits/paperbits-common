@@ -23,11 +23,11 @@ export class BlockService implements IBlockService {
         return this.objectStorage.getObject<BlockContract>(key);
     }
 
-    public async search(blockType: "email" | "page", pattern: string): Promise<BlockContract[]> {
+    public async search(type: string, pattern: string): Promise<BlockContract[]> {
         const query = Query
             .from<BlockContract>()
-            .where("type", Operator.equals, blockType)
-            .where<string, string>("builtIn", Operator.equals, "false");
+            .where("type", Operator.equals, type)
+            .where<string, boolean>("builtIn", Operator.equals, false);
 
         if (pattern.length > 0) {
             query.where("title", Operator.contains, pattern).orderBy("title");
@@ -45,13 +45,13 @@ export class BlockService implements IBlockService {
         await this.objectStorage.deleteObject(block.key);
     }
 
-    public async createBlock(title: string, description: string, content: Contract, blockType: "email" | "page"): Promise<void> {
+    public async createBlock(title: string, description: string, content: Contract, type: string): Promise<void> {
         const identifier = Utils.guid();
         const blockKey = `${blockPath}/${Utils.guid()}`;
         const contentKey = `${documentsPath}/${identifier}`;
 
         const block: BlockContract = {
-            type: blockType,
+            type: type,
             key: blockKey,
             title: title,
             description: description,

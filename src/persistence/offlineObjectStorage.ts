@@ -276,7 +276,7 @@ export class OfflineObjectStorage implements IObjectStorage {
                     for (const filter of query.filters) {
                         const property = x[filter.left];
 
-                        if(typeof filter.right === "boolean") {
+                        if (typeof filter.right === "boolean") {
                             if (filter.operator !== Operator.equals) {
                                 console.warn("Boolean query operator can be only equals");
                                 meetsCriteria = false;
@@ -289,14 +289,23 @@ export class OfflineObjectStorage implements IObjectStorage {
                             }
                             continue;
                         }
-                        
+
                         if (!property) {
                             meetsCriteria = false;
                             continue;
                         }
 
-                        const left = x[filter.left].toUpperCase();
-                        const right = filter.right.toUpperCase();
+                        let left = x[filter.left];
+                        let right = filter.right;
+
+                        if (typeof left === "string") {
+                            left = left.toUpperCase();
+                        }
+
+                        if (typeof right === "string") {
+                            right = right.toUpperCase();
+                        }
+
                         const operator = filter.operator;
 
                         switch (operator) {
