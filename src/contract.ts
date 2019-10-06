@@ -12,5 +12,5 @@ export interface Contract {
     /**
      * Is item system.
      */
-    buildIn?: boolean;
+    builtIn?: boolean;
 }

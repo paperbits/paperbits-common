@@ -27,7 +27,7 @@ export class BlockService implements IBlockService {
         const query = Query
             .from<BlockContract>()
             .where("type", Operator.equals, blockType)
-            .where<string, boolean>("buildIn", Operator.equals, false);
+            .where<string, string>("builtIn", Operator.equals, "false");
 
         if (pattern.length > 0) {
             query.where("title", Operator.contains, pattern).orderBy("title");
