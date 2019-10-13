@@ -26,8 +26,7 @@ export class BlockService implements IBlockService {
     public async search(type: string, pattern: string): Promise<BlockContract[]> {
         const query = Query
             .from<BlockContract>()
-            .where("type", Operator.equals, type)
-            .where<string, boolean>("builtIn", Operator.equals, false);
+            .where("type", Operator.equals, type);
 
         if (pattern.length > 0) {
             query.where("title", Operator.contains, pattern).orderBy("title");
