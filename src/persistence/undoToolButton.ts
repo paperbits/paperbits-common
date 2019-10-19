@@ -1,9 +1,9 @@
 import * as ko from "knockout";
 import { OfflineObjectStorage } from "../persistence";
-import { IToolButton } from "../ui";
+import { ToolButton } from "../ui";
 import { EventManager } from "../events";
 
-export class UndoToolButton implements IToolButton {
+export class UndoToolButton implements ToolButton {
     public readonly iconClass: string = "paperbits-icon paperbits-undo-25";
     public readonly title: string = "Undo";
     public readonly disabled: ko.Observable<boolean>;

@@ -1,6 +1,6 @@
 import { ILayoutService } from "../layouts";
 import { Router } from "../routing";
-import { IViewManager } from "./../ui";
+import { ViewManager } from "./../ui";
 import { EventManager } from "../events";
 
 export class Hinter {
@@ -8,7 +8,7 @@ export class Hinter {
 
     constructor(
         private readonly eventManager: EventManager,
-        private readonly viewManager: IViewManager,
+        private readonly viewManager: ViewManager,
         private readonly router: Router,
         private readonly layoutService: ILayoutService,
     ) {

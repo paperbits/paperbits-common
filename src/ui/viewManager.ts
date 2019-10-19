@@ -1,4 +1,4 @@
-﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet, ICommand, Toast } from "./";
+﻿import { View, IComponent, IHighlightConfig, IContextCommandSet, ICommand, Toast } from ".";
 import { DragSession } from "./draggables";
 import { IWidgetBinding } from "../editing";
 import { RoleModel } from "../user";
@@ -26,7 +26,7 @@ export interface ISplitterConfig {
     where: string;
 }
 
-export interface IViewManager {
+export interface ViewManager {
     addToast(title: string, content: string, commands?: ICommand[]): Toast;
     removeToast(toast: Toast): void;
     journeyName(): string;
@@ -38,11 +38,11 @@ export interface IViewManager {
     notifySuccess(title: string, content: string): void;
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
-    updateJourneyComponent(component: IView): void;
-    openViewAsPopup(view: IView): void;
-    openViewAsWorkshop(view: IView): void;
-    getOpenView(): IView;
-    closeWorkshop(editor: IView | string): void;
+    updateJourneyComponent(component: View): void;
+    openViewAsPopup(view: View): void;
+    openViewAsWorkshop(view: View): void;
+    getOpenView(): View;
+    closeWorkshop(editor: View | string): void;
     openUploadDialog(): Promise<File[]>;
     openWidgetEditor(binding: IWidgetBinding<any>): void;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;

@@ -1,6 +1,6 @@
 import { IComponent } from "./IComponent";
 
-export interface IView {
+export interface View {
     /**
      * View heading, e.g. "Picture editor".
      */
