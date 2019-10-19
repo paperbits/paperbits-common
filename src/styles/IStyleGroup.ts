@@ -5,5 +5,4 @@ export interface IStyleGroup {
     selectorTemplate: string;
     styleTemplate: string;
     description?: string;
-    defaultStyles?: Object;
 }
