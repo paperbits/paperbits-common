@@ -39,12 +39,31 @@ export interface Router {
     removeRouteChangeListener(eventHandler: (args?: any) => void): void;
 
     /**
+     * Adds specified listener of history update event.
+     * @param eventHandler Callback function.
+     */
+    addHistoryUpdateListener(eventHandler: (args?: any) => void): void;
+
+    /**
+     * Removes specified listener of history update event.
+     * @param eventHandler Callback function.
+     */
+    removeHistoryUpdateListener(eventHandler: (args?: any) => void): void;
+
+    /**
      * Navigates to specified URL.
      * @param url Absolute or relative path, i.e. https://paperbits.io or /about
      * @param title Destination title
      * @param metadata Associated metadata
      */
     navigateTo(url: string, title?: string, metadata?: Object): Promise<void>;
+
+    /**
+     * Update location history to specified URL.
+     * @param url relative path, i.e. /about
+     * @param title page title
+     */
+    updateHistory(url: string, title?: string): void;
 
     /**
      * Returns current route.

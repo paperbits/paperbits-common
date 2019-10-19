@@ -6,8 +6,9 @@ export class HistoryRouteHandler {
     constructor(private readonly router: Router) {
         this.internalPushState = history.pushState;
         history.pushState = this.externalPushState.bind(this);
-
-        router.addRouteChangeListener(this.onRouteChange.bind(this));
+        this.onRouteChange = this.onRouteChange.bind(this);
+        router.addRouteChangeListener(this.onRouteChange);
+        router.addHistoryUpdateListener(this.onRouteChange);
         window.addEventListener("popstate", this.onPopState.bind(this));
     }
 
