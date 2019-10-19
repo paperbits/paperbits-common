@@ -1,4 +1,4 @@
-﻿import { IEventManager } from "../events";
+﻿import { EventManager } from "../events";
 import { Router, RouterEvents, Route, RouteGuard } from ".";
 
 
@@ -8,7 +8,7 @@ export class DefaultRouter implements Router {
 
     constructor(
         private readonly routeGuards: RouteGuard[],
-        private readonly eventManager: IEventManager
+        private readonly eventManager: EventManager
     ) {
         // setting up...
         this.notifyListeners = true;
@@ -18,7 +18,7 @@ export class DefaultRouter implements Router {
     public getRouteFromLocation(): Route {
         const path = location.pathname;
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
-        const url = location.pathname + hash;
+        const url = location.pathname + "#" + hash;
 
         const route: Route = {
             url: url,

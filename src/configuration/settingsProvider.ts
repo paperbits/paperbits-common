@@ -1,4 +1,4 @@
-import { IEventManager } from "../events";
+import { EventManager } from "../events";
 import { HttpClient } from "../http";
 import { ISettingsProvider } from "../configuration";
 
@@ -8,7 +8,7 @@ export class SettingsProvider implements ISettingsProvider {
 
     constructor(
         private readonly httpClient: HttpClient,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: EventManager
     ) {
     }
 

@@ -1,11 +1,11 @@
-import { IEventManager } from "../events";
+import { EventManager } from "../events";
 import * as Objects from "../objects";
 
 export class HistoryService {
     private readonly past = [];
     private readonly future = [];
 
-    constructor(private readonly eventManager: IEventManager) {
+    constructor(private readonly eventManager: EventManager) {
         this.eventManager.addEventListener("onUndo", () => this.undo());
     }
 

@@ -4,7 +4,7 @@ import * as deepmerge from "deepmerge";
 
 
 export function guid(): string {
-    function s4() {
+    function s4(): string {
         return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
             .substring(1);
@@ -94,10 +94,13 @@ export function isDirectUrl(url: string): boolean {
     return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:");
 }
 
-export function getCookie(name: string) {
+export function getCookie(name: string): string {
     const value = "; " + document.cookie;
     const parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
+
+    if (parts.length === 2) {
+        return parts.pop().split(";").shift();
+    }
 }
 
 export function stringToUnit8Array(content: string): Uint8Array {

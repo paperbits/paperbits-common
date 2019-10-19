@@ -1,11 +1,11 @@
-import { IEventManager } from "../events";
+import { EventManager } from "../events";
 import { Keys } from "../keyboard";
 
 export class GlobalEventHandler {
-    private readonly eventManager: IEventManager;
+    private readonly eventManager: EventManager;
     private readonly documents: Document[];
 
-    constructor(eventManager: IEventManager) {
+    constructor(eventManager: EventManager) {
         this.eventManager = eventManager;
 
         this.onKeyDown = this.onKeyDown.bind(this);

@@ -1,6 +1,7 @@
 ﻿import { IView, IComponent, IHighlightConfig, IContextCommandSet, ICommand, Toast } from "./";
 import { DragSession } from "./draggables";
 import { IWidgetBinding } from "../editing";
+import { RoleModel } from "../user";
 
 
 export enum ViewManagerMode {
@@ -53,6 +54,8 @@ export interface IViewManager {
     mode: ViewManagerMode;
     setViewport(viewport: string): void;
     getViewport(): string;
+    setViewRoles(roles: RoleModel[]): void;
+    getViewRoles(): RoleModel[];
     setShutter(): void;
     removeShutter(): void;
     beginDrag(session: DragSession): void;

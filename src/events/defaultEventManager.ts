@@ -1,12 +1,12 @@
 import "../extensions";
-import { IEventManager } from "../events/IEventManager";
+import { EventManager } from "./eventManager";
 
 interface EventListener {
     eventName: string;
     eventHandler: (...args) => void;
 }
 
-export class DefaultEventManager implements IEventManager {
+export class DefaultEventManager implements EventManager {
     private readonly eventListeners: Array<EventListener>;
 
     constructor() {

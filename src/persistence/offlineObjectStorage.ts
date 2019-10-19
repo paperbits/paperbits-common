@@ -3,13 +3,12 @@ import * as _ from "lodash";
 import { Bag } from "./../bag";
 import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
-import { IEventManager } from "../events";
+import { EventManager } from "../events";
 
 interface HistoryRecord {
     do: () => void;
     undo: () => void;
 }
-
 
 export class OfflineObjectStorage implements IObjectStorage {
     private underlyingStorage: IObjectStorage;      // for storage
@@ -22,7 +21,7 @@ export class OfflineObjectStorage implements IObjectStorage {
     public isOnline: boolean;
     public autosave: boolean;
 
-    constructor(private readonly eventManager?: IEventManager) {
+    constructor(private readonly eventManager?: EventManager) {
         this.stateObject = {};
         this.changesObject = {};
         this.underlyingStorage = null;

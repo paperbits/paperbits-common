@@ -1,5 +1,5 @@
 import { IHtmlEditor } from "../editing";
-import { IEventManager } from "../events";
+import { EventManager } from "../events";
 
 export interface IHtmlEditorProvider {
     getCurrentHtmlEditor(): IHtmlEditor;
@@ -8,7 +8,7 @@ export interface IHtmlEditorProvider {
 export class HtmlEditorProvider implements IHtmlEditorProvider {
     private htmlEditor: IHtmlEditor;
 
-    constructor(eventManager: IEventManager) {
+    constructor(eventManager: EventManager) {
         this.getCurrentHtmlEditor = this.getCurrentHtmlEditor.bind(this);
         this.setCurrentHtmlEditor = this.setCurrentHtmlEditor.bind(this);
 

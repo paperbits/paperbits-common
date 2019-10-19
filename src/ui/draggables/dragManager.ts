@@ -1,6 +1,6 @@
 ﻿import * as Utils from "../../utils";
 import { DragSource, DragTarget, DragSourceConfig, DragTargetConfig } from "../../ui/draggables";
-import { IEventManager } from "../../events";
+import { EventManager } from "../../events";
 import { IViewManager, ViewManagerMode } from "../IViewManager";
 import { Box } from "../../editing/box";
 
@@ -34,7 +34,7 @@ export class DragManager {
     public draggedClientRect: ClientRect;
 
     constructor(
-        private readonly eventManager: IEventManager,
+        private readonly eventManager: EventManager,
         private readonly viewManager: IViewManager
     ) {
         this.startDragging = this.startDragging.bind(this);
