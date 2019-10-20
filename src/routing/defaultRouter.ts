@@ -11,7 +11,6 @@ export class DefaultRouter implements Router {
         private readonly routeGuards: RouteGuard[],
         private readonly eventManager: EventManager
     ) {
-        // setting up...
         this.notifyListeners = true;
         this.currentRoute = this.getRouteFromLocation();
     }
@@ -76,11 +75,8 @@ export class DefaultRouter implements Router {
         clearTimeout(this.notificationTimeout);
 
         this.notificationTimeout = setTimeout(() => {
-            const current = this.getRouteFromLocation();
-            if(route && route.url !== current.url) {
-                this.eventManager.dispatchEvent(RouterEvents.onRouteChange, route);
-            }
-        }, 500);
+            this.eventManager.dispatchEvent(RouterEvents.onRouteChange, route);
+        }, 100);
     }
 
     public updateHistory(url: string, title: string): void {
