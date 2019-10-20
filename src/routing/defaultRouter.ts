@@ -3,6 +3,7 @@ import { Router, RouterEvents, Route, RouteGuard } from ".";
 
 
 export class DefaultRouter implements Router {
+    private notificationTimeout: any;
     public currentRoute: Route;
     public notifyListeners: boolean;
 
@@ -66,9 +67,20 @@ export class DefaultRouter implements Router {
             this.currentRoute = route;
 
             if (this.notifyListeners) {
-                this.eventManager.dispatchEvent(RouterEvents.onRouteChange, route);
+                this.scheduleNotification(route);
             }
         }
+    }
+
+    private scheduleNotification(route: Route): void {
+        clearTimeout(this.notificationTimeout);
+
+        this.notificationTimeout = setTimeout(() => {
+            const current = this.getRouteFromLocation();
+            if(route && route.url !== current.url) {
+                this.eventManager.dispatchEvent(RouterEvents.onRouteChange, route);
+            }
+        }, 500);
     }
 
     public updateHistory(url: string, title: string): void {
