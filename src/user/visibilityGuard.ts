@@ -1,4 +1,4 @@
-import { UserService } from "./UserService";
+import { UserService } from "./userService";
 import { EventManager } from "../events";
 import * as ko from "knockout";
 import * as Utils from "../utils";
