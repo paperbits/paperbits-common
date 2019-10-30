@@ -20,10 +20,10 @@ export class HtmlPagePublisher {
         document.head.appendChild(element);
     }
 
-    private appendFaviconLink(): void {
+    private appendFaviconLink(permalink: string): void {
         const faviconLinkElement = document.createElement("link");
         faviconLinkElement.setAttribute("rel", "shortcut icon");
-        faviconLinkElement.setAttribute("href", "images/favicon.ico");
+        faviconLinkElement.setAttribute("href", permalink);
         document.head.insertAdjacentElement("afterbegin", faviconLinkElement);
     }
 
@@ -31,7 +31,9 @@ export class HtmlPagePublisher {
         const document = this.htmlDocumentProvider.createDocument(template);
         document.title = page.title;
 
-        this.appendFaviconLink();
+        if (page.faviconPermalink) {
+            this.appendFaviconLink(page.faviconPermalink);
+        }
 
         if (page.description) {
             this.appendMetaTag(document, "description", page.description);

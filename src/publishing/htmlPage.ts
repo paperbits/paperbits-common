@@ -9,4 +9,5 @@ export interface HtmlPage {
     permalink: string;
     openGraph?: OpenGraph;
     structuredData?: PageStructuredData;
+    faviconPermalink?: string;
 }
