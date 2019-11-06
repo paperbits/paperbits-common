@@ -1,4 +1,4 @@
-import { IInjector, IInjectorModule } from "../injection";
+import { IInjectorModule } from "../injection";
 
 /**
  * A utility for building inversion of control containers.

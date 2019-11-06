@@ -1,7 +1,5 @@
 ﻿import { MediaContract } from "./../media/mediaContract";
-import { IDataTransfer } from "../editing/IDataTransfer";
-import { IContentDropHandler } from "../editing/IContentDropHandler";
-import { IContentDescriptor } from "../editing/IContentDescriptor";
+import { IDataTransfer, IContentDescriptor } from "../editing";
 
 export interface IContentDropHandler {
     getContentDescriptorFromDataTransfer(dataTransfer: IDataTransfer): IContentDescriptor;

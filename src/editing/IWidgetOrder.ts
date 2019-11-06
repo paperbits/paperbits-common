@@ -1,4 +1,4 @@
-﻿import { IWidgetFactoryResult, IWidgetOrder } from "../editing";
+﻿import { IWidgetFactoryResult } from "../editing";
 
 /**
  * Structure exposing methods to create HTML element or a model for particular widget.
