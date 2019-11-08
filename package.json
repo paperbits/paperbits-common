@@ -15,21 +15,21 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
-        "deepmerge": "^3.0.0",
+        "deepmerge": "^4.2.2",
         "immutable": "^3.8.2",
-        "inversify": "^4.3.0",
-        "knockout": "^3.5.0-beta",
-        "lity": "^2.3.0",
-        "lodash": "^4.17.4",
-        "moment": "^2.18.1",
-        "reflect-metadata": "^0.1.10",
-        "xhr2": "^0.1.4"
+        "inversify": "^5.0.1",
+        "knockout": "^3.5.1",
+        "lity": "^2.4.0",
+        "lodash": "^4.17.15",
+        "moment": "^2.24.0",
+        "reflect-metadata": "^0.1.13",
+        "xhr2": "^0.2.0"
     },
     "devDependencies": {
-        "@types/knockout": "^3.4.53",
-        "@types/node": "^9.6.6",
-        "@types/mocha": "^5.2.5",
-        "mocha": "^5.2.0",
+        "@types/knockout": "^3.4.66",
+        "@types/node": "^12.12.6",
+        "@types/mocha": "^5.2.7",
+        "mocha": "^6.2.2",
         "chai": "^4.2.0"
     }
 }
