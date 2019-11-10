@@ -220,7 +220,7 @@ export class DragManager {
         else {
             this.startDragging(source);
         }
-    };
+    }
 
     public setAcceptor(acceptor: DragTarget, before: boolean): void {
         this.target = acceptor;

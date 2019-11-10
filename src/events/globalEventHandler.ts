@@ -19,6 +19,8 @@ export class GlobalEventHandler {
         this.addDragEndListener = this.addDragEndListener.bind(this);
         this.addDragLeaveListener = this.addDragLeaveListener.bind(this);
         this.addDragLeaveScreenListener = this.addDragLeaveScreenListener.bind(this);
+        this.addKeyDownListener = this.addKeyDownListener.bind(this);
+        this.addKeyUpListener = this.addKeyUpListener.bind(this);
 
         this.documents = [];
     }
@@ -30,7 +32,8 @@ export class GlobalEventHandler {
 
         this.documents.push(doc);
 
-        doc.addEventListener("keydown", this.onKeyDown);
+        doc.addEventListener("keydown", this.onKeyDown.bind(this), true);
+        doc.addEventListener("keyup", this.onKeyUp.bind(this), true);
         doc.addEventListener("dragenter", this.onDragEnter.bind(this), true);
         doc.addEventListener("dragstart", this.onDragStart.bind(this), true);
         doc.addEventListener("dragover", this.onDragOver.bind(this), true);
@@ -47,7 +50,8 @@ export class GlobalEventHandler {
     public removeDocument(doc: Document): void {
         this.documents.remove(doc);
 
-        doc.removeEventListener("keydown", this.onKeyDown);
+        doc.removeEventListener("keydown", this.onKeyDown.bind(this), true);
+        doc.removeEventListener("keyup", this.onKeyUp.bind(this), true);
         doc.removeEventListener("dragenter", this.onDragEnter.bind(this), true);
         doc.removeEventListener("dragstart", this.onDragStart.bind(this), true);
         doc.removeEventListener("dragover", this.onDragOver.bind(this), true);
@@ -62,6 +66,8 @@ export class GlobalEventHandler {
     }
 
     public onKeyDown(event: KeyboardEvent): void {
+        this.eventManager.dispatchEvent("onKeyDown", event);
+
         if (event.ctrlKey && event.keyCode === Keys.S) {
             event.preventDefault();
             this.onCtrlS();
@@ -86,6 +92,10 @@ export class GlobalEventHandler {
             event.preventDefault();
             this.onEscape();
         }
+    }
+
+    public onKeyUp(event: KeyboardEvent): void {
+        this.eventManager.dispatchEvent("onKeyUp", event);
     }
 
     private onCtrlS(): void {
@@ -196,5 +206,13 @@ export class GlobalEventHandler {
 
     public addPointerMoveEventListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onPointerMove", callback);
+    }
+
+    public addKeyDownListener(callback: (args?: any) => void): void {
+        this.eventManager.addEventListener("onKeyDown", callback);
+    }
+
+    public addKeyUpListener(callback: (args?: any) => void): void {
+        this.eventManager.addEventListener("onKeyUp", callback);
     }
 }

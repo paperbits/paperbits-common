@@ -19,27 +19,30 @@ export class DragSource {
         this.onPointerDown = this.onPointerDown.bind(this);
 
         element.addEventListener("mousedown", this.onPointerDown);
+        element["dragSource"] = this;
     }
 
     private onPointerDown(event: MouseEvent): void {
-        const targetElement = event.target as HTMLElement;
-
-
-        if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
-            return;
-        }
-        
         if (event.buttons !== 1 || event["handled"]) {
             return;
         }
 
         event["handled"] = true;
 
+        const targetElement = event.target as HTMLElement;
+        this.beginDrag(targetElement, event.clientX, event.clientY);
+    }
+
+    public beginDrag(targetElement: HTMLElement, clientX: number, clientY: number): void {
+        if (this.configuration.preventDragging && this.configuration.preventDragging(targetElement)) {
+            return;
+        }
+
         const rect = this.element.getBoundingClientRect();
-        this.initialOffsetX = event.clientX - rect.left;
-        this.initialOffsetY = event.clientY - rect.top;
-        this.initialPointerX = event.clientX;
-        this.initialPointerY = event.clientY;
+        this.initialOffsetX = clientX - rect.left;
+        this.initialOffsetY = clientY - rect.top;
+        this.initialPointerX = clientX;
+        this.initialPointerY = clientY;
 
         this.dragManager.onPointerDown(this);
     }

@@ -9,6 +9,7 @@ export interface IContextCommandSet {
 }
 
 export interface IContextCommand {
+    name?: string;
     callback?: () => void;
     component?: IComponent;
     tooltip?: string;

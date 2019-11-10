@@ -64,7 +64,6 @@ export interface ViewManager {
     removeBalloon(component: IComponent): void;
     setSplitter(config: ISplitterConfig): void;
     setHost(component: IComponent): void;
-    activatePreviousHost(): void;
     getHost(): IComponent;
     getHostDocument(): Document;
 }

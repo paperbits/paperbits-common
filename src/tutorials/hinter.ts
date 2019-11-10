@@ -41,7 +41,7 @@ export class Hinter {
             title: "Edit layout",
             iconClass: "paperbits-edit-72",
             action: async () => {
-                this.router.navigateTo(url, "", { routeKind: "layout" });
+                this.viewManager.setHost({ name: "layout-host", params: { layoutKey: layoutContract.key } });
             }
         }]);
 

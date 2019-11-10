@@ -7,7 +7,7 @@ interface EventListener {
 }
 
 export class DefaultEventManager implements EventManager {
-    private readonly eventListeners: Array<EventListener>;
+    private readonly eventListeners: EventListener[];
 
     constructor() {
         this.eventListeners = [];
