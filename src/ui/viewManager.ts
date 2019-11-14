@@ -38,7 +38,6 @@ export interface ViewManager {
     notifySuccess(title: string, content: string): void;
     notifyError(title: string, content: string): void;
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
-    updateJourneyComponent(component: View): void;
     openViewAsPopup(view: View): void;
     openViewAsWorkshop(view: View): void;
     getOpenView(): View;
