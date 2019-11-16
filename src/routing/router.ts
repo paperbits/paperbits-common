@@ -30,25 +30,25 @@ export interface Router {
      * Adds specified listener of route change event.
      * @param eventHandler Callback function.
      */
-    addRouteChangeListener(eventHandler: (args?: any) => void): void;
+    addRouteChangeListener?(eventHandler: (args?: any) => void): void;
 
     /**
      * Removes specified listener of route change event.
      * @param eventHandler Callback function.
      */
-    removeRouteChangeListener(eventHandler: (args?: any) => void): void;
+    removeRouteChangeListener?(eventHandler: (args?: any) => void): void;
 
     /**
      * Adds specified listener of history update event.
      * @param eventHandler Callback function.
      */
-    addHistoryUpdateListener(eventHandler: (args?: any) => void): void;
+    addHistoryUpdateListener?(eventHandler: (args?: any) => void): void;
 
     /**
      * Removes specified listener of history update event.
      * @param eventHandler Callback function.
      */
-    removeHistoryUpdateListener(eventHandler: (args?: any) => void): void;
+    removeHistoryUpdateListener?(eventHandler: (args?: any) => void): void;
 
     /**
      * Navigates to specified URL.
@@ -63,7 +63,7 @@ export interface Router {
      * @param url relative path, i.e. /about
      * @param title page title
      */
-    updateHistory(url: string, title?: string): void;
+    updateHistory?(url: string, title?: string): void;
 
     /**
      * Returns current route.

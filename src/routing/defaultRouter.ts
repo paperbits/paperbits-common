@@ -17,14 +17,14 @@ export class DefaultRouter implements Router {
 
     public getRouteFromLocation(): Route {
         const path = location.pathname;
-        const hash = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
-        const url = location.pathname + "#" + hash;
+        const hash = location.hash.startsWith("#") ? location.hash.slice(1) : null;
+        const url = path + (hash ? `#${hash}` : "");
 
         const route: Route = {
             url: url,
             path: path,
-            metadata: {},
             hash: hash,
+            metadata: {},
             previous: null
         };
 
