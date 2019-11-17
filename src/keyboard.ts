@@ -4,6 +4,7 @@ export const Keys = {
     Esc: 27,
     Space: 32,
     Delete: 46,
+    Alt: 18,
     P: 80,
     S: 83,
     Y: 89,
