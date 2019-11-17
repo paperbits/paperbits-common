@@ -63,5 +63,10 @@ String.prototype.replaceAll = function (search: string, replacement: string): st
 
 Array.prototype.remove = function <T>(item: T): void {
     const index = this.indexOf(item);
+
+    if (index < 0) {
+        return;
+    }
+    
     this.splice(index, 1);
 };
