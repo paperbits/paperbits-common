@@ -3,7 +3,7 @@
  */
 export interface LayoutContract {
     /**
-     * Own key.
+     * Unique identifier.
      */
     key?: string;
 
@@ -13,7 +13,7 @@ export interface LayoutContract {
     title: string;
 
     /**
-     * Page description.
+     * Layout description.
      */
     description: string;
 
