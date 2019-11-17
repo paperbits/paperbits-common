@@ -5,11 +5,11 @@ import { RoleModel } from "../user";
 
 
 export enum ViewManagerMode {
-    selecting,
-    dragging,
-    selected,
-    configure,
-    pause
+    selecting = "selectig",
+    dragging = "dragging",
+    selected = "selected",
+    configure = "configure",
+    pause = "pause"
 }
 
 export interface ISplitterConfig {
