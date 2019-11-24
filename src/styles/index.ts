@@ -4,5 +4,7 @@ export * from "./styles";
 export * from "./styleModel";
 export * from "./IStyleSnippetService";
 export * from "./IStyleGroup";
-export * from "./defaultStyle";
+export * from "./styleHandler";
 export * from "./styleable";
+export * from "./styleContract";
+export * from "./stylePluginConfig";

@@ -1,6 +1,6 @@
-import { StyleContract } from "./styleConfig";
-import { Style } from "./styles";
+import { LocalStyles, StatesContract, StyleContract } from "./styleContract";
 import { StyleModel } from "./styleModel";
+import { Style } from "./styles";
 
 
 /**
@@ -20,16 +20,16 @@ export interface StyleCompiler {
     getClassNameByStyleKeyAsync(key: string): Promise<string>;
 
     /**
-     * Returns CSS class name(s) for style contract.
+     * Returns CSS class name(s) for local styles.
      * @param contract 
      */
-    getClassNamesByStyleConfigAsync(contract: StyleContract): Promise<string>;
+    getClassNamesForLocalStylesAsync(contract: LocalStyles): Promise<string>;
 
     /**
      * Converts style contract into style model.
      * @param contract {StyleContract} Style contract.
      */
-    getStyleModelAsync(contract: StyleContract): Promise<StyleModel>;
+    getStyleModelAsync(contract: LocalStyles): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
@@ -44,7 +44,12 @@ export interface StyleCompiler {
      */
     getFontsStylesCss(): Promise<string>;
 
-    getStateStyle(stateConfig: { [x: string]: any; }, stateName: string): Promise<Style>;
+    /**
+     * Converts states style contract into style.
+     * @param states {StatesContract} Bag of state contracts.
+     * @param stateName {string} Name of the state, e.g. "hover", "active".
+     */
+    getStateStyle(states: StatesContract, stateName: string): Promise<Style>;
 
     /**
      * Return compiled theme styles.

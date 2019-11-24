@@ -38,8 +38,8 @@ export class FontFace {
 
     public toJssString(): string {
         const jssString = `{
-            "fontFamily": "${this.fontFamily}",
             "src": "url(${this.src})",
+            "fontFamily": "${this.fontFamily}",
             "fontStyle": "${this.fontStyle}",
             "fontWeight": "${this.fontWeight}"
         }`;
