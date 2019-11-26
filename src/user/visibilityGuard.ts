@@ -36,19 +36,22 @@ export class VisibilityGuard {
         // });
 
 
+        // TODO: Move out of visibility guard.
         const mousedown = (event: MouseEvent) => {
             const elements = Utils.elementsFromPoint(document, event.clientX, event.clientY);
             const toggleElement = elements.find(x => x.getAttribute("data-toggle"));
-        
+
             if (!toggleElement) {
                 return;
             }
-        
+
             const collapsible: HTMLElement = toggleElement.parentElement.parentElement.querySelector(".collapsible");
-        
-            collapsible.classList.toggle("expanded");
+
+            if (collapsible) {
+                collapsible.classList.toggle("expanded");
+            }
         };
-        
+
         document.addEventListener("mousedown", mousedown, true);
     }
 }
