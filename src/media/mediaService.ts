@@ -37,20 +37,22 @@ export class MediaService implements IMediaService {
             return null;
         }
 
-        try {
-            if (media.blobKey) {
-                const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+        if (media.blobKey) {
+            const downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
+            media.downloadUrl = downloadUrl || media.downloadUrl;
+        }
 
-                if (uri) {
-                    media.downloadUrl = uri;
-                }
-            }
+        return media;
+    }
+
+    private async getDownloadUrlFromBlobKey(blobKey: string) : Promise<string> {
+        try {            
+            return await this.blobStorage.getDownloadUrl(blobKey);
         }
         catch (error) {
             // TODO: Check for 404
         }
-
-        return media;
+        return undefined;
     }
 
     public async search(pattern: string = "", mimeType: string): Promise<MediaContract[]> {
@@ -67,8 +69,16 @@ export class MediaService implements IMediaService {
         }
 
         const result = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
+        const values = [];
+        for (const media of Object.values(result)) {
+            if (media.blobKey) {
+                const downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
+                media.downloadUrl = downloadUrl || media.downloadUrl;
+            }
+            values.push(media);
+        }
 
-        return Object.values(result);
+        return values;
     }
 
     public async deleteMedia(media: MediaContract): Promise<void> {
