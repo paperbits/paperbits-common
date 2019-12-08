@@ -5,7 +5,7 @@ export interface IWidgetBinding<TModel> {
     /**
      * Name of a widget.
      */
-    name?: string;
+    name: string;
 
     /**
      * Widget display name.
