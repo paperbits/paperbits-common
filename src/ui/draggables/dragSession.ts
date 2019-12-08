@@ -4,11 +4,6 @@ import { WidgetModel } from "../../widgets";
 
 export interface DragSession {
     /**
-     * Type of object being dragged, e.g. Section, Widget, Row.
-     */
-    type: string;
-
-    /**
      * Source element the dagging has started from.
      */
     sourceElement?: Element;

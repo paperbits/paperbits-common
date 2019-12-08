@@ -1,7 +1,32 @@
 import * as ko from "knockout";
-import { IWidgetBinding } from "../editing";
+import { IWidgetBinding, WidgetStackItem } from "../editing";
 
 export class GridHelper {
+    public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
+        const stack: WidgetStackItem[] = [];
+
+        do {
+            const context = ko.contextFor(element);
+
+            if (!context || !context.$data || !context.$data.widgetBinding || context.$data.widgetBinding.readonly) {
+                element = element.parentElement;
+                continue;
+            }
+
+            const binding: IWidgetBinding<any> = context.$data.widgetBinding;
+
+            stack.push({
+                element: element,
+                binding: binding
+            });
+
+            element = element.parentElement;
+        }
+        while (element);
+
+        return stack;
+    }
+
     private static GetSelfAndParentViewModels(element: HTMLElement): any[] {
         const context = ko.contextFor(element);
 
@@ -10,6 +35,10 @@ export class GridHelper {
         }
 
         const viewModels = [];
+
+        if (context.$data) {
+            viewModels.push(context.$data);
+        }
 
         let current = null;
 

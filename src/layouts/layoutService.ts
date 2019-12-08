@@ -4,6 +4,7 @@ import { LayoutContract } from "../layouts/layoutContract";
 import { IObjectStorage, Query, Operator } from "../persistence";
 import { ILayoutService } from "./";
 import { Contract } from "..";
+import { layoutTemplate } from "./layoutTemplate";
 
 const layoutsPath = "layouts";
 const documentsPath = "files";
@@ -53,15 +54,8 @@ export class LayoutService implements ILayoutService {
             contentKey: documentKey
         };
 
-        const template = {
-            nodes: [{
-                type: "page"
-            }],
-            type: "layout"
-        };
-
         await this.objectStorage.addObject(layoutKey, layout);
-        await this.objectStorage.addObject(documentKey, template);
+        await this.objectStorage.addObject(documentKey, layoutTemplate);
 
         return layout;
     }

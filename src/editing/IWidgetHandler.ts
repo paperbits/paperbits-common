@@ -6,6 +6,7 @@ import { DragSession } from "../ui/draggables";
 export interface IWidgetHandler {
     getWidgetOrder?(): Promise<IWidgetOrder>;
     getContextualEditor?(context: WidgetContext): IContextCommandSet;
-    onDragOver?(dragSession: DragSession): boolean;
+    canAccept?(dragSession: DragSession): boolean;
+    onDragOver?(dragSession: DragSession): void;
     onDragDrop?(dragSession: DragSession): void;
 }
