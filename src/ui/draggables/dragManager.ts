@@ -53,15 +53,21 @@ export class DragManager {
     }
 
     private onPointerMove(event: MouseEvent): void {
+        if (!this.isDragged) {
+            return;
+        }
+
+        if (event.which !== 1) {
+            this.cancelDragging();
+            return;
+        }
+
         this.previousX = this.positionX;
         this.previousY = this.positionY;
 
         this.pointerX = event.clientX;
         this.pointerY = event.clientY;
 
-        if (!this.isDragged) {
-            return;
-        }
 
         this.positionX = this.pointerX - this.initialOffsetX;
         this.positionY = this.pointerY - this.initialOffsetY;
@@ -147,6 +153,11 @@ export class DragManager {
         this.viewManager.mode = ViewManagerMode.dragging;
     }
 
+    private cancelDragging(): void {
+        this.target = null;
+        this.completeDragging();
+    }
+
     private completeDragging(): void {
         this.isDragged = false;
 
@@ -185,12 +196,7 @@ export class DragManager {
             this.inertia();
         }
 
-        // if (this.source.configuration.ondragend) {
-        //     this.source.configuration.ondragend(this.source.configuration.sourceData, this.source.element);
-        // }
-
         this.sourceData = null;
-        // this.dragged = null;
         this.source = null;
         this.target = null;
     }
