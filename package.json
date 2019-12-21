@@ -15,7 +15,6 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
-        "@webcomponents/webcomponentsjs": "^2.4.0",
         "deepmerge": "^4.2.2",
         "immutable": "^3.8.2",
         "inversify": "^5.0.1",
