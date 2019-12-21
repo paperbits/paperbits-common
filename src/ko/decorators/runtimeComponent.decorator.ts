@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import "@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"; 
 
 export function RuntimeComponent(config: any): (target: Function) => void {
     return (target) => {
