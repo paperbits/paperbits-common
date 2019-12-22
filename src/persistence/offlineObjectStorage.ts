@@ -365,7 +365,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         const resultObject = await this.searchLocalState(path, query);
 
         if (this.isOnline) {
-            let searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
+            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
 
             if (!searchResultObject || Object.keys(searchResultObject).length === 0) {
                 return resultObject;
@@ -401,8 +401,14 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async saveChanges(): Promise<void> {
+        const entities = Object.keys(this.changesObject);
+
+        if (entities.length === 0) {
+            return;
+        }
+
         await this.underlyingStorage.saveChanges(this.changesObject);
-        Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
+        entities.forEach(key => delete this.changesObject[key]);
         this.eventManager.dispatchEvent("onDataChange");
     }
 }

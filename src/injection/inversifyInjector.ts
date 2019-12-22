@@ -81,7 +81,7 @@ export class InversifyInjector implements IInjector {
         this.bindInternal(name, singletone).inSingletonScope();
     }
 
-    public bindFactory<T>(name, factory: (ctx: IInjector) => T): void {
+    public bindFactory<T>(name: string, factory: (ctx: IInjector) => T): void {
         let injector = this;
 
         const construct: any = function () {
@@ -90,7 +90,7 @@ export class InversifyInjector implements IInjector {
         this.bindInternal(name, construct);
     }
 
-    public bindSingletonFactory<T>(name, factory: (ctx: IInjector) => T): void {
+    public bindSingletonFactory<T>(name: string, factory: (ctx: IInjector) => T): void {
         const injector = this;
 
         const construct: any = function () {
@@ -120,7 +120,6 @@ export class InversifyInjector implements IInjector {
     public bindModule(module: IInjectorModule): void {
         module.register(this);
     }
-
 
     /**
      * Declares a collection of dependencies.
