@@ -411,4 +411,18 @@ export class OfflineObjectStorage implements IObjectStorage {
         entities.forEach(key => delete this.changesObject[key]);
         this.eventManager.dispatchEvent("onDataChange");
     }
+
+    public async loadData(): Promise<object> {
+        if (this.underlyingStorage.loadData) {
+            const loadedData = await this.underlyingStorage.loadData();
+            if (loadedData) {
+                await this.discardChanges();
+                this.eventManager.dispatchEvent("onDataPush");
+                this.eventManager.dispatchEvent("onDataChange");
+            }
+        } else {
+            console.warn("current ObjectStorage does not implement loadData");
+        }
+        return this.stateObject;
+    }
 }

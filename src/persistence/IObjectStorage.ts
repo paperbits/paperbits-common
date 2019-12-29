@@ -34,4 +34,6 @@ export interface IObjectStorage {
     searchObjects<T>(key: string, query?: Query<T>): Promise<Bag<T>>;
 
     saveChanges?(delta: Object): Promise<void>;
+
+    loadData?(): Promise<object>;
 }

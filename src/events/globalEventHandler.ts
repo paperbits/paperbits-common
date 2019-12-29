@@ -10,6 +10,7 @@ export class GlobalEventHandler {
 
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onCtrlS = this.onCtrlS.bind(this);
+        this.onCtrlO = this.onCtrlO.bind(this);
         this.onCtrlZ = this.onCtrlZ.bind(this);
         this.onEscape = this.onEscape.bind(this);
 
@@ -73,6 +74,11 @@ export class GlobalEventHandler {
             this.onCtrlS();
         }
 
+        if (event.ctrlKey && event.keyCode === Keys.O) {
+            event.preventDefault();
+            this.onCtrlO();
+        }
+
         if (event.ctrlKey && event.keyCode === Keys.Z) {
             event.preventDefault();
             this.onCtrlZ();
@@ -100,6 +106,10 @@ export class GlobalEventHandler {
 
     private onCtrlS(): void {
         this.eventManager.dispatchEvent("onSaveChanges");
+    }
+
+    private onCtrlO(): void {
+        this.eventManager.dispatchEvent("onLoadData");
     }
 
     private onCtrlZ(): void {

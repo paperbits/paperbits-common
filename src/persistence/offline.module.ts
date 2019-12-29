@@ -1,5 +1,5 @@
 import { OfflineOptions } from "./offlineOptions";
-import { IObjectStorage, OfflineObjectStorage, SavingHandler } from "../persistence";
+import { IObjectStorage, OfflineObjectStorage, SavingHandler, LoadingHandler } from "../persistence";
 import { IInjector, IInjectorModule } from "../injection";
 import { UndoToolButton } from "./undoToolButton";
 import { RedoToolButton } from "./redoToolButton";
@@ -31,5 +31,6 @@ export class OfflineModule implements IInjectorModule {
         });
 
         injector.bindToCollection("autostart", SavingHandler);
+        injector.bindToCollection("autostart", LoadingHandler);
     }
 }

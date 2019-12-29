@@ -5,3 +5,4 @@ export * from "./IObjectStorageMiddleware";
 export * from "./offlineObjectStorage";
 export * from "./query";
 export * from "./savingHandler";
+export * from "./loadingHandler";
