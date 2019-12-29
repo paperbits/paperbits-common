@@ -111,6 +111,23 @@ export class MediaService implements IMediaService {
         return this.uploadContent(content, media);
     }
 
+    public async createMediaUrl(name: string, downloadUrl: string, mimeType?: string): Promise<MediaContract> {
+        const blobKey = Utils.guid();
+        const mediaKey = `${Constants.mediaRoot}/${blobKey}`;
+        const media: MediaContract = {
+            key: mediaKey,
+            fileName: name,
+            blobKey: undefined,
+            downloadUrl: downloadUrl,
+            description: "",
+            keywords: "",
+            permalink: `/content/${name}`,
+            mimeType: mimeType
+        };
+        await this.updateMedia(media);
+        return media;
+    }
+
     private uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
         return new Promise<MediaContract>(async (resolve, reject) => {
             await this.blobStorage

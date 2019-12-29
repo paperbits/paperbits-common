@@ -33,6 +33,14 @@ export interface IMediaService {
      */
     createMedia(name: string, content: Uint8Array, contentType?: string): Promise<MediaContract>;
 
+    /**
+     * Creates new media files.
+     * @param name Name of media file, i.e. "logo.png"
+     * @param referenceUrl URL, i.e. "https://cdn.paperbits.io/images/logo.svg"
+     * @param contentType Content type, i.e. "image/png".
+     */
+    createMediaUrl(name: string, referenceUrl: string, mimeType?: string): Promise<MediaContract>;
+
     updateMedia(media: MediaContract): Promise<void>;
 
     /**
