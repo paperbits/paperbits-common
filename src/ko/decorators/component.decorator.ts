@@ -7,19 +7,32 @@ export enum Encapsulation {
 }
 
 export interface ComponentConfig {
+    /**
+     * Component selector, e.g. "button".
+     */
     selector: string;
+
+    /**
+     * Knockout template.
+     */
     template: string;
+
+    /**
+     * @deprecated. This property is not used anymore and can be safely removed.
+     */
     injectable?: string;
-    postprocess?: (element: Node, viewModel: any) => void;
-    encapsulation?: Encapsulation; 
+
+    /**
+     * Indicated encapsulation mode.
+     */
+    encapsulation?: Encapsulation;
 }
 
 export function Component(config: ComponentConfig): ClassDecorator {
-    return function (target: any) {
+    return function (target: new () => any): any {
         ko.components.register(config.selector, {
             template: config.template,
-            viewModel: { injectable: config.injectable || target.name },
-            postprocess: config.postprocess,
+            viewModel: target,
             synchrounous: true,
             encapsulation: config.encapsulation
         });
