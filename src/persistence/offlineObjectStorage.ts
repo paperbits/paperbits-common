@@ -134,7 +134,7 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     public async getObject<T>(path: string): Promise<T> {
         if (!path) {
-            throw new Error(`Path is undefined.`);
+            throw new Error(`Parameter "path" not specified.`);
         }
 
         const clonedChanges = <any>Objects.clone(this.changesObject);
