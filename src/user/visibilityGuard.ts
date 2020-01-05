@@ -1,6 +1,6 @@
 import { UserService } from "./userService";
 import { EventManager } from "../events";
-import * as ko from "knockout";
+
 
 /**
  * Guard that adjusts widget visibility depending of user role.
@@ -29,7 +29,5 @@ export class VisibilityGuard {
                 element.classList.add("hidden");
             }
         });
-
-      
     }
 }
