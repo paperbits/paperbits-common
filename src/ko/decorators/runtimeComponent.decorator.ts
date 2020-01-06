@@ -10,13 +10,15 @@ export function RuntimeComponent(config: any): (target: Function) => void {
             public connectedCallback(): void {
                 const element = <HTMLElement>this;
 
-                ko.applyBindingsToNode(element, {
-                    component: {
-                        name: config.selector,
-                        viewModel: target,
-                        params: element.getAttribute("params")
-                    }
-                }, null);
+                setTimeout(() => {
+                    ko.applyBindingsToNode(element, {
+                        component: {
+                            name: config.selector,
+                            viewModel: target,
+                            params: element.getAttribute("params")
+                        }
+                    }, null);
+                }, 10);
             }
 
             public disconnectedCallback(): void {
