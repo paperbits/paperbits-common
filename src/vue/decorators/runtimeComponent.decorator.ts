@@ -1,26 +1,23 @@
-import * as ko from "knockout";
+import Vue from "vue";
 
 export function RuntimeComponent(config: any): (target: Function) => void {
     return (target) => {
         class RuntimeComponentProxy extends HTMLElement {
+            private component: Vue;
+
             constructor() {
                 super();
             }
 
             public connectedCallback(): void {
-                const element = <HTMLElement>this;
-
-                ko.applyBindingsToNode(element, {
-                    component: {
-                        name: config.selector,
-                        viewModel: target,
-                        params: element.getAttribute("params")
-                    }
-                }, null);
+                const hostElement = document.createElement("vue-host");
+                this.appendChild(hostElement);
+                const construct = Vue.component(config.selector);
+                this.component = new construct().$mount(hostElement);
             }
 
             public disconnectedCallback(): void {
-                ko.cleanNode(this);
+                this.component.$destroy();
             }
         }
 

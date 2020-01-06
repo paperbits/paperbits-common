@@ -1,5 +1,6 @@
-import { Vue } from "./decorators";
 import { ComponentConfig } from "./ComponentConfig";
+import Vue from "vue";
+
 
 export function Component(config: ComponentConfig): ClassDecorator {
     return function (target) {
@@ -16,7 +17,7 @@ export function Component(config: ComponentConfig): ClassDecorator {
 
         propertyNames.forEach(name => {
             const method = target.prototype[name];
-            
+
             if (typeof method !== "function" || name === "constructor") {
                 return;
             }
@@ -44,7 +45,7 @@ export function Component(config: ComponentConfig): ClassDecorator {
 
         Vue.component(config.selector, vueComponentConfig);
         /*
-            Just in case:
+            Just in case, async also supported:
 
             Vue.component(config.selector, function (resolve, reject) {
                 setTimeout(function () {
