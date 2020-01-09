@@ -30,7 +30,7 @@ export interface IWidgetOrder {
     createWidget?(): IWidgetFactoryResult<any>;
 
     /**
-     * Widget model factory method.
+     * Widget model factory method. Invoked when widget gets added to the content.
      */
     createModel(): Promise<any>;
 
