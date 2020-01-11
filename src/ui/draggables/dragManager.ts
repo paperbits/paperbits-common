@@ -221,6 +221,7 @@ export class DragManager {
 
     public onPointerDown(source: DragSource): void {
         if (source.configuration.sticky) {
+            clearTimeout(this.startDraggingTimeout);
             this.startDraggingTimeout = <any>setTimeout(() => this.startDragging(source), startDraggingTime);
         }
         else {
