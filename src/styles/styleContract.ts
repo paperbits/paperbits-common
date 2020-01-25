@@ -1,4 +1,17 @@
-import { StylePluginConfig } from "./stylePluginConfig";
+/**
+ * Primitive definition.
+ */
+export interface PrimitiveContract {
+    /**
+     * Unique identifier.
+     */
+    key: string;
+
+    /**
+     * Display name.
+     */
+    displayName: string;
+}
 
 export interface LocalStyles {
     instance?: PluginBag;
@@ -16,7 +29,7 @@ export interface VariationsContract {
     /**
      * Variation name, e.g. "primary".
      */
-    [variationName: string]: StyleContract;
+    [variationName: string]: VariationContract;
 }
 
 export interface ComponentsContract {
@@ -41,7 +54,7 @@ export interface PluginBag {
     [pluginName: string]: any; //  StylePluginConfig;
 }
 
-export interface StyleContract extends PluginBag {
+export interface VariationContract extends PluginBag {
     /**
      * Unique identifier.
      */

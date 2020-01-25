@@ -1,4 +1,4 @@
-import { LocalStyles, StatesContract, StyleContract } from "./styleContract";
+import { LocalStyles, StatesContract, VariationContract } from "./styleContract";
 import { StyleModel } from "./styleModel";
 import { Style } from "./styles";
 
@@ -27,17 +27,17 @@ export interface StyleCompiler {
 
     /**
      * Converts style contract into style model.
-     * @param contract {StyleContract} Style contract.
+     * @param contract {VariationContract} Style contract.
      */
     getStyleModelAsync(contract: LocalStyles): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
-     * @param contract {StyleContract} Variation style contract.
+     * @param contract {VariationContract} Variation style contract.
      * @param componentName {string} Component name, e.g. "button".
      * @param variationName {string} Style variation name, e.g. "primary".
      */
-    getVariationStyle(contract: StyleContract, componentName: string, variationName?: string): Promise<Style>;
+    getVariationStyle(contract: VariationContract, componentName: string, variationName?: string): Promise<Style>;
 
     /**
      * Returns compiled font styles.
