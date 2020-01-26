@@ -1,4 +1,5 @@
 export const layoutTemplate = {
+    type: "layout",
     nodes: [
         {
             type: "layout-section",
