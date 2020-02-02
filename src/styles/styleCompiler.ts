@@ -1,6 +1,6 @@
 import { LocalStyles, StatesContract, VariationContract } from "./styleContract";
 import { StyleModel } from "./styleModel";
-import { Style } from "./styles";
+import { Style, StyleSheet, StyleManager } from "./";
 
 
 /**
@@ -29,7 +29,7 @@ export interface StyleCompiler {
      * Converts style contract into style model.
      * @param contract {VariationContract} Style contract.
      */
-    getStyleModelAsync(contract: LocalStyles): Promise<StyleModel>;
+    getStyleModelAsync(contract: LocalStyles, styleManager?: StyleManager): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
@@ -52,7 +52,12 @@ export interface StyleCompiler {
     getStateStyle(states: StatesContract, stateName: string): Promise<Style>;
 
     /**
-     * Return compiled theme styles.
+     * Returns theme style sheet;
+     */
+    getStyleSheet(): Promise<StyleSheet>;
+
+    /**
+     * Returns compiled theme style sheet.
      */
     compileCss(): Promise<string>;
 
