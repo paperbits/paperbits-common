@@ -33,7 +33,7 @@ export function Component(config: ComponentConfig): ClassDecorator {
         ko.components.register(config.selector, {
             template: config.template,
             viewModel: target,
-            synchrounous: true,
+            synchronous: false,
             encapsulation: config.encapsulation
         });
 
