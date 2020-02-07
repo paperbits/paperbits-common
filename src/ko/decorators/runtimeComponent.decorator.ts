@@ -1,8 +1,5 @@
 import * as ko from "knockout";
 
-
-
-
 export function RuntimeComponent(config: any): (target: Function) => void {
     return (target) => {
         class RuntimeComponentProxy extends HTMLElement {
@@ -31,6 +28,13 @@ export function RuntimeComponent(config: any): (target: Function) => void {
             }
 
             public attributeChangedCallback(): void {
+                const element = <HTMLElement>this;
+                const isBound = !!ko.contextFor(element);
+
+                if (!isBound) {
+                    return;
+                }
+
                 // Reinitialize bindings.
                 this.disconnectedCallback();
                 this.connectedCallback();
