@@ -41,4 +41,9 @@ export interface PageContract {
      * Permalink referencing this page.
      */    
     permalink?: string;
+
+    /**
+     * JSON-LD (JavaScript Object Notation for Linked Data) for this page.
+     */    
+    jsonLd?: string;
 }
