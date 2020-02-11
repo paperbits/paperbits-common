@@ -52,7 +52,7 @@ export class ContentItemService implements IContentItemService {
         await Promise.all([deleteContentPromise, deleteContentItemPromise]);
     }
 
-    public async createContentItem(url: string, title: string, description: string, keywords): Promise<ContentItemContract> {
+    public async createContentItem(url: string, title: string, description: string, keywords: string): Promise<ContentItemContract> {
         const identifier = Utils.guid();
         const contentItemKey = `${contentItemsPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;

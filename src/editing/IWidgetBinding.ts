@@ -53,4 +53,6 @@ export interface IWidgetBinding<TModel> {
     onCreate?: () => void;
 
     onDispose?: () => void;
+
+    draggable: boolean;
 }

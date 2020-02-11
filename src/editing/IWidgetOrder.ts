@@ -37,5 +37,5 @@ export interface IWidgetOrder {
     /**
      * List of features required for this widget.
      */
-    requires?: string[];
+    requires: string[];
 }

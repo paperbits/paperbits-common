@@ -45,8 +45,8 @@ export class MediaService implements IMediaService {
         return media;
     }
 
-    private async getDownloadUrlFromBlobKey(blobKey: string) : Promise<string> {
-        try {            
+    private async getDownloadUrlFromBlobKey(blobKey: string): Promise<string> {
+        try {
             return await this.blobStorage.getDownloadUrl(blobKey);
         }
         catch (error) {

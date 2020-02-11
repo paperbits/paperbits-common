@@ -1,7 +1,6 @@
-import template from "./page.html";
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
-import { Bag } from "../bag";
+
 
 export interface HtmlPagePublisherPlugin {
     apply(document: Document, page?: HtmlPage): void;
@@ -37,8 +36,8 @@ export class HtmlPagePublisher {
         document.head.insertAdjacentElement("afterbegin", faviconLinkElement);
     }
 
-    public async renderHtml(page: HtmlPage): Promise<string> {
-        const document = this.htmlDocumentProvider.createDocument(template);
+    public async renderHtml(page: HtmlPage, additionalPlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
+        const document = this.htmlDocumentProvider.createDocument(page.template);
         document.title = page.title;
 
         if (page.faviconPermalink) {
@@ -65,6 +64,12 @@ export class HtmlPagePublisher {
             await plugin.apply(document, page);
         }
 
-        return document.documentElement.outerHTML;
+        if (additionalPlugins) {
+            for (const plugin of additionalPlugins) {
+                await plugin.apply(document, page);
+            }
+        }
+
+        return "<!DOCTYPE html>" + document.documentElement.outerHTML;
     }
 }
