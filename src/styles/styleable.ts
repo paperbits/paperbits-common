@@ -1,4 +1,6 @@
+import { PrimitiveContract } from ".";
+
 export interface Styleable {
-    style: any;
+    style: PrimitiveContract;
     toggleBackground: () => void;
 }
