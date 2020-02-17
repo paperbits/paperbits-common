@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import * as ko from "knockout";
+import "../templateEngines/stringTemplateEngine";
+import { Bag } from "../..";
 
 export enum Encapsulation {
     none = "none",
@@ -26,6 +28,11 @@ export interface ComponentConfig {
      * Indicated encapsulation mode.
      */
     encapsulation?: Encapsulation;
+
+    /**
+     * Child templates.
+     */
+    childTemplates?: Bag<string>;
 }
 
 export function Component(config: ComponentConfig): ClassDecorator {
@@ -36,6 +43,16 @@ export function Component(config: ComponentConfig): ClassDecorator {
             synchronous: false,
             encapsulation: config.encapsulation
         });
+
+        if (config.childTemplates) {
+            Object.keys(config.childTemplates).forEach(templateName => {
+                if (ko["templates"][templateName]) {
+                    throw new Error(`Template "${templateName}" already defined.`);
+                }
+
+                ko["templates"][templateName] = config.childTemplates[templateName];
+            });
+        }
 
         Reflect.defineMetadata("knockout-component", { name: config.selector, constructor: target }, target);
     };
