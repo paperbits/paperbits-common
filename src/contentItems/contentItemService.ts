@@ -52,33 +52,6 @@ export class ContentItemService implements IContentItemService {
         await Promise.all([deleteContentPromise, deleteContentItemPromise]);
     }
 
-    public async createContentItem(url: string, title: string, description: string, keywords: string): Promise<ContentItemContract> {
-        const identifier = Utils.guid();
-        const contentItemKey = `${contentItemsPath}/${identifier}`;
-        const contentKey = `${documentsPath}/${identifier}`;
-
-        const contentItem: ContentItemContract = {
-            key: contentItemKey,
-            title: title,
-            description: description,
-            keywords: keywords,
-            permalink: url,
-            contentKey: contentKey
-        };
-
-        await this.objectStorage.addObject(contentItemKey, contentItem);
-
-        const template = await this.blockService.getBlockContent(templateBlockKey);
-
-        await this.objectStorage.addObject(contentKey, template);
-
-        return contentItem;
-    }
-
-    public async updateContentItem(contentItem: ContentItemContract): Promise<void> {
-        await this.objectStorage.updateObject<ContentItemContract>(contentItem.key, contentItem);
-    }
-
     public async getContentItemContent(contentItemKey: string): Promise<Contract> {
         const contentItem = await this.getContentItemByKey(contentItemKey);
         return await this.objectStorage.getObject(contentItem.contentKey);

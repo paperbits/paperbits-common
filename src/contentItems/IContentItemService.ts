@@ -23,16 +23,6 @@ export interface IContentItemService {
     deleteContentItem(contentItem: ContentItemContract): Promise<void>;
 
     /**
-     * Creates a new contentItem in storage and returns its contract.
-     */
-    createContentItem(url: string, title: string, description: string, keywords): Promise<ContentItemContract>;
-
-    /**
-     * Updates a contentItem.
-     */
-    updateContentItem(contentItem: ContentItemContract): Promise<void>;
-
-    /**
      * Returns contentItem content by specified key.
      * @param contentItemKey 
      */

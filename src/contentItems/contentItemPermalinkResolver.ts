@@ -1,12 +1,11 @@
-import { IPermalinkResolver } from "../permalinks";
+import { IPermalinkResolver, IPermalinkService } from "../permalinks";
 import { IContentItemService } from "./IContentItemService";
 
 export class ContentItemPermalinkResolver implements IPermalinkResolver {
-    private readonly contentItemService: IContentItemService;
-
-    constructor(contentItemService: IContentItemService) {
-        this.contentItemService = contentItemService;
-    }
+    constructor(
+        private readonly contentItemService: IContentItemService,
+        private readonly permalinkService: IPermalinkService
+    ) { }
 
     public async getUrlByTargetKey(contentItemKey: string): Promise<string> {
         const contentItem = await this.contentItemService.getContentItemByKey(contentItemKey);
@@ -16,6 +15,13 @@ export class ContentItemPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        return contentItem.permalink;
+        const permalink = await this.permalinkService.getPermalinkByKey(contentItem.permalinkKey);
+
+        if (!permalink) {
+            console.warn(`Permalink with key ${contentItem.permalinkKey} not found.`);
+            return null;
+        }
+
+        return permalink.uri;
     }
 }
