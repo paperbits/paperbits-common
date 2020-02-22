@@ -1,24 +1,23 @@
 import { ContentItemContract } from "./../contentItems/contentItemContract";
-import { IContentItemService } from "../contentItems";
-import { IPermalinkResolver } from "./";
+import { IPermalinkResolver, IPermalinkService } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 
 export class PermalinkResolver implements IPermalinkResolver {
-    constructor(private readonly contentItemService: IContentItemService) { }
+    constructor(private readonly permalinkService: IPermalinkService) { }
 
     public async getUrlByTargetKey(targetKey: string): Promise<string> {
         if (!targetKey) {
             throw new Error("Target key cannot be null or empty.");
         }
 
-        const contentItem = await this.contentItemService.getContentItemByKey(targetKey);
+        const permalinkContract = await this.permalinkService.getPermalinkByKey(targetKey);
 
-        if (!contentItem) {
+        if (!permalinkContract) {
             throw new Error(`Could not find permalink with key ${targetKey}.`);
         }
 
-        return contentItem.permalink;
+        return permalinkContract.uri;
     }
 
     public async getHyperlinkByContentType(contentItem: ContentItemContract): Promise<HyperlinkModel> {
@@ -34,9 +33,9 @@ export class PermalinkResolver implements IPermalinkResolver {
         let hyperlinkModel: HyperlinkModel;
 
         if (hyperlinkContract.targetKey) {
-            const contentItem = await this.contentItemService.getContentItemByKey(hyperlinkContract.targetKey);
+            const permalinkContract = await this.permalinkService.getPermalinkByKey(hyperlinkContract.targetKey);
 
-            if (contentItem) {
+            if (permalinkContract) {
                 hyperlinkModel = await this.getHyperlinkByContentType(contentItem);
 
                 if (!hyperlinkModel) {

@@ -43,6 +43,11 @@ export interface PageContract {
     permalink?: string;
 
     /**
+     * Key of permalink referencing this page.
+     */
+    permalinkKey?: string;
+
+    /**
      * JSON-LD (JavaScript Object Notation for Linked Data) for this page.
      */    
     jsonLd?: string;

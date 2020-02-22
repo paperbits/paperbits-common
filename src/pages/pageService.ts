@@ -3,6 +3,7 @@ import { PageContract, IPageService } from "../pages";
 import { IObjectStorage, Operator, Query } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
+import { IPermalinkService } from "../permalinks";
 
 const pagesPath = "pages";
 const documentsPath = "files";
@@ -11,6 +12,7 @@ const templateBlockKey = "blocks/new-page-template";
 export class PageService implements IPageService {
     constructor(
         private readonly objectStorage: IObjectStorage,
+        private readonly permalinkService: IPermalinkService,
         private readonly blockService: IBlockService
     ) { }
 
@@ -19,14 +21,9 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "permalink" not specified.`);
         }
 
-        const query = Query
-            .from<PageContract>()
-            .where("permalink", Operator.equals, permalink);
+        const permalinkContract = await this.permalinkService.getPermalinkByUrl(permalink);
 
-        const result = await this.objectStorage.searchObjects<PageContract>(pagesPath, query);
-        const pages = Object.values(result);
-
-        return pages.length > 0 ? pages[0] : null;
+        return await this.objectStorage.getObject<PageContract>(permalinkContract.targetKey);
     }
 
     public async getPageByKey(key: string): Promise<PageContract> {
@@ -44,7 +41,7 @@ export class PageService implements IPageService {
             .orderBy("title");
 
         const result = await this.objectStorage.searchObjects<PageContract>(pagesPath, query);
-        
+
         return Object.values(result);
     }
 
@@ -55,6 +52,7 @@ export class PageService implements IPageService {
 
         const deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
         const deletePagePromise = this.objectStorage.deleteObject(page.key);
+        // const deletePagePromise = this.objectStorage.deleteObject(page.key);
 
         await Promise.all([deleteContentPromise, deletePagePromise]);
     }
@@ -63,6 +61,8 @@ export class PageService implements IPageService {
         const identifier = Utils.guid();
         const pageKey = `${pagesPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;
+
+        const permalinkContract = await this.permalinkService.createPermalink(permalink, pageKey);
 
         const page: PageContract = {
             key: pageKey,
