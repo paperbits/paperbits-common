@@ -56,4 +56,6 @@ export interface IPageService {
      * @param document {Contract} Contract describing content of the page.
      */
     updatePageContent(pageKey: string, document: Contract): Promise<void>;
+
+    updatePagePemalink(pageKey: string, permalink: string): Promise<void>;
 }

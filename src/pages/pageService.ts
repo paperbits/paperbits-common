@@ -50,11 +50,11 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "page" not specified.`);
         }
 
+        const deletePermalinkPromise = this.objectStorage.deleteObject(page.permalinkKey);
         const deleteContentPromise = this.objectStorage.deleteObject(page.contentKey);
         const deletePagePromise = this.objectStorage.deleteObject(page.key);
-        // const deletePagePromise = this.objectStorage.deleteObject(page.key);
 
-        await Promise.all([deleteContentPromise, deletePagePromise]);
+        await Promise.all([deletePermalinkPromise, deleteContentPromise, deletePagePromise]);
     }
 
     public async createPage(permalink: string, title: string, description: string, keywords: string): Promise<PageContract> {
@@ -69,7 +69,7 @@ export class PageService implements IPageService {
             title: title,
             description: description,
             keywords: keywords,
-            permalink: permalink,
+            permalinkKey: permalinkContract.key,
             contentKey: contentKey
         };
 
@@ -110,5 +110,14 @@ export class PageService implements IPageService {
 
         const page = await this.getPageByKey(pageKey);
         this.objectStorage.updateObject(page.contentKey, content);
+    }
+
+    public async updatePagePemalink(pageKey: string, permalink: string): Promise<void> {
+        const pageContract = await this.getPageByKey(pageKey);
+        const permalinkContract = await this.permalinkService.getPermalinkByKey(pageContract.permalinkKey);
+
+        permalinkContract.uri = permalink;
+        
+        await this.permalinkService.updatePermalink(permalinkContract);
     }
 }
