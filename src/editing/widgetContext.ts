@@ -26,4 +26,6 @@ export interface WidgetContext {
     half?: string;
 
     providers?: string[];
+
+    switchToParent: <TModel>(model: TModel) => void;
 }
