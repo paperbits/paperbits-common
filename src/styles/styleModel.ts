@@ -6,7 +6,6 @@ import { StyleSheet, StyleManager } from "./";
 export interface StyleModel {
     key: string;
     classNames: string;
-    css?: string;
     styleSheet: StyleSheet;
     styleManager?: StyleManager;
 }
