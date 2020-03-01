@@ -36,7 +36,7 @@ export class HtmlPagePublisher {
         document.head.insertAdjacentElement("afterbegin", faviconLinkElement);
     }
 
-    public async renderHtml(page: HtmlPage, additionalPlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
+    public async renderHtml(page: HtmlPage, overridePlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
         const document = this.htmlDocumentProvider.createDocument(page.template);
         document.title = page.title;
 
@@ -60,12 +60,13 @@ export class HtmlPagePublisher {
             this.appendStyleLink(document, reference);
         });
 
-        for (const plugin of this.htmlPagePublisherPlugins) {
-            await plugin.apply(document, page);
+        if (overridePlugins) {
+            for (const plugin of overridePlugins) {
+                await plugin.apply(document, page);
+            }
         }
-
-        if (additionalPlugins) {
-            for (const plugin of additionalPlugins) {
+        else {
+            for (const plugin of this.htmlPagePublisherPlugins) {
                 await plugin.apply(document, page);
             }
         }
