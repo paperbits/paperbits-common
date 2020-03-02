@@ -58,7 +58,12 @@ export interface GoogleTagManagerConfig {
     /**
      * GTM container ID, e.g. GTM-000000.
      */
-    containerId: string;
+    containerId?: string;
+
+    /**
+     * Web-specific GTM container ID, e.g. GTM-000000.
+     */
+    webContainerId?: string;
 
     /**
      * AMP-specific GTM container ID, e.g. GTM-000000.
