@@ -55,7 +55,19 @@ export interface GoogleFontsConfig {
 }
 
 export interface GoogleTagManagerConfig {
+    /**
+     * GTM container ID, e.g. GTM-000000.
+     */
     containerId: string;
+
+    /**
+     * AMP-specific GTM container ID, e.g. GTM-000000.
+     */
+    ampContainerId?: string;
+
+    /**
+     * GTM data layer name.
+     */
     dataLayerName?: string;
 }
 
