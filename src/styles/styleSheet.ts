@@ -1,6 +1,6 @@
 import { StyleMediaQuery } from "./styleMediaQuery";
 import { Style } from "./styles";
-import { FontFace } from "./FontFace";
+import { FontFace } from "./fontFace";
 
 
 export class StyleSheet {

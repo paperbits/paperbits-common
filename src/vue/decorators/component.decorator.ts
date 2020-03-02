@@ -1,4 +1,5 @@
-import { ComponentConfig } from "./ComponentConfig";
+import "reflect-metadata";
+import { ComponentConfig } from "./componentConfig";
 import Vue from "vue";
 
 

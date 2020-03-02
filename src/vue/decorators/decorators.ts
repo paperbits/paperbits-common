@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Component } from "./component.decorator";
-import { LifecycleHook } from "./LifecylceHook";
+import { LifecycleHook } from "./lifecylceHook";
 
 export const OnBeforeCreate = () => LifecycleHook("beforeCreate");
 export const OnCreated = () => LifecycleHook("created");
