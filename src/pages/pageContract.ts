@@ -1,4 +1,6 @@
-﻿/**
+﻿import { SocialShareData } from "./socialShareData";
+
+/**
  * Page metadata.
  */
 export interface PageContract {
@@ -23,16 +25,6 @@ export interface PageContract {
     keywords: string;
 
     /**
-     * Facebook Open Graph: This is how you describe the kind of object you are sharing: website, article, blog.
-     */
-    ogType?: "website" | "article" | "blog";
-
-    /**
-     * Facebook Open Graph: This is how you ensure that a particular thumbnail will be shown when your page is shared.
-     */
-    ogImageSourceKey?: string;
-
-    /**
      * Key of a document containing page content.
      */
     contentKey?: string;
@@ -44,6 +36,12 @@ export interface PageContract {
 
     /**
      * JSON-LD (JavaScript Object Notation for Linked Data) for this page.
+     * Note: This is temporary solution until seo module is in-place.
      */    
     jsonLd?: string;
+
+    /**
+     * Text and image that display when this page is shared on social networks.
+     */
+    socialShareData?: SocialShareData;
 }

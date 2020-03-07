@@ -1,10 +1,7 @@
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
+import { HtmlPagePublisherPlugin } from "./htmlPagePublisherPlugin";
 
-
-export interface HtmlPagePublisherPlugin {
-    apply(document: Document, page?: HtmlPage): void;
-}
 
 export class HtmlPagePublisher {
     constructor(

@@ -1,7 +1,8 @@
 import { OpenGraph } from "./openGraph";
-import { PageStructuredData } from "./structuredData";
+import { PageLinkedData } from "./pageLinkedData";
 import { Contract } from "../contract";
 import { Bag } from "..";
+import { SocialShareData } from "../pages/socialShareData";
 
 export interface HtmlPage {
     title: string;
@@ -11,7 +12,8 @@ export interface HtmlPage {
     permalink: string;
     url?: string;
     openGraph?: OpenGraph;
-    structuredData?: PageStructuredData;
+    linkedData?: PageLinkedData;
+    socialShareData?: SocialShareData;
     faviconPermalink?: string;
     styleReferences: string[];
     content: Contract;

@@ -1,4 +1,4 @@
-export interface PageStructuredDataContactPoint {
+export interface PageLinkedDataContactPoint {
     /**
      * e.g. +1-401-555-1212
      */
@@ -10,7 +10,7 @@ export interface PageStructuredDataContactPoint {
     contactType: string;
 }
 
-export interface PageStructuredDataAddress {
+export interface PageLinkedDataAddress {
     /**
      * e.g. PostalAddress
      */
@@ -38,9 +38,9 @@ export interface PageStructuredDataAddress {
 }
 
 /**
- * Structured data provides a way to standardize information about a page and classify the page content. 
+ * Linked data provides a way to standardize information about a page and classify the page content. 
  */
-export interface PageStructuredData {
+export interface PageLinkedData {
     /**
      * e.g. Organization.
      */
@@ -64,10 +64,10 @@ export interface PageStructuredData {
     /**
      * Points of contact.
      */
-    contactPoints?: PageStructuredDataContactPoint;
+    contactPoints?: PageLinkedDataContactPoint;
 
     /**
      * Address.
      */
-    address?: PageStructuredDataAddress;
+    address?: PageLinkedDataAddress;
 }
