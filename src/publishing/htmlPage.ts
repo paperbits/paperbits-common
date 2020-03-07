@@ -11,6 +11,7 @@ export interface HtmlPage {
     author?: string;
     permalink: string;
     url?: string;
+    siteHostName?: string;
     openGraph?: OpenGraph;
     linkedData?: PageLinkedData;
     socialShareData?: SocialShareData;

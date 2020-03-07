@@ -2,7 +2,7 @@ export interface OpenGraphImage {
     /**
      * og:image, e.g. https://example.com/social.jpg
      */
-    url: string;
+    sourceKey: string;
 
     /**
      * og:image:width, e.g. 1200
