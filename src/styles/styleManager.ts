@@ -1,6 +1,6 @@
-import { Bag } from "@paperbits/common";
-import { StyleSheet } from "@paperbits/common/styles";
-import { EventManager } from "@paperbits/common/events";
+import { Bag } from "..";
+import { StyleSheet } from "../styles";
+import { EventManager } from "../events";
 
 
 export class StyleManager {

@@ -5,19 +5,19 @@ import { BlogPostContract } from "../blogs/blogPostContract";
  * Service for managing blog posts.
  */
 export interface IBlogService {
-    search(pattern: string): Promise<BlogPostContract[]>;
+    search(pattern: string, locale?: string): Promise<BlogPostContract[]>;
 
     /**
      * Returns blog post by specified key.
      * @param key 
      */
-    getBlogPostByKey(key: string): Promise<BlogPostContract>;
+    getBlogPostByKey(key: string, locale?: string): Promise<BlogPostContract>;
 
     /**
      * Returns blog post by specfied key.
      * @param permalink
      */
-    getBlogPostByPermalink(permalink: string): Promise<BlogPostContract>;
+    getBlogPostByPermalink(permalink: string, locale?: string): Promise<BlogPostContract>;
 
     /**
      * Deletes specified blog post.
@@ -31,24 +31,24 @@ export interface IBlogService {
      * @param description 
      * @param keywords 
      */
-    createBlogPost(url: string, title: string, description: string, keywords): Promise<BlogPostContract>;
+    createBlogPost(url: string, title: string, description: string, keywords: string, locale?: string): Promise<BlogPostContract>;
 
     /**
      * Updates a blog post.
      * @param blogPostRef 
      */
-    updateBlogPost(blogPostRef: BlogPostContract): Promise<void>;
+    updateBlogPost(blogPostRef: BlogPostContract, locale?: string): Promise<void>;
 
     /**
      * Returns blog post content by specified key.
      * @param postKey 
      */
-    getBlogPostContent(postKey: string): Promise<Contract>;
+    getBlogPostContent(postKey: string, locale?: string): Promise<Contract>;
 
     /**
      * Updates blog post content.
      * @param postKey 
      * @param document 
      */
-    updateBlogPostContent(postKey: string, document: Contract): Promise<void>;
+    updateBlogPostContent(postKey: string, document: Contract, locale?: string): Promise<void>;
 }

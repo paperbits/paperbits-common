@@ -1,4 +1,4 @@
-import { Contract } from "@paperbits/common";
+import { Contract } from "../..";
 import { InlineContract } from "./inlineContract";
 
 /**

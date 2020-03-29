@@ -1,4 +1,4 @@
-import { Contract } from "@paperbits/common";
+import { Contract } from "../..";
 import { MarkContract } from "./markContract";
 
 /**

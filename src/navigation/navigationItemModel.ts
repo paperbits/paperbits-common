@@ -2,17 +2,17 @@
     /**
      * Unique identifier.
      */
-    public key: string;
+    public key?: string;
 
     /**
      * Label.
      */
-    public label: string;
+    public label?: string;
 
     /**
      * Target key.
      */
-    public targetKey: string;
+    public targetKey?: string;
 
     /**
      * Target URL.
@@ -22,7 +22,7 @@
     /**
      * Child navigation items.
      */
-    public nodes: NavigationItemModel[];
+    public nodes?: NavigationItemModel[];
 
     /**
      * Indicates if item should be highlighted as actve.

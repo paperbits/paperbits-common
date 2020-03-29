@@ -12,7 +12,7 @@ export interface IUrlService {
     /**
      * Returns a url by specified key;
      */
-    getUrlByKey(key: string): Promise<UrlContract>;
+    getUrlByKey(key: string, locale?: string): Promise<UrlContract>;
 
     /**
      * Deletes a specified url from storage.

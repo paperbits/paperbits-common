@@ -1,4 +1,4 @@
-import { Contract } from "@paperbits/common";
+import { Contract } from "../..";
 
 /**
  * Mark, e.g. "bold", "italic", "underlined", etc.

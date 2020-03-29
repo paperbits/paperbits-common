@@ -18,6 +18,7 @@ export class Query<T> {
     public filters: Filter<any, any>[] = [];
     public skipping: number;
     public taking: number;
+    public selecting: string;
     public orderingBy: string;
     public orderDirection: OrderDirection;
 
@@ -27,6 +28,11 @@ export class Query<T> {
 
     public where<TLeftOperand, TRightOperand>(left: TLeftOperand, operator: Operator, right: TRightOperand): Query<T> {
         this.filters.push({ left, operator, right });
+        return this;
+    }
+
+    public select(path: string): Query<T> {
+        this.selecting = path;
         return this;
     }
 

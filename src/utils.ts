@@ -48,7 +48,7 @@ export function downloadFile(url: string): Promise<Uint8Array> {
 
 export function arrayBufferToBase64(buffer: Uint8Array): string {
     if (Buffer) {
-        return new Buffer(buffer).toString("base64");
+        return Buffer.from(buffer.buffer).toString("base64");
     }
     else {
         let binary = "";

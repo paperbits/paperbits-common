@@ -4,7 +4,6 @@ import { IInjector, IInjectorModule } from "../injection";
 import { UndoToolButton } from "./undoToolButton";
 import { RedoToolButton } from "./redoToolButton";
 
-
 /**
  * Module registering components required for offline work.
  */

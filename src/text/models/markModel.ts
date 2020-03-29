@@ -1,4 +1,4 @@
-import { HyperlinkModel } from "@paperbits/common/permalinks";
+import { HyperlinkModel } from "../../permalinks";
 import { ColorModel } from "./colorModel";
 
 export class MarkModel {

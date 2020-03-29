@@ -1,6 +1,7 @@
 ﻿export interface SettingsContract {
     integration?: IntegrationSettingsContract;
     site: SiteSettingsContract;
+    localizationEnabled?: boolean;
 }
 
 export interface SiteSettingsContract {

@@ -19,7 +19,6 @@ export class RedoToolButton implements ToolButton {
     private onDataChange(): void {
         this.disabled(!this.offlineObjectStorage.canRedo());
     }
-
     public onActivate(): void {
         this.eventManager.dispatchEvent("onRedo");
     }

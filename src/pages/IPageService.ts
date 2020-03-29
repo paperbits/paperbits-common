@@ -9,25 +9,25 @@ export interface IPageService {
      * Searches for pages that contain specified pattern in their title, description or keywords.
      * @param pattern {string} Search pattern.
      */
-    search(pattern: string): Promise<PageContract[]>;
+    search(pattern: string, locale?: string): Promise<PageContract[]>;
 
     /**
      * Returns page by specified key.
      * @param key {string} Unique page identifier.
      */
-    getPageByKey(key: string): Promise<PageContract>;
+    getPageByKey(key: string, locale?: string): Promise<PageContract>;
 
     /**
      * Returns page with specified permalink.
      * @param permalink {string} Permanent link of the page, e.g. /about.
      */
-    getPageByPermalink(permalink: string): Promise<PageContract>;
+    getPageByPermalink(permalink: string, locale?: string): Promise<PageContract>;
 
     /**
      * Deletes specified page from store.
      * @param page {PageContract} Contract describing page metadata.
      */
-    deletePage(page: PageContract): Promise<void>;
+    deletePage(page: PageContract, locale?: string): Promise<void>;
 
     /**
      * Creates a new page in store and returns its contract.
@@ -42,18 +42,18 @@ export interface IPageService {
      * Updates a page.
      * @param page {PageContract} Contract describing page metadata.
      */
-    updatePage(page: PageContract): Promise<void>;
+    updatePage(page: PageContract, locale?: string): Promise<void>;
 
     /**
      * Returns page content by specified key.
      * @param pageKey {string}
      */
-    getPageContent(pageKey: string): Promise<Contract>;
+    getPageContent(pageKey: string, locale?: string): Promise<Contract>;
 
     /**
      * Updates page content.
      * @param pageKey {string} Key of the page.
-     * @param document {Contract} Contract describing content of the page.
+     * @param content {Contract} Contract describing content of the page.
      */
-    updatePageContent(pageKey: string, document: Contract): Promise<void>;
+    updatePageContent(pageKey: string, content: Contract, locale?: string): Promise<void>;
 }
