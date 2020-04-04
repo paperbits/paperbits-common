@@ -8,4 +8,4 @@ export * from "./socialShareDataHtmlPagePublisherPlugin";
 export * from "./openGraphHtmlPagePublisherPlugin";
 export * from "./linkedDataHtmlPagePublisherPlugin";
 export * from "./dominoHtmlDocumentProvider";
-export * from "./HtmlPagePublisherPlugin";
+export * from "./htmlPagePublisherPlugin";

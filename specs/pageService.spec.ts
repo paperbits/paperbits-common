@@ -3,10 +3,9 @@ import { PageService, PageContract } from "../src/pages";
 import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockBlockService } from "./mocks/mockBlockService";
 import { MockLocaleService } from "./mocks/mockLocaleService";
-import { Contract } from "../src/";
-import { PageMetadata } from "@paperbits/common/pages/pageMetadata";
+import { Contract } from "../src";
 
-describe("Localized page service", async () => {
+describe("Page service", async () => {
     it("Can create page metadata in specified locale when metadata doesn't exists.", async () => {
         const initialData = {
             pages: {
@@ -32,7 +31,7 @@ describe("Localized page service", async () => {
         const pageContract: PageContract = {
             key: "pages/page1",
             title: "О нас",
-            permalink: "ru-ru/about"
+            permalink: "/ru-ru/about"
         };
 
         await localizedService.updatePage(pageContract);
@@ -80,7 +79,7 @@ describe("Localized page service", async () => {
                     locales: {
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }
@@ -114,7 +113,7 @@ describe("Localized page service", async () => {
                         },
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about"
+                            permalink: "/ru-ru/about"
                         }
                     }
                 }
@@ -143,7 +142,7 @@ describe("Localized page service", async () => {
                     locales: {
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }
@@ -161,7 +160,7 @@ describe("Localized page service", async () => {
         const pageContract: PageContract = {
             key: "pages/page1",
             title: "О нас (изменения)",
-            permalink: "ru-ru/about",
+            permalink: "/ru-ru/about",
             contentKey: "files/ru-ru-content"
         };
 
@@ -179,7 +178,7 @@ describe("Localized page service", async () => {
                     locales: {
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }
@@ -249,7 +248,7 @@ describe("Localized page service", async () => {
                         },
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }
@@ -284,7 +283,7 @@ describe("Localized page service", async () => {
                         },
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }
@@ -321,7 +320,7 @@ describe("Localized page service", async () => {
                         },
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about"
+                            permalink: "/ru-ru/about"
                         }
                     }
                 }
@@ -405,7 +404,7 @@ describe("Localized page service", async () => {
                         },
                         "ru-ru": {
                             title: "О нас",
-                            permalink: "ru-ru/about",
+                            permalink: "/ru-ru/about",
                             contentKey: "files/ru-ru-content"
                         }
                     }

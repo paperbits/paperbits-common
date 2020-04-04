@@ -1,9 +1,9 @@
 ﻿import { PageMetadata } from "./pageMetadata";
 
 /**
- * Localized page.
+ * Page.
  */
-export interface LocalizedPageContract {
+export interface PageLocalizedContract {
     /**
      * Own key.
      */

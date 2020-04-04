@@ -6,25 +6,25 @@ export interface ILayoutService {
      * Searches for layouts that contain specified pattern in their title or description.
      * @param pattern 
      */
-    search(pattern: string): Promise<LayoutContract[]>;
+    search(pattern: string, locale?: string): Promise<LayoutContract[]>;
 
     /**
      * Returns layout by specified key.
      * @param key {string} Unique layout identifier.
      */
-    getLayoutByKey(key: string): Promise<LayoutContract>;
+    getLayoutByKey(key: string, locale?: string): Promise<LayoutContract>;
 
     /**
      * Returns layout by specified permalink template.
      * @param permalinkTemplate {string} Permalink template, e.g. /blog/{blogId}.
      */
-    getLayoutByPermalinkTemplate(permalinkTemplate: string): Promise<LayoutContract>;
+    getLayoutByPermalinkTemplate(permalinkTemplate: string, locale?: string): Promise<LayoutContract>;
 
     /**
      * Deletes specified layout from store.
      * @param layout {LayoutContract} Contract describing layout metadata.
      */
-    deleteLayout(layout: LayoutContract): Promise<void>;
+    deleteLayout(layout: LayoutContract, locale?: string): Promise<void>;
 
     /**
      * Creates a new layout in store and returns its contract.
@@ -38,24 +38,24 @@ export interface ILayoutService {
      * Updates layout.
      * @param layout {LayoutContract} Contract describing layout metadata.
      */
-    updateLayout(layout: LayoutContract): Promise<void>;
+    updateLayout(layout: LayoutContract, locale?: string): Promise<void>;
 
     /**
      * Returns layout with permalink template matching specified permalink.
      * @param permalink {string} Content item permalink, e.g. /about.
      */
-    getLayoutByPermalink(permalink: string): Promise<LayoutContract>;
+    getLayoutByPermalink(permalink: string, locale?: string): Promise<LayoutContract>;
 
     /**
      * Returns layout content by specified key.
      * @param key {string} Unique layout identifier.
      */
-    getLayoutContent(key: string): Promise<Contract>;
+    getLayoutContent(key: string, locale?: string): Promise<Contract>;
 
     /**
      * Updates layout content.
      * @param key {string} Unique layout identifier.
      * @param document {Contract} Contract describing content of the layout.
      */
-    updateLayoutContent(key: string, document: Contract): Promise<void>;
+    updateLayoutContent(key: string, document: Contract, locale?: string): Promise<void>;
 }

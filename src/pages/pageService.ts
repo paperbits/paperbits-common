@@ -1,18 +1,16 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "../constants";
-import { PageContract, IPageService } from ".";
+import { PageContract, PageMetadata, PageLocalizedContract, IPageService } from ".";
 import { IObjectStorage, Operator, Query } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
 import { ILocaleService } from "../localization";
-import { LocalizedPageContract } from "./localizedPageContract";
-import { PageMetadata } from "./pageMetadata";
 
 const documentsPath = "files";
 const templateBlockKey = "blocks/new-page-template";
 
 export class PageService implements IPageService {
-    public pagesPath: string = "pages";
+    protected pagesPath: string = "pages";
 
     constructor(
         private readonly objectStorage: IObjectStorage,
@@ -43,7 +41,7 @@ export class PageService implements IPageService {
         return targetMetadata;
     }
 
-    private localizedPageContractToPageContract(defaultLocale: string, currentLocale: string, requestedLocale: string, localizedPageContract: LocalizedPageContract): PageContract {
+    private localizedContractToContract(defaultLocale: string, currentLocale: string, requestedLocale: string, localizedPageContract: PageLocalizedContract): PageContract {
         const locales = localizedPageContract[Constants.localePrefix];
 
         const pageMetadata = requestedLocale
@@ -69,42 +67,15 @@ export class PageService implements IPageService {
 
         const defaultLocale = await this.localeService.getDefaultLocale();
         const currentLocale = await this.localeService.getCurrentLocale();
-
-        // const permalinkProperty = locale
-        //     ? `${Constants.localePrefix}/${locale}/permalink`
-        //     : `permalink`;
-
-        const permalinkProperty = `${Constants.localePrefix}/${defaultLocale}/permalink`; // We use permalink from default locale only
+        const permalinkProperty = `${Constants.localePrefix}/${defaultLocale}/permalink`; // We use permalink from default locale only (for now).
 
         const query = Query
             .from<PageContract>()
             .where(permalinkProperty, Operator.equals, permalink);
 
-        const result = await this.objectStorage.searchObjects<LocalizedPageContract>(this.pagesPath, query);
+        const result = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, query);
 
         const pages: any[] = Object.values(result);
-
-        // if (pages.length === 0) {
-        //     /* Attempting to get default locale */
-
-        //     locale = defaultLocale;
-
-        //     const permalinkProperty = locale
-        //         ? `${Constants.localePrefix}/${defaultLocale}/permalink`
-        //         : `permalink`;
-
-        //     const query = Query
-        //         .from<PageContract>()
-        //         .where(permalinkProperty, Operator.equals, permalink);
-
-        //     result = await this.objectStorage.searchObjects<any>(this.pagesPath, query);
-
-        //     const pages = Object.values(result);
-
-        //     if (pages.length === 0) {
-        //         return null;
-        //     }
-        // }
 
         if (pages.length === 0) {
             return null;
@@ -112,7 +83,7 @@ export class PageService implements IPageService {
 
         const firstPage = pages[0];
 
-        return this.localizedPageContractToPageContract(defaultLocale, currentLocale, requestedLocale, firstPage);
+        return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, firstPage);
     }
 
     public async getPageByKey(key: string, requestedLocale?: string): Promise<PageContract> {
@@ -120,7 +91,7 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        const pageContract = await this.objectStorage.getObject<LocalizedPageContract>(key);
+        const pageContract = await this.objectStorage.getObject<PageLocalizedContract>(key);
 
         if (!pageContract) {
             return null;
@@ -129,7 +100,7 @@ export class PageService implements IPageService {
         const defaultLocale = await this.localeService.getDefaultLocale();
         const currentLocale = await this.localeService.getCurrentLocale();
 
-        return this.localizedPageContractToPageContract(defaultLocale, currentLocale, requestedLocale, pageContract);
+        return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, pageContract);
     }
 
     public async search(pattern: string, requestedLocale?: string): Promise<PageContract[]> {
@@ -148,7 +119,7 @@ export class PageService implements IPageService {
         const result = await this.objectStorage.searchObjects<any>(this.pagesPath, query);
         const pages = Object.values(result);
 
-        return pages.map(x => this.localizedPageContractToPageContract(defaultLocale, searchLocale, null, x));
+        return pages.map(x => this.localizedContractToContract(defaultLocale, searchLocale, null, x));
     }
 
     public async deletePage(page: PageContract): Promise<void> {
@@ -156,7 +127,7 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "page" not specified.`);
         }
 
-        const localizedPageContract = await this.objectStorage.getObject<LocalizedPageContract>(page.key);
+        const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
 
         if (localizedPageContract.locales) {
             const contentKeys = Object.values(localizedPageContract.locales).map(x => x.contentKey);
@@ -175,7 +146,7 @@ export class PageService implements IPageService {
         const pageKey = `${this.pagesPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;
 
-        const localizedPage: LocalizedPageContract = {
+        const localizedPage: PageLocalizedContract = {
             key: pageKey,
             locales: {
                 [locale]: {
@@ -188,11 +159,10 @@ export class PageService implements IPageService {
             }
         };
 
-        await this.objectStorage.addObject(pageKey, localizedPage);
+        await this.objectStorage.addObject<PageLocalizedContract>(pageKey, localizedPage);
 
         const template = await this.blockService.getBlockContent(templateBlockKey);
-
-        await this.objectStorage.addObject(contentKey, template);
+        await this.objectStorage.addObject<Contract>(contentKey, template);
 
         const pageContent: PageContract = {
             key: pageKey,
@@ -215,17 +185,17 @@ export class PageService implements IPageService {
             requestedLocale = await this.localeService.getCurrentLocale();
         }
 
-        const pageContract = await this.objectStorage.getObject<LocalizedPageContract>(page.key);
+        const pageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
 
         if (!pageContract) {
             throw new Error(`Could not update page. Page with key "${page.key}" doesn't exist.`);
         }
 
-        const existingLocaleMetadata = pageContract.locales[requestedLocale] || {};
+        const existingLocaleMetadata = pageContract.locales[requestedLocale] || <PageMetadata>{};
 
         pageContract.locales[requestedLocale] = this.copyMetadata(page, existingLocaleMetadata);
 
-        await this.objectStorage.updateObject<PageContract>(page.key, pageContract);
+        await this.objectStorage.updateObject<PageLocalizedContract>(page.key, pageContract);
     }
 
     public async getPageContent(pageKey: string, requestedLocale?: string): Promise<Contract> {
@@ -238,7 +208,7 @@ export class PageService implements IPageService {
         }
 
         const defaultLocale = await this.localeService.getDefaultLocale();
-        const localizedPageContract = await this.objectStorage.getObject<LocalizedPageContract>(pageKey);
+        const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(pageKey);
 
         let pageMetadata = localizedPageContract.locales[requestedLocale];
 
@@ -268,7 +238,7 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "content" not specified.`);
         }
 
-        const localizedPageContract = await this.objectStorage.getObject<LocalizedPageContract>(pageKey);
+        const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(pageKey);
 
         if (!localizedPageContract) {
             throw new Error(`Page with key "${pageKey}" not found.`);
