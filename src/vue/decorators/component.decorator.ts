@@ -6,11 +6,13 @@ import Vue from "vue";
 export function Component(config: ComponentConfig): ClassDecorator {
     return function (target) {
         const props = Reflect.getMetadata("props", target);
+
         const vueComponentConfig = {
             template: config.template,
             props: props,
             data: () => Component.prototype.getInstance(target),
             methods: {},
+            computed: {},
             watch: {}
         };
 
@@ -23,28 +25,32 @@ export function Component(config: ComponentConfig): ClassDecorator {
                 return;
             }
 
-            vueComponentConfig.methods[name] = method;
-
             const lifecycleHook = Reflect.getMetadata("lifecycle", method);
 
             if (lifecycleHook) {
                 vueComponentConfig[lifecycleHook] = method;
+                return;
             }
 
-            const computed = Reflect.getMetadata("computed", method);
+            const computedPropertyName = Reflect.getMetadata("computed", method);
 
-            if (computed) {
-                vueComponentConfig[computed] = method;
+            if (computedPropertyName) {
+                vueComponentConfig.computed[computedPropertyName] = method;
+                return;
             }
 
             const watchPropertyName = Reflect.getMetadata("watch", method);
 
             if (watchPropertyName) {
                 vueComponentConfig.watch[watchPropertyName] = method;
+                return;
             }
+
+            vueComponentConfig.methods[name] = method;
         });
 
         Vue.component(config.selector, vueComponentConfig);
+
         /*
             Just in case, async also supported:
 
