@@ -40,9 +40,10 @@ export class LayoutService implements ILayoutService {
     private localizedContractToContract(defaultLocale: string, currentLocale: string, requestedLocale: string, localizedPageContract: LayoutLocalizedContract): LayoutContract {
         const locales = localizedPageContract[Constants.localePrefix];
 
-        const metadata = requestedLocale
+        const metadata = (requestedLocale
             ? locales[requestedLocale]
-            : locales[currentLocale] || this.copyMetadata(locales[defaultLocale], {});
+            : locales[currentLocale])
+            || this.copyMetadata(locales[defaultLocale], {});
 
         if (!metadata) {
             return null;
@@ -221,7 +222,15 @@ export class LayoutService implements ILayoutService {
         return result.sort(compare).map(x => x.pattern);
     }
 
-    private matchPermalink(permalink: string, template: string): any {
+    private matchPermalink(permalink: string, template: string, locale?: string): any {
+        if (locale) {
+            const localePrefix = `/${locale}/`;
+
+            if (permalink.startsWith(localePrefix)) {
+                permalink = permalink.replace(localePrefix, "/");
+            }
+        }
+
         const tokens: { index: number, name: string, value?: string }[] = [];
 
         const permalinkSegments: string[] = permalink.split("/");
@@ -287,7 +296,7 @@ export class LayoutService implements ILayoutService {
             permalinkTemplates = this.sort(permalinkTemplates);
 
             const matchingTemplate = permalinkTemplates.find(template => {
-                return this.matchPermalink(permalink, template).match;
+                return this.matchPermalink(permalink, template, requestedLocale || currentLocale).match;
             });
 
             const matchingLayout = layouts.find(x => x.locales[defaultLocale].permalinkTemplate === (matchingTemplate || "/"));

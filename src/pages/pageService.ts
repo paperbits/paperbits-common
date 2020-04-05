@@ -44,9 +44,10 @@ export class PageService implements IPageService {
     private localizedContractToContract(defaultLocale: string, currentLocale: string, requestedLocale: string, localizedPageContract: PageLocalizedContract): PageContract {
         const locales = localizedPageContract[Constants.localePrefix];
 
-        const pageMetadata = requestedLocale
+        const pageMetadata = (requestedLocale
             ? locales[requestedLocale]
-            : locales[currentLocale] || this.copyMetadata(locales[defaultLocale], {});
+            : locales[currentLocale]) 
+            || this.copyMetadata(locales[defaultLocale], {});
 
         if (!pageMetadata) {
             return null;

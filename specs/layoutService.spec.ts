@@ -234,6 +234,21 @@ describe("Layout service", async () => {
                     key: "layouts/layout1",
                     locales: {
                         "en-us": {
+                            title: "Home",
+                            permalinkTemplate: "/",
+                            contentKey: "files/en-us-content"
+                        },
+                        "ru-ru": {
+                            title: "Главная",
+                            permalinkTemplate: "/ru-ru/",
+                            contentKey: "files/ru-ru-content"
+                        }
+                    }
+                },
+                layout2: {
+                    key: "layouts/layout2",
+                    locales: {
+                        "en-us": {
                             title: "Blog",
                             permalinkTemplate: "/blog/*",
                             contentKey: "files/en-us-content"
@@ -254,11 +269,17 @@ describe("Layout service", async () => {
 
         const layoutService = new LayoutService(objectStorage, localeService);
 
-        const layoutContract = await layoutService.getLayoutByKey("layouts/layout1");
+        const layoutContract = await layoutService.getLayoutByKey("layouts/layout2");
         assert.isTrue(layoutContract.title === "Блог", "Layout metadata is in invalid locale.");
 
         const layoutContract2 = await layoutService.getLayoutByPermalink("/blog/post1");
         assert.isTrue(layoutContract2.title === "Блог", "Layout metadata is in invalid locale.");
+
+        const layoutContract3 = await layoutService.getLayoutByPermalink("/ru-ru/blog/post1");
+        assert.isTrue(layoutContract3.title === "Блог", "Layout metadata is in invalid locale.");
+
+        const layoutContract4 = await layoutService.getLayoutByPermalink("/ru-ru/");
+        assert.isTrue(layoutContract4.title === "Главная", "Layout metadata is in invalid locale.");
     });
 
     it("Returns layout content in specified locale.", async () => {
