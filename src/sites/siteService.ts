@@ -5,13 +5,10 @@ import { SettingsContract, ISiteService } from "../sites";
 const settingsPath = "settings";
 
 export class SiteService implements ISiteService {
-    private objectStorage: IObjectStorage;
-    private settingsProvider: ISettingsProvider;
-
-    constructor(objectStorage: IObjectStorage, settingsProvider: ISettingsProvider) {
-        this.objectStorage = objectStorage;
-        this.settingsProvider = settingsProvider;
-    }
+    constructor(
+        private readonly objectStorage: IObjectStorage,
+        private readonly settingsProvider: ISettingsProvider
+    ) { }
 
     public async setSiteSettings(settings: SettingsContract): Promise<void> {
         await this.objectStorage.updateObject(settingsPath, settings);

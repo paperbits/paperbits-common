@@ -59,8 +59,6 @@ export interface ViewManager {
     removeShutter(): void;
     beginDrag(session: DragSession): void;
     getDragSession(): DragSession;
-    addBalloon(component: IComponent): void;
-    removeBalloon(component: IComponent): void;
     setSplitter(config: ISplitterConfig): void;
     setHost(component: IComponent): void;
     getHost(): IComponent;
