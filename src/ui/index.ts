@@ -1,6 +1,7 @@
 export * from "./background";
 export * from "./IBackground";
 export * from "./IComponent";
+export * from "./ITemplate";
 export * from "./IContextCommandSet";
 export * from "./IHighlightConfig";
 export * from "./IHyperlinkProvider";

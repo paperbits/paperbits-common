@@ -15,5 +15,5 @@ export interface IComponent {
     /**
      * A lifecycle hook fired after the component mounted.
      */
-    oncreate?: (viewModel?, element?) => void;
+    oncreate?: (viewModel?: any, element?: HTMLElement) => void;
 }
