@@ -93,6 +93,11 @@ export class GlobalEventHandler {
             event.preventDefault();
             this.onCtrlP();
         }
+        
+        if (event.keyCode === Keys.Delete) {
+            event.preventDefault();
+            this.onDelete();
+        }
 
         if (event.keyCode === Keys.Esc) {
             event.preventDefault();
@@ -126,6 +131,10 @@ export class GlobalEventHandler {
 
     private onEscape(): void {
         this.eventManager.dispatchEvent("onEscape");
+    }
+
+    private onDelete(): void {
+        this.eventManager.dispatchEvent("onDelete");
     }
 
     private onPointerMove(event: MouseEvent): void {
