@@ -9,7 +9,8 @@ export enum ViewManagerMode {
     dragging = "dragging",
     selected = "selected",
     configure = "configure",
-    pause = "pause"
+    pause = "pause",
+    preview = "preview"
 }
 
 export interface ISplitterConfig {
