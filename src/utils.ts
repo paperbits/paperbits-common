@@ -48,7 +48,7 @@ export function downloadFile(url: string): Promise<Uint8Array> {
 
 export function arrayBufferToBase64(buffer: Uint8Array): string {
     if (Buffer) {
-        return Buffer.from(buffer.buffer).toString("base64");
+        return Buffer.from(buffer).toString("base64");
     }
     else {
         let binary = "";
@@ -333,4 +333,13 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
     }
 
     return tokens;
+}
+
+export function closest(node: Node, predicate: (node: Node) => boolean): Node {
+    do {
+        if (predicate(node)) {
+            return node;
+        }
+    }
+    while (node = node && node.parentNode);
 }
