@@ -95,7 +95,6 @@ export class GlobalEventHandler {
         }
         
         if (event.keyCode === Keys.Delete) {
-            event.preventDefault();
             this.onDelete();
         }
 
