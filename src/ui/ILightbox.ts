@@ -1,3 +1,3 @@
 ﻿export interface ILightbox {
-    show(url: string): void;
+    show(url: string, fileName: string): void;
 }
