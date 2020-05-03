@@ -12,6 +12,7 @@ const documentsPath = "files";
 
 export class BlockService implements IBlockService {
     private blocksData: object;
+
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly httpClient: HttpClient,
@@ -31,7 +32,8 @@ export class BlockService implements IBlockService {
 
     public async search(type: BlockType, pattern: string): Promise<BlockContract[]> {
         let result: Bag<BlockContract> = {};
-        if (type === BlockType.saved){
+
+        if (type === BlockType.saved) {
             const query = Query
                 .from<BlockContract>()
                 .where("type", Operator.equals, type);
@@ -40,13 +42,16 @@ export class BlockService implements IBlockService {
                 query.where("title", Operator.contains, pattern).orderBy("title");
             }
             result = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
-        } else {
+        }
+        else {
             const data = await this.getBlocksData();
+
             if (!data) {
                 return [];
             }
             const blocks: Bag<BlockContract> = data[blockPath];
             const blockKeys = Object.keys(blocks);
+
             for (const blockKey of blockKeys) {
                 if (blocks[blockKey].title.indexOf(pattern) !== -1) {
                     result[blockKey] = blocks[blockKey];
@@ -101,6 +106,7 @@ export class BlockService implements IBlockService {
         }
 
         const data = await this.getBlocksData();
+        
         if (!data) {
             return null;
         }
@@ -112,7 +118,7 @@ export class BlockService implements IBlockService {
     }
 
     private async getBlocksData(): Promise<any> {
-        if (!this.blocksData) {            
+        if (!this.blocksData) {
             await this.loadData();
         }
         return this.blocksData;
@@ -120,7 +126,8 @@ export class BlockService implements IBlockService {
 
     private async loadData(): Promise<void> {
         try {
-            const blocksUrl = await this.settingsProvider.getSetting<string>("blocksUrl");            
+            const blocksUrl = await this.settingsProvider.getSetting<string>("blocksUrl");
+
             if (!blocksUrl) {
                 console.warn("Settings for blocksUrl not found.");
                 return;
@@ -131,7 +138,8 @@ export class BlockService implements IBlockService {
             });
 
             this.blocksData = <any>response.toObject();
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("Load blocks error: ", error);
         }
     }

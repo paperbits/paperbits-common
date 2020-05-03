@@ -23,4 +23,9 @@ export interface BlockContract extends Contract {
      * Key of a document having block content.
      */
     contentKey?: string;
+
+    /**
+     * Category of the block, e.g. Footers, Pricing, etc.
+     */
+    category?: string;
 }
