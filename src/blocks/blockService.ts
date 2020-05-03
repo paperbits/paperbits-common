@@ -44,7 +44,7 @@ export class BlockService implements IBlockService {
             result = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
         }
         else {
-            const data = await this.getBlocksData();
+            const data = await this.loadBlockSnippets();
 
             if (!data) {
                 return [];
@@ -105,7 +105,7 @@ export class BlockService implements IBlockService {
             return await this.objectStorage.getObject(block.contentKey);
         }
 
-        const data = await this.getBlocksData();
+        const data = await this.loadBlockSnippets();
         
         if (!data) {
             return null;
@@ -117,7 +117,7 @@ export class BlockService implements IBlockService {
         return this.getObjectByPath(data, block.contentKey);
     }
 
-    private async getBlocksData(): Promise<any> {
+    private async loadBlockSnippets(): Promise<any> {
         if (!this.blocksData) {
             await this.loadData();
         }
