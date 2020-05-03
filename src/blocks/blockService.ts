@@ -126,7 +126,7 @@ export class BlockService implements IBlockService {
 
     private async loadData(): Promise<void> {
         try {
-            const blocksUrl = await this.settingsProvider.getSetting<string>("blocksUrl");
+            const blocksUrl = await this.settingsProvider.getSetting<string>("blockSnippetsUrl");
 
             if (!blocksUrl) {
                 console.warn("Settings for blocksUrl not found.");
