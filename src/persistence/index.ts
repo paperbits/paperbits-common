@@ -6,3 +6,5 @@ export * from "./offlineObjectStorage";
 export * from "./query";
 export * from "./savingHandler";
 export * from "./loadingHandler";
+export * from "./changeCommitter";
+export * from "./defaultChangeCommitter";

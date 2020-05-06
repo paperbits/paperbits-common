@@ -31,7 +31,7 @@
      * Registers a listener for cache changes.
      * @param callback
      */
-    addChangeListener(callback: () => void);
+    addChangeListener(callback: () => void): void;
 
     /**
      * Removes element by key.
@@ -42,5 +42,5 @@
     /**
      * Clears cache.
      */
-    clear();
+    clear(): void;
 }
