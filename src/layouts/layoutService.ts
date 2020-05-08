@@ -340,6 +340,8 @@ export class LayoutService implements ILayoutService {
             layoutContent = await this.objectStorage.getObject<Contract>(layoutDefaultLocaleMetadata.contentKey);
         }
 
+        layoutContent.type = "layout";
+
         return layoutContent;
     }
 
