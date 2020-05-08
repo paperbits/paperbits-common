@@ -1,6 +1,6 @@
 ﻿import { BlockModel } from "../text/models/blockModel";
-import { HyperlinkModel } from "../permalinks";
 import { SelectionState } from "./selectionState";
+import { HyperlinkContract } from "./hyperlinkContract";
 
 export let formattableStates = ["bold", "italic", "underlined", "highlighted", "hyperlink", "h1", "h2", "h3", "h4", "h5", "h6",
     "quote", "code", "ol", "ul", "alignedLeft", "alignedRight", "alignedCenter", "justified"];
@@ -32,13 +32,13 @@ export interface IHtmlEditor {
     alignCenter(viewport?: string): void;
     alignRight(viewport?: string): void;
     justify(viewport?: string): void;
-    setHyperlink(hyperlink: HyperlinkModel): void;
+    setHyperlink(hyperlink: HyperlinkContract): void;
     setAnchor(hash: string, anchorKey: string): void;
     removeAnchor(): void;
     removeHyperlink(): void;
     setColor(colorKey: string): void;
     removeColor(): void;
-    getHyperlink(): HyperlinkModel;
+    getHyperlink(): HyperlinkContract;
     expandSelection(): void;
     getState(): BlockModel[];
     setState(state: BlockModel[]): void;

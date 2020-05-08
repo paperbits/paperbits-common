@@ -13,6 +13,11 @@ export interface HyperlinkContract {
     anchor?: string;
 
     /**
+     * Display name of the anchor (temporary field, should be calculated).
+     */
+    anchorName?: string;
+
+    /**
      * Parameter used to define "target" attribute of hyperlink element. Allowed values: "_blank", "_self", "_parent".
      */
     target: string;

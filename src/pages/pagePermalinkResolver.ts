@@ -44,12 +44,17 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         return pageContract.permalink;
     }
 
-    private async getHyperlink(pageContract: PageContract, target: string = "_self"): Promise<HyperlinkModel> {
+    private async getHyperlink(pageContract: PageContract, hyperlinkContract?: HyperlinkContract): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = pageContract.key;
         hyperlinkModel.href = pageContract.permalink;
         hyperlinkModel.title = pageContract.title || pageContract.permalink;
-        hyperlinkModel.target = target;
+
+        if (hyperlinkContract) {
+            hyperlinkModel.target = hyperlinkContract.target;
+            hyperlinkModel.anchor = hyperlinkContract.anchor;
+            hyperlinkModel.anchorName = hyperlinkContract.anchorName;
+        }
 
         return hyperlinkModel;
     }
@@ -69,7 +74,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
             const pageContract = await this.pageService.getPageByKey(hyperlinkContract.targetKey, locale);
 
             if (pageContract) {
-                return this.getHyperlink(pageContract, hyperlinkContract.target);
+                return this.getHyperlink(pageContract, hyperlinkContract);
             }
         }
 
@@ -79,6 +84,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = hyperlinkContract.anchor;
+        hyperlinkModel.anchorName = hyperlinkContract.anchorName;
 
         return hyperlinkModel;
     }

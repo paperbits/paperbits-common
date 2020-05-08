@@ -93,6 +93,7 @@ export class PermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = null;
+        hyperlinkModel.anchorName = null;
         return hyperlinkModel;
     }
 }
