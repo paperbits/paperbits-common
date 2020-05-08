@@ -11,6 +11,5 @@ export * from "./toolButton";
 export * from "./view";
 export * from "./viewManager";
 export * from "./ICommand";
-export * from "./lityLightbox";
 export * from "./quadrant";
 export * from "./toast";
