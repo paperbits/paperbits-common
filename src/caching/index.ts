@@ -1,3 +1,4 @@
 export * from "./ILocalCache";
-export * from "./localCache";
+export * from "./localStorageCache";
+export * from "./memoryCache";
 export * from "./lruCache";

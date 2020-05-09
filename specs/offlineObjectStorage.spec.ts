@@ -1,6 +1,7 @@
 import { OfflineObjectStorage } from "../src/persistence";
 import * as Objects from "../src/objects";
 import { assert, expect } from "chai";
+import { MemoryCache } from "../src/caching";
 
 
 const initialData = {
@@ -46,7 +47,8 @@ class MockStorage {
 
 describe("Offline object storage", async () => {
     it("Can correctly reflect the state.", async () => {
-        const obs = new OfflineObjectStorage();
+        const memoryCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(memoryCache);
         const changesObject: any = obs["changesObject"];
         const stateObject: any = obs["stateObject"];
         Object.assign(stateObject, initialData); // assigning initial state
@@ -79,7 +81,8 @@ describe("Offline object storage", async () => {
     });
 
     it("Can apply chages and undo them.", async () => {
-        const obs = new OfflineObjectStorage();
+        const memoryCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(memoryCache);
         const changesObject: any = obs["changesObject"];
         const stateObject: any = obs["stateObject"];
 
@@ -96,8 +99,9 @@ describe("Offline object storage", async () => {
     });
 
     it("Can do search taking changes into account.", async () => {
+        const memoryCache = new MemoryCache();
         const underlyingStorage: any = new MockStorage();
-        const obs = new OfflineObjectStorage();
+        const obs = new OfflineObjectStorage(memoryCache);
         obs.registerUnderlyingStorage(underlyingStorage);
         obs.isOnline = true;
         const changesObject: any = obs["changesObject"];
@@ -129,21 +133,15 @@ describe("Offline object storage", async () => {
     });
 
     it("Performs getObject taking changes into account.", async () => {
+        const memoryCache = new MemoryCache();
         const underlyingStorage: any = new MockStorage();
-        const obs = new OfflineObjectStorage();
+        const obs = new OfflineObjectStorage(memoryCache);
         obs.registerUnderlyingStorage(underlyingStorage);
         obs.isOnline = true;
-        const changesObject: any = obs["changesObject"];
-        const stateObject: any = obs["stateObject"];
 
         await obs.deleteObject("employees/employee1");
 
         const getObjectResult = await obs.getObject<any>("employees/employee1");
-
-        debugger;
-
         expect(getObjectResult).equals(undefined);
-
-        
     });
 });

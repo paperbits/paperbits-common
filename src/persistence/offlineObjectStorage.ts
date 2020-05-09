@@ -1,9 +1,11 @@
 import * as Objects from "../objects";
 import * as _ from "lodash";
+import * as Utils from "../utils";
 import { Bag } from "./../bag";
 import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { EventManager } from "../events";
+import { ILocalCache } from "../caching";
 
 interface HistoryRecord {
     do: () => void;
@@ -17,11 +19,16 @@ export class OfflineObjectStorage implements IObjectStorage {
     private readonly past: HistoryRecord[];
     private readonly future: HistoryRecord[];
     private readonly middlewares: IObjectStorageMiddleware[];
+    private initializePromise: Promise<void>;
+    private readonly changesObjectCacheKey: string = "changesObject";
 
     public isOnline: boolean;
     public autosave: boolean;
 
-    constructor(private readonly eventManager?: EventManager) {
+    constructor(
+        private readonly changesCache: ILocalCache,
+        private readonly eventManager?: EventManager,
+    ) {
         this.stateObject = {};
         this.changesObject = {};
         this.underlyingStorage = null;
@@ -35,6 +42,24 @@ export class OfflineObjectStorage implements IObjectStorage {
             this.eventManager.addEventListener("onUndo", () => this.undo());
             this.eventManager.addEventListener("onRedo", () => this.redo());
         }
+    }
+
+    private initialize(): Promise<void> {
+        if (this.initializePromise) {
+            return this.initializePromise;
+        }
+
+        this.initializePromise = new Promise<void>(async (resolve) => {
+            const cachedChangesObject = await this.changesCache.getItem<Object>(this.changesObjectCacheKey);
+
+            if (cachedChangesObject) {
+                Object.assign(this.changesObject, cachedChangesObject);
+            }
+
+            resolve();
+        });
+
+        return this.initializePromise;
     }
 
     public canUndo(): boolean {
@@ -58,6 +83,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error("Could not add object: Key is undefined.");
         }
 
+        await this.initialize();
+
         const dataObjectClone = Objects.clone(dataObject); // To drop any object references
 
         let compensationOfState;
@@ -72,6 +99,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         const undoCommand = () => {
@@ -83,6 +112,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -101,6 +132,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error(`Parameter "dataObject" not specified.`);
         }
 
+        await this.initialize();
+
         const dataObjectClone1 = Objects.clone(dataObject); // To drop any object references
         const dataObjectClone2 = Objects.clone(dataObject); // To drop any object references
 
@@ -116,6 +149,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         const undoCommand = () => {
@@ -127,6 +162,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -137,8 +174,10 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error(`Parameter "path" not specified.`);
         }
 
+        await this.initialize();
+
         const clonedChanges = <any>Objects.clone(this.changesObject);
-        const changesAt = Objects.getObjectAt(path, clonedChanges);
+        const changesAt = Objects.getObjectAt<T>(path, clonedChanges);
 
         if (changesAt === null) {
             /*
@@ -161,10 +200,21 @@ export class OfflineObjectStorage implements IObjectStorage {
             }
         }
 
+        if (changesAt) {
+            /* If there are changes at the same path, apply them to search result */
+            return changesAt;
+        }
+
         return result;
     }
 
     public async deleteObject(path: string): Promise<void> {
+        if (!path) {
+            throw new Error(`Parameter "path" not specified.`);
+        }
+
+        await this.initialize();
+
         let compensationOfState;
         let compensationOfChanges;
 
@@ -177,6 +227,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         const undoCommand = () => {
@@ -188,6 +240,8 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             Objects.cleanupObject(this.stateObject, true);
             Objects.cleanupObject(this.changesObject);
+
+            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -275,7 +329,7 @@ export class OfflineObjectStorage implements IObjectStorage {
                     for (const filter of query.filters) {
                         let left = Objects.getObjectAt<any>(filter.left, x);
                         let right = filter.right;
-                        
+
                         if (!!right && left === undefined) {
                             meetsCriteria = false;
                             continue;
@@ -365,6 +419,12 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
+        if (!path) {
+            throw new Error(`Parameter "path" not specified.`);
+        }
+
+        await this.initialize();
+
         const resultObject = await this.searchLocalState(path, query);
 
         if (this.isOnline) {
@@ -390,17 +450,21 @@ export class OfflineObjectStorage implements IObjectStorage {
         return resultObject;
     }
 
-    public hasUnsavedChanges(): boolean {
+    public async hasUnsavedChanges(): Promise<boolean> {
+        await this.initialize();
         return Object.keys(this.changesObject).length > 0;
     }
 
-    public hasUnsavedChangesAt(key: string): boolean {
+    public async hasUnsavedChangesAt(key: string): Promise<boolean> {
+        await this.initialize();
         return !!Objects.getObjectAt(key, this.changesObject);
     }
 
     public async discardChanges(): Promise<void> {
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
         Object.keys(this.stateObject).forEach(key => delete this.stateObject[key]);
+
+        this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
     }
 
     public async saveChanges(): Promise<void> {
@@ -412,20 +476,26 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         await this.underlyingStorage.saveChanges(this.changesObject);
         entities.forEach(key => delete this.changesObject[key]);
+
+        this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+
         this.eventManager.dispatchEvent("onDataChange");
     }
 
     public async loadData(): Promise<object> {
         if (this.underlyingStorage.loadData) {
             const loadedData = await this.underlyingStorage.loadData();
+
             if (loadedData) {
                 await this.discardChanges();
                 this.eventManager.dispatchEvent("onDataPush");
                 this.eventManager.dispatchEvent("onDataChange");
             }
-        } else {
+        }
+        else {
             console.warn("current ObjectStorage does not implement loadData");
         }
+
         return this.stateObject;
     }
 }

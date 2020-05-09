@@ -6,7 +6,9 @@ import { OfflineObjectStorage } from ".";
 export class SavingHandler {
     constructor(eventManager: EventManager, offlineObjectStorage: OfflineObjectStorage, viewManager: ViewManager) {
         eventManager.addEventListener("onSaveChanges", async () => {
-            if (!offlineObjectStorage.hasUnsavedChanges()) {
+            const hasChanges = await offlineObjectStorage.hasUnsavedChanges();
+
+            if (!hasChanges) {
                 return;
             }
 
