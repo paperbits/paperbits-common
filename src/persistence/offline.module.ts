@@ -3,6 +3,7 @@ import { IObjectStorage, OfflineObjectStorage, SavingHandler, LoadingHandler } f
 import { IInjector, IInjectorModule } from "../injection";
 import { UndoToolButton } from "./undoToolButton";
 import { RedoToolButton } from "./redoToolButton";
+import { SaveChangesToolButton } from "./saveChangesToolbutton";
 
 /**
  * Module registering components required for offline work.
@@ -13,6 +14,10 @@ export class OfflineModule implements IInjectorModule {
     }
 
     public register(injector: IInjector): void {
+        if (!this.options?.autosave) {
+            injector.bindToCollection("trayCommands", SaveChangesToolButton);
+        }
+
         injector.bindToCollection("trayCommands", UndoToolButton);
         injector.bindToCollection("trayCommands", RedoToolButton);
 
@@ -24,7 +29,8 @@ export class OfflineModule implements IInjectorModule {
         injector.bindSingletonFactory<IObjectStorage>("objectStorage", (ctx: IInjector) => {
             const offlineObjectStorage = ctx.resolve<OfflineObjectStorage>("offlineObjectStorage");
             offlineObjectStorage.registerUnderlyingStorage(underlyingObjectStorage);
-            offlineObjectStorage.autosave = this.options ? this.options.autosave : false;
+            offlineObjectStorage.autosave = !!this.options?.autosave;
+            console.log(offlineObjectStorage.autosave);
 
             return offlineObjectStorage;
         });
