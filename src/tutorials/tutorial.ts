@@ -95,22 +95,22 @@ export class Tutorial {
         let arrowX: number = targetOffset.left + (targetRect.width / 2);
         let arrowY: number = targetOffset.top + (targetRect.height / 2);
 
-        if (step.arrowPosition.contains("left")) {
+        if (step.arrowPosition.includes("left")) {
             this.arrowElement.classList.add("arrow-left");
             arrowX = targetOffset.left - this.arrowElement.clientWidth;
         }
 
-        if (step.arrowPosition.contains("right")) {
+        if (step.arrowPosition.includes("right")) {
             this.arrowElement.classList.add("arrow-right");
             arrowX = targetOffset.left + targetRect.width;
         }
 
-        if (step.arrowPosition.contains("top")) {
+        if (step.arrowPosition.includes("top")) {
             this.arrowElement.classList.add("arrow-top");
             arrowY = targetOffset.top - this.arrowElement.clientHeight + 70 + (targetRect.height / 2);
         }
 
-        if (step.arrowPosition.contains("bottom")) {
+        if (step.arrowPosition.includes("bottom")) {
             this.arrowElement.classList.add("arrow-bottom");
             arrowY = targetOffset.top + targetRect.height;
         }
