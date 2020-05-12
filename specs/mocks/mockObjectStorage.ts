@@ -120,7 +120,7 @@ export class MockObjectStorage implements IObjectStorage {
 
                         switch (operator) {
                             case Operator.contains:
-                                if (left && !left.contains(right)) {
+                                if (left && !left.includes(right)) {
                                     meetsCriteria = false;
                                 }
                                 break;
