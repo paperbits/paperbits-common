@@ -6,7 +6,7 @@ export class PlaceholderModelBinder implements IModelBinder<PlaceholderModel> {
     constructor(public readonly message?: string) { }
 
     public async contractToModel(contract: Contract): Promise<PlaceholderModel> {
-        return new PlaceholderModel(`Could not find model binder for widget type "${contract.type}".`);
+        return new PlaceholderModel(`Could not find model binder for widget type "${contract.type}".`, contract.type);
     }
 
     public modelToContract(model: PlaceholderModel): Contract {
