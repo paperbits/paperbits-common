@@ -20,7 +20,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
             const contentItem = await this.mediaService.getMediaByKey(mediaKey);
 
             if (!contentItem) {
-                console.warn(`Could not find permalink with key ${mediaKey}.`);
+                console.warn(`Could not find permalink by key ${mediaKey}.`);
                 return null;
             }
 

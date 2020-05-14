@@ -10,7 +10,7 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
         return targetKey.startsWith("urls/");
     }
 
-    public async getUrlByTargetKey(targetKey: string, locale?: string): Promise<string> {
+    public async getUrlByTargetKey(targetKey: string): Promise<string> {
         if (!targetKey) {
             throw new Error("Target key cannot be null or empty.");
         }
@@ -23,14 +23,14 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
             const contentItem = await this.urlService.getUrlByKey(targetKey);
 
             if (!contentItem) {
-                console.warn(`Unable to resolve permalink for external URL. Could not find permalink with key ${targetKey}.`);
+                console.warn(`Could not find permalink by key ${targetKey}.`);
                 return null;
             }
 
             return contentItem.permalink;
         }
         catch (error) {
-            return "";
+            return null;
         }
     }
 

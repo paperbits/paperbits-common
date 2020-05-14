@@ -34,7 +34,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
 
             if (!pageContract) {
                 console.warn(`Could not find content item with key ${targetKey}.`);
-                return "";
+                return null;
             }
         }
         else if (locale && locale !== defaultLocale) {

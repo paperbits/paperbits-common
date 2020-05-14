@@ -46,7 +46,7 @@ export class PageService implements IPageService {
 
         const pageMetadata = (requestedLocale
             ? locales[requestedLocale]
-            : locales[currentLocale]) 
+            : locales[currentLocale])
             || this.copyMetadata(locales[defaultLocale], {});
 
         if (!pageMetadata) {
@@ -163,6 +163,7 @@ export class PageService implements IPageService {
         await this.objectStorage.addObject<PageLocalizedContract>(pageKey, localizedPage);
 
         const template = await this.blockService.getBlockContent(templateBlockKey);
+        template["key"] = contentKey; // rewriting own key
         await this.objectStorage.addObject<Contract>(contentKey, template);
 
         const pageContent: PageContract = {

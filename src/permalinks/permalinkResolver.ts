@@ -20,7 +20,7 @@ export class PermalinkResolver implements IPermalinkResolver {
             throw new Error(`Parameter "targetKey" not specified.`);
         }
 
-        let targetUrl: string = "";
+        let targetUrl: string = null;
 
         const permalinkResolver = this.permalinkResolvers.find(x => x.canHandleTarget(targetKey));
 

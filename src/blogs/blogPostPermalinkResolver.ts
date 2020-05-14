@@ -25,7 +25,7 @@ export class BlogPostPermalinkResolver implements IPermalinkResolver {
         const contentItem = await this.blogPostService.getBlogPostByKey(targetKey, locale);
 
         if (!contentItem) {
-            throw new Error(`Could not find permalink with key ${targetKey}.`);
+            throw new Error(`Could not find permalink by key ${targetKey}.`);
         }
 
         return contentItem.permalink;
