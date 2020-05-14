@@ -8,6 +8,10 @@ export class PermalinkResolver implements IPermalinkResolver {
     constructor(private readonly permalinkResolvers: IPermalinkResolver[]) { }
 
     public canHandleTarget(targetKey: string): boolean {
+        if (!targetKey) {
+            throw new Error(`Parameter "targetKey" not specified.`);
+        }
+
         return this.permalinkResolvers.some(x => x.canHandleTarget(targetKey));
     }
 
@@ -16,8 +20,21 @@ export class PermalinkResolver implements IPermalinkResolver {
             throw new Error(`Parameter "targetKey" not specified.`);
         }
 
+        let targetUrl: string = "";
+
         const permalinkResolver = this.permalinkResolvers.find(x => x.canHandleTarget(targetKey));
-        const targetUrl = await permalinkResolver.getUrlByTargetKey(targetKey, locale);
+
+        if (!permalinkResolver) {
+            console.warn(`Could not find permalink resolver for target key ${targetKey}.`);
+            return targetKey;
+        }
+
+        try {
+            targetUrl = await permalinkResolver.getUrlByTargetKey(targetKey, locale);
+        }
+        catch (error) {
+            console.warn(`Unable to resolve permalink. ${error}`);
+        }
 
         return targetUrl;
     }
@@ -25,17 +42,21 @@ export class PermalinkResolver implements IPermalinkResolver {
     public async getHyperlinkFromContract(hyperlinkContract: HyperlinkContract, locale?: string): Promise<HyperlinkModel> {
         let hyperlinkModel: HyperlinkModel;
 
+        if (!hyperlinkContract.targetKey) {
+            return this.getEmptyHyperlink();
+        }
+
         const permalinkResolver = this.permalinkResolvers.find(x => x.canHandleTarget(hyperlinkContract.targetKey));
 
-        if (permalinkResolver) {
-            hyperlinkModel = await permalinkResolver.getHyperlinkFromContract(hyperlinkContract, locale);
-
-            if (hyperlinkModel) {
-                return hyperlinkModel;
-            }
+        if (!permalinkResolver) {
+            console.warn(`Could not find permalink resolver for target key "${hyperlinkContract.targetKey}"`);
+            return this.getEmptyHyperlink();
         }
-        else {
-            console.warn(`Could not find permalink resolver for content item with key "${hyperlinkContract.targetKey}"`);
+
+        hyperlinkModel = await permalinkResolver.getHyperlinkFromContract(hyperlinkContract, locale);
+
+        if (hyperlinkModel) {
+            return hyperlinkModel;
         }
 
         return this.getEmptyHyperlink();

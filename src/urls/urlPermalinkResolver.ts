@@ -19,13 +19,19 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        const contentItem = await this.urlService.getUrlByKey(targetKey, locale);
+        try {
+            const contentItem = await this.urlService.getUrlByKey(targetKey);
 
-        if (!contentItem) {
-            throw new Error(`Could not find permalink with key ${targetKey}.`);
+            if (!contentItem) {
+                console.warn(`Unable to resolve permalink for external URL. Could not find permalink with key ${targetKey}.`);
+                return null;
+            }
+
+            return contentItem.permalink;
         }
-
-        return contentItem.permalink;
+        catch (error) {
+            return "";
+        }
     }
 
     private async getHyperlink(urlContract: UrlContract, target: string = "_self"): Promise<HyperlinkModel> {

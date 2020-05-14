@@ -30,7 +30,6 @@ export class OfflineModule implements IInjectorModule {
             const offlineObjectStorage = ctx.resolve<OfflineObjectStorage>("offlineObjectStorage");
             offlineObjectStorage.registerUnderlyingStorage(underlyingObjectStorage);
             offlineObjectStorage.autosave = !!this.options?.autosave;
-            console.log(offlineObjectStorage.autosave);
 
             return offlineObjectStorage;
         });

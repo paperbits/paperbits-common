@@ -33,7 +33,7 @@ export class MediaService implements IMediaService {
         const media = await this.objectStorage.getObject<MediaContract>(key);
 
         if (!media) {
-            console.warn(`Media with key ${key} not found`);
+            console.warn(`Media with key ${key} not found.`);
             return null;
         }
 
