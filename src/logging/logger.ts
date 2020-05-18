@@ -13,7 +13,7 @@ export interface Logger {
     /**
      * Traces information related to beginning of session.
      */
-    traceSession(): Promise<void>;
+    traceSession(userId?: string): Promise<void>;
 
     /**
      * Traces error.

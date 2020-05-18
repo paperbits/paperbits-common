@@ -11,10 +11,6 @@ import { Logger } from "./logger";
 
 
 export class ConsoleLogger implements Logger {
-    constructor() {
-        this.traceSession();
-    }
-
     public async traceSession(): Promise<void> {
         this.traceEvent(`Session started.`);
     }

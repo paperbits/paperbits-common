@@ -13,7 +13,7 @@ export class SitemapBuilder {
 
     public async buildSitemap(): Promise<string> {
         const settings = await this.siteService.getSiteSettings();
-        const hostname = settings?.site?.hostname;
+        const hostname = settings?.hostname;
         const baseUrl = hostname ? `https://${hostname}` : "";
 
         const now = new Date();

@@ -3,6 +3,11 @@
  */
 export interface UserService {
     /**
+     * Returns display name of the current user.
+     */
+    getUserName(): Promise<string>;
+
+    /**
      * Returns URL to current user's photo.
      */
     getUserPhotoUrl(): Promise<string>;

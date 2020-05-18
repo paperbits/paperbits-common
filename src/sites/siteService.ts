@@ -1,6 +1,6 @@
-﻿import { ISettingsProvider, Settings } from "./../configuration";
-import { IObjectStorage } from "../persistence";
-import { SettingsContract, ISiteService } from "../sites";
+﻿import { IObjectStorage } from "../persistence";
+import { ISiteService, SiteSettingsContract } from "../sites";
+import { ISettingsProvider } from "../configuration";
 
 const settingsPath = "settings";
 
@@ -10,15 +10,21 @@ export class SiteService implements ISiteService {
         private readonly settingsProvider: ISettingsProvider
     ) { }
 
-    public async setSiteSettings(settings: SettingsContract): Promise<void> {
-        await this.objectStorage.updateObject(settingsPath, settings);
-        await this.settingsProvider.setSetting(Settings.Config.GoogleTagManager, settings.integration.googleTagManager);
-        await this.settingsProvider.setSetting(Settings.Config.GoogleMaps, settings.integration.googleMaps);
-        await this.settingsProvider.setSetting(Settings.Config.Intercom, settings.integration.intercom);
-        await this.settingsProvider.setSetting(Settings.Config.GoogleFonts, settings.integration.googleFonts);
+    public async setSiteSettings(settings: SiteSettingsContract): Promise<void> {
+        await this.objectStorage.updateObject(`${settingsPath}/site`, settings);
     }
 
-    public async getSiteSettings(): Promise<SettingsContract> {
-        return this.objectStorage.getObject<SettingsContract>(settingsPath);
+    public async getSiteSettings(): Promise<SiteSettingsContract> {
+        return this.objectStorage.getObject<SiteSettingsContract>(`${settingsPath}/site`);
+    }
+
+    public async getIntegrationSettings<TSettings>(intergationName: string): Promise<TSettings> {
+        let settings = await this.objectStorage.getObject<TSettings>(`${settingsPath}/integration/${intergationName}`);
+
+        if (!settings) {
+            settings = await this.settingsProvider.getSetting<TSettings>(intergationName);
+        }
+
+        return settings;
     }
 }

@@ -20,8 +20,8 @@ export class LinkedDataHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
             linkedDataObject = {
                 "@context": "http://www.schema.org",
                 "@type": "Organization",
-                "name": settings.site.title,
-                "description": settings.site.description
+                "name": settings.title,
+                "description": settings.description
             };
         }
 
