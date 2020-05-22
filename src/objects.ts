@@ -92,13 +92,13 @@ export function setStructure(path: string, target: object, delimiter: string = "
 /**
  * Remove all properties with undefined value from object.
  */
-export function cleanupObject(source: object, includingNulls: boolean = false): void {
+export function cleanupObject(source: object, includingNulls: boolean = false, includingEmptyString: boolean = false): void {
     if (source instanceof Object) {
         Object.keys(source).forEach(key => {
             const child = source[key];
 
             if (Array.isArray(child)) {
-                child.forEach(x => cleanupObject(x, includingNulls));
+                child.forEach(x => cleanupObject(x, includingNulls, includingEmptyString));
 
                 if (child.length === 0) {
                     source[key] = null;
@@ -109,13 +109,13 @@ export function cleanupObject(source: object, includingNulls: boolean = false): 
                 }
             }
             else if (child instanceof Object) {
-                cleanupObject(child, includingNulls);
+                cleanupObject(child, includingNulls, includingEmptyString);
 
                 if (Object.keys(child).length === 0) {
                     delete source[key];
                 }
             }
-            else if (child === undefined || (includingNulls && child === null)) {
+            else if (child === undefined || (includingNulls && child === null) || (includingEmptyString && child === "")) {
                 delete source[key];
             }
         });
@@ -199,4 +199,8 @@ export function findObjects(source: object, predicate: (node: object) => boolean
     }
 
     return result;
+}
+
+export function isEmpty(source: object): boolean {
+    return !source || Object.keys(source).length === 0;
 }
