@@ -13,6 +13,15 @@ export class UnhandledErrorHandler {
     }
 
     public handlerError(event: ErrorEvent): void {
+        if (!event.error) {
+            const message = event.target
+                ? `Unparsable error for element: ${event.target.toString()}`
+                : `Unparsable error thrown.`;
+
+            this.logger.traceError(new Error(message));
+            return;
+        }
+
         this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
         this.logger.traceError(event.error);
     }
