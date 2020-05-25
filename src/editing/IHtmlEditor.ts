@@ -26,8 +26,8 @@ export interface IHtmlEditor {
     toggleQuote(): void;
     toggleFormatted(): void;
     toggleSize(): void;
-    toggleOrderedList(): void;
-    toggleUnorderedList(): void;
+    toggleOrderedList(styleKey?: string): void;
+    toggleUnorderedList(styleKey?: string): void;
     alignLeft(viewport?: string): void;
     alignCenter(viewport?: string): void;
     alignRight(viewport?: string): void;
@@ -45,7 +45,7 @@ export interface IHtmlEditor {
     getSelectionText(): string;
     increaseIndent(): void;
     decreaseIndent(): void;
-    setTextStyle(textStyleKey: string, viewport?: string): void;
+    setTextStyle(styleKey: string, viewport?: string): void;
 
     /* Events */
     addSelectionChangeListener(callback: () => void): void;

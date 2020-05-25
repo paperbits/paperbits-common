@@ -1,6 +1,6 @@
 import { StylePluginConfig } from "./stylePluginConfig";
 import { BreakpointValues } from "./breakpoints";
-import { LocalStyles } from "./styleContract";
+import { LocalStyles } from "./localStyles";
 import * as Objects from "../objects";
 import * as Utils from "../utils";
 

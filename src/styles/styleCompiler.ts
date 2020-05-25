@@ -1,4 +1,6 @@
-import { LocalStyles, StatesContract, VariationContract } from "./styleContract";
+import { StateBagContract } from "./stateBagContract";
+import { LocalStyles } from "./localStyles";
+import { VariationContract } from "./variationContract";
 import { StyleModel } from "./styleModel";
 import { Style, StyleSheet, StyleManager } from "./";
 
@@ -46,10 +48,10 @@ export interface StyleCompiler {
 
     /**
      * Converts states style contract into style.
-     * @param states {StatesContract} Bag of state contracts.
+     * @param states {StateBagContract} Bag of state contracts.
      * @param stateName {string} Name of the state, e.g. "hover", "active".
      */
-    getStateStyle(states: StatesContract, stateName: string): Promise<Style>;
+    getStateStyle(states: StateBagContract, stateName: string): Promise<Style>;
 
     /**
      * Returns theme style sheet;
