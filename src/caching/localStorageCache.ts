@@ -1,19 +1,43 @@
 ﻿import { ILocalCache } from "./ILocalCache";
+import { ISettingsProvider } from "../configuration";
 
 export class LocalStorageCache implements ILocalCache {
+    private initializePromise: Promise<void>;
+    private containerId: string;
+
+    constructor(private readonly settingsProvider: ISettingsProvider) { }
+
+    private initialize(): Promise<void> {
+        if (this.initializePromise) {
+            return this.initializePromise;
+        }
+
+        this.initializePromise = new Promise<void>(async (resolve) => {
+            this.containerId = await this.settingsProvider.getSetting("cacheContainerId") || "default";
+            resolve();
+        });
+
+        return this.initializePromise;
+    }
+
     public async getKeys(): Promise<string[]> {
+        await this.initialize();
         return Object.keys(localStorage);
     }
 
     public async setItem(key: string, value: any): Promise<void> {
-        localStorage.setItem(key, JSON.stringify(value));
+        await this.initialize();
+        localStorage.setItem(`${this.containerId}/${key}`, JSON.stringify(value));
     }
 
     public async getItem<T>(key: string): Promise<T> {
-        return <T>JSON.parse(localStorage.getItem(key));
+        await this.initialize();
+        return <T>JSON.parse(localStorage.getItem(`${this.containerId}/${key}`));
     }
 
     private async estimateSize(object: any): Promise<number> {
+        await this.initialize();
+
         const list = [];
         const stack = [object];
         let bytes = 0;
@@ -61,7 +85,8 @@ export class LocalStorageCache implements ILocalCache {
     }
 
     public async removeItem(key: string): Promise<void> {
-        localStorage.removeItem(key);
+        await this.initialize();
+        localStorage.removeItem(`${this.containerId}/${key}`);
     }
 
     public async clear(): Promise<void> {
