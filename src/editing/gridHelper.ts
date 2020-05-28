@@ -8,8 +8,13 @@ export class GridHelper {
         do {
             const context = ko.contextFor(element);
 
-            if (!context || !context.$data || !context.$data.widgetBinding || context.$data.widgetBinding.readonly) {
-                element = element.parentElement;
+            if (!context?.$data?.widgetBinding || context.$data.widgetBinding.readonly) {
+                element = element?.parentElement;
+
+                if (!element) {
+                    return stack;
+                }
+                
                 continue;
             }
 
@@ -20,7 +25,7 @@ export class GridHelper {
                 binding: binding
             });
 
-            element = element.parentElement;
+            element = element?.parentElement;
         }
         while (element);
 
