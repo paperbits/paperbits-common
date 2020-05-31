@@ -27,7 +27,16 @@ export class UnhandledErrorHandler {
     }
 
     public handlerPromiseRejection(event: PromiseRejectionEvent): void {
+        if (!event.reason) {
+            const message = event.target
+                ? `Unhandled rejection for target: ${event.target.toString()}`
+                : `Unhandled rejection.`;
+
+            this.logger.traceError(new Error(message));
+            return;
+        }
+
         this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.traceError(event.reason);
+        this.logger.traceError(new Error(`Unhandled rejection: ${event.reason}`));
     }
 }
