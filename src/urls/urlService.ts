@@ -36,16 +36,16 @@ export class UrlService implements IUrlService {
     public async createUrl(permalink: string, title: string, description?: string): Promise<UrlContract> {
         const key = `${urlsPath}/${Utils.guid()}`;
 
-        const url: UrlContract = {
+        const contract: UrlContract = {
             key: key,
             title: title,
             description: description,
             permalink: permalink
         };
 
-        await this.objectStorage.addObject(key, url);
+        await this.objectStorage.addObject(key, contract);
 
-        return url;
+        return contract;
     }
 
     public async updateUrl(url: UrlContract): Promise<void> {
