@@ -170,9 +170,10 @@ export class LayoutService implements ILayoutService {
             throw new Error(`Parameter "permalinkTemplate" not specified.`);
         }
 
+        const defaultLocale = await this.localeService.getDefaultLocale();
         const query = Query
             .from<LayoutContract>()
-            .where("permalinkTemplate", Operator.equals, permalinkTemplate);
+            .where(`locales/${defaultLocale}/permalinkTemplate`, Operator.equals, permalinkTemplate);
 
         const result = await this.objectStorage.searchObjects<LayoutContract>(this.layoutsPath, query);
         const layouts = Object.keys(result).map(key => result[key]);
