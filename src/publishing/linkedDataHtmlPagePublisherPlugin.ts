@@ -1,4 +1,4 @@
-import { ISiteService } from "../sites";
+import { ISiteService, SiteSettingsContract } from "../sites";
 import { HtmlPage } from "./htmlPage";
 import { HtmlPagePublisherPlugin } from "./htmlPagePublisherPlugin";
 
@@ -7,21 +7,22 @@ export class LinkedDataHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
     constructor(private readonly siteService: ISiteService) { }
 
     public async apply(document: Document, page: HtmlPage): Promise<void> {
-        let linkedDataObject: any =  page.linkedData;
+        let linkedDataObject: any = page.linkedData;
 
         /* Ensure rendering structured data for home page only */
         if (page.permalink !== "/" && !linkedDataObject) {
             return;
         }
-        
+
         if (!linkedDataObject) {
-            const settings = await this.siteService.getSiteSettings();
+            const settings = await this.siteService.getSettings<any>();
+            const siteSettings: SiteSettingsContract = settings.site;
 
             linkedDataObject = {
                 "@context": "http://www.schema.org",
                 "@type": "Organization",
-                "name": settings.title,
-                "description": settings.description
+                "name": siteSettings.title,
+                "description": siteSettings.description
             };
         }
 

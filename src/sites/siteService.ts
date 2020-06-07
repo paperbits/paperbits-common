@@ -1,30 +1,21 @@
 ﻿import { IObjectStorage } from "../persistence";
-import { ISiteService, SiteSettingsContract } from "../sites";
-import { ISettingsProvider } from "../configuration";
+import { ISiteService } from "../sites";
 
 const settingsPath = "settings";
 
 export class SiteService implements ISiteService {
-    constructor(
-        private readonly objectStorage: IObjectStorage,
-        private readonly settingsProvider: ISettingsProvider
-    ) { }
+    constructor(private readonly objectStorage: IObjectStorage) { }
 
-    public async setSiteSettings(settings: SiteSettingsContract): Promise<void> {
-        await this.objectStorage.updateObject(`${settingsPath}/site`, settings);
+    public async getSettings<T>(): Promise<T> {
+        const settings = await this.objectStorage.getObject<T>(settingsPath);
+        return settings;
     }
 
-    public async getSiteSettings(): Promise<SiteSettingsContract> {
-        return this.objectStorage.getObject<SiteSettingsContract>(`${settingsPath}/site`);
-    }
-
-    public async getIntegrationSettings<TSettings>(intergationName: string): Promise<TSettings> {
-        let settings = await this.objectStorage.getObject<TSettings>(`${settingsPath}/integration/${intergationName}`);
-
+    public async setSettings<T>(settings: T): Promise<void> {
         if (!settings) {
-            settings = await this.settingsProvider.getSetting<TSettings>(intergationName);
+            throw new Error(`Parameter "settings" not specified.`);
         }
 
-        return settings;
+        await this.objectStorage.updateObject(`${settingsPath}`, settings);
     }
 }

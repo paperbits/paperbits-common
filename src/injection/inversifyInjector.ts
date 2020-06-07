@@ -3,13 +3,13 @@ import { IInjector, IInjectorModule, InjectableMetadataKey } from "../injection"
 import { inject, injectable, Container, decorate, interfaces, METADATA_KEY } from "inversify";
 
 export class InversifyInjector implements IInjector {
-    private conatainer: Container;
+    private container: Container;
 
     constructor() {
         this.bindSingleton = this.bindSingleton.bind(this);
         this.bind = this.bind.bind(this);
 
-        this.conatainer = new Container();
+        this.container = new Container();
     }
 
     public getFunctionArguments(func: Function): string[] {
@@ -65,13 +65,13 @@ export class InversifyInjector implements IInjector {
     }
 
     private bindInternal<T>(name: string, component: any): interfaces.BindingInWhenOnSyntax<T> {
-        if (this.conatainer.isBound(name)) {
-            this.conatainer.unbind(name);
+        if (this.container.isBound(name)) {
+            this.container.unbind(name);
         }
 
         this.decorateComponent(name, component);
 
-        return this.conatainer.bind<T>(name).to(component);
+        return this.container.bind<T>(name).to(component);
     }
 
     public bind(name: string, component: any): void {
@@ -101,21 +101,25 @@ export class InversifyInjector implements IInjector {
     }
 
     public bindInstance<T>(name: string, instance: T): void {
-        if (this.conatainer.isBound(name)) {
-            this.conatainer.unbind(name);
+        if (this.container.isBound(name)) {
+            this.container.unbind(name);
         }
 
-        this.conatainer.bind(name).toConstantValue(instance);
+        this.container.bind(name).toConstantValue(instance);
     }
 
     public resolve<TImplementationType>(runtimeIdentifier: string): TImplementationType {
-        const component = this.conatainer.get<TImplementationType>(runtimeIdentifier);
+        const component = this.container.get<TImplementationType>(runtimeIdentifier);
 
         if (!component) {
             throw new Error(`Component ${runtimeIdentifier} not found.`);
         }
 
         return component;
+    }
+
+    public resolveClass<TImplementationType>(constructorFunc: new (...args: any[]) => TImplementationType): TImplementationType {
+        return this.container.resolve<TImplementationType>(constructorFunc);
     }
 
     public bindModule(module: IInjectorModule): void {
@@ -127,7 +131,7 @@ export class InversifyInjector implements IInjector {
      * @param collectionName
      */
     public bindCollection(collectionName: string): void {
-        const kernel = this.conatainer;
+        const kernel = this.container;
         const result = [];
 
         @injectable()
@@ -148,8 +152,8 @@ export class InversifyInjector implements IInjector {
                 return result;
             }
         }
-        this.conatainer.bind<any>(collectionName).to(Collection).inSingletonScope();
-        this.conatainer.bind<any>(collectionName + "C").to(Placeholder);
+        this.container.bind<any>(collectionName).to(Collection).inSingletonScope();
+        this.container.bind<any>(collectionName + "C").to(Placeholder);
     }
 
     /**
@@ -157,7 +161,7 @@ export class InversifyInjector implements IInjector {
      * @param collectionName 
      */
     public bindCollectionLazily(collectionName: string): void {
-        const kernel = this.conatainer;
+        const kernel = this.container;
         const result = [];
 
         @injectable()
@@ -180,24 +184,24 @@ export class InversifyInjector implements IInjector {
                 return result;
             }
         }
-        this.conatainer.bind<any>(collectionName).to(Collection).inSingletonScope();
-        this.conatainer.bind<any>(collectionName + "C").to(Placeholder);
+        this.container.bind<any>(collectionName).to(Collection).inSingletonScope();
+        this.container.bind<any>(collectionName + "C").to(Placeholder);
     }
 
     public bindToCollection(collectionName: string, component: any, name?: string): void {
         this.decorateComponent(collectionName + "C", component);
-        this.conatainer.bind<any>(collectionName + "C").to(component);
+        this.container.bind<any>(collectionName + "C").to(component);
 
         if (name) {
-            this.conatainer.bind<any>(name).to(component);
+            this.container.bind<any>(name).to(component);
         }
     }
 
     public bindInstanceToCollection(collectionName: string, instance: any, name?: string): void {
-        this.conatainer.bind<any>(collectionName + "C").toConstantValue(instance);
+        this.container.bind<any>(collectionName + "C").toConstantValue(instance);
 
         if (name) {
-            this.conatainer.bind<any>(name).toConstantValue(instance);
+            this.container.bind<any>(name).toConstantValue(instance);
         }
     }
 }

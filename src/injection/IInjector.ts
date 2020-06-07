@@ -79,4 +79,9 @@ export interface IInjector {
      * @param name Name of the dependency, e.g. myInstance.
      */
     resolve<T>(name: string): T;
+
+    /**
+     * Resolves specified dependecy by constructor.
+     */
+    resolveClass<TImplementationType>(constructorFunc: new (...args: any[]) => TImplementationType): TImplementationType;
 }

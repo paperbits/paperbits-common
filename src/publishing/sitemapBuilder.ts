@@ -1,4 +1,4 @@
-import { ISiteService } from "../sites";
+import { ISiteService, SiteSettingsContract } from "../sites";
 
 export class SitemapBuilder {
     private readonly permalinks: string[];
@@ -12,8 +12,9 @@ export class SitemapBuilder {
     }
 
     public async buildSitemap(): Promise<string> {
-        const settings = await this.siteService.getSiteSettings();
-        const hostname = settings?.hostname;
+        const settings =  await this.siteService.getSettings<any>();
+        const siteSettings: SiteSettingsContract = settings.site;
+        const hostname = siteSettings?.hostname;
         const baseUrl = hostname ? `https://${hostname}` : "";
 
         const now = new Date();
