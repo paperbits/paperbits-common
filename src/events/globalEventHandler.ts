@@ -80,7 +80,7 @@ export class GlobalEventHandler {
         }
 
         if (event.ctrlKey && event.keyCode === Keys.Z) {
-            event.preventDefault();
+            // event.preventDefault();
             this.onCtrlZ();
         }
 

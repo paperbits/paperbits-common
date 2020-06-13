@@ -1,17 +1,30 @@
 import * as Objects from "../objects";
 import * as _ from "lodash";
-import { Bag } from "./../bag";
-import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence";
+import { Bag } from "../bag";
+import { IObjectStorage, Query, Operator, OrderDirection } from ".";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { EventManager } from "../events";
 import { ILocalCache } from "../caching";
+
+import { createStore, combineReducers } from "redux";
+import undoable, { ActionCreators, includeAction, excludeAction } from "redux-undo";
+import produce from "immer";
 
 interface HistoryRecord {
     do: () => void;
     undo: () => void;
 }
 
-export class OfflineObjectStorage implements IObjectStorage {
+const initialHistory: any = {
+    past: [],
+    present: { value: 0, version: 0 },
+    future: []
+};
+
+export class ReduxOfflineObjectStorage implements IObjectStorage {
+    private readonly store: any;
+    private transactionOpen: boolean = false;
+
     private underlyingStorage: IObjectStorage;      // for storage
     private readonly stateObject: Object;
     private readonly changesObject: Object;
@@ -36,6 +49,54 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.middlewares = [];
         this.past = [];
         this.future = [];
+
+        const reducer = this.setupReducer();
+
+        this.store = createStore(undoable(reducer, { filter: this.actionFilter }), initialHistory);
+        this.store.subscribe(() => console.log(JSON.stringify(this.store.getState().present)));
+    }
+
+    private actionFilter(action: any, currentState: any, previousHistory: any): boolean {
+        return !this.transactionOpen; // exclude action if transaction is open.
+    }
+
+    private setupReducer(): any {
+        const reducer = produce((draft, action) => {
+            switch (action.type) {
+                case "ADD":
+                    Objects.setValue(action.path, draft.changesObject, action.dataObject);
+                    Objects.setValue(action.path, draft.stateObject, action.dataObject);
+
+                    Objects.cleanupObject(this.stateObject, true);
+                    Objects.cleanupObject(this.changesObject, true);
+
+                    if (!this.transactionOpen) {
+                        draft.version++;
+                    }
+                    break;
+
+                case "UPDATE":
+                    Objects.setValue(action.path, draft.changesObject, action.dataObject);
+                    Objects.setValue(action.path, draft.stateObject, action.dataObject);
+
+                    Objects.cleanupObject(this.stateObject, true);
+                    Objects.cleanupObject(this.changesObject);
+
+                    if (!this.transactionOpen) {
+                        draft.version++;
+                    }
+                    break;
+
+                case "COMMIT":
+                    draft.version++;
+                    break;
+
+                default:
+                    return draft;
+            }
+        });
+
+        return reducer;
     }
 
     private initialize(): Promise<void> {
@@ -81,36 +142,38 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         const dataObjectClone = Objects.clone(dataObject); // To drop any object references
 
-        let compensationOfState;
-        let compensationOfChanges;
+        this.store.dispatch({ type: "ADD", dataObjectClone });
 
-        const doCommand = () => {
-            /* Writing state */
-            compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone);
+        // let compensationOfState;
+        // let compensationOfChanges;
 
-            /* Writng changes */
-            compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone);
+        // const doCommand = () => {
+        //     /* Writing state */
+        //     compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone);
 
-            Objects.cleanupObject(this.stateObject, true);
-            Objects.cleanupObject(this.changesObject, true);
+        //     /* Writng changes */
+        //     compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone);
 
-            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-        };
+        //     Objects.cleanupObject(this.stateObject, true);
+        //     Objects.cleanupObject(this.changesObject, true);
 
-        const undoCommand = () => {
-            /* Undoing state */
-            Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
+        //     this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        // };
 
-            /* Undoing changes */
-            Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
+        // const undoCommand = () => {
+        //     /* Undoing state */
+        //     Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
-            Objects.cleanupObject(this.stateObject, true);
-            Objects.cleanupObject(this.changesObject, true);
+        //     /* Undoing changes */
+        //     Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
-            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-        };
+        //     Objects.cleanupObject(this.stateObject, true);
+        //     Objects.cleanupObject(this.changesObject, true);
 
-        this.do(doCommand, undoCommand);
+        //     this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        // };
+
+        // this.do(doCommand, undoCommand);
     }
 
     public async patchObject<T>(path: string, dataObject: T): Promise<void> {
@@ -128,39 +191,43 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         await this.initialize();
 
-        const dataObjectClone1 = Objects.clone(dataObject); // To drop any object references
-        const dataObjectClone2 = Objects.clone(dataObject); // To drop any object references
+        const dataObjectClone = Objects.clone(dataObject); // To drop any object references
 
-        let compensationOfState;
-        let compensationOfChanges;
+        this.store.dispatch({ type: "UPDATE", dataObjectClone });
 
-        const doCommand = () => {
-            /* Writing state */
-            compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone1);
+        // const dataObjectClone1 = Objects.clone(dataObject); // To drop any object references
+        // const dataObjectClone2 = Objects.clone(dataObject); // To drop any object references
 
-            /* Writng changes */
-            compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone2);
+        // let compensationOfState;
+        // let compensationOfChanges;
 
-            Objects.cleanupObject(this.stateObject, true);
-            Objects.cleanupObject(this.changesObject);
+        // const doCommand = () => {
+        //     /* Writing state */
+        //     compensationOfState = Objects.setValueWithCompensation(path, this.stateObject, dataObjectClone1);
 
-            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-        };
+        //     /* Writng changes */
+        //     compensationOfChanges = Objects.setValueWithCompensation(path, this.changesObject, dataObjectClone2);
 
-        const undoCommand = () => {
-            /* Undoing state */
-            Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
+        //     Objects.cleanupObject(this.stateObject, true);
+        //     Objects.cleanupObject(this.changesObject);
 
-            /* Undoing changes */
-            Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
+        //     this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        // };
 
-            Objects.cleanupObject(this.stateObject, true);
-            Objects.cleanupObject(this.changesObject);
+        // const undoCommand = () => {
+        //     /* Undoing state */
+        //     Objects.setValueWithCompensation(path, this.stateObject, compensationOfState);
 
-            this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-        };
+        //     /* Undoing changes */
+        //     Objects.setValueWithCompensation(path, this.changesObject, compensationOfChanges);
 
-        this.do(doCommand, undoCommand);
+        //     Objects.cleanupObject(this.stateObject, true);
+        //     Objects.cleanupObject(this.changesObject);
+
+        //     this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        // };
+
+        // this.do(doCommand, undoCommand);
     }
 
     public async getObject<T>(path: string): Promise<T> {

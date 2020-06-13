@@ -36,4 +36,8 @@ export interface IObjectStorage {
     saveChanges?(delta: Object): Promise<void>;
 
     loadData?(): Promise<object>;
+
+    beginTransaction?(): void;
+
+    commitTransaction?(): void;
 }
