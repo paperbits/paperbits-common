@@ -3,7 +3,7 @@ import { IComponent } from "./IComponent";
 export interface IContextCommandSet {
     color?: string;
     element?: HTMLElement;
-    hoverCommand?: IContextCommand;
+    hoverCommands?: IContextCommand[];
     selectCommands?: IContextCommand[];
     deleteCommand?: IContextCommand;
 }
