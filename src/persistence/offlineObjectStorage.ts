@@ -438,13 +438,13 @@ export class OfflineObjectStorage implements IObjectStorage {
 
             if (changesAt) {
                 /* If there are changes at the same path, apply them to search result */
-                Objects.mergeDeep(searchResultObject, changesAt);
+                Objects.mergeDeep(searchResultObject, changesAt, true);
             }
 
             /* Complement stateObject with new objects from search result, if any */
-            Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject));
+            Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject), true);
 
-            Objects.mergeDeep(resultObject, searchResultObject);
+            Objects.mergeDeep(resultObject, searchResultObject, true);
         }
 
         return resultObject;

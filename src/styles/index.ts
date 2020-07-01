@@ -13,7 +13,6 @@ export * from "./styleRule";
 export * from "./styles";
 export * from "./styleSheet";
 export * from "./styleManager";
-export * from "./styleHelper";
 export * from "./variationContract";
 export * from "./variationBagContract";
 export * from "./primitiveContract";

@@ -19,11 +19,12 @@ export function getObjectAt<T>(path: string, source: object, delimiter: string =
 
 /**
  * Applies changes to a target and returns reverse changeset that can be used to rollback changes.
- * @param target 
- * @param changeset 
+ * @param target {object} Object to which changes are being applied.
+ * @param changeset {object} Object that needs to be merged into targt object.
+ * @param removeNulls {boolean} Indicates that properties with "null" values should be removed.
  * @returns {object} Reverse changeset.
  */
-export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean = true): Object {
+export function mergeDeep(target: Object, changeset: Object, removeNulls: boolean = false): Object {
     const reverseChangeset = {};
 
     if (isObject(target) && isObject(changeset)) {
@@ -32,14 +33,14 @@ export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean
 
             if (isObject(sourceProperty)) {
                 if (target[key] !== undefined && target[key] !== null) {
-                    reverseChangeset[key] = mergeDeep(target[key], sourceProperty, cleanNulls);
+                    reverseChangeset[key] = mergeDeep(target[key], sourceProperty, removeNulls);
                 }
                 else { // if not present in target, safely assign whole source.
                     if (target[key] !== sourceProperty) {
                         reverseChangeset[key] = target[key] || null;
                         target[key] = sourceProperty;
 
-                        if (cleanNulls) {
+                        if (removeNulls) {
                             if (target[key] === null || target[key] === undefined) {
                                 delete target[key];
                             }
@@ -52,7 +53,7 @@ export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean
                     reverseChangeset[key] = target[key] || null;
                     target[key] = sourceProperty;
 
-                    if (cleanNulls) {
+                    if (removeNulls) {
                         if (target[key] === null || target[key] === undefined) {
                             delete target[key];
                         }
@@ -65,13 +66,13 @@ export function mergeDeep(target: Object, changeset: Object, cleanNulls: boolean
     return reverseChangeset;
 }
 
-export function mergeDeepAt(path: string, target: any, source: any, cleanNulls: boolean = true): void {
+export function mergeDeepAt(path: string, target: any, source: any, removeNulls: boolean = false): void {
     if (Array.isArray(source)) {
         setValueWithCompensation(path, target, source);
     }
     else {
         const updatingObject = setStructure(path, target);
-        mergeDeep(updatingObject, source, cleanNulls);
+        mergeDeep(updatingObject, source, removeNulls);
     }
 }
 
@@ -91,6 +92,9 @@ export function setStructure(path: string, target: object, delimiter: string = "
 
 /**
  * Remove all properties with undefined value from object.
+ * @param source {object} An object that needs to be cleaned.
+ * @param includingNulls {boolean} Indicates if properties with "null" values will also be removed from source object.
+ * @param includingEmptyString {boolean} Indicates if properties with empty string values will also be removed from source object.
  */
 export function cleanupObject(source: object, includingNulls: boolean = false, includingEmptyString: boolean = false): void {
     if (source instanceof Object) {
