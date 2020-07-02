@@ -15,6 +15,7 @@ export interface IHtmlEditor {
     toggleItalic(): void;
     toggleUnderlined(): void;
     toggleHighlighted(): void;
+    toggleStriked(): void;
     toggleCode(): void;
     toggleParagraph(): void;
     toggleH1(): void;

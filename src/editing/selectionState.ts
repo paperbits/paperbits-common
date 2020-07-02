@@ -4,6 +4,7 @@ export class SelectionState {
     public block: string;
     public bold: boolean;
     public italic: boolean;
+    public striked: boolean;
     public underlined: boolean;
     public highlighted: boolean;
     public code: boolean;
