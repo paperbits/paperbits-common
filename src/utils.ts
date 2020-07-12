@@ -232,8 +232,9 @@ export function pointerToClientQuadrant(pointerX: number, pointerY: number, elem
 export function optimizeBreakpoints(breakpoints: Breakpoints<any>): Breakpoints<any> {
     const result: Breakpoints<any> = {};
     let lastAssigned = null;
+    const breakpointKeys = ["xs", "sm", "md", "lg", "xl"];
 
-    ["xs", "sm", "md", "lg", "xl"].forEach(breakpoint => {
+    breakpointKeys.forEach(breakpoint => {
         const value = breakpoints[breakpoint];
 
         if (value && value !== lastAssigned) {
@@ -241,6 +242,13 @@ export function optimizeBreakpoints(breakpoints: Breakpoints<any>): Breakpoints<
             lastAssigned = value;
         }
     });
+
+    const resultKeys = Object.keys(result);
+
+    if (resultKeys.length === 1) {
+        const singleKey = resultKeys[0];
+        return result[singleKey];
+    }
 
     return result;
 }
