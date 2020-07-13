@@ -6,33 +6,47 @@
  * found in the LICENSE file and at https://paperbits.io/license/mit.
  */
 
-import { Bag } from "../";
+import { Bag } from "../bag";
 
 
 export interface Logger {
     /**
      * Traces information related to beginning of session.
      */
-    traceSession(userId?: string): Promise<void>;
+    trackSession(properties?: object): Promise<void>;
 
     /**
-     * Traces error.
-     * @param error {Error} Error object.
-     * @param handledAt 
+     * Tracks an arbitrary error.
+     * @param message {string} Associated error message.
+     * @param error {Error} Error object. 
      */
-    traceError(error: Error, handledAt?: string): Promise<void>;
+    trackError(message: string, error?: Error): Promise<void>;
 
     /**
-     * Traces opening of a particular view.
-     * @param name {string} Name of the view.
+     * Tracks activation of a specified view.
+     * @param viewName {string} Name of the view, e.g. "saveChangesDialog".
+     * @param arguments
      */
-    traceView(name: string): Promise<void>;
+    trackView(viewName: string, properties?: Bag<string>): Promise<void>;
 
     /**
-     * Traces an arbitrary event.
-     * @param eventName {string} Name of the event.
-     * @param properties {Bag<string>} A bag of event properties, e.g. { event: "click" }.
-     * @param measurments {Bag<number>} A bag of measurement, e.g. { numberOfClicks: 5 }.
+     * Tracks an arbitrary event.
+     * @param eventName {string} Name of the event, e.g. "mousedown"
+     * @param properties {Bag<string>}  An object of event properties, e.g. { clientX: 100, clientY: 100 }.
      */
-    traceEvent(eventName: string, properties?: Bag<string>, measurments?: Bag<number>): Promise<void>;
+    trackEvent(eventName: string, properties?: Bag<string>): Promise<void>;
+
+    /**
+     * Tracks an arbitrary metric.
+     * @param metricName {string} Name of the metric, e.g. "serverResponse".
+     * @param properties {Bag<string>} An object of metric properties, e.g. { latency: 1000 }.
+     */
+    trackMetric(metricName: string, properties?: Bag<string>): Promise<void>;
+
+    /**
+     * Tracks dependency component invocation.
+     * @param name {string} Name of the dependency, e.g. "blobStorage".
+     * @param properties {Bag<string>} An object of invoke properties, e.g. { bucket: "media" }.
+     */
+    trackDependency(name: string, properties?: Bag<string>): Promise<void>;
 }

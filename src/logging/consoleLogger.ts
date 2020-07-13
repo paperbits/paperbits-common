@@ -11,19 +11,27 @@ import { Logger } from "./logger";
 
 
 export class ConsoleLogger implements Logger {
-    public async traceSession(): Promise<void> {
-        this.traceEvent(`Session started.`);
+    public async trackSession(properties?: Bag<string>): Promise<void> {
+        this.trackEvent(`Session started.`, properties);
     }
 
-    public async traceEvent(eventName: string, properties?: Bag<string>, measurments?: Bag<number>): Promise<void> {
-        console.info(`${eventName}`);
+    public async trackEvent(eventName: string, properties?: Bag<string>): Promise<void> {
+        console.info(`${eventName}`, !!properties ? JSON.stringify(properties) : undefined);
     }
 
-    public async traceError(error: Error, handledAt?: string): Promise<void> {
-        console.error(error);
+    public async trackError(message: string, error?: Error): Promise<void> {
+        console.error(message, error);
     }
 
-    public async traceView(name: string): Promise<void> {
-        console.info(`View: ${name}`);
+    public async trackView(name: string, properties?: Bag<string>): Promise<void> {
+        console.info(`View: ${name}`, !!properties ? JSON.stringify(properties) : undefined);
+    }
+
+    public async trackMetric(metricName: string, properties?: Bag<string>): Promise<void> {
+        console.info(`Metric: ${metricName}`, !!properties ? JSON.stringify(properties) : undefined);
+    }
+
+    public async trackDependency(dependencyName: string, properties?: Bag<string>): Promise<void> {
+        console.info(`Invoking dependency: ${dependencyName}`, !!properties ? JSON.stringify(properties) : undefined);
     }
 }

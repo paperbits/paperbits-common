@@ -9,7 +9,7 @@ export class UnhandledErrorHandler {
         private readonly logger: Logger
     ) {
         this.eventManager.addEventListener("onError", this.handlerError.bind(this));
-        window.addEventListener("unhandledrejection", this.handlerPromiseRejection.bind(this), true);
+        this.eventManager.addEventListener("onUnhandledRejection", this.handlerPromiseRejection.bind(this));
     }
 
     public handlerError(event: ErrorEvent): void {
@@ -27,12 +27,12 @@ export class UnhandledErrorHandler {
                 message = `Unparsable error thrown.`;
             }
 
-            this.logger.traceError(new Error(message));
+            this.logger.trackError(message);
             return;
         }
 
         this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.traceError(event.error);
+        this.logger.trackError(event.error);
     }
 
     public handlerPromiseRejection(event: PromiseRejectionEvent): void {
@@ -41,11 +41,11 @@ export class UnhandledErrorHandler {
                 ? `Unhandled rejection for target: ${event.target.toString()}`
                 : `Unhandled rejection.`;
 
-            this.logger.traceError(new Error(message));
+            this.logger.trackError(message);
             return;
         }
 
         this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.traceError(new Error(`Unhandled rejection: ${event.reason}`));
+        this.logger.trackError(`Unhandled rejection: ${event.reason}`);
     }
 }

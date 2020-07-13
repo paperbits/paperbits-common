@@ -26,7 +26,7 @@ export class SaveChangesToolButton implements ToolButton {
     }
 
     public onActivate(): void {
-        this.logger.traceEvent("Click: Save changes");
+        this.logger.trackEvent("Click: Save changes");
         this.eventManager.dispatchEvent("onSaveChanges");
     }
 }

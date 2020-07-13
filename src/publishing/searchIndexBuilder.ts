@@ -21,25 +21,35 @@ export class SearchIndexBuilder {
     }
 
     public appendPage(permalink: string, title: string, description: string, body: string): void {
-        const regex = /<main.*>([\s\S]*)<\/main>/g;
-        const match = regex.exec(body);
+        try {
+            const regex = /<main.*>([\s\S]*)<\/main>/g;
+            const match = regex.exec(body);
 
-        if (!match || match.length < 1) {
-            return;
+            if (!match || match.length < 1) {
+                return;
+            }
+
+            const mainContent = match[1];
+
+            this.documents.push({
+                permalink: permalink,
+                title: title,
+                description: description,
+                body: h2p(mainContent)
+            });
         }
-
-        const mainContent = match[1];
-
-        this.documents.push({
-            permalink: permalink,
-            title: title,
-            description: description,
-            body: h2p(mainContent)
-        });
+        catch (error) {
+            throw new Error(`Unable to index content for ${permalink}: ${error}`);
+        }
     }
 
     public buildIndex(): string {
-        const index = lunr(this.getIndexerConfigFunc(this.documents));
-        return JSON.stringify(index);
+        try {
+            const index = lunr(this.getIndexerConfigFunc(this.documents));
+            return JSON.stringify(index);
+        }
+        catch (error) {
+            throw new Error(`Unable to build search index: ${error}`);
+        }
     }
 }
