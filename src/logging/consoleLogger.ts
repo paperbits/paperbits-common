@@ -19,12 +19,12 @@ export class ConsoleLogger implements Logger {
         console.info(`${eventName}`, !!properties ? JSON.stringify(properties) : undefined);
     }
 
-    public async trackError(message: string, error?: Error): Promise<void> {
-        console.error(message, error);
+    public async trackError(error: Error): Promise<void> {
+        console.error(error?.message);
     }
 
-    public async trackView(name: string, properties?: Bag<string>): Promise<void> {
-        console.info(`View: ${name}`, !!properties ? JSON.stringify(properties) : undefined);
+    public async trackView(viewName: string, properties?: Bag<string>): Promise<void> {
+        console.info(`View: ${viewName}`, !!properties ? JSON.stringify(properties) : undefined);
     }
 
     public async trackMetric(metricName: string, properties?: Bag<string>): Promise<void> {

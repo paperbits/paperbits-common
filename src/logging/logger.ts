@@ -17,10 +17,10 @@ export interface Logger {
 
     /**
      * Tracks an arbitrary error.
-     * @param message {string} Associated error message.
-     * @param error {Error} Error object. 
+     * @param error {Error} Error object.
+     * @param properties {Bag<string>} An object of additional properties.
      */
-    trackError(message: string, error?: Error): Promise<void>;
+    trackError(error: Error, properties?: Bag<string>): Promise<void>;
 
     /**
      * Tracks activation of a specified view.
@@ -32,21 +32,21 @@ export interface Logger {
     /**
      * Tracks an arbitrary event.
      * @param eventName {string} Name of the event, e.g. "mousedown"
-     * @param properties {Bag<string>}  An object of event properties, e.g. { clientX: 100, clientY: 100 }.
+     * @param properties {Bag<string>}  An object of additional properties, e.g. { clientX: 100, clientY: 100 }.
      */
     trackEvent(eventName: string, properties?: Bag<string>): Promise<void>;
 
     /**
      * Tracks an arbitrary metric.
      * @param metricName {string} Name of the metric, e.g. "serverResponse".
-     * @param properties {Bag<string>} An object of metric properties, e.g. { latency: 1000 }.
+     * @param properties {Bag<string>} An object of additional properties, e.g. { latency: 1000 }.
      */
     trackMetric(metricName: string, properties?: Bag<string>): Promise<void>;
 
     /**
      * Tracks dependency component invocation.
      * @param name {string} Name of the dependency, e.g. "blobStorage".
-     * @param properties {Bag<string>} An object of invoke properties, e.g. { bucket: "media" }.
+     * @param properties {Bag<string>} An object of additional properties, e.g. { bucket: "media" }.
      */
     trackDependency(name: string, properties?: Bag<string>): Promise<void>;
 }

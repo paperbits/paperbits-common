@@ -27,7 +27,7 @@ export class UnhandledErrorHandler {
                 message = `Unparsable error thrown.`;
             }
 
-            this.logger.trackError(message);
+            this.logger.trackError(new Error(message));
             return;
         }
 
@@ -41,11 +41,11 @@ export class UnhandledErrorHandler {
                 ? `Unhandled rejection for target: ${event.target.toString()}`
                 : `Unhandled rejection.`;
 
-            this.logger.trackError(message);
+            this.logger.trackError(new Error(message));
             return;
         }
 
         this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.trackError(`Unhandled rejection: ${event.reason}`);
+        this.logger.trackError(new Error(`Unhandled rejection: ${event.reason}`));
     }
 }
