@@ -13,39 +13,49 @@ export class UnhandledErrorHandler {
     }
 
     public handlerError(event: ErrorEvent): void {
-        if (!event.error) {
-            let message: string;
+        try {
+            if (!event?.error) {
+                let message: string;
 
-            if (event.target) {
-                message = `Unparsable error for element: ${event.target.toString()}`;
+                if (event.target) {
+                    message = `Unparsable error for element: ${event.target.toString()}`;
 
-                if (navigator.sendBeacon && event.target["src"]) {
-                    navigator.sendBeacon(event.target["src"]);
+                    if (navigator.sendBeacon && event.target["src"]) {
+                        navigator.sendBeacon(event.target["src"]);
+                    }
                 }
-            }
-            else {
-                message = `Unparsable error thrown.`;
+                else {
+                    message = `Unparsable error thrown.`;
+                }
+
+                this.logger.trackError(new Error(message));
+                return;
             }
 
-            this.logger.trackError(new Error(message));
-            return;
+            this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
+            this.logger.trackError(event.error.stack || event.error);
         }
-
-        this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.trackError(event.error);
+        catch (error) {
+            console.error(`Unable to log error. ${error}`);
+        }
     }
 
     public handlerPromiseRejection(event: PromiseRejectionEvent): void {
-        if (!event.reason) {
-            const message = event.target
-                ? `Unhandled rejection for target: ${event.target.toString()}`
-                : `Unhandled rejection.`;
+        try {
+            if (!event?.reason) {
+                const message = event.target
+                    ? `Unhandled rejection for target: ${event.target.toString()}`
+                    : `Unhandled rejection.`;
 
-            this.logger.trackError(new Error(message));
-            return;
+                this.logger.trackError(new Error(message));
+                return;
+            }
+
+            this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
+            this.logger.trackError(new Error(`Unhandled rejection: ${event.reason.stack || event.reason}`));
         }
-
-        this.viewManager.notifyError("Oops, something went wrong.", "We are unable to complete your operation this time. Please try again later.");
-        this.logger.trackError(new Error(`Unhandled rejection: ${event.reason}`));
+        catch (error) {
+            console.error(`Unable to log error. ${error}`);
+        }
     }
 }
