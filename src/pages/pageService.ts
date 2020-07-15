@@ -92,7 +92,7 @@ export class PageService implements IPageService {
             return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, firstPage);
         }
         catch (error) {
-            throw new Error(`Unable to search pages: ${error}`);
+            throw new Error(`Unable to search pages: ${error.stack || error.message}`);
         }
     }
 
@@ -138,7 +138,7 @@ export class PageService implements IPageService {
             return pages.map(x => this.localizedContractToContract(defaultLocale, searchLocale, null, x));
         }
         catch (error) {
-            throw new Error(`Unable to search pages: ${error}`);
+            throw new Error(`Unable to search pages: ${error.stack || error.message}`);
         }
     }
 
@@ -161,7 +161,7 @@ export class PageService implements IPageService {
             await this.objectStorage.deleteObject(page.key);
         }
         catch (error) {
-            throw new Error(`Unable to delete page ${page.title}: ${error}`);
+            throw new Error(`Unable to delete page ${page.title}: ${error.stack || error.message}`);
         }
     }
 

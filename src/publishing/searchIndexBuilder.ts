@@ -39,7 +39,7 @@ export class SearchIndexBuilder {
             });
         }
         catch (error) {
-            throw new Error(`Unable to index content for ${permalink}: ${error}`);
+            throw new Error(`Unable to index content for ${permalink}: ${error.stack || error.message}`);
         }
     }
 
@@ -49,7 +49,7 @@ export class SearchIndexBuilder {
             return JSON.stringify(index);
         }
         catch (error) {
-            throw new Error(`Unable to build search index: ${error}`);
+            throw new Error(`Unable to build search index: ${error.stack || error.message}`);
         }
     }
 }

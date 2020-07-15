@@ -49,7 +49,7 @@ export class InversifyInjector implements IInjector {
             Reflect.defineMetadata(InjectableMetadataKey, { name: name }, component);
         }
         catch (error) {
-            console.warn(`Unable to decorate component "${name}". ${error}`);
+            console.warn(`Unable to decorate component "${name}". ${error.stack || error.message}`);
         }
 
         const constructorArguments = this.getFunctionArguments(component);
@@ -59,7 +59,7 @@ export class InversifyInjector implements IInjector {
                 decorate(inject(constructorArguments[i]), component, i);
             }
             catch (error) {
-                console.warn(`Unable to decorate constructor argument "${constructorArguments[i]}" for component "${name}". ${error}`);
+                console.warn(`Unable to decorate constructor argument "${constructorArguments[i]}" for component "${name}". ${error.stack || error.message}`);
             }
         }
     }
@@ -146,7 +146,7 @@ export class InversifyInjector implements IInjector {
                     result.push(...collection.slice(1));
                 }
                 catch (error) {
-                    throw new Error(`Unable to resolve collection "${collectionName}": ${error}`);
+                    throw new Error(`Unable to resolve collection "${collectionName}": ${error.stack || error.message}`);
                 }
 
                 return result;
@@ -177,7 +177,7 @@ export class InversifyInjector implements IInjector {
                         result.push(...collection.slice(1));
                     }
                     catch (error) {
-                        throw new Error(`Unable to resolve collection "${collectionName}": ${error}`);
+                        throw new Error(`Unable to resolve collection "${collectionName}": ${error.stack || error.message}`);
                     }
                 });
 

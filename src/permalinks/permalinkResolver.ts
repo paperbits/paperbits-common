@@ -33,7 +33,7 @@ export class PermalinkResolver implements IPermalinkResolver {
             targetUrl = await permalinkResolver.getUrlByTargetKey(targetKey, locale);
         }
         catch (error) {
-            console.warn(`Unable to resolve permalink. ${error}`);
+            console.warn(`Unable to resolve permalink. ${error.stack || error.message}`);
         }
 
         return targetUrl;

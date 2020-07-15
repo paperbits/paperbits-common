@@ -36,7 +36,7 @@ export class UnhandledErrorHandler {
             this.logger.trackError(event.error.stack || event.error);
         }
         catch (error) {
-            console.error(`Unable to log error. ${error}`);
+            console.error(`Unable to log error. ${error.stack || error.message}`);
         }
     }
 
@@ -55,7 +55,7 @@ export class UnhandledErrorHandler {
             this.logger.trackError(new Error(`Unhandled rejection: ${event.reason.stack || event.reason}`));
         }
         catch (error) {
-            console.error(`Unable to log error. ${error}`);
+            console.error(`Unable to log error. ${error.stack || error.message}`);
         }
     }
 }

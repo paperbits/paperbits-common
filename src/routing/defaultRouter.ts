@@ -132,7 +132,7 @@ export class DefaultRouter implements Router {
                 }
             }
             catch (error) {
-                throw new Error(`Unable to invoke route a guard: ${error}`);
+                throw new Error(`Unable to invoke route a guard: ${error.stack || error.message}`);
                 return false;
             }
         }
