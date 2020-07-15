@@ -74,17 +74,26 @@ export class PageService implements IPageService {
             .from<PageContract>()
             .where(permalinkProperty, Operator.equals, permalink);
 
-        const result = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, query);
+        try {
+            const result = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, query);
 
-        const pages: any[] = Object.values(result);
+            if (!result) {
+                return null;
+            }
 
-        if (pages.length === 0) {
-            return null;
+            const pages: any[] = Object.values(result);
+
+            if (pages.length === 0) {
+                return null;
+            }
+
+            const firstPage = pages[0];
+
+            return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, firstPage);
         }
-
-        const firstPage = pages[0];
-
-        return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, firstPage);
+        catch (error) {
+            throw new Error(`Unable to search pages: ${error}`);
+        }
     }
 
     public async getPageByKey(key: string, requestedLocale?: string): Promise<PageContract> {
@@ -117,10 +126,20 @@ export class PageService implements IPageService {
                 .orderBy(`locales/${searchLocale}/title`);
         }
 
-        const result = await this.objectStorage.searchObjects<any>(this.pagesPath, query);
-        const pages = Object.values(result);
+        try {
+            const result = await this.objectStorage.searchObjects<any>(this.pagesPath, query);
 
-        return pages.map(x => this.localizedContractToContract(defaultLocale, searchLocale, null, x));
+            if (!result) {
+                return [];
+            }
+            
+            const pages = Object.values(result);
+
+            return pages.map(x => this.localizedContractToContract(defaultLocale, searchLocale, null, x));
+        }
+        catch (error) {
+            throw new Error(`Unable to search pages: ${error}`);
+        }
     }
 
     public async deletePage(page: PageContract): Promise<void> {
@@ -128,17 +147,22 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "page" not specified.`);
         }
 
-        const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
+        try {
+            const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
 
-        if (localizedPageContract.locales) {
-            const contentKeys = Object.values(localizedPageContract.locales).map(x => x.contentKey);
+            if (localizedPageContract.locales) {
+                const contentKeys = Object.values(localizedPageContract.locales).map(x => x.contentKey);
 
-            for (const contentKey of contentKeys) {
-                await this.objectStorage.deleteObject(contentKey);
+                for (const contentKey of contentKeys) {
+                    await this.objectStorage.deleteObject(contentKey);
+                }
             }
-        }
 
-        await this.objectStorage.deleteObject(page.key);
+            await this.objectStorage.deleteObject(page.key);
+        }
+        catch (error) {
+            throw new Error(`Unable to delete page ${page.title}: ${error}`);
+        }
     }
 
     public async createPage(permalink: string, title: string, description: string, keywords: string): Promise<PageContract> {
