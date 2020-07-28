@@ -1,6 +1,7 @@
 import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { MediaContract } from ".";
+import { ContentItemContract } from "../contentItems";
 
 export class MediaPermalinkResolver implements IPermalinkResolver {
     protected mediaPath: string = "uploads/";
@@ -60,5 +61,15 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         const hyperlink = await this.getHyperlink(mediaContract);
 
         return hyperlink;
+    }
+
+    public async getContentItemByPermalink(permalink: string): Promise<ContentItemContract> {
+        if (!permalink) {
+            throw new Error(`Parameter "permalink" not specified.`);
+        }
+
+        const mediaContract = await this.mediaService.getMediaByPermalink(permalink);
+
+        return mediaContract;
     }
 }

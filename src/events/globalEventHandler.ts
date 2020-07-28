@@ -89,16 +89,6 @@ export class GlobalEventHandler {
             this.onCtrlO();
         }
 
-        if (event.ctrlKey && event.keyCode === Keys.Z) {
-            event.preventDefault();
-            this.onCtrlZ();
-        }
-
-        if (event.ctrlKey && event.keyCode === Keys.Y) {
-            event.preventDefault();
-            this.onCtrlY();
-        }
-
         if (event.ctrlKey && event.keyCode === Keys.P) {
             event.preventDefault();
             this.onCtrlP();
@@ -124,14 +114,6 @@ export class GlobalEventHandler {
 
     private onCtrlO(): void {
         this.eventManager.dispatchEvent("onLoadData");
-    }
-
-    private onCtrlZ(): void {
-        this.eventManager.dispatchEvent("onUndo");
-    }
-
-    private onCtrlY(): void {
-        this.eventManager.dispatchEvent("onRedo");
     }
 
     private onCtrlP(): void {
