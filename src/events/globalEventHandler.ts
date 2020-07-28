@@ -8,7 +8,6 @@ export class GlobalEventHandler {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onCtrlS = this.onCtrlS.bind(this);
         this.onCtrlO = this.onCtrlO.bind(this);
-        this.onCtrlZ = this.onCtrlZ.bind(this);
         this.onEscape = this.onEscape.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onDragEnter = this.onDragEnter.bind(this);
