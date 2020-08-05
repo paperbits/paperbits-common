@@ -2,6 +2,7 @@ import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { MediaContract } from ".";
 import { ContentItemContract } from "../contentItems";
+import { HyperlinkContract } from "../editing";
 
 export class MediaPermalinkResolver implements IPermalinkResolver {
     protected mediaPath: string = "uploads/";
@@ -32,15 +33,21 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         }
     }
 
-    private async getHyperlink(mediaContract: MediaContract, target: string = "_self"): Promise<HyperlinkModel> {
+    private async getHyperlink(mediaContract: MediaContract, hyperlinkContract?: HyperlinkContract): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = mediaContract.key;
         hyperlinkModel.href = mediaContract.permalink;
         hyperlinkModel.title = mediaContract.fileName || mediaContract.permalink;
-        hyperlinkModel.target = target;
+
+        if (hyperlinkContract) {
+            hyperlinkModel.target = hyperlinkContract.target;
+            hyperlinkModel.anchor = hyperlinkContract.anchor;
+            hyperlinkModel.anchorName = hyperlinkContract.anchorName;
+        }
 
         return hyperlinkModel;
     }
+
 
     public async getHyperlinkByTargetKey(targetKey: string): Promise<HyperlinkModel> {
         if (!targetKey) {
@@ -72,4 +79,35 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         return mediaContract;
     }
+
+    public async getHyperlinkFromContract(hyperlinkContract: HyperlinkContract, locale?: string): Promise<HyperlinkModel> {
+        if (!hyperlinkContract.targetKey) {
+            throw new Error("Target key cannot be null or empty.");
+        }
+
+        if (!hyperlinkContract.targetKey.startsWith(this.mediaPath)) {
+            return null;
+        }
+
+        let hyperlinkModel: HyperlinkModel;
+
+        if (hyperlinkContract.targetKey) {
+            const mediaContract = await this.mediaService.getMediaByKey(hyperlinkContract.targetKey);
+
+            if (mediaContract) {
+                return this.getHyperlink(mediaContract, hyperlinkContract);
+            }
+        }
+
+        hyperlinkModel = new HyperlinkModel();
+        hyperlinkModel.title = "Unset link";
+        hyperlinkModel.target = hyperlinkContract.target;
+        hyperlinkModel.targetKey = null;
+        hyperlinkModel.href = "#";
+        hyperlinkModel.anchor = hyperlinkContract.anchor;
+        hyperlinkModel.anchorName = hyperlinkContract.anchorName;
+
+        return hyperlinkModel;
+    }
+
 }
