@@ -1,6 +1,6 @@
 export interface ToolButton {
     iconClass: string;
     title: string;
-    helpText?: string;
+    tooltip?: string;
     onActivate: () => void;
 }

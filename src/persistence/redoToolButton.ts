@@ -6,6 +6,7 @@ import { EventManager } from "../events";
 export class RedoToolButton implements ToolButton {
     public readonly iconClass: string = "paperbits-icon paperbits-redo-26";
     public readonly title: string = "Redo";
+    public readonly tooltip: string = "Redo";
     public readonly disabled: ko.Observable<boolean>;
 
     constructor(
