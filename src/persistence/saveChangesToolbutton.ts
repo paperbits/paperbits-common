@@ -8,7 +8,7 @@ import { Logger } from "../logging";
 export class SaveChangesToolButton implements ToolButton {
     public iconClass: string = "paperbits-icon paperbits-floppy-disk";
     public title: string = "Save changes";
-    public tooltip: string = "<h1>Save changes</h1><p>Push your changes to the storage.</p>";
+    public tooltip: string = `<h1>Save changes</h1><p>Push your changes to the storage.</p><div class="subtle">(Ctrl+S)</div>`;
     public disabled: ko.Observable<boolean>;
 
     constructor(
