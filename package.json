@@ -29,7 +29,6 @@
         "xhr2": "^0.2.0"
     },
     "devDependencies": {
-        "@types/knockout": "^3.4.66",
         "@types/node": "^12.12.6",
         "@types/mocha": "^5.2.7",
         "mocha": "^6.2.2",
