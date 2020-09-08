@@ -37,6 +37,7 @@ export class BlogPostPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.href = blogPostContract.permalink;
         hyperlinkModel.title = blogPostContract.title || blogPostContract.permalink;
         hyperlinkModel.target = target;
+        hyperlinkModel.targetKey = blogPostContract.key;
 
         return hyperlinkModel;
     }
@@ -63,7 +64,7 @@ export class BlogPostPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlinkContract.target;
-        hyperlinkModel.targetKey = null;
+        hyperlinkModel.targetKey = hyperlinkContract.targetKey;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = hyperlinkContract.anchor;
 

@@ -66,7 +66,7 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlinkContract.target;
-        hyperlinkModel.targetKey = null;
+        hyperlinkModel.targetKey = hyperlinkContract.targetKey;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = hyperlinkContract.anchor;
 
