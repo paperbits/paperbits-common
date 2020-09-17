@@ -12,7 +12,9 @@ export class LocationRouteHandler {
     }
 
     private onRouteChange(route: Route): void {
-        if (route.path !== location.pathname) {
+        const locationHash = location.hash.slice(1);
+
+        if (route.path !== location.pathname || route.hash !== locationHash) {
             location.assign(route.url);
         }
     }
