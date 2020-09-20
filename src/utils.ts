@@ -1,6 +1,7 @@
 ﻿import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
 import * as deepmerge from "deepmerge";
+import { Query } from "./persistence";
 
 
 export function guid(): string {
@@ -23,7 +24,6 @@ export function identifier(): string {
 
     return result;
 }
-
 
 export function randomClassName(): string {
     let result = "";
@@ -350,4 +350,19 @@ export function closest(node: Node, predicate: (node: Node) => boolean): Node {
         }
     }
     while (node = node && node.parentNode);
+}
+
+export function localizeQuery<T>(query: Query<T>, locale: string): Query<T> {
+    const localizedQuery = query.copy();
+    localizedQuery.filters.forEach(x => x.left = `locales/${locale}/${x.left}`);
+
+    if (localizedQuery.orderingBy) {
+        localizedQuery.orderingBy = `locales/${locale}/${localizedQuery.orderingBy}`;
+    }
+
+    return localizedQuery;
+}
+
+export function delay(ms: number): Promise<void> {
+    return new Promise<void>(resolve => setTimeout(resolve, ms));
 }

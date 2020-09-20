@@ -1,6 +1,6 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "./constants";
-import { IObjectStorage, IBlobStorage, Query, Operator } from "../persistence";
+import { IObjectStorage, IBlobStorage, Query, Operator, Page } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 
 
@@ -19,7 +19,8 @@ export class MediaService implements IMediaService {
             .from<MediaContract>()
             .where("permalink", Operator.equals, permalink);
 
-        const result = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
+        const pageOfObjects = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
+        const result = pageOfObjects.value;
         const uploads = Object.values(result);
 
         return uploads.length > 0 ? uploads[0] : null;
@@ -55,30 +56,35 @@ export class MediaService implements IMediaService {
         return undefined;
     }
 
-    public async search(pattern: string = "", mimeType: string): Promise<MediaContract[]> {
-        let query = Query
-            .from<MediaContract>()
-            .orderBy("fileName");
-
-        if (pattern) {
-            query = query.where("fileName", Operator.contains, pattern);
-        }
-
-        if (mimeType) {
-            query = query.where("mimeType", Operator.contains, mimeType);
-        }
-
-        const result = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
-        const values = [];
-        for (const media of Object.values(result)) {
-            if (media.blobKey) {
-                const downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
-                media.downloadUrl = downloadUrl || media.downloadUrl;
+    private convertPage(pageOfMedia: Page<MediaContract>): Page<MediaContract> {
+        const resultPage: Page<MediaContract> = {
+            value: pageOfMedia.value,
+            takeNext: async (): Promise<Page<MediaContract>> => {
+                const nextPage = await pageOfMedia.takeNext();
+                return this.convertPage(nextPage);
             }
-            values.push(media);
+        };
+
+        if (!pageOfMedia.takeNext) {
+            resultPage.takeNext = null;
         }
 
-        return values;
+        return resultPage;
+    }
+
+    public async search(query: Query<MediaContract>): Promise<Page<MediaContract>> {
+        if (!query) {
+            throw new Error(`Parameter "query" not specified.`);
+        }
+
+        try {
+            const pageOfResults = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
+            return this.convertPage(pageOfResults);
+          
+        }
+        catch (error) {
+            throw new Error(`Unable to search media: ${error.stack || error.message}`);
+        }
     }
 
     public async deleteMedia(media: MediaContract): Promise<void> {

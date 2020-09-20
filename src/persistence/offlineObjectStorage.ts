@@ -1,8 +1,6 @@
 import * as Objects from "../objects";
 import * as _ from "lodash";
-import * as Utils from "../utils";
-import { Bag } from "./../bag";
-import { IObjectStorage, Query, Operator, OrderDirection } from "../persistence";
+import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { EventManager } from "../events";
 import { ILocalCache } from "../caching";
@@ -12,15 +10,21 @@ interface HistoryRecord {
     undo: () => void;
 }
 
+interface LocalSearchResults<T> {
+    value: T;
+    totalCount: number;
+}
+
 export class OfflineObjectStorage implements IObjectStorage {
-    private underlyingStorage: IObjectStorage;      // for storage
+    private remoteObjectStorage: IObjectStorage;
+    private initializePromise: Promise<void>;
     private readonly stateObject: Object;
     private readonly changesObject: Object;
     private readonly past: HistoryRecord[];
     private readonly future: HistoryRecord[];
     private readonly middlewares: IObjectStorageMiddleware[];
-    private initializePromise: Promise<void>;
     private readonly changesObjectCacheKey: string = "changesObject";
+    private readonly stateObjectCacheKey: string = "stateObject";
 
     public isOnline: boolean;
     public autosave: boolean;
@@ -31,7 +35,7 @@ export class OfflineObjectStorage implements IObjectStorage {
     ) {
         this.stateObject = {};
         this.changesObject = {};
-        this.underlyingStorage = null;
+        this.remoteObjectStorage = null;
         this.isOnline = true;
         this.autosave = false;
         this.middlewares = [];
@@ -56,6 +60,12 @@ export class OfflineObjectStorage implements IObjectStorage {
                 Object.assign(this.changesObject, cachedChangesObject);
             }
 
+            const cachedStateObject = await this.changesCache.getItem<Object>(this.stateObjectCacheKey);
+
+            if (cachedStateObject) {
+                Object.assign(this.stateObject, cachedStateObject);
+            }
+
             resolve();
         });
 
@@ -70,8 +80,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         return this.future.length > 0;
     }
 
-    public registerUnderlyingStorage(underlyingStorage: IObjectStorage): void {
-        this.underlyingStorage = underlyingStorage;
+    public setRemoteObjectStorage(underlyingStorage: IObjectStorage): void {
+        this.remoteObjectStorage = underlyingStorage;
     }
 
     public registerMiddleware(middleware: IObjectStorageMiddleware): void {
@@ -101,6 +111,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject, true);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         const undoCommand = () => {
@@ -114,6 +125,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject, true);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -151,6 +163,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         const undoCommand = () => {
@@ -164,6 +177,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -176,36 +190,41 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         await this.initialize();
 
-        const clonedChanges = <any>Objects.clone(this.changesObject);
-        const changesAt = Objects.getObjectAt<T>(path, clonedChanges);
+        /* 1. Check locally changed object */
+        const locallyChangedObject = Objects.getObjectAt<T>(path, this.changesObject);
 
-        if (changesAt === null) {
+        // If there is one, return it now.
+        if (!!locallyChangedObject) {
+            return Objects.clone(locallyChangedObject); // Cloning to loose references.
+        }
+
+        /* 2. Check if object marked as deleted. */
+        if (locallyChangedObject === null) {
             /*
                Note: "null" (not undefined) in changesObject specifically means that this object
-               has been deleted locally (but not yet saved to underlying). Hence, no need to check
+               has been deleted locally (but not yet saved to underlying storage). Hence, no need to check
                neither local nor underlying storage.
             */
-
             return undefined;
         }
 
-        let result = Objects.getObjectAt<T>(path, this.stateObject);
+        /* 3. Check if object exists locally. If yes, return it (without querying remote). */
+        let locallyCachedObject = Objects.getObjectAt<T>(path, this.stateObject);
 
-        if (!result && this.isOnline) {
-            const underlyingStorageResult = await this.underlyingStorage.getObject<T>(path);
-
-            if (underlyingStorageResult) {
-                result = Objects.clone(underlyingStorageResult);
-                Objects.setValue(path, this.stateObject, result);
-            }
+        if (locallyCachedObject) {
+            return Objects.clone(locallyCachedObject); // Cloning to loose references.
         }
 
-        if (changesAt) {
-            /* If there are changes at the same path, apply them to search result */
-            return changesAt;
+        /* 4. If no loally changed of cached object, query remote. If returned, cache locally. */
+        const remoteObjectStorageResult = await this.remoteObjectStorage.getObject<T>(path);
+
+        if (!!remoteObjectStorageResult) { // Adding to local cache.
+            locallyCachedObject = Objects.clone(remoteObjectStorageResult);
+            Objects.setValue(path, this.stateObject, locallyCachedObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         }
 
-        return result;
+        return remoteObjectStorageResult;
     }
 
     public async deleteObject(path: string): Promise<void> {
@@ -229,6 +248,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         const undoCommand = () => {
@@ -242,6 +262,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(this.changesObject);
 
             this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+            this.changesCache.setItem(this.stateObjectCacheKey, this.stateObject);
         };
 
         this.do(doCommand, undoCommand);
@@ -300,26 +321,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    private async searchLocalState<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
-        const searchResultObject: Bag<T> = {};
-        const data = this.stateObject;
-
-        if (!data) {
-            return searchResultObject;
-        }
-
-        const searchObj = Objects.getObjectAt(path, data);
+    private async searchLocalChanges<T>(path: string, query?: Query<T>): Promise<LocalSearchResults<T[]>> {
+        const searchObj = Objects.getObjectAt(path, this.changesObject);
 
         if (!searchObj) {
-            return searchResultObject;
+            return { value: [], totalCount: 0 };
         }
 
-        return this.searchInResult<T>(searchObj, query);
-    }
-
-    private searchInResult<T>(searchObj: unknown, query?: Query<T>): Bag<T> {
-        const searchResultObject: Bag<T> = {};
-        let collection = Object.values(searchObj);
+        let collection = Object.values(searchObj).filter(x => !!x); // skip deleted objects
 
         if (query) {
             if (query.filters.length > 0) {
@@ -407,47 +416,73 @@ export class OfflineObjectStorage implements IObjectStorage {
             }
         }
 
-        collection.forEach(item => {
-            const segments = item.key.split("/");
-            const key = segments[1];
+        const totalObjectsMatchingCriteria = collection.length;
 
-            Objects.setValue(key, searchResultObject, item);
-            Objects.cleanupObject(item); // Ensure all "undefined" are cleaned up
-        });
-
-        return searchResultObject;
+        return { value: collection, totalCount: totalObjectsMatchingCriteria };
     }
 
-    public async searchObjects<T>(path: string, query?: Query<T>): Promise<Bag<T>> {
+    private convertPage<T>(remotePage: Page<T>): Page<T> {
+        const resultPage: Page<T> = {
+            value: remotePage.value,
+            takeNext: async (n?: number): Promise<Page<T>> => {
+                const nextRemotePage = await remotePage.takeNext();
+                return this.convertPage(nextRemotePage);
+            }
+        };
+
+        if (!remotePage.takeNext) {
+            resultPage.takeNext = null;
+        }
+
+        return resultPage;
+    }
+
+    public async searchObjects<T>(path: string, query: Query<T> = Query.from<T>()): Promise<Page<T>> {
         if (!path) {
             throw new Error(`Parameter "path" not specified.`);
         }
 
         await this.initialize();
 
-        const resultObject = await this.searchLocalState(path, query);
+        const resultPage: Page<T> = {
+            value: [],
+            takeNext: null
+        };
 
-        if (this.isOnline) {
-            const searchResultObject = await this.underlyingStorage.searchObjects<Bag<T>>(path, query);
+        /* Find locally added/changed objects */
+        const localSearchResults = await this.searchLocalChanges(path, query);
+        const remoteQuery = query.copy();
+        const pageOfRemoteSearchResults = await this.remoteObjectStorage.searchObjects<T>(path, remoteQuery);
+        const remoteSearchResults = pageOfRemoteSearchResults.value;
 
-            if (!searchResultObject || Object.keys(searchResultObject).length === 0) {
-                return resultObject;
-            }
+        if (pageOfRemoteSearchResults.takeNext) {
+            resultPage.takeNext = async (): Promise<Page<T>> => {
+                const nextRemotePage = await pageOfRemoteSearchResults.takeNext();
 
-            const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
+                // TODO: Remove all deleted pages from results.
 
-            if (changesAt) {
-                /* If there are changes at the same path, apply them to search result */
-                Objects.mergeDeep(searchResultObject, changesAt, true);
-            }
-
-            /* Complement stateObject with new objects from search result, if any */
-            Objects.mergeDeepAt(path, this.stateObject, Objects.clone(searchResultObject), true);
-
-            Objects.mergeDeep(resultObject, searchResultObject, true);
+                return this.convertPage(nextRemotePage);
+            };
         }
 
-        return resultObject;
+        /* Remove deleted objects from remote search resuls */
+        const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
+
+        if (changesAt) {
+            Object.keys(changesAt)
+                .forEach(key => {
+                    const index = remoteSearchResults.findIndex(x => x["key"] === key);
+
+                    if (index >= 0 && changesAt[key] === null) {
+                        remoteSearchResults.splice(index, 1);
+                    }
+                });
+        }
+
+        /* Merging local searh results with remote search results */
+        resultPage.value = localSearchResults.value.concat(remoteSearchResults);
+
+        return resultPage;
     }
 
     public async hasUnsavedChanges(): Promise<boolean> {
@@ -474,7 +509,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             return;
         }
 
-        await this.underlyingStorage.saveChanges(this.changesObject);
+        await this.remoteObjectStorage.saveChanges(this.changesObject);
         entities.forEach(key => delete this.changesObject[key]);
 
         this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
@@ -483,8 +518,8 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async loadData(): Promise<object> {
-        if (this.underlyingStorage.loadData) {
-            const loadedData = await this.underlyingStorage.loadData();
+        if (this.remoteObjectStorage.loadData) {
+            const loadedData = await this.remoteObjectStorage.loadData();
 
             if (loadedData) {
                 await this.discardChanges();

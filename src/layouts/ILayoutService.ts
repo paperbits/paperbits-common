@@ -1,12 +1,13 @@
 ﻿import { LayoutContract } from "./layoutContract";
 import { Contract } from "..";
+import { Page, Query } from "../persistence";
 
 export interface ILayoutService {
     /**
      * Searches for layouts that contain specified pattern in their title or description.
-     * @param pattern 
+     * @param query {Query<LayoutContract>} Search query.
      */
-    search(pattern: string, locale?: string): Promise<LayoutContract[]>;
+    search(query: Query<LayoutContract>, locale?: string): Promise<Page<LayoutContract>>;
 
     /**
      * Returns layout by specified key.

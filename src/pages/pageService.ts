@@ -1,7 +1,7 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "../constants";
 import { PageContract, PageMetadata, PageLocalizedContract, IPageService } from ".";
-import { IObjectStorage, Operator, Query } from "../persistence";
+import { IObjectStorage, Operator, Query, Page } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
 import { ILocaleService } from "../localization";
@@ -75,7 +75,8 @@ export class PageService implements IPageService {
             .where(permalinkProperty, Operator.equals, permalink);
 
         try {
-            const result = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, query);
+            const pageOfObjects = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, query);
+            const result = pageOfObjects.value;
 
             if (!result) {
                 return null;
@@ -113,29 +114,37 @@ export class PageService implements IPageService {
         return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, pageContract);
     }
 
-    public async search(pattern: string, requestedLocale?: string): Promise<PageContract[]> {
+    private convertPage(localizedPage: Page<PageLocalizedContract>, defaultLocale: string, searchLocale: string, requestedLocale: string): Page<PageContract> {
+        const resultPage: Page<PageContract> = {
+            value: localizedPage.value.map(x => this.localizedContractToContract(defaultLocale, searchLocale, requestedLocale, x)),
+            takeNext: async (): Promise<Page<PageContract>> => {
+                const nextLocalizedPage = await localizedPage.takeNext();
+                return this.convertPage(nextLocalizedPage, defaultLocale, searchLocale, requestedLocale);
+            }
+        };
+
+        if (!localizedPage.takeNext) {
+            resultPage.takeNext = null;
+        }
+
+        return resultPage;
+    }
+
+    public async search(query: Query<PageContract>, requestedLocale?: string): Promise<Page<PageContract>> {
+        if (!query) {
+            throw new Error(`Parameter "query" not specified.`);
+        }
+
         const defaultLocale = await this.localeService.getDefaultLocale();
         const currentLocale = await this.localeService.getCurrentLocale();
         const searchLocale = requestedLocale || currentLocale;
 
-        let query = Query.from<PageContract>();
-
-        if (pattern || requestedLocale) {
-            query = Query.from<PageContract>()
-                .where(`locales/${searchLocale}/title`, Operator.contains, pattern)
-                .orderBy(`locales/${searchLocale}/title`);
-        }
+        const localizedQuery = Utils.localizeQuery(query, searchLocale);
 
         try {
-            const result = await this.objectStorage.searchObjects<any>(this.pagesPath, query);
+            const pageOfResults = await this.objectStorage.searchObjects<PageLocalizedContract>(this.pagesPath, localizedQuery);
+            return this.convertPage(pageOfResults, defaultLocale, searchLocale, requestedLocale);
 
-            if (!result) {
-                return [];
-            }
-            
-            const pages = Object.values(result);
-
-            return pages.map(x => this.localizedContractToContract(defaultLocale, searchLocale, null, x));
         }
         catch (error) {
             throw new Error(`Unable to search pages: ${error.stack || error.message}`);

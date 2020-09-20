@@ -1,9 +1,12 @@
-import { Query } from "../persistence/query";
-import { Bag } from "../bag";
+import { Query, Page } from "../persistence/query";
 
+
+/**
+ * Object storage.
+ */
 export interface IObjectStorage {
     /**
-     * Creates object with specified key in storage.
+     * Creates an object with specified key in storage.
      * @template T Type of created object.
      * @param key string Object key.
      * @param dataObject T Object.
@@ -24,16 +27,28 @@ export interface IObjectStorage {
     deleteObject(key: string): Promise<void>;
 
     /**
-     * Updates object with specified key in storage.
+     * Updates an object with specified key in storage.
      * @template T Type of updated object.
      * @param key string Object key.
      * @param dataObject {T} Object.
      */
     updateObject<T>(key: string, dataObject: T): Promise<void>;
 
-    searchObjects<T>(key: string, query?: Query<T>): Promise<Bag<T>>;
+    /**
+     * Returns objects matching search criteria.
+     * @param key {string} Collection key.
+     * @param query {Query<T>} Search query.
+     */
+    searchObjects<T>(key: string, query?: Query<T>): Promise<Page<T>>;
 
+    /**
+     * Save changes.
+     * @param delta 
+     */
     saveChanges?(delta: Object): Promise<void>;
 
+    /**
+     * Loads data.
+     */
     loadData?(): Promise<object>;
 }

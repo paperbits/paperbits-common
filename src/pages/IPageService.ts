@@ -1,19 +1,22 @@
 ﻿import { Contract } from "../";
 import { PageContract } from "../pages/pageContract";
+import { Query, Page } from "../persistence";
 
 /**
- * Service for managing pages.
+ * Service for managing website pages.
  */
 export interface IPageService {
     /**
      * Searches for pages that contain specified pattern in their title, description or keywords.
-     * @param pattern {string} Search pattern.
+     * @param query {Query<PageContract>} Search query.
+     * @param locale {string} Search locale.
      */
-    search(pattern: string, locale?: string): Promise<PageContract[]>;
+    search(query: Query<PageContract>, locale?: string): Promise<Page<PageContract>>;
 
     /**
      * Returns page by specified key.
      * @param key {string} Unique page identifier.
+     * @param locale {string} If provided, operation returns metadata in specified locale.
      */
     getPageByKey(key: string, locale?: string): Promise<PageContract>;
 
@@ -26,6 +29,7 @@ export interface IPageService {
     /**
      * Deletes specified page from store.
      * @param page {PageContract} Contract describing page metadata.
+     * @param locale {string} If provided, operation deletes metadata in specified locale.
      */
     deletePage(page: PageContract, locale?: string): Promise<void>;
 
@@ -39,14 +43,16 @@ export interface IPageService {
     createPage(permalink: string, title: string, description: string, keywords: string): Promise<PageContract>;
 
     /**
-     * Updates a page.
+     * Updates page metadata.
      * @param page {PageContract} Contract describing page metadata.
+     * @param locale {string} If provided, operation updates metadata in specified locale.
      */
     updatePage(page: PageContract, locale?: string): Promise<void>;
 
     /**
      * Returns page content by specified key.
      * @param pageKey {string}
+     * @param locale {string} If provided, operation returns content in specified locale.
      */
     getPageContent(pageKey: string, locale?: string): Promise<Contract>;
 
@@ -54,6 +60,7 @@ export interface IPageService {
      * Updates page content.
      * @param pageKey {string} Key of the page.
      * @param content {Contract} Contract describing content of the page.
+     * @param locale {string} If provided, operation updates content in specified locale.
      */
     updatePageContent(pageKey: string, content: Contract, locale?: string): Promise<void>;
 }

@@ -34,40 +34,48 @@ export class HtmlPagePublisher {
     }
 
     public async renderHtml(page: HtmlPage, overridePlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
-        const document = this.htmlDocumentProvider.createDocument(page.template);
-        document.title = page.title;
+        try {
 
-        if (page.faviconPermalink) {
-            this.appendFaviconLink(page.faviconPermalink);
-        }
 
-        if (page.description) {
-            this.appendMetaTag(document, "description", page.description);
-        }
+            const document = this.htmlDocumentProvider.createDocument(page.template);
+            document.title = page.title;
 
-        if (page.keywords) {
-            this.appendMetaTag(document, "keywords", page.keywords);
-        }
-
-        if (page.author) {
-            this.appendMetaTag(document, "author", page.author);
-        }
-
-        page.styleReferences.forEach(reference => {
-            this.appendStyleLink(document, reference);
-        });
-
-        if (overridePlugins) {
-            for (const plugin of overridePlugins) {
-                await plugin.apply(document, page);
+            if (page.faviconPermalink) {
+                this.appendFaviconLink(page.faviconPermalink);
             }
-        }
-        else {
-            for (const plugin of this.htmlPagePublisherPlugins) {
-                await plugin.apply(document, page);
-            }
-        }
 
-        return "<!DOCTYPE html>" + document.documentElement.outerHTML;
+            if (page.description) {
+                this.appendMetaTag(document, "description", page.description);
+            }
+
+            if (page.keywords) {
+                this.appendMetaTag(document, "keywords", page.keywords);
+            }
+
+            if (page.author) {
+                this.appendMetaTag(document, "author", page.author);
+            }
+
+            page.styleReferences.forEach(reference => {
+                this.appendStyleLink(document, reference);
+            });
+
+            if (overridePlugins) {
+                for (const plugin of overridePlugins) {
+                    await plugin.apply(document, page);
+                }
+            }
+            else {
+                for (const plugin of this.htmlPagePublisherPlugins) {
+                    await plugin.apply(document, page);
+                }
+            }
+
+            return "<!DOCTYPE html>" + document.documentElement.outerHTML;
+        }
+        catch (error) {
+            debugger;
+            throw new Error(`Unable to render page: ${error.stack}`);
+        }
     }
 }

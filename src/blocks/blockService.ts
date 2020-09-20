@@ -31,7 +31,7 @@ export class BlockService implements IBlockService {
     }
 
     public async search(type: BlockType, pattern: string): Promise<BlockContract[]> {
-        let result: Bag<BlockContract> = {};
+        let results: BlockContract[] = [];
 
         if (type === BlockType.saved) {
             const query = Query
@@ -41,7 +41,9 @@ export class BlockService implements IBlockService {
             if (pattern.length > 0) {
                 query.where("title", Operator.contains, pattern).orderBy("title");
             }
-            result = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
+
+            const pageOfObjects = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
+            results = pageOfObjects.value;
         }
         else {
             const data = await this.loadBlockSnippets();
@@ -54,12 +56,12 @@ export class BlockService implements IBlockService {
 
             for (const blockKey of blockKeys) {
                 if (blocks[blockKey].title.indexOf(pattern) !== -1) {
-                    result[blockKey] = blocks[blockKey];
+                    results[blockKey] = blocks[blockKey];
                 }
             }
         }
 
-        return Object.values(result);
+        return results;
     }
 
     public async deleteBlock(block: BlockContract): Promise<void> {
@@ -106,7 +108,7 @@ export class BlockService implements IBlockService {
         }
 
         const data = await this.loadBlockSnippets();
-        
+
         if (!data) {
             return null;
         }
@@ -138,7 +140,7 @@ export class BlockService implements IBlockService {
             });
 
             this.blocksData = <any>response.toObject();
-        } 
+        }
         catch (error) {
             console.error("Load blocks error: ", error);
         }

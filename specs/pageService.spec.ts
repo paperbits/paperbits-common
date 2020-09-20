@@ -4,6 +4,7 @@ import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockBlockService } from "./mocks/mockBlockService";
 import { MockLocaleService } from "./mocks/mockLocaleService";
 import { Contract } from "../src";
+import { Operator, Query } from "../src/persistence";
 
 describe("Page service", async () => {
     it("Can create page metadata in specified locale when metadata doesn't exists.", async () => {
@@ -427,9 +428,10 @@ describe("Page service", async () => {
         const localeService = new MockLocaleService();
 
         const localizedService = new PageService(objectStorage, blockService, localeService);
+        const query = Query.from<PageContract>().where("title", Operator.contains, "");
 
-        const pageContracts = await localizedService.search("", "ru-ru");
-        assert.isTrue(pageContracts.length === 1, "Must return only 1 page.");
-        assert.isTrue(pageContracts[0].title === "О нас", "Page metadata is in invalid locale.");
+        const pageOfSearchResults = await localizedService.search(query, "ru-ru");
+        assert.isTrue(pageOfSearchResults.value.length === 1, "Must return only 1 page.");
+        assert.isTrue(pageOfSearchResults.value[0].title === "О нас", "Page metadata is in invalid locale.");
     });
 });

@@ -1,4 +1,4 @@
-export function isObject(item): boolean {
+export function isObject(item: any): boolean {
     return item !== undefined && (item && typeof item === "object" && !Array.isArray(item));
 }
 

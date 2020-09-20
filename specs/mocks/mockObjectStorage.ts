@@ -9,13 +9,15 @@
 
 import * as _ from "lodash";
 import * as Objects from "../../src/objects";
-import { IObjectStorage, Query, Operator, OrderDirection } from "../../src/persistence";
-import { Bag } from "../../src";
+import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../../src/persistence";
 
+const pageSize = 20;
 
 export class MockObjectStorage implements IObjectStorage {
     protected storageDataObject: Object;
     private splitter: string = "/";
+
+    public requestCount: number = 0;
 
     constructor(initialData: Object = {}) {
         this.storageDataObject = initialData;
@@ -26,46 +28,57 @@ export class MockObjectStorage implements IObjectStorage {
     }
 
     public async addObject(path: string, dataObject: Object): Promise<void> {
-        if (path) {
-            const pathParts = path.split(this.splitter);
-            const mainNode = pathParts[0];
+        if (!path) {
+            throw new Error(`Parameter "path" not specified.`);
+        }
 
-            if (pathParts.length === 1 || (pathParts.length === 2 && !pathParts[1])) {
-                this.storageDataObject[mainNode] = dataObject;
-            }
-            else {
-                if (!_.has(this.storageDataObject, mainNode)) {
-                    this.storageDataObject[mainNode] = {};
-                }
-                this.storageDataObject[mainNode][pathParts[1]] = dataObject;
-            }
+        const pathParts = path.split(this.splitter);
+        const mainNode = pathParts[0];
+
+        if (pathParts.length === 1 || (pathParts.length === 2 && !pathParts[1])) {
+            this.storageDataObject[mainNode] = dataObject;
         }
         else {
-            Object.keys(dataObject).forEach(prop => {
-                const obj = dataObject[prop];
-                const pathParts = prop.split(this.splitter);
-                const mainNode = pathParts[0];
-
-                if (pathParts.length === 1 || (pathParts.length === 2 && !pathParts[1])) {
-                    this.storageDataObject[mainNode] = obj;
-                }
-                else {
-                    if (!_.has(this.storageDataObject, mainNode)) {
-                        this.storageDataObject[mainNode] = {};
-                    }
-                    this.storageDataObject[mainNode][pathParts[1]] = obj;
-                }
-            });
+            if (!_.has(this.storageDataObject, mainNode)) {
+                this.storageDataObject[mainNode] = {};
+            }
+            this.storageDataObject[mainNode][pathParts[1]] = dataObject;
         }
+
+        // else {
+        //     Object.keys(dataObject).forEach(prop => {
+        //         const obj = dataObject[prop];
+        //         const pathParts = prop.split(this.splitter);
+        //         const mainNode = pathParts[0];
+
+        //         if (pathParts.length === 1 || (pathParts.length === 2 && !pathParts[1])) {
+        //             this.storageDataObject[mainNode] = obj;
+        //         }
+        //         else {
+        //             if (!_.has(this.storageDataObject, mainNode)) {
+        //                 this.storageDataObject[mainNode] = {};
+        //             }
+        //             this.storageDataObject[mainNode][pathParts[1]] = obj;
+        //         }
+        //     });
+        // }
     }
 
     public async getObject<T>(path: string): Promise<T> {
+        if (!path) {
+            throw new Error(`Parameter "path" not specified.`);
+        }
+
+        this.requestCount++;
+
         const data = await this.getData();
 
         return Objects.getObjectAt(path, Objects.clone(data));
     }
 
     public async deleteObject(path: string): Promise<void> {
+        this.requestCount++;
+
         if (!path) {
             return;
         }
@@ -78,21 +91,27 @@ export class MockObjectStorage implements IObjectStorage {
             throw new Error(`Parameter "path" not specified.`);
         }
 
+        this.requestCount++;
+
         const clone: any = Objects.clone(dataObject);
         Objects.setValue(path, this.storageDataObject, clone);
         Objects.cleanupObject(clone); // Ensure all "undefined" are cleaned up
     }
 
-    public async searchObjects<T>(path: string, query: Query<T>): Promise<Bag<T>> {
-        const searchResultObject: Bag<T> = {};
+    public async searchObjects<T>(path: string, query: Query<T>): Promise<Page<T>> {
         const data = await this.getData();
 
         if (!data) {
-            return searchResultObject;
+            return { value: [] };
         }
 
         const searchObj = Objects.getObjectAt(path, data);
-        let collection = Object.values(searchObj);
+
+        if (!searchObj) {
+            return { value: [] };
+        }
+
+        let collection: any[] = Object.values(searchObj);
 
         if (query) {
             if (query.filters.length > 0) {
@@ -161,15 +180,9 @@ export class MockObjectStorage implements IObjectStorage {
             }
         }
 
-        collection.forEach(item => {
-            const segments = item.key.split("/");
-            const key = segments[1];
+        const value = collection.slice(0, pageSize);
 
-            Objects.setValue(key, searchResultObject, item);
-            Objects.cleanupObject(item); // Ensure all "undefined" are cleaned up
-        });
-
-        return searchResultObject;
+        return new StaticPage(value, collection, pageSize);
     }
 
     public async saveChanges(delta: Object): Promise<void> {
@@ -178,5 +191,29 @@ export class MockObjectStorage implements IObjectStorage {
 
     public async loadData(): Promise<object> {
         throw new Error("Not implemented");
+    }
+}
+
+class StaticPage<T> implements Page<T> {
+    constructor(
+        public readonly value: T[],
+        private readonly collection: any,
+        private readonly skip: number,
+    ) {
+        if (skip > this.collection.length) {
+            this.takeNext = null;
+        }
+    }
+
+    public async takePrev?(): Promise<Page<T>> {
+        throw new Error("Not implemented");
+    }
+
+    public async takeNext?(): Promise<Page<T>> {
+        const value = this.collection.slice(this.skip, this.skip + pageSize);
+        const skipNext = this.skip + pageSize;
+        const nextPage = new StaticPage<T>(value, this.collection, skipNext);
+
+        return nextPage;
     }
 }

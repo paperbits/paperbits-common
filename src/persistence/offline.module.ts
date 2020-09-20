@@ -28,7 +28,7 @@ export class OfflineModule implements IInjectorModule {
 
         injector.bindSingletonFactory<IObjectStorage>("objectStorage", (ctx: IInjector) => {
             const offlineObjectStorage = ctx.resolve<OfflineObjectStorage>("offlineObjectStorage");
-            offlineObjectStorage.registerUnderlyingStorage(underlyingObjectStorage);
+            offlineObjectStorage.setRemoteObjectStorage(underlyingObjectStorage);
             offlineObjectStorage.autosave = !!this.options?.autosave;
 
             return offlineObjectStorage;

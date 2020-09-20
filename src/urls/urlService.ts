@@ -1,7 +1,7 @@
 ﻿import * as Utils from "../utils";
 import { UrlContract } from "../urls/urlContract";
 import { IUrlService } from "../urls/IUrlService";
-import { IObjectStorage, Query, Operator } from "../persistence";
+import { IObjectStorage, Query, Page } from "../persistence";
 import * as _ from "lodash";
 
 const urlsPath = "urls";
@@ -16,16 +16,36 @@ export class UrlService implements IUrlService {
     public async getUrlByKey(key: string): Promise<UrlContract> {
         return await this.objectStorage.getObject<UrlContract>(key);
     }
+    
+    private convertPage(pageOfUrls: Page<UrlContract>): Page<UrlContract> {
+        const resultPage: Page<UrlContract> = {
+            value: pageOfUrls.value,
+            takeNext: async (): Promise<Page<UrlContract>> => {
+                const nextLocalizedPage = await pageOfUrls.takeNext();
+                return this.convertPage(nextLocalizedPage);
+            }
+        };
 
-    public async search(pattern: string): Promise<UrlContract[]> {
-        const query = Query
-            .from<UrlContract>()
-            .where("title", Operator.contains, pattern)
-            .orderBy("title");
+        if (!pageOfUrls.takeNext) {
+            resultPage.takeNext = null;
+        }
 
-        const result = await this.objectStorage.searchObjects<UrlContract>(urlsPath, query);
+        return resultPage;
+    }
 
-        return Object.values(result);
+    public async search(query: Query<UrlContract>): Promise<Page<UrlContract>> {
+        if (!query) {
+            throw new Error(`Parameter "query" not specified.`);
+        }
+
+        try {
+            const pageOfResults = await this.objectStorage.searchObjects<UrlContract>(urlsPath, query);
+            return this.convertPage(pageOfResults);
+          
+        }
+        catch (error) {
+            throw new Error(`Unable to search url: ${error.stack || error.message}`);
+        }
     }
 
     public async deleteUrl(url: UrlContract): Promise<void> {

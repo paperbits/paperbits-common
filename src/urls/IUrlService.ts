@@ -1,4 +1,5 @@
 ﻿import { UrlContract } from "../urls/urlContract";
+import { Query, Page } from "../persistence";
 
 /**
  * Service for managing urls.
@@ -7,7 +8,7 @@ export interface IUrlService {
     /**
      * Searches for urls that contain specified pattern in their title, description or keywords.
      */
-    search(pattern: string): Promise<UrlContract[]>;
+    search(query: Query<UrlContract>): Promise<Page<UrlContract>>;
 
     /**
      * Returns a url by specified key;

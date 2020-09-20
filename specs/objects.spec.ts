@@ -88,8 +88,8 @@ describe("Objects", async () => {
 
     it("Set value at specific path.", () => {
         const target: any = { address: { street: "South Eads" } };
-        const compensation1: any = Objects.setValue("address/streetNumber", target, 2000);
-        const compensation2: any = Objects.setValue("address/street", target, "S Eads");
+        const compensation1: any = Objects.setValueWithCompensation("address/streetNumber", target, 2000);
+        const compensation2: any = Objects.setValueWithCompensation("address/street", target, "S Eads");
 
         expect(target.address.streetNumber).equal(2000);
         expect(compensation1).equals(undefined);
