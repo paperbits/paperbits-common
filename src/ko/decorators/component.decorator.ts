@@ -36,7 +36,7 @@ export interface ComponentConfig {
 }
 
 export function Component(config: ComponentConfig): ClassDecorator {
-    return function (target: new () => any): any {
+    return function (target): any {
         ko.components.register(config.selector, {
             template: config.template,
             viewModel: target,
