@@ -1,4 +1,5 @@
 import { IComponent } from "./IComponent";
+import { ResizableOptions } from "./resizableOptions";
 
 export interface View {
     /**
@@ -14,7 +15,7 @@ export interface View {
     /**
      * Allowed values: "vertically", "horizontally".
      */
-    resize?: string;
+    resize?: string | ResizableOptions;
 
     /**
      * Help text.
@@ -37,4 +38,8 @@ export interface View {
     returnFocusTo?: HTMLElement;
 
     hitTest?(element: HTMLElement): boolean;
+
+    initialWidth?: number;
+
+    initialHeight?: number;
 }
