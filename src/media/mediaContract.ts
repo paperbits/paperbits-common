@@ -1,4 +1,7 @@
-﻿export interface MediaContract {
+﻿/**
+ * Media file metadata.
+ */
+export interface MediaContract {
     /**
      * Own key.
      */
