@@ -20,6 +20,11 @@
     public targetUrl?: string;
 
     /**
+     * Indicates where the navigation link should open, e.g. _blank.
+     */
+    public targetWindow?: string;
+
+    /**
      * Child navigation items.
      */
     public nodes?: NavigationItemModel[];

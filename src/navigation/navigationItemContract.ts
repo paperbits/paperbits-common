@@ -18,6 +18,11 @@ export interface NavigationItemContract {
     targetKey?: string;
 
     /**
+     * Indicates where the navigation link should open, e.g. _blank.
+     */
+    targetWindow?: string;
+
+    /**
      * Child navigation items.
      */
     navigationItems?: NavigationItemContract[];
