@@ -1,4 +1,5 @@
 ﻿import * as Utils from "../utils";
+import * as Constants from "../constants";
 import { IObjectStorage, Query, Operator } from "../persistence";
 import { IBlockService, BlockType } from "./IBlockService";
 import { Contract } from "../contract";
@@ -56,7 +57,7 @@ export class BlockService implements IBlockService {
 
             for (const blockKey of blockKeys) {
                 if (blocks[blockKey].title.indexOf(pattern) !== -1) {
-                    results[blockKey] = blocks[blockKey];
+                    results.push(blocks[blockKey]);
                 }
             }
         }
@@ -128,7 +129,7 @@ export class BlockService implements IBlockService {
 
     private async loadData(): Promise<void> {
         try {
-            const blocksUrl = await this.settingsProvider.getSetting<string>("blockSnippetsUrl");
+            const blocksUrl = Constants.blockSnippetsLibraryUrl;
 
             if (!blocksUrl) {
                 console.warn("Settings for blocksUrl not found.");

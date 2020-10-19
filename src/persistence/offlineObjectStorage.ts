@@ -471,7 +471,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         if (changesAt) {
             Object.keys(changesAt)
                 .forEach(key => {
-                    const index = remoteSearchResults.findIndex(x => x["key"] === key);
+                    const index = remoteSearchResults.findIndex(x => x["key"] === `${path}/${key}`);
 
                     if (index >= 0 && changesAt[key] === null) {
                         remoteSearchResults.splice(index, 1);
