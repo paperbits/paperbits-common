@@ -1,8 +1,12 @@
 import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver } from "../permalinks";
+import { IBlobStorage } from "../persistence";
 
 export class MediaPermalinkResolver implements IPermalinkResolver {
-    constructor(private readonly mediaService: IMediaService) { }
+    constructor(
+        private readonly mediaService: IMediaService,
+        private readonly blobStorage: IBlobStorage
+    ) { }
 
     public canHandleTarget(targetKey: string): boolean {
         return targetKey.startsWith("uploads/");
@@ -16,7 +20,16 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         const media = await this.mediaService.getMediaByKey(mediaKey);
 
         if (media) {
-            return media.downloadUrl;
+            if (media.downloadUrl) {
+                return media.downloadUrl;
+            }
+            else {
+                debugger;
+                const downloadUrl = await this.blobStorage.getDownloadUrl(media.blobKey);
+           
+                return downloadUrl;
+            }
+
         }
         else {
             return null;

@@ -1,5 +1,6 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "./constants";
+import * as Objects from "../objects";
 import { IObjectStorage, IBlobStorage, Query, Operator, Page } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 
@@ -79,8 +80,20 @@ export class MediaService implements IMediaService {
 
         try {
             const pageOfResults = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
-            return this.convertPage(pageOfResults);
-          
+
+            const pageOfMedia = this.convertPage(pageOfResults);
+
+            for (const media of pageOfMedia.value) {
+                if (media.downloadUrl) {
+                    continue;
+                }
+
+                media.downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
+                console.log(media.downloadUrl);
+            }
+
+            return pageOfMedia;
+
         }
         catch (error) {
             throw new Error(`Unable to search media: ${error.stack || error.message}`);
@@ -134,24 +147,19 @@ export class MediaService implements IMediaService {
         return media;
     }
 
-    private uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
-        return new Promise<MediaContract>(async (resolve, reject) => {
-            await this.blobStorage
-                .uploadBlob(media.blobKey, content, media.mimeType);
+    private async uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
+        await this.blobStorage.uploadBlob(media.blobKey, content, media.mimeType);
 
-            const uri = await this.blobStorage.getDownloadUrl(media.blobKey);
+        Object.seal(media);
 
-            if (!media.downloadUrl) {
-                media.downloadUrl = uri;
-                await this.objectStorage.addObject(media.key, media);
-            }
-            else {
-                media.downloadUrl = uri;
-                await this.objectStorage.updateObject(media.key, media);
-            }
+        if (!media.downloadUrl) {
+            await this.objectStorage.addObject(media.key, media);
+        }
+        else {
+            await this.objectStorage.updateObject(media.key, media);
+        }
 
-            resolve(media);
-        });
+        return media;
     }
 
     public updateMedia(media: MediaContract): Promise<void> {

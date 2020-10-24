@@ -322,7 +322,7 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     private async searchLocalChanges<T>(path: string, query?: Query<T>): Promise<LocalSearchResults<T[]>> {
-        const searchObj = Objects.getObjectAt(path, this.changesObject);
+        const searchObj = Objects.getObjectAt(path, Objects.clone(this.changesObject));
 
         if (!searchObj) {
             return { value: [], totalCount: 0 };
