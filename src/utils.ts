@@ -54,11 +54,23 @@ export function arrayBufferToBase64(buffer: Uint8Array): string {
         let binary = "";
         const bytes = new Uint8Array(buffer);
         const len = bytes.byteLength;
+
         for (let i = 0; i < len; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
         return btoa(binary);
     }
+}
+
+export function base64ToArrayBuffer(base64: string): Uint8Array {
+    const buffer = Buffer.from(base64, "base64");
+    const arrayBuffer = new ArrayBuffer(buffer.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    
+    for (let i = 0; i < buffer.length; ++i) {
+        uint8Array[i] = buffer[i];
+    }
+    return uint8Array;
 }
 
 export function readFileAsByteArray(file: File): Promise<Uint8Array> {

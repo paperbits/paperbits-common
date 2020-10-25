@@ -1,6 +1,5 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "./constants";
-import * as Objects from "../objects";
 import { IObjectStorage, IBlobStorage, Query, Operator, Page } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 
@@ -89,7 +88,6 @@ export class MediaService implements IMediaService {
                 }
 
                 media.downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
-                console.log(media.downloadUrl);
             }
 
             return pageOfMedia;

@@ -2,6 +2,7 @@ import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver } from "../permalinks";
 import { IBlobStorage } from "../persistence";
 
+
 export class MediaPermalinkResolver implements IPermalinkResolver {
     constructor(
         private readonly mediaService: IMediaService,
@@ -18,21 +19,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         }
 
         const media = await this.mediaService.getMediaByKey(mediaKey);
-
-        if (media) {
-            if (media.downloadUrl) {
-                return media.downloadUrl;
-            }
-            else {
-                debugger;
-                const downloadUrl = await this.blobStorage.getDownloadUrl(media.blobKey);
-           
-                return downloadUrl;
-            }
-
-        }
-        else {
-            return null;
-        }
+        
+        return media?.downloadUrl || await this.blobStorage.getDownloadUrl(media.blobKey);
     }
 }
