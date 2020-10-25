@@ -66,7 +66,7 @@ export function base64ToArrayBuffer(base64: string): Uint8Array {
     const buffer = Buffer.from(base64, "base64");
     const arrayBuffer = new ArrayBuffer(buffer.length);
     const uint8Array = new Uint8Array(arrayBuffer);
-    
+
     for (let i = 0; i < buffer.length; ++i) {
         uint8Array[i] = buffer[i];
     }
@@ -377,4 +377,12 @@ export function localizeQuery<T>(query: Query<T>, locale: string): Query<T> {
 
 export function delay(ms: number): Promise<void> {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
+export function ensureLeadingSlash(url: string = ""): string {
+    return url.startsWith("/") ? url : `/${url}`;
+}
+
+export function ensureTrailingSlash(url: string = ""): string {
+    return url.endsWith("/") ? url : `${url}/`;
 }
