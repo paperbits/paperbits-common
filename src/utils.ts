@@ -280,7 +280,7 @@ export function getClosestBreakpoint(source: Breakpoints<any>, current: string):
 }
 
 export function camelCaseToKebabCase(str: string): string {
-    return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+    return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase().replace(/\s/g, "-");
 }
 
 export function getUrlHashPart(urlPath: string): string {
@@ -330,7 +330,8 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
             }
 
             continue;
-        } else {
+        }
+        else {
             if (token) {
                 const hashIndex = segment.indexOf("#");
                 if (hashIndex === 0) {
