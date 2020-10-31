@@ -64,4 +64,6 @@ export interface StyleCompiler {
     compileCss(): Promise<string>;
 
     setStyles(styles: any): void;
+
+    getIconFontStylesCss(): Promise<string>;
 }
