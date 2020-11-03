@@ -79,11 +79,10 @@ export class MediaService implements IMediaService {
 
         try {
             const pageOfResults = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
-
             const pageOfMedia = this.convertPage(pageOfResults);
 
             for (const media of pageOfMedia.value) {
-                if (media.downloadUrl) {
+                if (!media.blobKey) {
                     continue;
                 }
 
