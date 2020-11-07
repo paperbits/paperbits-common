@@ -1,5 +1,6 @@
 export * from "./IPublisher";
 export * from "./htmlPagePublisher";
+export * from "./htmlPageOptimizer";
 export * from "./htmlDocumentProvider";
 export * from "./htmlPage";
 export * from "./searchIndexBuilder";

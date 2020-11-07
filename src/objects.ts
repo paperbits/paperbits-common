@@ -208,3 +208,17 @@ export function findObjects(source: object, predicate: (node: object) => boolean
 export function isEmpty(source: object): boolean {
     return !source || Object.keys(source).length === 0;
 }
+
+export function deepFreeze(obj: object): void {
+    const propNames = Object.getOwnPropertyNames(obj);
+
+    for (const name of propNames) {
+        const value = obj[name];
+
+        if (value && typeof value === "object") {
+            this.deepFreeze(value);
+        }
+    }
+
+    Object.freeze(obj);
+}

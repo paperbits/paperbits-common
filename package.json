@@ -19,6 +19,7 @@
         "domino": "^2.1.4",
         "immutable": "^3.8.2",
         "inversify": "^5.0.1",
+        "html-minifier-terser": "^5.1.1",
         "html2plaintext": "^2.1.2",
         "knockout": "^3.5.1",
         "lodash": "^4.17.15",

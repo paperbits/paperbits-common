@@ -1,12 +1,14 @@
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
+import { HtmlPageOptimizer } from "./htmlPageOptimizer";
 import { HtmlPagePublisherPlugin } from "./htmlPagePublisherPlugin";
 
 
 export class HtmlPagePublisher {
     constructor(
         private readonly htmlDocumentProvider: HtmlDocumentProvider,
-        private readonly htmlPagePublisherPlugins: HtmlPagePublisherPlugin[]
+        private readonly htmlPagePublisherPlugins: HtmlPagePublisherPlugin[],
+        private readonly htmlPageOptimizer: HtmlPageOptimizer
     ) { }
 
     private appendMetaTag(document: Document, name: string, content: string): void {
@@ -35,8 +37,6 @@ export class HtmlPagePublisher {
 
     public async renderHtml(page: HtmlPage, overridePlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
         try {
-
-
             const document = this.htmlDocumentProvider.createDocument(page.template);
             document.title = page.title;
 
@@ -71,10 +71,12 @@ export class HtmlPagePublisher {
                 }
             }
 
-            return "<!DOCTYPE html>" + document.documentElement.outerHTML;
+            const htmlContent = "<!DOCTYPE html>" + document.documentElement.outerHTML;
+            const optimizedHtmlContent = await this.htmlPageOptimizer.optimize(htmlContent);
+
+            return optimizedHtmlContent;
         }
         catch (error) {
-            debugger;
             throw new Error(`Unable to render page: ${error.stack}`);
         }
     }
