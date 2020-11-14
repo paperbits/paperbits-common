@@ -43,7 +43,12 @@ export interface ViewManager {
     openViewAsWorkshop(view: View): void;
     getOpenView(): View;
     closeWorkshop(editor: View | string): void;
-    openUploadDialog(): Promise<File[]>;
+
+    /**
+     * Opens upload file dialog.
+     * @param accept File extensions, e.g. ".ttf,.woff";
+     */
+    openUploadDialog(...accept: string[]): Promise<File[]>;
     openWidgetEditor(binding: IWidgetBinding<any>): void;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
     removeContextualEditor(editorName: string): void;
