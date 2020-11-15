@@ -146,13 +146,9 @@ export class MediaService implements IMediaService {
 
     private async uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
         await this.blobStorage.uploadBlob(media.blobKey, content, media.mimeType);
+        await this.objectStorage.updateObject(media.key, media);
 
-        if (!media.downloadUrl) {
-            await this.objectStorage.addObject(media.key, media);
-        }
-        else {
-            await this.objectStorage.updateObject(media.key, media);
-        }
+        media.downloadUrl = await this.blobStorage.getDownloadUrl(media.blobKey);
 
         return media;
     }
