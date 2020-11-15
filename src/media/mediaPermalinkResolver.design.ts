@@ -19,7 +19,25 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         }
 
         const media = await this.mediaService.getMediaByKey(mediaKey);
-        
-        return media?.downloadUrl || await this.blobStorage.getDownloadUrl(media.blobKey);
+
+        if (!media) {
+            return null;
+        }
+
+        let mediaUrl = null;
+
+        if (media.blobKey) {
+            mediaUrl = await this.blobStorage.getDownloadUrl(media.blobKey);
+        }
+
+        if (mediaUrl) {
+            return mediaUrl;
+        }
+
+        if (media.downloadUrl) {
+            mediaUrl = media.downloadUrl;
+        }
+
+        return mediaUrl;
     }
 }

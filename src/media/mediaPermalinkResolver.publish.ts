@@ -19,17 +19,18 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
         }
 
         try {
-            const contentItem = await this.mediaService.getMediaByKey(mediaKey);
+            const media = await this.mediaService.getMediaByKey(mediaKey);
 
-            if (!contentItem) {
+            if (!media) {
                 console.warn(`Could not find permalink by key ${mediaKey}.`);
                 return null;
             }
 
-            return contentItem.permalink;
+            return media.permalink;
         }
         catch (error) {
-            return "";
+            console.warn(`Could not fetch permalink by key ${mediaKey}.`);
+            return null;
         }
     }
 
