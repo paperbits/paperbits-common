@@ -54,6 +54,10 @@ export function Component(config: ComponentConfig): ClassDecorator {
             });
         }
 
-        Reflect.defineMetadata("knockout-component", { name: config.selector, constructor: target }, target);
+        Reflect.defineMetadata("paperbits-component", {
+            name: config.selector,
+            constructor: target,
+            framework: "knockout"
+        }, target);
     };
 } 
