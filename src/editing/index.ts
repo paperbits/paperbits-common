@@ -16,3 +16,4 @@ export * from "./widgetContext";
 export * from "./mediaHandlers";
 export * from "./selectionState";
 export * from "./widgetStackItem";
+export * from "./widgetBinding";

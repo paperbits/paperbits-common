@@ -1,28 +1,34 @@
 import * as ko from "knockout";
-import { IWidgetBinding, WidgetStackItem } from "../editing";
+import { IWidgetBinding, WidgetBinding, WidgetStackItem } from "../editing";
 
 export class GridHelper {
     public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
         const stack: WidgetStackItem[] = [];
 
         do {
-            const context = ko.contextFor(element);
+            const context = ko.dataFor(element);
 
-            if (!context?.$data?.widgetBinding || context.$data.widgetBinding.readonly) {
+            if (!context) {
+                element = element?.parentElement;
+                continue;
+            }
+
+            const widgetBinding = context instanceof WidgetBinding
+                ? context
+                : context.widgetBinding;
+
+            if (!widgetBinding || widgetBinding.readonly) {
                 element = element?.parentElement;
 
                 if (!element) {
                     return stack;
                 }
-                
                 continue;
             }
 
-            const binding: IWidgetBinding<any> = context.$data.widgetBinding;
-
             stack.push({
                 element: element,
-                binding: binding
+                binding: widgetBinding
             });
 
             element = element?.parentElement;
@@ -32,29 +38,38 @@ export class GridHelper {
         return stack;
     }
 
-    private static GetSelfAndParentViewModels(element: HTMLElement): any[] {
+    private static GetSelfAndParentBindings(element: HTMLElement): IWidgetBinding<any>[] {
         const context = ko.contextFor(element);
 
         if (!context) {
             return [];
         }
 
-        const viewModels = [];
+        const bindings: IWidgetBinding<any>[] = [];
 
         if (context.$data) {
-            viewModels.push(context.$data);
+            const widgetBinding = context.$data instanceof WidgetBinding
+                ? context.$data // new
+                : context.$data.widgetBinding; // legacy 
+
+            bindings.push(widgetBinding);
         }
 
         let current = null;
 
         context.$parents.forEach(viewModel => {
             if (viewModel && viewModel !== current) {
-                viewModels.push(viewModel);
+
+                if (viewModel instanceof WidgetBinding) {
+                    console.log("QQQ");
+                }
+
+                bindings.push(viewModel["widgetBinding"]);
                 current = viewModel;
             }
         });
 
-        return viewModels;
+        return bindings;
     }
 
     private static GetParentViewModels(element: HTMLElement): any[] {
@@ -121,10 +136,10 @@ export class GridHelper {
     }
 
     public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
-        const viewModels = this.GetSelfAndParentViewModels(element);
+        const bindings = this.GetSelfAndParentBindings(element);
 
-        if (viewModels.length > 0) {
-            return viewModels[0]["widgetBinding"];
+        if (bindings.length > 0) {
+            return bindings[0];
         }
         else {
             return null;
