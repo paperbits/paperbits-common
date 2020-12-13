@@ -39,7 +39,7 @@ export interface IWidgetBinding<TModel> {
     readonly: boolean;
 
     /**
-     * Either "box" or "fluid".
+     * Determines how component flows on the page. Possible values: "box" or "fluid".
      */
     flow?: string;
 

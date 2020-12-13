@@ -16,8 +16,7 @@ export class BlockService implements IBlockService {
 
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly httpClient: HttpClient,
-        private readonly settingsProvider: ISettingsProvider
+        private readonly httpClient: HttpClient
     ) { }
 
     public getBlockByKey(key: string): Promise<BlockContract> {
