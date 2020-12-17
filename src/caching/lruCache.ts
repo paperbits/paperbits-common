@@ -1,22 +1,30 @@
-﻿interface ICacheItem<T> {
+﻿import { Bag } from "../bag";
+
+interface ICacheItem<T> {
     key: string;
     value: T;
     next: ICacheItem<T>;
     prev: ICacheItem<T>;
 }
 
+/**
+ * Basic LRU cache utility.
+ */
 export class LruCache<T> {
-
-    private nodeMap = {};
+    private nodeMap: Bag<ICacheItem<T>> = {};
     private tail: ICacheItem<T>;
     private head: ICacheItem<T>;
 
     constructor(
         private maxSize: number = 10000,
-        private onevict?: (key: string, value: T) => void) {
+        private onEvict?: (key: string, value: T) => void) {
     }
 
-    public getItem(key): T {
+    /**
+     * Returns cached item with specified key.
+     * @param key {string} Item key.
+     */
+    public getItem(key: string): T {
         const item: ICacheItem<T> = this.nodeMap[key];
 
         if (!item) {
@@ -28,13 +36,18 @@ export class LruCache<T> {
         return item.value;
     }
 
-    public setItem(key, value): void {
+    /**
+     * Puts specified into cache.
+     * @param key {string} Item key.
+     * @param value {string} Item value.
+     */
+    public setItem(key: string, value: T): void {
         const item: ICacheItem<T> = this.nodeMap[key];
 
         if (item) {
             item.value = value;
             this.pop(item);
-        } 
+        }
         else {
             this.insert(key, value);
         }
@@ -45,12 +58,20 @@ export class LruCache<T> {
         this.nodeMap = {};
     }
 
-    public removeItem(key: string) {
-        let item = this.nodeMap[key];
+    /**
+     * Removes item from the cache.
+     * @param key {string} Item key.
+     */
+    public removeItem(key: string): void {
+        const item = this.nodeMap[key];
         this.remove(item);
     }
 
-    public removeWhere(predicate: (key: string, value: T) => boolean) {
+    /**
+     * Removed item matching to predicate.
+     * @param predicate Predicate.
+     */
+    public removeWhere(predicate: (key: string, value: T) => boolean): void {
         let item: ICacheItem<T> = this.head;
 
         if (!item) {
@@ -61,9 +82,13 @@ export class LruCache<T> {
             if (predicate(item.key, item.value)) {
                 this.removeItem(item.key);
             }
-        } while ((item = item.next) != null);
+        }
+        while ((item = item.next) !== null);
     }
 
+    /**
+     * Returns all keys of cached objects.
+     */
     public getKeys(): string[] {
         const result: string[] = new Array<string>();
         let item: ICacheItem<T> = this.head;
@@ -80,7 +105,10 @@ export class LruCache<T> {
         return result;
     }
 
-    public size() {
+    /**
+     * Returns number of cached items.
+     */
+    public size(): number {
         return Object.keys(this.nodeMap).length;
     }
 
@@ -89,9 +117,11 @@ export class LruCache<T> {
             return;
         }
         item.prev.next = item.next;
+
         if (item.next) {
             item.next.prev = item.prev;
-        } else {
+        }
+        else {
             this.tail = item.prev;
         }
         item.next = this.head;
@@ -104,8 +134,12 @@ export class LruCache<T> {
         if (Object.keys(this.nodeMap).length === this.maxSize) {
             const tail = this.tail;
             this.remove(tail);
-            this.onevict(tail.key, tail.value);
+
+            if (this.onEvict) {
+                this.onEvict(tail.key, tail.value);
+            }
         }
+
         if (!this.head) {
             this.head = <ICacheItem<T>>{
                 key: key,
@@ -114,7 +148,8 @@ export class LruCache<T> {
                 next: null
             };
             this.tail = this.head;
-        } else {
+        }
+        else {
             this.head = <ICacheItem<T>>{
                 key: key,
                 value: value,
@@ -123,6 +158,7 @@ export class LruCache<T> {
             };
             this.head.next.prev = this.head;
         }
+
         this.nodeMap[key] = this.head;
     }
 
@@ -131,14 +167,17 @@ export class LruCache<T> {
             return;
         }
         delete this.nodeMap[item.key];
+
         if (!this.head) {
             return;
         }
+
         if (this.head === item) {
             this.head = item.next;
             this.head.prev = null;
             return;
         }
+
         if (this.tail === item) {
             this.tail = this.tail.prev;
             this.tail.next = null;
