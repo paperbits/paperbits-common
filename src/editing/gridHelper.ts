@@ -1,41 +1,45 @@
+import content from "*.html";
 import * as ko from "knockout";
 import { IWidgetBinding, WidgetBinding, WidgetStackItem } from "../editing";
 
 export class GridHelper {
-    public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
-        const stack: WidgetStackItem[] = [];
 
-        do {
-            const context = ko.dataFor(element);
+    private static getSelfAndParentElements(element: HTMLElement): HTMLElement[] {
+        const stack = [];
 
-            if (!context) {
-                element = element?.parentElement;
-                continue;
-            }
-
-            const widgetBinding = context instanceof WidgetBinding
-                ? context
-                : context.widgetBinding;
-
-            if (!widgetBinding || widgetBinding.readonly) {
-                element = element?.parentElement;
-
-                if (!element) {
-                    return stack;
-                }
-                continue;
-            }
-
-            stack.push({
-                element: element,
-                binding: widgetBinding
-            });
-
-            element = element?.parentElement;
+        while (element) {
+            stack.push(element);
+            element = element.parentElement;
         }
-        while (element);
 
         return stack;
+    }
+
+    public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
+        const elements = this.getSelfAndParentElements(element);
+        let current = null;
+        const roots = [];
+
+        elements.reverse().forEach(element => {
+            const context = ko.contextFor(element);
+
+            if (context && context !== current) {
+                const widgetBinding = context.$data instanceof WidgetBinding
+                    ? context.$data
+                    : context.$data?.widgetBinding;
+
+                if (widgetBinding && !widgetBinding.readonly) {
+                    roots.push({
+                        element: element,
+                        binding: widgetBinding
+                    });
+                }
+
+                current = context;
+            }
+        });
+
+        return roots.reverse();
     }
 
     private static GetSelfAndParentBindings(element: HTMLElement): IWidgetBinding<any>[] {
@@ -112,22 +116,6 @@ export class GridHelper {
         });
 
         return bindings;
-    }
-
-    public static getComponentRoots(elements: Element[]): any[] {
-        let current = null;
-        const roots = [];
-
-        elements.reverse().forEach(x => {
-            const context = ko.contextFor(x);
-
-            if (context && context !== current) {
-                roots.push(x);
-                current = context;
-            }
-        });
-
-        return roots.reverse();
     }
 
     public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
