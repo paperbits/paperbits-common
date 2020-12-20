@@ -1,4 +1,3 @@
-import content from "*.html";
 import * as ko from "knockout";
 import { IWidgetBinding, WidgetBinding, WidgetStackItem } from "../editing";
 
@@ -17,26 +16,30 @@ export class GridHelper {
 
     public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
         const elements = this.getSelfAndParentElements(element);
-        let current = null;
+        let lastAdded = null;
         const roots = [];
 
         elements.reverse().forEach(element => {
             const context = ko.contextFor(element);
 
-            if (context && context !== current) {
-                const widgetBinding = context.$data instanceof WidgetBinding
-                    ? context.$data
-                    : context.$data?.widgetBinding;
-
-                if (widgetBinding && !widgetBinding.readonly) {
-                    roots.push({
-                        element: element,
-                        binding: widgetBinding
-                    });
-                }
-
-                current = context;
+            if (!context) {
+                return;
             }
+
+            const widgetBinding = context.$data instanceof WidgetBinding
+                ? context.$data
+                : context.$data?.widgetBinding;
+
+            if (!widgetBinding || widgetBinding.readonly || lastAdded === widgetBinding) {
+                return;
+            }
+
+            roots.push({
+                element: element,
+                binding: widgetBinding
+            });
+
+            lastAdded = widgetBinding;
         });
 
         return roots.reverse();
