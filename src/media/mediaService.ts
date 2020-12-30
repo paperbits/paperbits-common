@@ -56,7 +56,15 @@ export class MediaService implements IMediaService {
         return undefined;
     }
 
-    private convertPage(pageOfMedia: Page<MediaContract>): Page<MediaContract> {
+    private async convertPage(pageOfMedia: Page<MediaContract>): Promise<Page<MediaContract>> {
+        for (const media of pageOfMedia.value) {
+            if (!media.blobKey) {
+                continue;
+            }
+
+            media.downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
+        }
+
         const resultPage: Page<MediaContract> = {
             value: pageOfMedia.value,
             takeNext: async (): Promise<Page<MediaContract>> => {
@@ -80,14 +88,6 @@ export class MediaService implements IMediaService {
         try {
             const pageOfResults = await this.objectStorage.searchObjects<MediaContract>(Constants.mediaRoot, query);
             const pageOfMedia = this.convertPage(pageOfResults);
-
-            for (const media of pageOfMedia.value) {
-                if (!media.blobKey) {
-                    continue;
-                }
-
-                media.downloadUrl = await this.getDownloadUrlFromBlobKey(media.blobKey);
-            }
 
             return pageOfMedia;
 
