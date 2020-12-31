@@ -11,4 +11,5 @@ export class WidgetBinding implements IWidgetBinding<any> {
     public draggable: boolean;
     public editor: string;
     public applyChanges: (model: any) => Promise<void>;
+    public dispose?: (model: any) => Promise<void>;
 }
