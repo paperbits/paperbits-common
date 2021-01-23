@@ -11,7 +11,7 @@ export interface WidgetContext {
     /**
      * Widget binding attached to source element.
      */
-    binding?: IWidgetBinding<any>;
+    binding?: IWidgetBinding<any, any>;
 
     /**
      * Model attached to parent of dragged element.
@@ -21,7 +21,7 @@ export interface WidgetContext {
     /**
      * Widget bindhing of parent widget.
      */
-    parentBinding?: IWidgetBinding<any>;
+    parentBinding?: IWidgetBinding<any, any>;
 
     half?: string;
 

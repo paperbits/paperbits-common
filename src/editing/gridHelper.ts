@@ -45,14 +45,14 @@ export class GridHelper {
         return roots.reverse();
     }
 
-    private static GetSelfAndParentBindings(element: HTMLElement): IWidgetBinding<any>[] {
+    private static GetSelfAndParentBindings(element: HTMLElement): IWidgetBinding<any, any>[] {
         const context = ko.contextFor(element);
 
         if (!context) {
             return [];
         }
 
-        const bindings: IWidgetBinding<any>[] = [];
+        const bindings: IWidgetBinding<any, any>[] = [];
 
         if (context.$data) {
             const widgetBinding = context.$data instanceof WidgetBinding
@@ -95,7 +95,7 @@ export class GridHelper {
         return viewModels;
     }
 
-    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
+    public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
         const viewModels = this.GetParentViewModels(element);
 
         if (viewModels.length === 0) {
@@ -106,7 +106,7 @@ export class GridHelper {
         return parentViewModel["widgetBinding"];
     }
 
-    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding<any>[] {
+    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding<any, any>[] {
         const bindings = [];
         const parentViewModels = this.GetParentViewModels(element);
 
@@ -121,7 +121,7 @@ export class GridHelper {
         return bindings;
     }
 
-    public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any> {
+    public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
         const bindings = this.GetSelfAndParentBindings(element);
 
         if (bindings.length > 0) {

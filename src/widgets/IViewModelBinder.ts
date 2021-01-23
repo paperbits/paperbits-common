@@ -23,5 +23,5 @@ export interface ViewModelBinder<TModel, TViewModel> {
      * @param model {TModel} This is data created by digesting config from contract.
      * @param bindingContext {Bag<any>} Additional data passed from the top-level binding.
      */
-    createWidgetBinding?(model: TModel, bindingContext?: Bag<any>): Promise<IWidgetBinding<TModel>>;
+    createWidgetBinding?<TViewModel>(model: TModel, bindingContext?: Bag<any>): Promise<IWidgetBinding<TModel, TViewModel>>;
 }

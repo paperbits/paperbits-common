@@ -49,7 +49,7 @@ export interface ViewManager {
      * @param accept File extensions, e.g. ".ttf,.woff";
      */
     openUploadDialog(...accept: string[]): Promise<File[]>;
-    openWidgetEditor(binding: IWidgetBinding<any>): void;
+    openWidgetEditor(binding: IWidgetBinding<any, any>): void;
     setContextualEditor(editorName: string, contextualEditor: IContextCommandSet): void;
     removeContextualEditor(editorName: string): void;
     clearContextualEditors(): void;

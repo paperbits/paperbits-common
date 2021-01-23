@@ -1,7 +1,7 @@
 /**
  * Structure that binds widget view model to widget HTML element.
  */
-export interface IWidgetBinding<TModel> {
+export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Name of a widget.
      */
@@ -13,11 +13,6 @@ export interface IWidgetBinding<TModel> {
     displayName: string;
 
     /**
-     * Callback method invoked when HTML element is created.
-     */
-    oncreate?: (viewModel: any) => void;
-
-    /**
      * Widget model.
      */
     model?: TModel;
@@ -27,15 +22,19 @@ export interface IWidgetBinding<TModel> {
      */
     editor?: string;
 
+    /**
+     * Editor window resizing options, e.g. `vertically horizontally`.
+     */
     editorResize?: string;
-
-    hideCloseButton?: boolean;
 
     /**
      * Propagates changes from widget model to widget view model.
      */
-    applyChanges?: (changes?: TModel) => void;
+    applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;
 
+    /**
+     * Indicates whethere the widget should appear editable in the designer.
+     */
     readonly: boolean;
 
     /**
@@ -48,11 +47,23 @@ export interface IWidgetBinding<TModel> {
      */
     provides?: string[];
 
+    /**
+     * Widget handler used by the designer.
+     */
     handler?: any;
 
+    /**
+     * Callback invoked when the widget view model gets created.
+     */
     onCreate?: () => void;
 
+    /**
+     * Callback invoked when the widget view model gets displosed.
+     */
     onDispose?: () => void;
 
+    /**
+     * Indicates whether the widget can be moved in the designer.
+     */
     draggable: boolean;
 }

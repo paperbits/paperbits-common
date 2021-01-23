@@ -27,7 +27,7 @@ export interface IWidgetOrder {
     /**
      * Widget factory method.
      */
-    createWidget?(): IWidgetFactoryResult<any>;
+    createWidget?(): IWidgetFactoryResult<any, any>;
 
     /**
      * Widget model factory method. Invoked when widget gets added to the content.
