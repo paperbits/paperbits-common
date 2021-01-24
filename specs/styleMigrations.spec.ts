@@ -1,13 +1,14 @@
 
 import "../src/extensions";
+import { VariationBagContract } from "../src/styles";
 
 describe("Styles migration", async () => {
     it("Menu navigation link migration", () => {
-        const migrate = (style: any): void => { // Temporary migration mechanism
-            const menuVariations = Object.keys(style);
+        const migrate = (variationBag: VariationBagContract): void => { // Temporary migration mechanism
+            const menuVariations = Object.keys(variationBag);
 
             menuVariations.forEach(variationKey => {
-                const menuVariation = style[variationKey];
+                const menuVariation = variationBag[variationKey];
 
                 const components = menuVariation["components"];
 
@@ -34,7 +35,7 @@ describe("Styles migration", async () => {
             });
         };
 
-        const originalData = {
+        const originalData: VariationBagContract = {
             default: {
                 category: "appearance",
                 components: {
