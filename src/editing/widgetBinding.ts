@@ -1,7 +1,7 @@
 import { IWidgetBinding } from "../editing";
 
 /**
- * Widget binding used to connect widget model to its view model.
+ * Widget binding used to connect widget model to its view model instance.
  */
 export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel, TViewModel> {
     /**
