@@ -12,17 +12,17 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Widget view model class.
      */
-    public viewModelClass: any;
+    public viewModelClass: new (...args: any[]) => TViewModel;
 
     /**
      * Instance of the view model associated with the widget.
      */
-    public viewModel: any;
+    public viewModel: TViewModel;
 
     /**
      * Instance of the model associated with the widget.
      */
-    public model: any;
+    public model: TModel;
 
     /**
      * Name of a widget, e.g. `button`.
@@ -52,7 +52,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Propagates changes from widget model to widget view model.
      */
-    public applyChanges: (model: any, viewModel: any) => Promise<void>;
+    public applyChanges?: (model: TModel, viewModel: TViewModel) => Promise<void>;
 
     /**
      * Callback invoked when the widget view model gets created.
