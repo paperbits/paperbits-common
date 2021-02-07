@@ -6,6 +6,7 @@ export interface PrimitiveContract {
      * Unique identifier.
      */
     key: string;
+    
     /**
      * Display name.
      */

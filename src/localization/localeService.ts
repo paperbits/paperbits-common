@@ -18,15 +18,9 @@ export class LocaleService implements ILocaleService {
             displayName: "English (US)"
         };
 
-        const result = await this.objectStorage.getObject(localesPath);
+        const pageOfLocales = await this.objectStorage.searchObjects<LocaleModel>(localesPath);
 
-        if (!result) {
-            return [localeEnUs];
-        }
-
-        const locales = Object.values(result);
-
-        return [localeEnUs].concat(locales);
+        return [localeEnUs].concat(pageOfLocales.value);
     }
 
     public async createLocale(code: string, displayName: string): Promise<void> {
