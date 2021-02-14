@@ -28,7 +28,7 @@ export class HyperlinkModel {
     public anchor: string;
     
     /**
-     * Example: "Anchor name"
+     * @deprecated. Display name of the anchor (temporary field, should be calculated).
      */
     public anchorName: string;
 }
