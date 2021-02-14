@@ -1,6 +1,5 @@
+import * as Constants from "./constants";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
-
 
 export class PageHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Pages";
@@ -8,10 +7,6 @@ export class PageHyperlinkProvider implements IHyperlinkProvider {
     public readonly iconClass: string = "paperbits-icon paperbits-menu-4";
 
     public canHandleHyperlink(contentItemKey: string): boolean {
-        return contentItemKey.startsWith("pages/");
-    }
-
-    public getHyperlinkFromResource(hyperlinkModel: HyperlinkModel): HyperlinkModel {
-        return hyperlinkModel;
+        return contentItemKey.startsWith(`${Constants.pagesRoot}/`);
     }
 }

@@ -1,7 +1,4 @@
-import { BlogPostContract } from "../blogs/blogPostContract";
 import { IHyperlinkProvider } from "../ui/IHyperlinkProvider";
-import { HyperlinkModel } from "../permalinks/hyperlinkModel";
-
 
 export class BlogHyperlinkProvider implements IHyperlinkProvider {
     public readonly name: string = "Blog posts";
@@ -10,14 +7,5 @@ export class BlogHyperlinkProvider implements IHyperlinkProvider {
 
     public canHandleHyperlink(contentItemKey: string): boolean {
         return contentItemKey.startsWith("posts/");
-    }
-
-    public getHyperlinkFromResource(post: BlogPostContract): HyperlinkModel {
-        const hyperlinkModel = new HyperlinkModel();
-        hyperlinkModel.title = post.title;
-        hyperlinkModel.targetKey = post.key;
-        hyperlinkModel.href = post.permalink;
-
-        return hyperlinkModel;
     }
 }
