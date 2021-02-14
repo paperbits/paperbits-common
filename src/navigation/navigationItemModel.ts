@@ -25,6 +25,11 @@
     public targetWindow?: string;
 
     /**
+     * Parameter used to define anchor of hyperlink element.
+     */
+    public anchor?: string;
+
+    /**
      * Child navigation items.
      */
     public nodes?: NavigationItemModel[];
