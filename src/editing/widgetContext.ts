@@ -2,6 +2,9 @@ import { WidgetModel } from "../widgets";
 import { IWidgetBinding } from "./IWidgetBinding";
 
 
+/**
+ * Widget context used for configuring contextual editors.
+ */
 export interface WidgetContext {
     /**
      * Model attached to dragged (source) element.
@@ -23,9 +26,18 @@ export interface WidgetContext {
      */
     parentBinding?: IWidgetBinding<any, any>;
 
+    /**
+     * Indicates which side of this widget the new widget shall land, e.g. `bottom`.
+     */
     half?: string;
 
+    /**
+     * Feature provider tags used for filtering widgets in the widget selector, e.g. "html", "js", "email".
+     */
     providers?: string[];
 
+    /**
+     * Switches widget selection to parent widget.
+     */
     switchToParent: () => void;
 }
