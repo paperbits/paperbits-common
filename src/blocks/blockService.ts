@@ -1,11 +1,11 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "../constants";
+import * as Objects from "../objects";
 import { IObjectStorage, Query, Operator } from "../persistence";
-import { IBlockService, BlockType } from "./IBlockService";
+import { IBlockService } from "./IBlockService";
 import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";
 import { HttpClient } from "../http/httpClient";
-import { ISettingsProvider } from "../configuration/ISettingsProvider";
 import { Bag } from "../bag";
 
 const blockPath = "blocks";
@@ -30,38 +30,32 @@ export class BlockService implements IBlockService {
         return this.objectStorage.getObject<BlockContract>(key);
     }
 
-    public async search(type: BlockType, pattern: string): Promise<BlockContract[]> {
-        let results: BlockContract[] = [];
+    public async search(blockType: string, pattern: string): Promise<BlockContract[]> {
+        const query = Query
+            .from<BlockContract>()
+            .where("type", Operator.equals, blockType);
 
-        if (type === BlockType.saved) {
-            const query = Query
-                .from<BlockContract>()
-                .where("type", Operator.equals, type);
-
-            if (pattern.length > 0) {
-                query.where("title", Operator.contains, pattern).orderBy("title");
-            }
-
-            const pageOfObjects = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
-            results = pageOfObjects.value;
-        }
-        else {
-            const data = await this.loadBlockSnippets();
-
-            if (!data) {
-                return [];
-            }
-            const blocks: Bag<BlockContract> = data[blockPath];
-            const blockKeys = Object.keys(blocks);
-
-            for (const blockKey of blockKeys) {
-                if (blocks[blockKey].title.indexOf(pattern) !== -1) {
-                    results.push(blocks[blockKey]);
-                }
-            }
+        if (pattern.length > 0) {
+            query.where("title", Operator.contains, pattern).orderBy("title");
         }
 
-        return results;
+        const pageOfObjects = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
+        const results = pageOfObjects.value;
+
+        if (results.length > 0) {
+            return results;
+        }
+
+        const blockSnippets = await this.loadBlockSnippets();
+
+        if (!blockSnippets) {
+            return [];
+        }
+
+        const bagOfBlocks: Bag<BlockContract> = blockSnippets[blockPath];
+        const blocks = Object.values(bagOfBlocks);
+
+        return blocks.filter(block => block.title.includes(pattern) && block.type === blockType);
     }
 
     public async deleteBlock(block: BlockContract): Promise<void> {
@@ -72,13 +66,13 @@ export class BlockService implements IBlockService {
         await this.objectStorage.deleteObject(block.key);
     }
 
-    public async createBlock(title: string, description: string, content: Contract, type: BlockType): Promise<void> {
+    public async createBlock(title: string, description: string, content: Contract, blockType: string): Promise<void> {
         const identifier = Utils.guid();
         const blockKey = `${blockPath}/${Utils.guid()}`;
         const contentKey = `${documentsPath}/${identifier}`;
 
         const block: BlockContract = {
-            type: type,
+            type: blockType,
             key: blockKey,
             title: title,
             description: description,
@@ -97,26 +91,32 @@ export class BlockService implements IBlockService {
         return this.objectStorage.updateObject(block.key, block);
     }
 
-    public async getBlockContent(key: string, blockType?: BlockType): Promise<Contract> {
-        if (!key) {
+    public async getBlockContent(blockKey: string): Promise<Contract> {
+        if (!blockKey) {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        if (!blockType || blockType === BlockType.saved) {
-            const block = await this.getBlockByKey(key);
-            return await this.objectStorage.getObject(block.contentKey);
+        const storedBlock: BlockContract = await this.getBlockByKey(blockKey);
+
+        if (storedBlock) {
+            const content = await this.objectStorage.getObject(storedBlock.contentKey);
+            return Objects.clone(content);
         }
 
-        const data = await this.loadBlockSnippets();
+        const blockSnippets = await this.loadBlockSnippets();
 
-        if (!data) {
+        if (!blockSnippets) {
             return null;
         }
-        const block = this.getObjectByPath(data, key);
-        if (!block) {
+
+        const blockSnippet = Objects.getObjectAt<BlockContract>(blockKey, blockSnippets);
+
+        if (!blockSnippet) {
             return null;
         }
-        return this.getObjectByPath(data, block.contentKey);
+
+        const content = Objects.getObjectAt<Contract>(blockSnippet.contentKey, blockSnippets);
+        return Objects.clone(content);
     }
 
     private async loadBlockSnippets(): Promise<any> {
@@ -144,12 +144,5 @@ export class BlockService implements IBlockService {
         catch (error) {
             console.error("Load blocks error: ", error);
         }
-    }
-
-    private getObjectByPath(obj: any, pathKey: string): any {
-        for (let i = 0, path = pathKey.split("/"), len = path.length; i < len; i++) {
-            obj = obj[path[i]];
-        }
-        return obj;
     }
 }

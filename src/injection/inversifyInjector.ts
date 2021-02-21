@@ -188,20 +188,22 @@ export class InversifyInjector implements IInjector {
         this.container.bind<any>(collectionName + "C").to(Placeholder);
     }
 
-    public bindToCollection(collectionName: string, component: any, name?: string): void {
-        this.decorateComponent(collectionName + "C", component);
-        this.container.bind<any>(collectionName + "C").to(component);
+    public bindToCollection(collectionName: string, component: any, componentName?: string): void {
+        const collectionComponentName = collectionName + "C";
 
-        if (name) {
-            this.container.bind<any>(name).to(component);
+        this.decorateComponent(collectionComponentName, component);
+        this.container.bind<any>(collectionComponentName).to(component);
+
+        if (componentName) {
+            this.container.bind<any>(componentName).to(component);
         }
     }
 
-    public bindInstanceToCollection(collectionName: string, instance: any, name?: string): void {
+    public bindInstanceToCollection(collectionName: string, instance: any, componentName?: string): void {
         this.container.bind<any>(collectionName + "C").toConstantValue(instance);
 
-        if (name) {
-            this.container.bind<any>(name).toConstantValue(instance);
+        if (componentName) {
+            this.container.bind<any>(componentName).toConstantValue(instance);
         }
     }
 }

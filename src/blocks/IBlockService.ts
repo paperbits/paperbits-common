@@ -10,7 +10,7 @@ export interface IBlockService {
      * @param blockType {string}
      * @param pattern {string}
      */
-    search(blockType: BlockType, pattern: string): Promise<BlockContract[]>;
+    search(blockType: string, pattern: string): Promise<BlockContract[]>;
 
     /**
      * Returns a design block by specified key;
@@ -24,10 +24,13 @@ export interface IBlockService {
     deleteBlock(block: BlockContract): Promise<void>;
 
     /**
-     * Creates new design block in storage and returns a contract of it.
-     * Block can be used in a page or email. 
+     * Creates new design block in storage and returns a contract of it. Block can be used in a page or email. 
+     * @param title {string} Block title.
+     * @param description {string} Block description.
+     * @param content {Contact} Content contract.
+     * @param blockType {string} Block type, e.g. `layout-section`.
      */
-    createBlock(title: string, description: string, content: Contract, type: BlockType): Promise<void>;
+    createBlock(title: string, description: string, content: Contract, blockType: string): Promise<void>;
 
     /**
      * Updates specified design block.
@@ -36,12 +39,7 @@ export interface IBlockService {
 
     /**
      * Returns block content by specified key.
-     * @param blockKey {string}
+     * @param blockKey {string} Block key.
      */
-    getBlockContent?(blockKey: string, blockType?: BlockType): Promise<Contract>;
-}
-
-export enum BlockType {
-    saved = "layout-section",
-    blocks = "blocks-section"
+    getBlockContent?(blockKey: string): Promise<Contract>;
 }
