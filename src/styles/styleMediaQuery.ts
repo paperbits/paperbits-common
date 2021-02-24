@@ -10,21 +10,4 @@ export class StyleMediaQuery {
         this.styles = [];
         this.globalStyles = [];
     }
-
-    public toJssString(): string {
-        const stylesJss = this.styles.map(style => style.toJssString()).join();
-        const globalStylesJss = this.globalStyles.map(style => style.toJssString()).join();
-
-        const general = !!stylesJss
-            ? stylesJss
-            : "";
-
-        const global = !!globalStylesJss
-            ? `"@global": {${globalStylesJss}}`
-            : "";
-
-        const jssString = `"@media(min-width:${this.minWidth}px)":{${[global, general].filter(x => !!x).join(",")}}`;
-
-        return jssString;
-    }
 }
