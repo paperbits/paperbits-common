@@ -1,5 +1,6 @@
 export * from "./defaultRouter";
 export * from "./defaultRouteGuard";
+export * from "./mailtoRouteGuard";
 export * from "./router";
 export * from "./routerEvents";
 export * from "./routeGuard";
