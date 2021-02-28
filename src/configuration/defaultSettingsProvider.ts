@@ -1,4 +1,4 @@
-import * as Objects from "@paperbits/common/objects";
+import * as Objects from "../objects";
 import { EventManager } from "../events";
 import { HttpClient } from "../http";
 import { ISettingsProvider } from "../configuration";
@@ -33,7 +33,7 @@ export class DefaultSettingsProvider implements ISettingsProvider {
         });
     }
 
-    public setSetting<T>(name: string, value: T): void {
+    public async setSetting<T>(name: string, value: T): Promise<void> {
         this.configuration[name] = value;
         this.eventManager.dispatchEvent("onSettingChange", { name: name, value: value });
     }

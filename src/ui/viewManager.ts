@@ -35,10 +35,10 @@ export interface ViewManager {
     showToolboxes(): void;
     clearJourney(): void;
     closeView(): void;
-    notifyInfo(title: string, content: string, commands?: ICommand[]): void;
-    notifySuccess(title: string, content: string): void;
-    notifyError(title: string, content: string): void;
-    notifyProgress<T>(promise: Promise<T>, title: string, content: string): void;
+    notifyInfo(title: string, content: string, commands?: ICommand[]): Toast;
+    notifySuccess(title: string, content: string): Toast;
+    notifyError(title: string, content: string): Toast;
+    notifyProgress<T>(promise: Promise<T>, title: string, content: string): Toast;
     openViewAsPopup(view: View): void;
     openViewAsWorkshop(view: View): void;
     getOpenView(): View;

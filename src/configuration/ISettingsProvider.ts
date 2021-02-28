@@ -18,16 +18,12 @@ export interface ISettingsProvider {
      * @param name {string} Setting name.
      * @param value {any} Setting value.
      */
-    setSetting<T>(name: string, value: T): void;
+    setSetting<T>(name: string, value: T): Promise<void>;
 
+    /**
+     * Registers a listener for specified setting changes.
+     * @param name {string} Setting name.
+     * @param eventHandler {(value: T) => void} Change handler.
+     */
     onSettingChange?<T>(name: string, eventHandler: (value: T) => void): void;
-}
-
-export module Settings {
-    export module Config {
-        export const GoogleMaps = "googleMaps";
-        export const GoogleTagManager = "gtm";
-        export const Intercom = "intercom";
-        export const GoogleFonts = "googleFonts";
-    }
 }
