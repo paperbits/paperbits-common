@@ -41,7 +41,7 @@ export interface ViewManager {
     notifyProgress<T>(promise: Promise<T>, title: string, content: string): Toast;
     openViewAsPopup(view: View): void;
     openViewAsWorkshop(view: View): void;
-    getOpenView(): View;
+    getActiveView(): View;
     closeWorkshop(editor: View | string): void;
 
     /**

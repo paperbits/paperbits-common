@@ -3,9 +3,11 @@ import { Router } from "../routing";
 import { ViewManager } from "./../ui";
 import { EventManager } from "../events";
 import { ISettingsProvider } from "../configuration";
+import { Hint } from "./hint";
 
 export class Hinter {
     private noHints: boolean;
+    private activeHintKey: string;
 
     constructor(
         private readonly eventManager: EventManager,
@@ -15,22 +17,26 @@ export class Hinter {
         private readonly localSettings: ISettingsProvider
     ) {
         this.noHints = false;
-        this.eventManager.addEventListener("DesignTimeNavigationHint", this.showDesignTimeNavigationHint.bind(this));
-        this.eventManager.addEventListener("InactiveLayoutHint", this.showInactiveLayoutHint.bind(this));
+        this.eventManager.addEventListener("displayInactiveLayoutHint", this.showInactiveLayoutHint.bind(this));
+        this.eventManager.addEventListener("displayHint", this.displayHint.bind(this));
     }
 
-    private async showDesignTimeNavigationHint(): Promise<void> {
-        const dismissed = await this.localSettings.getSetting("hints:DesignTimeNavigationHint");
+    private async displayHint(hint: Hint): Promise<void> {
+        const hintSettingName = `hints:${hint.key}`;
+        const dismissed = await this.localSettings.getSetting(hintSettingName);
 
-        if (dismissed) {
+        if (!!dismissed || !!this.activeHintKey) {
             return;
         }
 
-        const toast = this.viewManager.addToast("Did you know?", `When you're in the administrative view, you still can navigate any website hyperlink by clicking on it holding Ctrl (Windows) or ⌘ (Mac) key.`, [{
+        this.activeHintKey = hint.key;
+
+        const toast = this.viewManager.addToast("Did you know?", hint.content, [{
             title: "Got it",
             action: async () => {
-                await this.localSettings.setSetting("hints:DesignTimeNavigationHint", true);
+                await this.localSettings.setSetting(hintSettingName, true);
                 this.viewManager.removeToast(toast);
+                this.activeHintKey = null;
             }
         }]);
     }
@@ -45,14 +51,21 @@ export class Hinter {
         const url = this.router.getPath();
         const layoutContract = await this.layoutService.getLayoutByPermalink(url);
 
-        const toast = this.viewManager.notifyInfo("Did you know?", `This section is a part of "<b>${layoutContract.title}</b>" layout. Would you like to open it for editing?`, [{
-            title: "Edit layout",
-            iconClass: "paperbits-edit-72",
-            action: async () => {
-                this.viewManager.setHost({ name: "layout-host", params: { layoutKey: layoutContract.key } });
-                this.viewManager.removeToast(toast);
-            }
-        }]);
+        const toast = this.viewManager.notifyInfo("Layouts", `This section is a part of "<b>${layoutContract.title}</b>" layout. Would you like to open it for editing?`,
+            [{
+                title: "Edit layout",
+                iconClass: "paperbits-edit-72",
+                action: async () => {
+                    this.viewManager.setHost({ name: "layout-host", params: { layoutKey: layoutContract.key } });
+                    this.viewManager.removeToast(toast);
+                }
+            },
+            {
+                title: "Dismiss",
+                action: async () => {
+                    this.viewManager.removeToast(toast);
+                }
+            }]);
 
         setTimeout(() => this.noHints = false, 8000);
     }
