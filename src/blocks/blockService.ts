@@ -1,23 +1,15 @@
 ﻿import * as Utils from "../utils";
-import * as Constants from "../constants";
 import * as Objects from "../objects";
 import { IObjectStorage, Query, Operator } from "../persistence";
 import { IBlockService } from "./IBlockService";
 import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";
-import { HttpClient } from "../http/httpClient";
-import { Bag } from "../bag";
 
 const blockPath = "blocks";
 const documentsPath = "files";
 
 export class BlockService implements IBlockService {
-    private blocksData: object;
-
-    constructor(
-        private readonly objectStorage: IObjectStorage,
-        private readonly httpClient: HttpClient
-    ) { }
+    constructor(private readonly objectStorage: IObjectStorage) { }
 
     public getBlockByKey(key: string): Promise<BlockContract> {
         if (!key) {
@@ -42,20 +34,7 @@ export class BlockService implements IBlockService {
         const pageOfObjects = await this.objectStorage.searchObjects<BlockContract>(blockPath, query);
         const results = pageOfObjects.value;
 
-        if (results.length > 0) {
-            return results;
-        }
-
-        const blockSnippets = await this.loadBlockSnippets();
-
-        if (!blockSnippets) {
-            return [];
-        }
-
-        const bagOfBlocks: Bag<BlockContract> = blockSnippets[blockPath];
-        const blocks = Object.values(bagOfBlocks);
-
-        return blocks.filter(block => block.title.includes(pattern) && block.type === blockType);
+        return results;
     }
 
     public async deleteBlock(block: BlockContract): Promise<void> {
@@ -98,51 +77,11 @@ export class BlockService implements IBlockService {
 
         const storedBlock: BlockContract = await this.getBlockByKey(blockKey);
 
-        if (storedBlock) {
-            const content = await this.objectStorage.getObject(storedBlock.contentKey);
-            return Objects.clone(content);
+        if (!storedBlock) {
+            throw new Error(`Content not found for block with key ${blockKey}`);
         }
 
-        const blockSnippets = await this.loadBlockSnippets();
-
-        if (!blockSnippets) {
-            return null;
-        }
-
-        const blockSnippet = Objects.getObjectAt<BlockContract>(blockKey, blockSnippets);
-
-        if (!blockSnippet) {
-            return null;
-        }
-
-        const content = Objects.getObjectAt<Contract>(blockSnippet.contentKey, blockSnippets);
+        const content = await this.objectStorage.getObject(storedBlock.contentKey);
         return Objects.clone(content);
-    }
-
-    private async loadBlockSnippets(): Promise<any> {
-        if (!this.blocksData) {
-            await this.loadData();
-        }
-        return this.blocksData;
-    }
-
-    private async loadData(): Promise<void> {
-        try {
-            const blocksUrl = Constants.blockSnippetsLibraryUrl;
-
-            if (!blocksUrl) {
-                console.warn("Settings for blocksUrl not found.");
-                return;
-            }
-            const response = await this.httpClient.send({
-                url: blocksUrl,
-                method: "GET"
-            });
-
-            this.blocksData = <any>response.toObject();
-        }
-        catch (error) {
-            console.error("Load blocks error: ", error);
-        }
     }
 }

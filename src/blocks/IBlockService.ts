@@ -7,14 +7,14 @@ import { Contract } from "../contract";
 export interface IBlockService {
     /**
      * Searches for design blocks that contain specified pattern in their title, description.
-     * @param blockType {string}
-     * @param pattern {string}
+     * @param blockType {string} Block type, e.g. "layout-section".
+     * @param pattern {string} Search pattern.
      */
     search(blockType: string, pattern: string): Promise<BlockContract[]>;
 
     /**
      * Returns a design block by specified key;
-     * @param blockKey {string}
+     * @param blockKey {string} Block type, e.g. "layout-section".
      */
     getBlockByKey(blockKey: string): Promise<BlockContract>;
 
