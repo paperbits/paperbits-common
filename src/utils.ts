@@ -356,15 +356,6 @@ export function matchUrl(urlPath: string, urlTemplate: string): { index: number,
     return tokens;
 }
 
-export function closest(node: Node, predicate: (node: Node) => boolean): Node {
-    do {
-        if (predicate(node)) {
-            return node;
-        }
-    }
-    while (node = node && node.parentNode);
-}
-
 export function localizeQuery<T>(query: Query<T>, locale: string): Query<T> {
     const localizedQuery = query.copy();
     localizedQuery.filters.forEach(x => x.left = `locales/${locale}/${x.left}`);
