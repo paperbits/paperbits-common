@@ -13,7 +13,7 @@ export interface View {
     component?: IComponent;
 
     /**
-     * Allowed values: "vertically", "horizontally".
+     * Allowed values: `vertically`, `horizontally`.
      */
     resize?: string | ResizableOptions;
 
@@ -37,9 +37,9 @@ export interface View {
      */
     returnFocusTo?: HTMLElement;
 
+    /**
+     * Checks if speficied element belongs to this view.
+     * @param element {HTMLElement} HTML element being checked.
+     */
     hitTest?(element: HTMLElement): boolean;
-
-    initialWidth?: number;
-
-    initialHeight?: number;
 }
