@@ -20,27 +20,30 @@ export class SearchIndexBuilder {
         };
     }
 
-    public appendPage(permalink: string, title: string, description: string, body: string): void {
+    public appendText(permalink: string, title: string, description: string, text: string): void {
+        this.append(permalink, title, description, text);
+    }
+
+    public appendHtml(permalink: string, title: string, description: string, html: string): void {
         try {
-            const regex = /<main.*>([\s\S]*)<\/main>/g;
-            const match = regex.exec(body);
-
-            if (!match || match.length < 1) {
-                return;
-            }
-
-            const mainContent = match[1];
-
-            this.documents.push({
-                permalink: permalink,
-                title: title,
-                description: description,
-                body: h2p(mainContent)
-            });
+            this.append(permalink, title, description, h2p(html));
         }
         catch (error) {
             throw new Error(`Unable to index content for ${permalink}: ${error.stack || error.message}`);
         }
+    }
+
+    public append(permalink: string, title: string, description: string, content: string): void {
+        if (!permalink || !title || !content) {
+            return; // skip indexing
+        }
+
+        this.documents.push({
+            permalink: permalink,
+            title: title,
+            description: description,
+            body: content
+        });
     }
 
     public buildIndex(): string {
