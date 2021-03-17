@@ -5,7 +5,7 @@ export class HyperlinkModel {
     /**
      * Example: "Page: Home"
      */
-    public title: string;
+    public title?: string;
 
     /**
      * Example: _blank.
