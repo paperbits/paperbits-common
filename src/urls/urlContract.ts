@@ -10,7 +10,7 @@ export interface UrlContract {
     /**
      * URL title.
      */
-    title: string;
+    title?: string;
 
     /**
      * URL description.
