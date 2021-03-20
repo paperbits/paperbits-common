@@ -7,6 +7,9 @@ export class StyleRule {
         this.value = value;
     }
 
+    /**
+     * @deprecated
+     */
     public toJssString(): string {
         return `"${this.name}":"${this.value}"`;
     }

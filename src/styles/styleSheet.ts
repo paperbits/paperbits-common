@@ -1,6 +1,7 @@
 import { StyleMediaQuery } from "./styleMediaQuery";
 import { Style } from "./styles";
 import { FontFace } from "./fontFace";
+import { StyleAnimation } from "./animation";
 
 
 export class StyleSheet {
@@ -9,6 +10,7 @@ export class StyleSheet {
     public readonly globalStyles: Style[];
     public readonly mediaQueries: StyleMediaQuery[];
     public readonly fontFaces: FontFace[];
+    public readonly animations: StyleAnimation[];
 
     constructor(key?: string) {
         this.key = key;
@@ -16,5 +18,6 @@ export class StyleSheet {
         this.globalStyles = [];
         this.mediaQueries = [];
         this.fontFaces = [];
+        this.animations = [];
     }
 }
