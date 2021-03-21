@@ -54,8 +54,7 @@ export class PopupService implements IPopupService {
     }
 
     public async createPopup(permalink: string, title: string, description?: string): Promise<PopupContract> {
-        // const key = `${popupsPath}/${Utils.guid()}`;
-        const key = Utils.randomClassName();
+        const key = `${popupsPath}/${Utils.guid()}`;
 
         const contract: PopupContract = {
             key: key,
