@@ -14,7 +14,7 @@ export interface IMediaService {
 
     /**
      * Returns media file metadata by specified key.
-     * @param key
+     * @param key {string} Media key, e.g. `uploads/1bbf57f8-8954-46bb-9c33-5b54643f9376`;
      */
     getMediaByKey(key: string): Promise<MediaContract>;
 
@@ -32,17 +32,17 @@ export interface IMediaService {
 
     /**
      * Creates new media files.
-     * @param name Name of media file, i.e. "logo.png"
+     * @param name Name of media file, i.e. `logo.png`.
      * @param content Content in form of byte array.
-     * @param contentType Content type, i.e. "image/png".
+     * @param contentType Content type, i.e. `image/png`.
      */
     createMedia(name: string, content: Uint8Array, contentType?: string): Promise<MediaContract>;
 
     /**
      * Creates new media files.
-     * @param name Name of media file, i.e. "logo.png"
+     * @param name Name of media file, i.e. `logo.png`.
      * @param referenceUrl URL, i.e. "https://cdn.paperbits.io/images/logo.svg"
-     * @param contentType Content type, i.e. "image/png".
+     * @param contentType Content type, i.e. `image/png`.
      */
     createMediaUrl(name: string, referenceUrl: string, mimeType?: string): Promise<MediaContract>;
 
@@ -56,7 +56,7 @@ export interface IMediaService {
      * Update media file content.
      * @param media metadata to Update
      * @param content New content in form of byte array.
-     * @param contentType Content type, i.e. "image/png".
+     * @param contentType Content type, i.e. `image/png`.
      */
     updateMediaContent(media: MediaContract, content: Uint8Array): Promise<MediaContract>;
 }
