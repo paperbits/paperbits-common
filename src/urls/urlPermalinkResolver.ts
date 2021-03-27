@@ -53,8 +53,6 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        let hyperlinkModel: HyperlinkModel;
-
         if (hyperlinkContract.targetKey) {
             const urlContract = await this.urlService.getUrlByKey(hyperlinkContract.targetKey, locale);
 
@@ -63,7 +61,7 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
             }
         }
 
-        hyperlinkModel = new HyperlinkModel();
+        const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlinkContract.target;
         hyperlinkModel.targetKey = hyperlinkContract.targetKey;

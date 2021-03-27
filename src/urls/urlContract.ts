@@ -3,12 +3,12 @@
  */
 export interface UrlContract {
     /**
-     * Own key.
+     * Own key, e.g. `urls/c25f5533-3e4d-4580-a7e2-09134ef9e0c3`.
      */
     key?: string;
 
     /**
-     * URL title.
+     * URL title, e.g. `Google Fonts`.
      */
     title?: string;
 
@@ -18,7 +18,7 @@ export interface UrlContract {
     description?: string;
 
     /**
-     * Permalink of a resource.
+     * Permalink of a resource, e.g. `https://fonts.google.com`;
      */
     permalink?: string;
 }

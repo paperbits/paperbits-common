@@ -15,14 +15,14 @@ export interface IPageService {
 
     /**
      * Returns page by specified key.
-     * @param key {string} Unique page identifier.
+     * @param key {string} Unique page identifier, e.g. `pages/1bbf57f8-8954-46bb-9c33-5b54643f9376`.
      * @param locale {string} If provided, operation returns metadata in specified locale.
      */
     getPageByKey(key: string, locale?: string): Promise<PageContract>;
 
     /**
      * Returns page with specified permalink.
-     * @param permalink {string} Permanent link of the page, e.g. /about.
+     * @param permalink {string} Permanent link of the page, e.g. `/about`.
      */
     getPageByPermalink(permalink: string, locale?: string): Promise<PageContract>;
 
@@ -35,7 +35,7 @@ export interface IPageService {
 
     /**
      * Creates a new page in store and returns its contract.
-     * @param permalink {string} Permanent link of the page, e.g. /about.
+     * @param permalink {string} Permanent link of the page, e.g. `/about`.
      * @param title {string} Page title.
      * @param description {string} Page description.
      * @param keywords {string} Page keywords.
@@ -45,14 +45,14 @@ export interface IPageService {
     /**
      * Updates page metadata.
      * @param page {PageContract} Contract describing page metadata.
-     * @param locale {string} If provided, operation updates metadata in specified locale.
+     * @param locale {string} Locale, e.g. `en-us`. If provided, operation updates metadata in specified locale.
      */
     updatePage(page: PageContract, locale?: string): Promise<void>;
 
     /**
      * Returns page content by specified key.
-     * @param pageKey {string}
-     * @param locale {string} If provided, operation returns content in specified locale.
+     * @param pageKey {string} Unique page identifier, e.g. `pages/1bbf57f8-8954-46bb-9c33-5b54643f9376`.
+     * @param locale {string} Locale, e.g. `en-us`. If provided, operation returns content in specified locale.
      */
     getPageContent(pageKey: string, locale?: string): Promise<Contract>;
 
@@ -60,7 +60,7 @@ export interface IPageService {
      * Updates page content.
      * @param pageKey {string} Key of the page.
      * @param content {Contract} Contract describing content of the page.
-     * @param locale {string} If provided, operation updates content in specified locale.
+     * @param locale {string} Locale, e.g. `en-us`. If provided, operation updates content in specified locale.
      */
     updatePageContent(pageKey: string, content: Contract, locale?: string): Promise<void>;
 }
