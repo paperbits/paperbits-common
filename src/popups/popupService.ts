@@ -142,9 +142,7 @@ export class PopupService implements IPopupService {
                                 },
                                 size: {
                                     maxWidth: 500,
-                                    maxHeight: 200,
-                                    width: "100%",
-                                    height: "100%"
+                                    maxHeight: 200
                                 },
                                 padding: {
                                     left: 10,
@@ -152,6 +150,28 @@ export class PopupService implements IPopupService {
                                 },
                                 container: {
                                     overflow: "scroll"
+                                },
+                                border: {
+                                    bottom: {
+                                        colorKey: "colors/15o9C",
+                                        style: "solid",
+                                        width: "1"
+                                    },
+                                    left: {
+                                        colorKey: "colors/15o9C",
+                                        style: "solid",
+                                        width: "1"
+                                    },
+                                    right: {
+                                        colorKey: "colors/15o9C",
+                                        style: "solid",
+                                        width: "1"
+                                    },
+                                    top: {
+                                        colorKey: "colors/15o9C",
+                                        style: "solid",
+                                        width: "1"
+                                    }
                                 }
                             }
                         }
