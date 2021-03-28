@@ -1,24 +1,13 @@
-﻿/**
- * URL metadata.
+﻿import { PopupMetadata } from "./popupMetadata";
+import { ContentItemContract } from "../contentItems";
+
+
+/**
+ * Popup metadata.
  */
-export interface PopupContract {
+ export interface PopupContract extends PopupMetadata, ContentItemContract {
     /**
      * Own key.
      */
     key?: string;
-
-    /**
-     * URL title.
-     */
-    title?: string;
-
-    /**
-     * URL description.
-     */
-    description?: string;
-
-    /**
-     * Permalink of a resource.
-     */
-    permalink?: string;
 }

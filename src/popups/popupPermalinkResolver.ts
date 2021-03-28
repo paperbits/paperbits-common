@@ -19,6 +19,8 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
+        debugger;
+
         try {
             const contentItem = await this.popupService.getPopupByKey(targetKey);
 
@@ -27,7 +29,7 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
                 return null;
             }
 
-            return contentItem.permalink;
+            return contentItem.key;
         }
         catch (error) {
             return null;
