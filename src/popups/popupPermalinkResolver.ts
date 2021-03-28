@@ -1,10 +1,15 @@
 import { HyperlinkContract } from "../editing";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { IPopupService, PopupContract } from ".";
+import { ILocaleService } from "../localization";
 
+const popupsPath = "popups/";
 
 export class PopupPermalinkResolver implements IPermalinkResolver {
-    constructor(private readonly popupService: IPopupService) { }
+    constructor(
+        private readonly popupService: IPopupService,
+        private readonly localeService: ILocaleService
+    ) { }
 
     public canHandleTarget(targetKey: string): boolean {
         return targetKey.startsWith("popups/");
@@ -18,8 +23,6 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
         if (!targetKey.startsWith("popups/")) {
             return null;
         }
-
-        debugger;
 
         try {
             const contentItem = await this.popupService.getPopupByKey(targetKey);
@@ -36,12 +39,15 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
         }
     }
 
-    private async getHyperlink(popupContract: PopupContract, target: string = "_self"): Promise<HyperlinkModel> {
+    private async getHyperlink(popupContract: PopupContract, hyperlinkContract?: HyperlinkContract): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = popupContract.key;
         hyperlinkModel.href = popupContract.permalink;
         hyperlinkModel.title = popupContract.title || popupContract.permalink;
-        hyperlinkModel.target = target;
+
+        if (hyperlinkContract) {
+            hyperlinkModel.target = hyperlinkContract.target;
+        }
 
         return hyperlinkModel;
     }
@@ -51,7 +57,7 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
             throw new Error("Target key cannot be null or empty.");
         }
 
-        if (!hyperlinkContract.targetKey.startsWith("popups/")) {
+        if (!hyperlinkContract.targetKey.startsWith(popupsPath)) {
             return null;
         }
 
@@ -61,7 +67,7 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
             const popupContract = await this.popupService.getPopupByKey(hyperlinkContract.targetKey, locale);
 
             if (popupContract) {
-                return this.getHyperlink(popupContract, hyperlinkContract.target);
+                return this.getHyperlink(popupContract, hyperlinkContract);
             }
         }
 
@@ -70,7 +76,6 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.target = hyperlinkContract.target;
         hyperlinkModel.targetKey = hyperlinkContract.targetKey;
         hyperlinkModel.href = "#";
-        hyperlinkModel.anchor = hyperlinkContract.anchor;
 
         return hyperlinkModel;
     }
@@ -80,17 +85,26 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
             throw new Error("Target key cannot be null or empty.");
         }
 
-        if (!targetKey.startsWith("popups/")) {
+        if (!targetKey.startsWith(popupsPath)) {
             return null;
         }
 
-        const contentItem = await this.popupService.getPopupByKey(targetKey, locale);
+        const defaultLocale = await this.localeService.getDefaultLocale();
+        let popupContract = await this.popupService.getPopupByKey(targetKey, locale);
 
-        if (!contentItem) {
-            return null;
+        if (!popupContract) {
+            popupContract = await this.popupService.getPopupByKey(targetKey, defaultLocale);
+
+            if (!popupContract) {
+                console.warn(`Could create hyperlink for target with key ${targetKey} in locale ${locale}.`);
+                return null;
+            }
+        }
+        else if (locale && locale !== defaultLocale) {
+            popupContract.permalink = `/${locale}${popupContract.permalink}`;
         }
 
-        const hyperlink = await this.getHyperlink(contentItem);
+        const hyperlink = await this.getHyperlink(popupContract);
 
         return hyperlink;
     }

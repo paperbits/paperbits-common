@@ -17,8 +17,21 @@ export class PopupService implements IPopupService {
         private readonly localeService: ILocaleService
     ) { }
 
-    public async getPopupByKey(key: string): Promise<PopupContract> {
-        return await this.objectStorage.getObject<PopupContract>(key);
+    public async getPopupByKey(key: string, requestedLocale?: string): Promise<PopupContract> {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
+        const popupContract = await this.objectStorage.getObject<PopupLocalizedContract>(key);
+
+        if (!popupContract) {
+            return null;
+        }
+
+        const defaultLocale = await this.localeService.getDefaultLocale();
+        const currentLocale = await this.localeService.getCurrentLocale();
+
+        return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, popupContract);
     }
 
     /**
