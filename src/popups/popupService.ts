@@ -177,8 +177,7 @@ export class PopupService implements IPopupService {
                                 }
                             }
                         }
-                    },
-                    key: "okjhxmbkgi"
+                    }
                 }
             },
             nodes: [
