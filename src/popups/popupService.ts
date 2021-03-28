@@ -142,12 +142,13 @@ export class PopupService implements IPopupService {
                                     }
                                 },
                                 size: {
-                                    maxWidth: 500,
-                                    maxHeight: 200
+                                    maxWidth: 500
                                 },
                                 padding: {
-                                    left: 10,
-                                    right: 10
+                                    top: 20,
+                                    left: 30,
+                                    right: 30,
+                                    bottom: 30
                                 },
                                 container: {
                                     overflow: "scroll"
