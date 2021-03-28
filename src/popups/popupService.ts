@@ -105,6 +105,7 @@ export class PopupService implements IPopupService {
         return {
             type: "popup",
             key: "popups/5580ced1-61f9-9bdd-751e-ce5418608a28",
+            backdrop: true,
             styles: {
                 instance: {
                     components: {
