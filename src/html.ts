@@ -1,5 +1,5 @@
 /**
- * Returns closest element that satisfies the predicate.
+ * Returns closest element that satisfies the predicate, going from child to parent.
  * @param node {Node} Node from which the search starts.
  * @param predicate {(node: Node) => boolean} Search predicate
  */

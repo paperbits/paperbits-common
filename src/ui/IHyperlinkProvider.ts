@@ -23,4 +23,6 @@ export interface IHyperlinkProvider {
      * Determines if this provider is suitable for a resource the permalink points to.
      */
     canHandleHyperlink?(contentItemKey: string): boolean;
+
+    hyperlinkDetailsComponentName?: string;
 }
