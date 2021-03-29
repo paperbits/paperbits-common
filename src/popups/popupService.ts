@@ -7,14 +7,17 @@ import { Contract } from "../contract";
 import { ILocaleService } from "../localization";
 import { PopupMetadata } from "./popupMetadata";
 import { PopupLocalizedContract } from "./popupLocalizedContract";
+import { IBlockService } from "../blocks";
 
 const popupsPath = "popups";
 const documentsPath = "files";
+const templateBlockKey = "blocks/new-popup-template";
 
 export class PopupService implements IPopupService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly localeService: ILocaleService
+        private readonly localeService: ILocaleService,
+        private readonly blockService: IBlockService
     ) { }
 
     public async getPopupByKey(key: string, requestedLocale?: string): Promise<PopupContract> {
@@ -122,21 +125,6 @@ export class PopupService implements IPopupService {
             styles: {
                 instance: {
                     components: {
-                        popupBackdrop: {
-                            default: {
-                                position: {
-                                    position: "fixed",
-                                    top: "0",
-                                    left: "0",
-                                    right: "0",
-                                    bottom: "0",
-                                    zIndex: 1000
-                                },
-                                background: {
-                                    colorKey: "colors/a4ZAV"
-                                }
-                            }
-                        },
                         popupContainer: {
                             default: {
                                 position: {
@@ -240,7 +228,8 @@ export class PopupService implements IPopupService {
 
         await this.objectStorage.addObject<PopupLocalizedContract>(popupKey, localizedPopup);
 
-        const template = this.getPopupDefaultContent();
+        // const template = this.getPopupDefaultContent();
+        const template = await this.blockService.getBlockContent(templateBlockKey);
         template["key"] = contentKey; // rewriting own key
         await this.objectStorage.addObject<Contract>(contentKey, template);
 
