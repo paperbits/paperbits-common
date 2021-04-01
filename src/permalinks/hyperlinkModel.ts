@@ -26,9 +26,14 @@ export class HyperlinkModel {
      * Example: "http://external-resource#anchor"
      */
     public anchor: string;
-    
+
     /**
      * @deprecated. Display name of the anchor (temporary field, should be calculated).
      */
     public anchorName: string;
+}
+
+export enum HyperlinkTarget {
+    popup = "_popup",
+    download = "_download"
 }
