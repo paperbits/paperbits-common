@@ -17,7 +17,7 @@ export interface IInjector {
      * @param name {string} Name of the dependency, e.g. myComponent.
      * @param singletone A singletone component being bound.
      */
-    bindSingleton(name: string, singletone: any): void;
+    bindSingleton<T>(name: string, singletone: any): void;
 
     /**
      * Binds an instance of a component (or any other entity that doesn't require inversion of control resolution).

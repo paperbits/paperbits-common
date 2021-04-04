@@ -50,6 +50,11 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public editor: string;
 
     /**
+     * Determines how component flows on the page. Possible values: "inline" or "block".
+     */
+    public flow?: string;
+
+    /**
      * Propagates changes from widget model to widget view model.
      */
     public applyChanges?: (model: TModel, viewModel: TViewModel) => Promise<void>;
