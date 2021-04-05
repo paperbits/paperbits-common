@@ -374,7 +374,21 @@ export class OfflineObjectStorage implements IObjectStorage {
                         }
 
                         switch (operator) {
+                            case Operator.notEmpty:
+                                if (typeof left === "string") {
+                                    meetsCriteria = !left;
+                                    break;
+                                }
+                                if (Array.isArray(left)) {
+                                    meetsCriteria = left.length > 0;
+                                }
+                                break;
                             case Operator.contains:
+                                if(Array.isArray(left) && Array.isArray(right)) {
+                                    meetsCriteria = right.filter(value=>left.includes(value))?.length > 0;
+                                    break;
+                                }
+
                                 if (left && !left.includes(right)) {
                                     meetsCriteria = false;
                                 }
@@ -480,7 +494,17 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         /* Merging local searh results with remote search results */
-        resultPage.value = localSearchResults.value.concat(remoteSearchResults);
+        const added = [];
+        for (let i = 0; i < localSearchResults.value.length; i++) {
+            const local = localSearchResults.value[i];
+            const updateIndex = remoteSearchResults.findIndex(r => r["key"] === local["key"]);
+            if (updateIndex !== -1) {
+                remoteSearchResults[updateIndex] = local;
+            } else {
+                added.push(local);
+            }     
+        }
+        resultPage.value = added.concat(remoteSearchResults);
 
         return resultPage;
     }

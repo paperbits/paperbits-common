@@ -41,4 +41,9 @@ export interface MediaContract {
      * Mime type of a file (i.e. image/png).
      */
     mimeType?: string;
+
+    /**
+     * Terms assigned to a file. Used for grouping
+     */
+    tags?: string[];
 }

@@ -1,6 +1,7 @@
 export enum Operator {
     equals,
-    contains
+    contains,
+    notEmpty
 }
 
 export enum OrderDirection {
@@ -25,7 +26,7 @@ export class Query<T> {
         this.orderDirection = OrderDirection.accending;
     }
 
-    public where<TLeftOperand, TRightOperand>(left: TLeftOperand, operator: Operator, right: TRightOperand): Query<T> {
+    public where<TLeftOperand, TRightOperand>(left: TLeftOperand, operator: Operator, right?: TRightOperand): Query<T> {
         this.filters.push({ left, operator, right });
         return this;
     }
