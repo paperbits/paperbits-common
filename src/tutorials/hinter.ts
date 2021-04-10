@@ -54,7 +54,7 @@ export class Hinter {
         const toast = this.viewManager.notifyInfo("Layouts", `This section is a part of "<b>${layoutContract.title}</b>" layout. Would you like to open it for editing?`,
             [{
                 title: "Edit layout",
-                iconClass: "paperbits-edit-72",
+                iconClass: "paperbits-icon paperbits-edit-72",
                 action: async () => {
                     this.viewManager.setHost({ name: "layout-host", params: { layoutKey: layoutContract.key } });
                     this.viewManager.removeToast(toast);

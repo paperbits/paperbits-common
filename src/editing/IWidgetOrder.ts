@@ -25,6 +25,11 @@ export interface IWidgetOrder {
     iconClass?: string;
 
     /**
+     * Icon URL.
+     */
+    iconUrl?: string;
+
+    /**
      * Widget factory method.
      */
     createWidget?(): IWidgetFactoryResult<any, any>;
