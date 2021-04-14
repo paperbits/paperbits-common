@@ -5,6 +5,8 @@ export class BlockModel {
         styles?: object;
         className?: string;
         id?: string;
+        name?: string;
+        placeholder?: string;
     };
 
     public nodes?: InlineModel[];
