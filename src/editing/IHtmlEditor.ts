@@ -48,4 +48,5 @@ export interface IHtmlEditor {
     decreaseIndent(): void;
     setTextStyle(styleKey: string, viewport?: string): void;
     onStateChange: (state: BlockModel[]) => void;
+    insertProperty(name: string, placeholder: string): void;
 }
