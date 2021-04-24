@@ -91,7 +91,7 @@ export function setStructure(path: string, target: object, delimiter: string = "
 }
 
 /**
- * Remove all properties with undefined value from object.
+ * Removes all properties with undefined value from object.
  * @param source {object} An object that needs to be cleaned.
  * @param includingNulls {boolean} Indicates if properties with "null" values will also be removed from source object.
  * @param includingEmptyString {boolean} Indicates if properties with empty string values will also be removed from source object.
@@ -221,4 +221,44 @@ export function deepFreeze(obj: object): void {
     }
 
     Object.freeze(obj);
+}
+
+export function generateChangeset(target: Object, source: Object): Object {
+    const changeset = {};
+
+    if (!isObject(target) || !isObject(source)) {
+        return changeset;
+    }
+
+    Object.keys(source).forEach(key => {
+        const sourceProperty = source[key];
+        const targetProperty = target[key];
+
+        if (isObject(sourceProperty)) {
+            if (targetProperty !== undefined && targetProperty !== null) {
+                changeset[key] = generateChangeset(targetProperty, sourceProperty);
+
+                if (!Object.values(changeset[key]).some(x => x !== null)) {
+                    changeset[key] = null;
+                }
+            }
+            else if (targetProperty !== sourceProperty && sourceProperty !== undefined) {  // if not present in target, safely assign whole source.
+                changeset[key] = sourceProperty;
+            }
+        }
+        else if (targetProperty !== sourceProperty && sourceProperty !== undefined) {  // if value or array, just assign as is.
+            changeset[key] = sourceProperty || null;
+        }
+    });
+
+    Object.keys(target).forEach(key => {
+        const targetProperty = target[key];
+        const sourceProperty = source[key];
+
+        if (targetProperty !== undefined && (sourceProperty === undefined || sourceProperty === null)) {
+            changeset[key] = null;
+        }
+    });
+
+    return changeset;
 }

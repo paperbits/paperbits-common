@@ -95,4 +95,32 @@ describe("Objects", async () => {
         expect(compensation1).equals(undefined);
         expect(compensation2).equals("South Eads");
     });
+
+    it("Generate changeset.", () => {
+        const object1: any = {
+            firstName: "John",
+            address1: { street: "South Eads" },
+            address2: { street: "South Eads" },
+            address3: { street: "South Eads" },
+        };
+
+        const object2: any = {
+            address1: {
+                streetNumber: 10
+            },
+            address3: { street: null }
+        };
+
+        const actualResult = Objects.generateChangeset(object1, object2);
+
+        const expectedResult: any = {
+            firstName: null,
+            address1: { street: null, streetNumber: 10 },
+            address2: null,
+            address3: null
+        };
+
+        console.log(JSON.stringify(actualResult));
+        console.log(JSON.stringify(expectedResult));
+    });
 });

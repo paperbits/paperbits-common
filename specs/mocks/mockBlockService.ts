@@ -1,4 +1,4 @@
-import { IBlockService, BlockType } from "../../src/blocks/IBlockService";
+import { IBlockService } from "../../src/blocks";
 import { Contract } from "../../src/contract";
 import { BlockContract } from "../../src/blocks/blockContract";
 
@@ -8,7 +8,7 @@ export class MockBlockService implements IBlockService {
         throw new Error("Not implemented");
     }
 
-    public async search(type: BlockType, pattern: string): Promise<BlockContract[]> {
+    public async search(type: string, pattern: string): Promise<BlockContract[]> {
         throw new Error("Not implemented");
     }
 
@@ -16,7 +16,7 @@ export class MockBlockService implements IBlockService {
         throw new Error("Not implemented");
     }
 
-    public async createBlock(title: string, description: string, content: Contract, type: BlockType): Promise<void> {
+    public async createBlock(title: string, description: string, content: Contract, type: string): Promise<void> {
         throw new Error("Not implemented");
     }
 
@@ -24,7 +24,7 @@ export class MockBlockService implements IBlockService {
        throw new Error("Not implemented");
     }
 
-    public async getBlockContent(key: string, blockType?: BlockType): Promise<Contract> {
+    public async getBlockContent(key: string, blockType?: string): Promise<Contract> {
         return <any>{};
     }
 }
