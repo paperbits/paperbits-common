@@ -7,3 +7,4 @@ export * from "./routeGuard";
 export * from "./route";
 export * from "./historyRouteHandler";
 export * from "./locationRouteHandler";
+export * from "./anchorRouteHandler";
