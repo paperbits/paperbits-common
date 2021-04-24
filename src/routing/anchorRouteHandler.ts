@@ -9,7 +9,7 @@ export class AnchorRouteHandler {
     }
 
     /**
-     * Handles internal router event.
+     * Handles route change event.
      */
     private onRouteChange(route: Route): void {
         if (!route.hash) {

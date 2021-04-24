@@ -25,7 +25,7 @@ export class HistoryRouteHandler {
     }
 
     /**
-     * Handles internal router event.
+     * Handles internal route change event.
      */
     private onRouteChange(route: Route): void {
         this.internalPushState.call(history, route, route.title, route.url);
