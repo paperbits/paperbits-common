@@ -111,7 +111,7 @@ describe("Objects", async () => {
             address3: { street: null }
         };
 
-        const actualResult = Objects.generateChangeset(object1, object2);
+        const actualResult = Objects.generateChangeset(object1, object2, true);
 
         const expectedResult: any = {
             firstName: null,

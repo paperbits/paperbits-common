@@ -223,7 +223,7 @@ export function deepFreeze(obj: object): void {
     Object.freeze(obj);
 }
 
-export function generateChangeset(target: Object, source: Object): Object {
+export function generateChangeset(target: Object, source: Object, collapseEmptyNodes: boolean = false): Object {
     const changeset = {};
 
     if (!isObject(target) || !isObject(source)) {
@@ -238,7 +238,7 @@ export function generateChangeset(target: Object, source: Object): Object {
             if (targetProperty !== undefined && targetProperty !== null) {
                 changeset[key] = generateChangeset(targetProperty, sourceProperty);
 
-                if (!Object.values(changeset[key]).some(x => x !== null)) {
+                if (collapseEmptyNodes && !Object.values(changeset[key]).some(x => x !== null)) { // collapse empty nodes empty nodes
                     changeset[key] = null;
                 }
             }
