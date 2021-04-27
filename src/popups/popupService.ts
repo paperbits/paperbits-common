@@ -117,98 +117,6 @@ export class PopupService implements IPopupService {
         await Promise.all([deletePopupPromise]);
     }
 
-    private getPopupDefaultContent(): any {
-        return {
-            type: "popup",
-            key: "popups/5580ced1-61f9-9bdd-751e-ce5418608a28",
-            backdrop: true,
-            styles: {
-                instance: {
-                    components: {
-                        popupContainer: {
-                            default: {
-                                position: {
-                                    position: "fixed",
-                                    top: "50%",
-                                    left: "50%",
-                                    zIndex: 1001
-                                },
-                                background: {
-                                    colorKey: "colors/defaultBg"
-                                },
-                                transform: {
-                                    translate: {
-                                        x: "-50%",
-                                        y: "-50%"
-                                    }
-                                },
-                                size: {
-                                    maxWidth: 500
-                                },
-                                padding: {
-                                    top: 20,
-                                    left: 30,
-                                    right: 30,
-                                    bottom: 30
-                                },
-                                container: {
-                                    overflow: "scroll"
-                                },
-                                border: {
-                                    bottom: {
-                                        colorKey: "colors/15o9C",
-                                        style: "solid",
-                                        width: "1"
-                                    },
-                                    left: {
-                                        colorKey: "colors/15o9C",
-                                        style: "solid",
-                                        width: "1"
-                                    },
-                                    right: {
-                                        colorKey: "colors/15o9C",
-                                        style: "solid",
-                                        width: "1"
-                                    },
-                                    top: {
-                                        colorKey: "colors/15o9C",
-                                        style: "solid",
-                                        width: "1"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            nodes: [
-                {
-                    type: "text-block",
-                    nodes: [
-                        {
-                            type: "heading1",
-                            nodes: [
-                                {
-                                    type: "text",
-                                    text: "Popup"
-                                }
-                            ]
-                        },
-                        {
-                            type: "paragraph",
-                            nodes: [
-                                {
-                                    type: "text",
-                                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor..."
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
-    }
-
     public async createPopup(title: string, description?: string): Promise<PopupContract> {
         const locale = await this.localeService.getDefaultLocale();
         const identifier = Utils.guid();
@@ -228,8 +136,8 @@ export class PopupService implements IPopupService {
 
         await this.objectStorage.addObject<PopupLocalizedContract>(popupKey, localizedPopup);
 
-        // const template = this.getPopupDefaultContent();
         const template = await this.blockService.getBlockContent(templateBlockKey);
+
         template["key"] = contentKey; // rewriting own key
         await this.objectStorage.addObject<Contract>(contentKey, template);
 
