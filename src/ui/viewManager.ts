@@ -243,4 +243,8 @@ export interface ViewManager {
      * Returns the document where the content component being hosted.
      */
     getHostDocument(): Document;
+
+    pauseContextualEditors(): void;
+
+    resumeContextualEditors(): void;
 }
