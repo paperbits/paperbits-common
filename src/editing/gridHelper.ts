@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import * as Arrays from "../arrays";
 import { IWidgetBinding, WidgetBinding, WidgetStackItem } from "../editing";
 
 export class GridHelper {
@@ -14,32 +15,46 @@ export class GridHelper {
         return stack;
     }
 
+    private static getWidgetStackItem(element: HTMLElement): WidgetStackItem {
+        const context = ko.contextFor(element);
+
+        if (!context) {
+            return null;
+        }
+
+        const widgetBinding = context.$data instanceof WidgetBinding
+            ? context.$data
+            : context.$data?.widgetBinding;
+
+        if (!widgetBinding || widgetBinding.readonly) {
+            return null;
+        }
+
+        return {
+            element: element,
+            binding: widgetBinding
+        };
+    }
+
     public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
         const elements = this.getSelfAndParentElements(element);
         let lastAdded = null;
         const roots = [];
 
         elements.reverse().forEach(element => {
-            const context = ko.contextFor(element);
+            const item = GridHelper.getWidgetStackItem(element);
 
-            if (!context) {
+            if (!item) {
                 return;
             }
 
-            const widgetBinding = context.$data instanceof WidgetBinding
-                ? context.$data
-                : context.$data?.widgetBinding;
-
-            if (!widgetBinding || widgetBinding.readonly || lastAdded === widgetBinding) {
+            if (lastAdded === item.binding) {
                 return;
             }
 
-            roots.push({
-                element: element,
-                binding: widgetBinding
-            });
+            roots.push(item);
 
-            lastAdded = widgetBinding;
+            lastAdded = item.binding;
         });
 
         return roots.reverse();
@@ -141,5 +156,13 @@ export class GridHelper {
         else {
             return null;
         }
+    }
+
+    public static findTopElementByModel(parentElement: HTMLElement, model: any): WidgetStackItem {
+        const children = Arrays.coerce<HTMLElement>(parentElement.children);
+        const items = children.map(x => GridHelper.getWidgetStackItem(x));
+        const item = items.find(x => x?.binding.model === model);
+
+        return item;
     }
 }
