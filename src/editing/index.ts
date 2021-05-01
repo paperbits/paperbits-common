@@ -15,5 +15,5 @@ export * from "./IWidgetOrder";
 export * from "./widgetContext";
 export * from "./mediaHandlers";
 export * from "./selectionState";
-export * from "./widgetStackItem";
+export * from "./gridItem";
 export * from "./widgetBinding";
