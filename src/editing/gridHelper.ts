@@ -1,6 +1,6 @@
 import * as ko from "knockout";
 import * as Arrays from "../arrays";
-import { IWidgetBinding, WidgetBinding, WidgetStackItem } from "../editing";
+import { IWidgetBinding, WidgetBinding, GridItem } from "../editing";
 
 export class GridHelper {
 
@@ -15,7 +15,7 @@ export class GridHelper {
         return stack;
     }
 
-    private static getWidgetStackItem(element: HTMLElement): WidgetStackItem {
+    public static getGridItem(element: HTMLElement, includeReadonly: boolean = false): GridItem {
         const context = ko.contextFor(element);
 
         if (!context) {
@@ -26,23 +26,34 @@ export class GridHelper {
             ? context.$data
             : context.$data?.widgetBinding;
 
-        if (!widgetBinding || widgetBinding.readonly) {
+        if (!widgetBinding) {
             return null;
         }
 
-        return {
+        if (widgetBinding.readonly && !includeReadonly) {
+            return null;
+        }
+
+        const gridItem: GridItem = {
             element: element,
-            binding: widgetBinding
+            binding: widgetBinding,
+            getParent: () => GridHelper.getParentGridItem(gridItem),
+            getChildren: () => GridHelper.getChildGridItems(gridItem),
+            getSiblings: () => GridHelper.getSiblingGridItems(gridItem),
+            getNextSibling: () => GridHelper.getNextSibling(gridItem),
+            getPrevSibling: () => GridHelper.getPrevSibling(gridItem)
         };
+
+        return gridItem;
     }
 
-    public static getWidgetStack(element: HTMLElement): WidgetStackItem[] {
+    public static getWidgetStack(element: HTMLElement): GridItem[] {
         const elements = this.getSelfAndParentElements(element);
         let lastAdded = null;
         const roots = [];
 
         elements.reverse().forEach(element => {
-            const item = GridHelper.getWidgetStackItem(element);
+            const item = GridHelper.getGridItem(element);
 
             if (!item) {
                 return;
@@ -158,11 +169,44 @@ export class GridHelper {
         }
     }
 
-    public static findTopElementByModel(parentElement: HTMLElement, model: any): WidgetStackItem {
-        const children = Arrays.coerce<HTMLElement>(parentElement.children);
-        const items = children.map(x => GridHelper.getWidgetStackItem(x));
-        const item = items.find(x => x?.binding.model === model);
+    public static getChildGridItems(gridItem: GridItem): GridItem[] {
+        const childElements = Arrays.coerce<HTMLElement>(gridItem.element.children);
 
-        return item;
+        return childElements
+            .map(child => GridHelper.getGridItem(child))
+            .filter(x => !!x && x.binding.model !== gridItem.binding.model);
+    }
+
+    public static getParentGridItem(gridItem: GridItem): GridItem {
+        const stack = GridHelper.getWidgetStack(gridItem.element);
+
+        return stack.length > 1
+            ? stack[1]
+            : null;
+    }
+
+    public static getSiblingGridItems(gridItem: GridItem): GridItem[] {
+        const parent = GridHelper.getParentGridItem(gridItem);
+        return GridHelper.getChildGridItems(parent);
+    }
+
+    public static getNextSibling(gridItem: GridItem): GridItem {
+        const nextElement = <HTMLElement>gridItem.element.nextElementSibling;
+
+        if (!nextElement) {
+            return null;
+        }
+
+        return GridHelper.getGridItem(nextElement);
+    }
+
+    public static getPrevSibling(gridItem: GridItem): GridItem {
+        const previousElement = <HTMLElement>gridItem.element.previousElementSibling;
+
+        if (!previousElement) {
+            return null;
+        }
+
+        return GridHelper.getGridItem(previousElement);
     }
 }
