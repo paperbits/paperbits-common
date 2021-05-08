@@ -10,6 +10,11 @@ export interface LocaleModel {
     code: string;
 
     /**
+     * Direction of the text, e.g. `ltr`, `rtl`.
+     */
+    direction?: string;
+
+    /**
      * Locale display name, e.g. English (US). 
      */
     displayName: string;

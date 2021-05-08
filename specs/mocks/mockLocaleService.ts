@@ -32,11 +32,11 @@ export class MockLocaleService implements ILocaleService {
         // TODO
     }
 
-    public async getDefaultLocale(): Promise<string> {
+    public async getDefaultLocaleCode(): Promise<string> {
         return "en-us";
     }
 
-    public async getCurrentLocale(): Promise<string> {
+    public async getCurrentLocaleCode(): Promise<string> {
         return this.currentLocale;
     }
 

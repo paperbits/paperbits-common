@@ -66,8 +66,8 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "permalink" not specified.`);
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
         const permalinkProperty = `${Constants.localePrefix}/${defaultLocale}/permalink`; // We use permalink from default locale only (for now).
 
         const query = Query
@@ -108,8 +108,8 @@ export class PageService implements IPageService {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
 
         return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, pageContract);
     }
@@ -135,8 +135,8 @@ export class PageService implements IPageService {
             throw new Error(`Parameter "query" not specified.`);
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
         const searchLocale = requestedLocale || currentLocale;
 
         const localizedQuery = Utils.localizeQuery(query, searchLocale);
@@ -175,7 +175,7 @@ export class PageService implements IPageService {
     }
 
     public async createPage(permalink: string, title: string, description: string, keywords: string): Promise<PageContract> {
-        const locale = await this.localeService.getDefaultLocale();
+        const locale = await this.localeService.getDefaultLocaleCode();
         const identifier = Utils.guid();
         const pageKey = `${this.pagesPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;
@@ -217,7 +217,7 @@ export class PageService implements IPageService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
         const pageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
@@ -239,10 +239,10 @@ export class PageService implements IPageService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(pageKey);
 
         let pageMetadata = localizedPageContract.locales[requestedLocale];
@@ -280,13 +280,13 @@ export class PageService implements IPageService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
         let pageMetadata = localizedPageContract.locales[requestedLocale];
 
         if (!pageMetadata) {
-            const defaultLocale = await this.localeService.getDefaultLocale();
+            const defaultLocale = await this.localeService.getDefaultLocaleCode();
             const defaultPageMetadata = localizedPageContract.locales[defaultLocale];
             const identifier = Utils.guid();
 

@@ -26,7 +26,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         let pageContract = await this.pageService.getPageByKey(targetKey, locale);
 
         if (!pageContract) {
@@ -98,7 +98,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         let pageContract = await this.pageService.getPageByKey(targetKey, locale);
 
         if (!pageContract) {
@@ -126,7 +126,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         let pageContract = await this.pageService.getPageByPermalink(permalink, locale);
 
         if (!pageContract) {
-            const defaultLocale = await this.localeService.getDefaultLocale();
+            const defaultLocale = await this.localeService.getDefaultLocaleCode();
             pageContract = await this.pageService.getPageByPermalink(permalink, defaultLocale);
 
             if (!pageContract) {

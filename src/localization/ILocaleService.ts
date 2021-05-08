@@ -7,15 +7,21 @@ export interface ILocaleService {
      */
     getLocales(): Promise<LocaleModel[]>;
 
-    createLocale(code: string, displayName: string): Promise<void>;
+    createLocale(code: string, displayName: string, direction?: string): Promise<LocaleModel>;
 
     deleteLocale(code: string): Promise<void>;
 
-    getCurrentLocale(): Promise<string>;
+    /**
+     * Returns the code of the current locale.
+     */
+    getCurrentLocaleCode(): Promise<string>;
 
     setCurrentLocale(localeCode: string): Promise<void>;
 
-    getDefaultLocale(): Promise<string>;
+    /**
+     * Returns the code of the default locale.
+     */
+    getDefaultLocaleCode(): Promise<string>;
 
     isLocalizationEnabled(): Promise<boolean>;
 }

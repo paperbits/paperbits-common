@@ -31,8 +31,8 @@ export class PopupService implements IPopupService {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
 
         return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, popupContract);
     }
@@ -96,8 +96,8 @@ export class PopupService implements IPopupService {
             throw new Error(`Parameter "query" not specified.`);
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
         const searchLocale = requestedLocale || currentLocale;
 
         const localizedQuery = Utils.localizeQuery(query, searchLocale);
@@ -118,7 +118,7 @@ export class PopupService implements IPopupService {
     }
 
     public async createPopup(title: string, description?: string): Promise<PopupContract> {
-        const locale = await this.localeService.getDefaultLocale();
+        const locale = await this.localeService.getDefaultLocaleCode();
         const identifier = Utils.guid();
         const popupKey = `${popupsPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;
@@ -161,10 +161,10 @@ export class PopupService implements IPopupService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         const localizedPopupContract = await this.objectStorage.getObject<PopupLocalizedContract>(popupKey);
 
         let popupMetadata = localizedPopupContract.locales[requestedLocale];
@@ -202,13 +202,13 @@ export class PopupService implements IPopupService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
         let popupMetadata = localizedPopupContract.locales[requestedLocale];
 
         if (!popupMetadata) {
-            const defaultLocale = await this.localeService.getDefaultLocale();
+            const defaultLocale = await this.localeService.getDefaultLocaleCode();
             const defaultPopupMetadata = localizedPopupContract.locales[defaultLocale];
             const identifier = Utils.guid();
 

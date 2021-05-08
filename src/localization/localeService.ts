@@ -15,7 +15,7 @@ export class LocaleService implements ILocaleService {
         const localeEnUs: LocaleModel = {
             key: `${localesPath}/en-us`,
             code: "en-us",
-            displayName: "English (US)"
+            displayName: "English (US)",
         };
 
         const pageOfLocales = await this.objectStorage.searchObjects<LocaleModel>(localesPath);
@@ -23,27 +23,30 @@ export class LocaleService implements ILocaleService {
         return [localeEnUs].concat(pageOfLocales.value);
     }
 
-    public async createLocale(code: string, displayName: string): Promise<void> {
+    public async createLocale(code: string, displayName: string, direction: string = "ltr"): Promise<LocaleModel> {
         const key = `${localesPath}/${code}`;
 
         const locale: LocaleModel = {
             key: key,
             code: code,
+            direction: direction,
             displayName: displayName
         };
 
         await this.objectStorage.addObject(key, locale);
+
+        return locale;
     }
 
     public async deleteLocale(code: string): Promise<void> {
         // TODO
     }
 
-    public async getDefaultLocale(): Promise<string> {
+    public async getDefaultLocaleCode(): Promise<string> {
         return "en-us";
     }
 
-    public async getCurrentLocale(): Promise<string> {
+    public async getCurrentLocaleCode(): Promise<string> {
         return this.currentLocale;
     }
 

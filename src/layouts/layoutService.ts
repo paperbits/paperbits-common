@@ -68,8 +68,8 @@ export class LayoutService implements ILayoutService {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
 
         return this.localizedContractToContract(defaultLocale, currentLocale, requestedLocale, layoutContract);
     }
@@ -95,8 +95,8 @@ export class LayoutService implements ILayoutService {
             throw new Error(`Parameter "query" not specified.`);
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
         const searchLocale = requestedLocale || currentLocale;
 
         const localizedQuery = Utils.localizeQuery(query, searchLocale);
@@ -130,7 +130,7 @@ export class LayoutService implements ILayoutService {
     }
 
     public async createLayout(title: string, description: string, permalinkTemplate: string): Promise<LayoutContract> {
-        const locale = await this.localeService.getDefaultLocale();
+        const locale = await this.localeService.getDefaultLocaleCode();
         const identifier = Utils.guid();
         const layoutKey = `${this.layoutsPath}/${identifier}`;
         const contentKey = `${documentsPath}/${identifier}`;
@@ -167,7 +167,7 @@ export class LayoutService implements ILayoutService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
         const layoutContract = await this.objectStorage.getObject<LayoutLocalizedContract>(layout.key);
@@ -188,7 +188,7 @@ export class LayoutService implements ILayoutService {
             throw new Error(`Parameter "permalinkTemplate" not specified.`);
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         const query = Query
             .from<LayoutContract>()
             .where(`locales/${defaultLocale}/permalinkTemplate`, Operator.equals, permalinkTemplate);
@@ -303,8 +303,8 @@ export class LayoutService implements ILayoutService {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
-        const currentLocale = await this.localeService.getCurrentLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        const currentLocale = await this.localeService.getCurrentLocaleCode();
 
         const query = Query
             .from<LayoutContract>();
@@ -342,10 +342,10 @@ export class LayoutService implements ILayoutService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         const localizedLayoutContract = await this.objectStorage.getObject<LayoutLocalizedContract>(layoutKey);
 
         let layoutMetadata = localizedLayoutContract.locales[requestedLocale];
@@ -385,13 +385,13 @@ export class LayoutService implements ILayoutService {
         }
 
         if (!requestedLocale) {
-            requestedLocale = await this.localeService.getCurrentLocale();
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
         }
 
         let layoutMetadata = localizedLayoutContract.locales[requestedLocale];
 
         if (!layoutMetadata) {
-            const defaultLocale = await this.localeService.getDefaultLocale();
+            const defaultLocale = await this.localeService.getDefaultLocaleCode();
             const defaultLayoutMetadata = localizedLayoutContract.locales[defaultLocale];
             const identifier = Utils.guid();
 

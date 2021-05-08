@@ -89,7 +89,7 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
             return null;
         }
 
-        const defaultLocale = await this.localeService.getDefaultLocale();
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
         let popupContract = await this.popupService.getPopupByKey(targetKey, locale);
 
         if (!popupContract) {

@@ -56,6 +56,14 @@ export class HtmlPagePublisher {
                 this.appendMetaTag(document, "author", page.author);
             }
 
+            if (page.locale) {
+                document.documentElement.setAttribute("lang", page.locale.code.split("-")[0]);
+
+                if (page.locale.direction) {
+                    document.documentElement.setAttribute("dir", page.locale.direction);
+                }
+            }
+
             page.styleReferences.forEach(reference => {
                 this.appendStyleLink(document, reference);
             });
