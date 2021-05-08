@@ -247,4 +247,6 @@ export interface ViewManager {
     pauseContextualEditors(): void;
 
     resumeContextualEditors(): void;
+
+    clearSelection(): void;
 }
