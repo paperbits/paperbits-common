@@ -24,8 +24,9 @@ export class MockLocaleService implements ILocaleService {
         return [localeEnUs, localeRuRu];
     }
 
-    public async createLocale(code: string, displayName: string): Promise<void> {
+    public async createLocale(code: string, displayName: string): Promise<LocaleModel> {
         // TODO
+        return null;
     }
 
     public async deleteLocale(code: string): Promise<void> {
