@@ -3,25 +3,31 @@ import { EventManager } from "../events";
 import { HttpClient } from "../http";
 import { ISettingsProvider } from "../configuration";
 
+
 export class DefaultSettingsProvider implements ISettingsProvider {
     private configuration: Object;
-    private loadingPromise: Promise<Object>;
+    private initializePromise: Promise<void>;
 
     constructor(
         private readonly httpClient: HttpClient,
         private readonly eventManager: EventManager
-    ) {
+    ) { }
+
+    private async ensureInitialized(): Promise<void> {
+        if (!this.initializePromise) {
+            this.initializePromise = this.loadSettings();
+        }
+        return this.initializePromise;
     }
 
-    private async loadSettings(): Promise<Object> {
+    private async loadSettings(): Promise<void> {
         const response = await this.httpClient.send<any>({ url: "/config.json" });
-        this.configuration = response.toObject();
-
-        return this.configuration;
+        const loadedConfiguration = response.toObject();
+        this.configuration = loadedConfiguration;
     }
 
     public async getSetting<T>(name: string): Promise<T> {
-        await this.getSettings();
+        await this.ensureInitialized();
         return Objects.getObjectAt(name, this.configuration);
     }
 
@@ -34,15 +40,15 @@ export class DefaultSettingsProvider implements ISettingsProvider {
     }
 
     public async setSetting<T>(name: string, value: T): Promise<void> {
-        this.configuration[name] = value;
+        await this.ensureInitialized();
+
+        Objects.setValue(name, this.configuration, value);
         this.eventManager.dispatchEvent("onSettingChange", { name: name, value: value });
     }
 
-    public getSettings(): Promise<any> {
-        if (!this.loadingPromise) {
-            this.loadingPromise = this.loadSettings();
-        }
+    public async getSettings(): Promise<any> {
+        await this.ensureInitialized();
 
-        return this.loadingPromise;
+        return this.configuration;
     }
 }
