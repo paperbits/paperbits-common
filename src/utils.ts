@@ -132,10 +132,7 @@ export function stringToUnit8Array(content: string): Uint8Array {
 }
 
 export function uint8ArrayToString(bytes: Uint8Array): string {
-    const encodedString = String.fromCharCode.apply(null, bytes);
-    const decodedString = decodeURIComponent(escape(encodedString));
-
-    return decodedString;
+    return new TextDecoder().decode(bytes);
 }
 
 export function intersectDeepMany(target, nonObjectHandler: (target: any, source: any, key: string) => any, ...sources: any[]) {
