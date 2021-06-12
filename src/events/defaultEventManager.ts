@@ -33,7 +33,7 @@ export class DefaultEventManager implements EventManager {
         }
     }
 
-    public dispatchEvent(eventName: string, args?): void {
+    public dispatchEvent(eventName: string, args?: unknown): void {
         this.eventListeners
             .filter(listener => listener.eventName === eventName)
             .forEach(x => x.eventHandler(args));

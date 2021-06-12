@@ -142,18 +142,18 @@ export interface ViewManager {
      * @param widgetName {string} Name of a widget.
      * @param commands {IContextCommandSet} Set of commands.
      */
-    setContextualEditor(widgetName: string, commands: IContextCommandSet): void;
+    setContextualCommands(widgetName: string, commands: IContextCommandSet): void;
 
     /**
      * Removes contextual editor for specfied widget.
      * @param widgetName {string} Name of a widget.
      */
-    removeContextualEditor(widgetName: string): void;
+    removeContextualCommands(widgetName: string): void;
 
     /**
      * Clears all contextual editors.
      */
-    clearContextualEditors(): void;
+    clearContextualCommands(): void;
 
     /**
      * Highlights the element specfied in the configuration.
@@ -244,9 +244,18 @@ export interface ViewManager {
      */
     getHostDocument(): Document;
 
-    pauseContextualEditors(): void;
+    /**
+     * Temporarily disables contextual commands.
+     */
+    pauseContextualCommands(): void;
 
+    /**
+     * Resumes contextual commands.
+     */
     resumeContextualEditors(): void;
 
+    /**
+     * Clears widget selection.
+     */
     clearSelection(): void;
 }
