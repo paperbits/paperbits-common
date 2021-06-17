@@ -23,6 +23,14 @@ export class DefaultSettingsProvider implements ISettingsProvider {
     private async loadSettings(): Promise<void> {
         const response = await this.httpClient.send<any>({ url: "/config.json" });
         const loadedConfiguration = response.toObject();
+
+        const searializedDesignTimeSettings = sessionStorage?.getItem("designTimeSettings");
+
+        if (searializedDesignTimeSettings) {
+            const designTimeSettings = JSON.parse(searializedDesignTimeSettings);
+            Object.assign(loadedConfiguration, designTimeSettings);
+        }
+
         this.configuration = loadedConfiguration;
     }
 
