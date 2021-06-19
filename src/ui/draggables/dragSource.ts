@@ -1,3 +1,4 @@
+import { Events } from "../../events";
 import { DragManager, DragSourceConfig } from "../../ui/draggables";
 
 
@@ -18,7 +19,7 @@ export class DragSource {
 
         this.onPointerDown = this.onPointerDown.bind(this);
 
-        element.addEventListener("mousedown", this.onPointerDown);
+        element.addEventListener(Events.MouseDown, this.onPointerDown);
         element["dragSource"] = this;
     }
 

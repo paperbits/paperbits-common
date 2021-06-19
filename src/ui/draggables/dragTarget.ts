@@ -1,4 +1,5 @@
-﻿import { DragManager, DragTargetConfig } from "../../ui/draggables";
+﻿import { Events } from "../../events";
+import { DragManager, DragTargetConfig } from "../../ui/draggables";
 
 export class DragTarget {
     private readonly dragManager: DragManager;
@@ -13,7 +14,7 @@ export class DragTarget {
 
         this.onPointerMove = this.onPointerMove.bind(this);
 
-        element.addEventListener("mousemove", this.onPointerMove, false);
+        element.addEventListener(Events.MouseMove, this.onPointerMove, false);
     }
 
     private onPointerMove(event: MouseEvent): void {

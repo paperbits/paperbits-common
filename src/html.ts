@@ -45,3 +45,10 @@ export enum AriaAttributes {
      */
     hasPopup = "aria-haspopup",
 }
+
+export enum DataAttributes {
+    Toggle = "data-toggle",
+    ToggleEvent = "data-toggle-event",
+    Target = "data-target",
+    Dismiss = "data-dismiss"
+}

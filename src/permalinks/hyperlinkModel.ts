@@ -31,6 +31,11 @@ export class HyperlinkModel {
      * @deprecated. Display name of the anchor (temporary field, should be calculated).
      */
     public anchorName: string;
+
+    /**
+     * Event that triggers the navigation, e.g. `click`.
+     */
+    public triggerEvent?: string;
 }
 
 export enum HyperlinkTarget {

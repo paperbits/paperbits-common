@@ -1,4 +1,4 @@
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 import { Keys } from "../keyboard";
 
 export class GlobalEventHandler {
@@ -40,8 +40,8 @@ export class GlobalEventHandler {
 
         this.documents.push(doc);
 
-        doc.addEventListener("keydown", this.onKeyDown, true);
-        doc.addEventListener("keyup", this.onKeyUp, true);
+        doc.addEventListener(Events.KeyDown, this.onKeyDown, true);
+        doc.addEventListener(Events.KeyUp, this.onKeyUp, true);
         doc.addEventListener("dragenter", this.onDragEnter, true);
         doc.addEventListener("dragstart", this.onDragStart, true);
         doc.addEventListener("dragover", this.onDragOver, true);
@@ -49,9 +49,9 @@ export class GlobalEventHandler {
         doc.addEventListener("drop", this.onDragDrop, true);
         doc.addEventListener("dragend", this.onDragEnd, true);
         doc.addEventListener("paste", this.onPaste, true);
-        doc.addEventListener("mousemove", this.onPointerMove, true);
-        doc.addEventListener("mousedown", this.onPointerDown, true);
-        doc.addEventListener("mouseup", this.onPointerUp, true);
+        doc.addEventListener(Events.MouseMove, this.onPointerMove, true);
+        doc.addEventListener(Events.MouseDown, this.onPointerDown, true);
+        doc.addEventListener(Events.MouseUp, this.onPointerUp, true);
         doc.defaultView.window.addEventListener("error", this.onError, true);
         doc.defaultView.window.addEventListener("unhandledrejection", this.onUnhandledRejection, true);
     }
@@ -59,8 +59,8 @@ export class GlobalEventHandler {
     public removeDocument(doc: Document): void {
         this.documents.remove(doc);
 
-        doc.removeEventListener("keydown", this.onKeyDown, true);
-        doc.removeEventListener("keyup", this.onKeyUp, true);
+        doc.removeEventListener(Events.KeyDown, this.onKeyDown, true);
+        doc.removeEventListener(Events.KeyUp, this.onKeyUp, true);
         doc.removeEventListener("dragenter", this.onDragEnter, true);
         doc.removeEventListener("dragstart", this.onDragStart, true);
         doc.removeEventListener("dragover", this.onDragOver, true);
@@ -68,9 +68,9 @@ export class GlobalEventHandler {
         doc.removeEventListener("drop", this.onDragDrop, true);
         doc.removeEventListener("dragend", this.onDragEnd, true);
         doc.removeEventListener("paste", this.onPaste, true);
-        doc.removeEventListener("mousemove", this.onPointerMove, true);
-        doc.removeEventListener("mousedown", this.onPointerDown, true);
-        doc.removeEventListener("mouseup", this.onPointerUp, true);
+        doc.removeEventListener(Events.MouseMove, this.onPointerMove, true);
+        doc.removeEventListener(Events.MouseDown, this.onPointerDown, true);
+        doc.removeEventListener(Events.MouseUp, this.onPointerUp, true);
         doc.defaultView.window.removeEventListener("error", this.onError, true);
         doc.defaultView.window.removeEventListener("unhandledrejection", this.onUnhandledRejection, true);
     }
