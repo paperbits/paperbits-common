@@ -75,6 +75,7 @@ export class PopupPermalinkResolver implements IPermalinkResolver {
         hyperlinkModel.title = "Unset link";
         hyperlinkModel.target = hyperlinkContract.target;
         hyperlinkModel.targetKey = hyperlinkContract.targetKey;
+        hyperlinkModel.triggerEvent = hyperlinkModel.triggerEvent;
         hyperlinkModel.href = "#";
 
         return hyperlinkModel;

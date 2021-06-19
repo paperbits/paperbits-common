@@ -46,9 +46,15 @@ export enum AriaAttributes {
     hasPopup = "aria-haspopup",
 }
 
+export enum Attributes {
+    Href = "href",
+    Target = "target",
+    Download = "download"
+}
+
 export enum DataAttributes {
     Toggle = "data-toggle",
-    ToggleEvent = "data-toggle-event",
+    TriggerEvent = "data-trigger-event",
     Target = "data-target",
     Dismiss = "data-dismiss"
 }

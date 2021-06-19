@@ -25,6 +25,11 @@
     public targetWindow?: string;
 
     /**
+     * Event that triggers the navigation, e.g. `click`.
+     */
+    public triggerEvent?: string;
+
+    /**
      * Parameter used to define anchor of hyperlink element.
      */
     public anchor?: string;

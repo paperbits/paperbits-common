@@ -31,4 +31,9 @@ export interface NavigationItemContract {
      * Parameter used to define anchor of hyperlink element, e.g. `myanchor`.
      */
     anchor?: string;
+
+    /**
+     * Event that triggers the navigation, e.g. `click`.
+     */
+    triggerEvent?: string;
 }

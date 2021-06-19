@@ -21,4 +21,9 @@ export interface HyperlinkContract {
      * Key of permalink that is used to define "href" attribute of hyperlink element.
      */
     targetKey?: string;
+
+    /**
+     * Event that triggers the navigation, e.g. `click`.
+     */
+    triggerEvent?: string;
 }
