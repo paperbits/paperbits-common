@@ -211,6 +211,49 @@ export class PageService implements IPageService {
         return pageContent;
     }
 
+    public async copyPage(key: string): Promise<PageContract> {
+        const originalPage = await this.getPageByKey(key);
+        const originalPageContent = await this.getPageContent(key);
+
+        const locale = await this.localeService.getDefaultLocaleCode();
+        const identifier = Utils.guid();
+        const pageKey = `${this.pagesPath}/${identifier}`;
+        const contentKey = `${documentsPath}/${identifier}`;
+        const permalink = `${originalPage.permalink}_copy`;
+        const title = `${originalPage.title} copy`;
+        const description = originalPage.description;
+        const keywords = originalPage.keywords;
+
+        const localizedPage: PageLocalizedContract = {
+            key: pageKey,
+            locales: {
+                [locale]: {
+                    title: title,
+                    description: description,
+                    keywords: keywords,
+                    permalink: permalink,
+                    contentKey: contentKey
+                }
+            }
+        };
+
+        await this.objectStorage.addObject<PageLocalizedContract>(pageKey, localizedPage);
+
+        originalPageContent["key"] = contentKey; // rewriting own key
+        await this.objectStorage.addObject<Contract>(contentKey, originalPageContent);
+
+        const pageContent: PageContract = {
+            key: pageKey,
+            title: title,
+            description: description,
+            keywords: keywords,
+            permalink: permalink,
+            contentKey: contentKey
+        };
+
+        return pageContent;
+    }
+
     public async updatePage(page: PageContract, requestedLocale?: string): Promise<void> {
         if (!page) {
             throw new Error(`Parameter "page" not specified.`);

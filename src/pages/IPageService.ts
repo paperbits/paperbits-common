@@ -43,6 +43,12 @@ export interface IPageService {
     createPage(permalink: string, title: string, description: string, keywords: string): Promise<PageContract>;
 
     /**
+     * Makes a copy of specified page.
+     * @param key {string} Key of the original page.
+     */
+    copyPage(key: string): Promise<PageContract>;
+
+    /**
      * Updates page metadata.
      * @param page {PageContract} Contract describing page metadata.
      * @param locale {string} Locale, e.g. `en-us`. If provided, operation updates metadata in specified locale.

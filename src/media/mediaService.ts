@@ -155,6 +155,10 @@ export class MediaService implements IMediaService {
             throw new Error(`Parameter "media" not specified.`);
         }
 
+        if (!!media.blobKey) {
+            delete media.downloadUrl; // explicitly delete download URL when blob key specified.
+        }
+
         return this.objectStorage.updateObject(media.key, media);
     }
 
