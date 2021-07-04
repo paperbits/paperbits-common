@@ -52,7 +52,7 @@ const initialData3: any = {
         employee4: {
             key: "employees/employee4",
             firstName: "Employee 4"
-        }        ,
+        },
         employee5: {
             key: "employees/employee5",
             firstName: "Employee 5"
@@ -62,8 +62,9 @@ const initialData3: any = {
 
 describe("Offline object storage", async () => {
     it("Can correctly reflect the state.", async () => {
-        const memoryCache = new MemoryCache();
-        const obs = new OfflineObjectStorage(memoryCache);
+        const stateCache = new MemoryCache();
+        const changesCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(stateCache, changesCache);
         const changesObject: any = obs["changesObject"];
         const stateObject: any = obs["stateObject"];
         Object.assign(stateObject, initialData1); // assigning initial state
@@ -96,8 +97,9 @@ describe("Offline object storage", async () => {
     });
 
     it("Can apply chages and undo them.", async () => {
-        const memoryCache = new MemoryCache();
-        const obs = new OfflineObjectStorage(memoryCache);
+        const stateCache = new MemoryCache();
+        const changesCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(stateCache, changesCache);
         const changesObject: any = obs["changesObject"];
         const stateObject: any = obs["stateObject"];
 
@@ -120,9 +122,10 @@ describe("Offline object storage", async () => {
          * Scenario 3. Query remote. If returned, cache locally.
          */
 
-        const memoryCache = new MemoryCache();
         const remoteObjectStorage: MockObjectStorage = new MockObjectStorage(initialData2);
-        const obs = new OfflineObjectStorage(memoryCache);
+        const stateCache = new MemoryCache();
+        const changesCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(stateCache, changesCache);
         obs.setRemoteObjectStorage(remoteObjectStorage);
         obs.isOnline = true;
 
@@ -190,9 +193,10 @@ describe("Offline object storage", async () => {
     // });
 
     it("Performs getObject taking changes into account.", async () => {
-        const memoryCache = new MemoryCache();
+        const stateCache = new MemoryCache();
+        const changesCache = new MemoryCache();
+        const obs = new OfflineObjectStorage(stateCache, changesCache);
         const remoteObjectStorage: any = new MockObjectStorage();
-        const obs = new OfflineObjectStorage(memoryCache);
         obs.setRemoteObjectStorage(remoteObjectStorage);
         obs.isOnline = true;
 

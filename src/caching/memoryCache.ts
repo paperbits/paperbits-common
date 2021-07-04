@@ -13,11 +13,11 @@ export class MemoryCache implements ILocalCache {
     }
 
     public async setItem(key: string, value: any): Promise<void> {
-        this.cacheObject[key] = JSON.stringify(value);
+        Objects.setValue(key, this.cacheObject, value);
     }
 
     public async getItem<T>(key: string): Promise<T> {
-        const item = this.cacheObject[key];
+        const item = Objects.getObjectAt(key, this.cacheObject);
 
         if (!item) {
             return null;
@@ -26,20 +26,8 @@ export class MemoryCache implements ILocalCache {
         return Objects.clone<T>(item);
     }
 
-    public async getOccupiedSpace(): Promise<number> {
-        return 0;
-    }
-
-    public async getRemainingSpace(): Promise<number> {
-        return 0;
-    }
-
-    public addChangeListener(callback: () => void): void {
-        // Do nothing
-    }
-
     public async removeItem(key: string): Promise<void> {
-        delete this.cacheObject[key];
+        Objects.setValue(key, this.cacheObject, undefined);
     }
 
     public async clear(): Promise<void> {
