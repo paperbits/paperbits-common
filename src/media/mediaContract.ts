@@ -34,7 +34,7 @@ export interface MediaContract {
 
     /**
      * Permalink referencing this media.
-     */    
+     */
     permalink?: string;
 
     /**
@@ -46,4 +46,29 @@ export interface MediaContract {
      * Terms assigned to a file. Used for grouping
      */
     tags?: string[];
+
+    /**
+     * Variants of the media for different screen sizes.
+     */
+    variants?: MediaVariantContract[];
+}
+
+/**
+ * Variant of the media for different screen sizes.
+ */
+export interface MediaVariantContract {
+    /**
+     * Width in pixels.
+     */
+    width: number;
+
+    /**
+     * Height in pixels.
+     */
+    height: number;
+
+    /**
+     * Mime type, e.g. image/webp
+     */
+    mimeType?: string;
 }
