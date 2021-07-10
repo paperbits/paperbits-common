@@ -159,6 +159,12 @@ export class MediaService implements IMediaService {
             delete media.downloadUrl; // explicitly delete download URL when blob key specified.
         }
 
+        if (media.variants) {
+            media.variants.forEach(variant => {
+                delete variant.downloadUrl;
+            });
+        }
+
         return this.objectStorage.updateObject(media.key, media);
     }
 

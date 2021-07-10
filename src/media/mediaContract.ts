@@ -10,7 +10,7 @@ export interface MediaContract {
     /**
      * A key that is used to identify a file in blob.
      */
-    blobKey: string;
+    blobKey?: string;
 
     /**
      * Display name of a file (i.e. picture.png). It is used to name target file during publishing.
@@ -58,17 +58,27 @@ export interface MediaContract {
  */
 export interface MediaVariantContract {
     /**
+     * A key that is used to identify a file in blob.
+     */
+    blobKey?: string;
+
+    /**
      * Width in pixels.
      */
-    width: number;
+    width?: number;
 
     /**
      * Height in pixels.
      */
-    height: number;
+    height?: number;
 
     /**
-     * Mime type, e.g. image/webp
+     * Mime type, e.g. `image/png`.
      */
     mimeType?: string;
+
+    /**
+     * Download URL. If available, can be used for direct download.
+     */
+    downloadUrl?: string;
 }

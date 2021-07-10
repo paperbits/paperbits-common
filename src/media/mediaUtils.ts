@@ -1,3 +1,5 @@
+import * as mime from "mime";
+import { MediaVariantContract } from "./mediaContract";
 
 export async function getVideoThumbnailAsDataUrlFromUrl(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -58,8 +60,24 @@ export async function getVideoThumbnailAsDataUrl(file: File): Promise<string> {
             resolve(dataUrl);
 
             URL.revokeObjectURL(url);
-        }
+        };
 
         fileReader.readAsArrayBuffer(file);
-    })
+    });
+}
+
+export function getPermalinkForMediaVariant(originalPermalink: string, variant: MediaVariantContract): string {
+    const type = mime.getType(originalPermalink) || "";
+    let extension = "";
+
+    if (type) {
+        extension = `.${mime.getExtension(type)}`;
+        originalPermalink = originalPermalink.substr(0, originalPermalink.lastIndexOf("."));
+    }
+
+    if (variant.mimeType) { // if variant has its own mime type, assign new extension
+        extension = `.${mime.getExtension(variant.mimeType)}`;
+    }
+
+    return `${originalPermalink}@${variant.width}x${variant.height}${extension}`;
 }

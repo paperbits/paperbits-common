@@ -24,6 +24,7 @@
         "knockout": "^3.5.1",
         "lodash": "^4.17.15",
         "lunr": "^2.3.8",
+        "mime": "^2.4.6",
         "moment": "^2.24.0",
         "reflect-metadata": "^0.1.13",
         "xhr2": "^0.2.0"
