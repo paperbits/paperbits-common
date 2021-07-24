@@ -4,10 +4,10 @@ import { StyleMediaQuery } from "./styleMediaQuery";
 
 export class Style {
     public readonly rules: StyleRule[];
-    public readonly selector: string;
-    public readonly nestedStyles: Style[];
+    public selector: string;
+    public nestedStyles: Style[];
     public readonly nestedGlobalStyles: Style[];
-    public readonly modifierStyles: Style[];
+    public modifierStyles: Style[];
     public readonly pseudoStyles: Style[];
     public readonly nestedMediaQueries: StyleMediaQuery[];
 
