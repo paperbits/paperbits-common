@@ -171,6 +171,12 @@ export class LruCache<T> {
         if (!this.head) {
             return;
         }
+        
+        if (this.head === item && this.tail === item) {
+            this.head = null;
+            this.tail = null;
+            return;
+        }
 
         if (this.head === item) {
             this.head = item.next;
