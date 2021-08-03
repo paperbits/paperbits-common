@@ -1,5 +1,5 @@
 import * as mime from "mime";
-import { MediaVariantContract } from "./mediaContract";
+import { MediaVariantContract } from "./mediaVariantContract";
 
 export async function getVideoThumbnailAsDataUrlFromUrl(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
