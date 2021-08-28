@@ -4,7 +4,7 @@ import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockLocaleService } from "./mocks/mockLocaleService";
 import { Contract } from "../src";
 import { copySync } from "fs-extra";
-import { Query } from "../src/persistence";
+import { Operator, Query } from "../src/persistence";
 
 describe("Layout service", async () => {
     it("Can create layout metadata in specified locale when metadata doesn't exists.", async () => {
@@ -438,9 +438,10 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
 
         const localizedService = new LayoutService(objectStorage, localeService);
+        const query = Query.from<LayoutContract>().where("title", Operator.contains, "");
 
-        const layoutContracts = await localizedService.search(Query.from<LayoutContract>(), "ru-ru");
+        const layoutContracts = await localizedService.search(query, "ru-ru");
         assert.isTrue(layoutContracts.value.length === 1, "Must return only 1 layout.");
-        assert.isTrue(layoutContracts[0].title === "Блог", "Layout metadata is in invalid locale.");
+        assert.isTrue(layoutContracts.value[0].title === "Блог", "Layout metadata is in invalid locale.");
     });
 });

@@ -3,17 +3,15 @@ import * as _ from "lodash";
 import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { EventManager } from "../events";
-import { ILocalCache } from "../caching";
+import { ILocalCache, CachingStrategy } from "../caching";
 
 interface HistoryRecord {
-    do: () => void;
-    undo: () => void;
+    do: () => Promise<void>;
+    undo: () => Promise<void>;
 }
 
-interface LocalSearchResults<T> {
-    value: T;
-    totalCount: number;
-}
+const changesObjectCacheKey: string = "changesObject";
+const stateObjectCacheKey: string = "stateObject";
 
 export class OfflineObjectStorage implements IObjectStorage {
     private remoteObjectStorage: IObjectStorage;
@@ -22,10 +20,9 @@ export class OfflineObjectStorage implements IObjectStorage {
     private readonly past: HistoryRecord[];
     private readonly future: HistoryRecord[];
     private readonly middlewares: IObjectStorageMiddleware[];
-    private readonly changesObjectCacheKey: string = "changesObject";
-    private readonly stateObjectCacheKey: string = "stateObject";
 
-    public isOnline: boolean;
+
+    public cachingStrategy: CachingStrategy;
     public autosave: boolean;
 
     constructor(
@@ -35,7 +32,7 @@ export class OfflineObjectStorage implements IObjectStorage {
     ) {
         this.changesObject = {};
         this.remoteObjectStorage = null;
-        this.isOnline = true;
+        this.cachingStrategy = CachingStrategy.NetworkFirst;
         this.autosave = false;
         this.middlewares = [];
         this.past = [];
@@ -53,16 +50,16 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         this.initializePromise = new Promise<void>(async (resolve) => {
-            const cachedChangesObject = await this.changesCache.getItem<Object>(this.changesObjectCacheKey);
+            const cachedChangesObject = await this.changesCache.getItem<Object>(changesObjectCacheKey);
 
             if (cachedChangesObject) {
                 Object.assign(this.changesObject, cachedChangesObject);
             }
 
-            const cachedStateObject = await this.changesCache.getItem<Object>(this.stateObjectCacheKey) || {};
+            const cachedStateObject = await this.stateCache.getItem<Object>(stateObjectCacheKey) || {};
 
             if (cachedStateObject) {
-                await this.stateCache.setItem(this.stateObjectCacheKey, cachedStateObject);
+                await this.stateCache.setItem(stateObjectCacheKey, cachedStateObject);
             }
 
             resolve();
@@ -100,7 +97,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         let compensationOfChanges;
 
         const doCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Writing state */
             compensationOfState = Objects.setValueWithCompensation(path, stateObject, dataObjectClone);
@@ -111,12 +108,12 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         const undoCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Undoing state */
             Objects.setValueWithCompensation(path, stateObject, compensationOfState);
@@ -127,8 +124,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject, true);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         await this.do(doCommand, undoCommand);
@@ -143,7 +140,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             throw new Error(`Parameter "path" not specified.`);
         }
 
-        if (dataObject === undefined) { // Note: "null" is acceptable.
+        if (dataObject === undefined) { // Note: "null" is acceptable, which means "delete".
             throw new Error(`Parameter "dataObject" not specified.`);
         }
 
@@ -156,7 +153,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         let compensationOfChanges;
 
         const doCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Writing state */
             compensationOfState = Objects.setValueWithCompensation(path, stateObject, dataObjectClone1);
@@ -167,12 +164,12 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         const undoCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Undoing state */
             Objects.setValueWithCompensation(path, stateObject, compensationOfState);
@@ -183,8 +180,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         await this.do(doCommand, undoCommand);
@@ -216,7 +213,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         /* 3. Check if object exists locally. If yes, return it (without querying remote). */
-        const stateCacheKey = `${this.stateObjectCacheKey}/${path}`;
+        const stateCacheKey = `${stateObjectCacheKey}/${path}`;
         let locallyCachedObject = await this.stateCache.getItem<object>(stateCacheKey);
 
         if (locallyCachedObject) {
@@ -245,7 +242,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         let compensationOfChanges;
 
         const doCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Writing state */
             compensationOfState = Objects.setValueWithCompensation(path, stateObject, null);
@@ -256,12 +253,12 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         const undoCommand = async (): Promise<void> => {
-            const stateObject = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+            const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
             /* Undoing state */
             Objects.setValueWithCompensation(path, stateObject, compensationOfState);
@@ -272,16 +269,16 @@ export class OfflineObjectStorage implements IObjectStorage {
             Objects.cleanupObject(stateObject, true);
             Objects.cleanupObject(this.changesObject);
 
-            await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
-            await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+            await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
+            await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
         await this.do(doCommand, undoCommand);
     }
 
-    private do(doCommand: () => void, undoCommand: () => void): void {
+    private async do(doCommand: () => Promise<void>, undoCommand: () => Promise<void>): Promise<void> {
         const record = { do: doCommand, undo: undoCommand };
-        record.do();
+        await record.do();
 
         this.past.push(record);
 
@@ -298,13 +295,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    public undo(): void {
+    public async undo(): Promise<void> {
         if (!this.canUndo()) {
             return;
         }
 
         const record = this.past.pop();
-        record.undo();
+        await record.undo();
+
         this.future.push(record);
 
         if (this.autosave) {
@@ -317,13 +315,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    public redo(): void {
+    public async redo(): Promise<void> {
         if (!this.canRedo()) {
             return;
         }
 
         const record = this.future.pop();
-        record.do();
+        await record.do();
+
         this.past.push(record);
 
         if (this.eventManager) {
@@ -332,11 +331,14 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    private async searchLocalChanges<T>(path: string, query?: Query<T>): Promise<LocalSearchResults<T[]>> {
+    private async searchLocalChanges<T>(path: string, query?: Query<T>): Promise<Page<T>> {
         const searchObj = Objects.getObjectAt(path, Objects.clone(this.changesObject));
 
         if (!searchObj) {
-            return { value: [], totalCount: 0 };
+            return {
+                value: [],
+                takeNext: null
+            };
         }
 
         let collection = Object.values(searchObj).filter(x => !!x); // skip deleted objects
@@ -441,9 +443,136 @@ export class OfflineObjectStorage implements IObjectStorage {
             }
         }
 
-        const totalObjectsMatchingCriteria = collection.length;
+        return {
+            value: collection,
+            takeNext: null
+        };
+    }
 
-        return { value: collection, totalCount: totalObjectsMatchingCriteria };
+    private async searchLocalState<T>(path: string, query?: Query<T>): Promise<Page<T>> {
+        const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
+        const searchObj = Objects.getObjectAt(path, Objects.clone(stateObject));
+
+        if (!searchObj) {
+            return {
+                value: [],
+                takeNext: null
+            };
+        }
+
+        let collection = Object.values(searchObj).filter(x => !!x); // skip deleted objects
+
+        if (query) {
+            if (query.filters.length > 0) {
+                collection = collection.filter(x => {
+                    let meetsCriteria = true;
+
+                    for (const filter of query.filters) {
+                        let left = Objects.getObjectAt<any>(filter.left, x);
+                        let right = filter.right;
+
+                        if (!!right && left === undefined) {
+                            meetsCriteria = false;
+                            continue;
+                        }
+
+                        if (typeof filter.right === "boolean") {
+                            if (filter.operator !== Operator.equals) {
+                                console.warn("Boolean query operator can be only equals");
+                                meetsCriteria = false;
+                                return;
+                            }
+
+                            if (((left === undefined || left === false) && filter.right === true) ||
+                                ((filter.right === undefined || filter.right === false) && left === true)) {
+                                meetsCriteria = false;
+                            }
+                            continue;
+                        }
+
+                        if (!left) {
+                            meetsCriteria = false;
+                            continue;
+                        }
+
+                        const operator = filter.operator;
+
+                        if (typeof left === "string") {
+                            left = left.toUpperCase();
+                        }
+
+                        if (typeof right === "string") {
+                            right = right.toUpperCase();
+                        }
+
+                        switch (operator) {
+                            case Operator.notEmpty:
+                                if (typeof left === "string") {
+                                    meetsCriteria = !left;
+                                    break;
+                                }
+                                if (Array.isArray(left)) {
+                                    meetsCriteria = left.length > 0;
+                                }
+                                break;
+                            case Operator.contains:
+                                if (Array.isArray(left) && Array.isArray(right)) {
+                                    meetsCriteria = right.filter(value => left.includes(value))?.length > 0;
+                                    break;
+                                }
+
+                                if (left && !left.includes(right)) {
+                                    meetsCriteria = false;
+                                }
+                                break;
+
+                            case Operator.equals:
+                                if (left !== right) {
+                                    meetsCriteria = false;
+                                }
+                                break;
+
+                            default:
+                                throw new Error("Cannot translate operator into Firebase Realtime Database query.");
+                        }
+                    }
+
+                    return meetsCriteria;
+                });
+            }
+
+            if (query.orderingBy) {
+                const property = query.orderingBy;
+
+                collection = collection.sort((x, y) => {
+                    const a = Objects.getObjectAt<any>(property, x);
+                    const b = Objects.getObjectAt<any>(property, y);
+                    const modifier = query.orderDirection === OrderDirection.accending ? 1 : -1;
+
+                    if (a > b) {
+                        return modifier;
+                    }
+
+                    if (a < b) {
+                        return -modifier;
+                    }
+
+                    return 0;
+                });
+            }
+        }
+
+        return {
+            value: collection,
+            takeNext: null
+        };
+    }
+
+    private async searchRemote<T>(path: string, query?: Query<T>): Promise<any> {
+        const remoteQuery = query.copy();
+        const pageOfRemoteSearchResults = await this.remoteObjectStorage.searchObjects<T>(path, remoteQuery);
+
+        return pageOfRemoteSearchResults;
     }
 
     private convertPage<T>(remotePage: Page<T>): Page<T> {
@@ -469,28 +598,24 @@ export class OfflineObjectStorage implements IObjectStorage {
 
         await this.initialize();
 
-        const resultPage: Page<T> = {
-            value: [],
-            takeNext: null
-        };
+        let resultPage: Page<T>;
 
-        /* Find locally added/changed objects */
-        const localSearchResults = await this.searchLocalChanges(path, query);
-        const remoteQuery = query.copy();
-        const pageOfRemoteSearchResults = await this.remoteObjectStorage.searchObjects<T>(path, remoteQuery);
-        const remoteSearchResults = pageOfRemoteSearchResults.value;
+        switch (this.cachingStrategy) {
+            case CachingStrategy.NetworkFirst:
+                resultPage = await this.searchRemote(path, query);
+                break;
 
-        if (pageOfRemoteSearchResults.takeNext) {
-            resultPage.takeNext = async (): Promise<Page<T>> => {
-                const nextRemotePage = await pageOfRemoteSearchResults.takeNext();
+            case CachingStrategy.CacheFirst:
+                resultPage = await this.searchLocalState<T>(path, query);
+                break;
 
-                // TODO: Remove all deleted pages from results.
-
-                return this.convertPage(nextRemotePage);
-            };
+            default:
+                throw new Error(`Caching strategy "${this.cachingStrategy}" not yet supported.`);
         }
 
-        /* Remove deleted objects from remote search resuls */
+        const remoteSearchResults = resultPage.value;
+
+        /* Remove locally deleted objects from remote search results */
         const changesAt = Objects.getObjectAt(path, Objects.clone(this.changesObject));
 
         if (changesAt) {
@@ -504,17 +629,23 @@ export class OfflineObjectStorage implements IObjectStorage {
                 });
         }
 
-        /* Merging local searh results with remote search results */
+        /* Find locally added/changed objects */
+        const localChangesSearchResults = await this.searchLocalChanges(path, query);
+
+        /* Merge local changes search results with remote search results */
         const added = [];
-        for (let i = 0; i < localSearchResults.value.length; i++) {
-            const local = localSearchResults.value[i];
-            const updateIndex = remoteSearchResults.findIndex(r => r["key"] === local["key"]);
-            if (updateIndex !== -1) {
-                remoteSearchResults[updateIndex] = local;
-            } else {
-                added.push(local);
+
+        for (const searchResultItem of localChangesSearchResults.value) {
+            const searchResultItemIndex = remoteSearchResults.findIndex(r => r["key"] === searchResultItem["key"]);
+
+            if (searchResultItemIndex !== -1) {
+                remoteSearchResults[searchResultItemIndex] = searchResultItem;
+            }
+            else {
+                added.push(searchResultItem);
             }
         }
+
         resultPage.value = added.concat(remoteSearchResults);
 
         return resultPage;
@@ -531,14 +662,14 @@ export class OfflineObjectStorage implements IObjectStorage {
     }
 
     public async discardChanges(): Promise<void> {
-        const stateObject = await this.stateCache.getItem(this.stateObjectCacheKey);
+        const stateObject = await this.stateCache.getItem(stateObjectCacheKey);
 
         Object.keys(this.changesObject).forEach(key => delete this.changesObject[key]);
         Object.keys(stateObject).forEach(key => delete stateObject[key]);
 
-        await this.stateCache.setItem(this.stateObjectCacheKey, stateObject);
+        await this.stateCache.setItem(stateObjectCacheKey, stateObject);
 
-        await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
     }
 
     public async saveChanges(): Promise<void> {
@@ -551,7 +682,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         await this.remoteObjectStorage.saveChanges(this.changesObject);
         entities.forEach(key => delete this.changesObject[key]);
 
-        await this.changesCache.setItem(this.changesObjectCacheKey, this.changesObject);
+        await this.changesCache.setItem(changesObjectCacheKey, this.changesObject);
 
         this.eventManager.dispatchEvent("onDataChange");
     }
@@ -570,7 +701,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             console.warn("current ObjectStorage does not implement loadData");
         }
 
-        const data = await this.stateCache.getItem<object>(this.stateObjectCacheKey);
+        const data = await this.stateCache.getItem<object>(stateObjectCacheKey);
 
         return data;
     }

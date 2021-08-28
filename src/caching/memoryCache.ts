@@ -20,7 +20,7 @@ export class MemoryCache implements ILocalCache {
         const item = Objects.getObjectAt(key, this.cacheObject);
 
         if (!item) {
-            return null;
+            return undefined;
         }
 
         return Objects.clone<T>(item);

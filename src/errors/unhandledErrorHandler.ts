@@ -18,14 +18,14 @@ export class UnhandledErrorHandler {
                 let message: string;
 
                 if (event.target) {
-                    message = `Unparsable error for element: ${event.target.toString()}`;
+                    message = `Unknown error occured in element: ${event.target.toString()}`;
 
                     if (navigator.sendBeacon && event.target["src"]) {
                         navigator.sendBeacon(event.target["src"]);
                     }
                 }
                 else {
-                    message = `Unparsable error thrown.`;
+                    message = `Unknown error occured.`;
                 }
 
                 this.logger.trackError(new Error(message));

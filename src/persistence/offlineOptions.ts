@@ -1,3 +1,6 @@
+import { CachingStrategy } from "../caching";
+
 export interface OfflineOptions {
-    autosave: boolean;
+    autosave?: boolean;
+    cachingStrategy?: CachingStrategy;
 }

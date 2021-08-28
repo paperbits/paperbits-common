@@ -31,6 +31,10 @@ export class OfflineModule implements IInjectorModule {
             offlineObjectStorage.setRemoteObjectStorage(underlyingObjectStorage);
             offlineObjectStorage.autosave = !!this.options?.autosave;
 
+            if (this.options?.cachingStrategy) {
+                offlineObjectStorage.cachingStrategy = this.options?.cachingStrategy;
+            }
+
             return offlineObjectStorage;
         });
 
