@@ -8,7 +8,9 @@ export enum Events {
     Click = "click",
     Scroll = "scroll",
     KeyUp = "keyup",
-    KeyDown = "keydown"
+    KeyDown = "keydown",
+    Focus = "focus",
+    Blur = "blur"
 }
 
 export enum MouseButton {

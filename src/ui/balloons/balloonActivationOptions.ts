@@ -1,4 +1,5 @@
 export enum BalloonActivationOptions {
     clickOrKeyDown = "clickOrKeyDown",
-    hoverOrFocus = "hoverOrFocus"
+    hoverOrFocus = "hoverOrFocus",
+    all = "all"
 }
