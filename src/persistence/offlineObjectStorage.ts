@@ -19,7 +19,6 @@ export class OfflineObjectStorage implements IObjectStorage {
     private readonly future: HistoryRecord[];
     private readonly middlewares: IObjectStorageMiddleware[];
 
-
     public cachingStrategy: CachingStrategy;
     public autosave: boolean;
 
@@ -160,29 +159,25 @@ export class OfflineObjectStorage implements IObjectStorage {
         await this.do(doCommand, undoCommand);
     }
 
-    // private getObjectFromRemote(path: string): Promise<T> {
-    //     //    1. Check if there is and object in local CHANGES (STATE must match CHANGES).
-    //     //    1.1. if YES, return it right away from STATE (the STATE might be different from CHANGES).
-    //     //    1.2. if NO, fetch from remote, update STATE, return it.
-
-
-    // }
-
     public async getObject<T>(path: string): Promise<T> {
         if (!path) {
             throw new Error(`Parameter "path" not specified.`);
         }
 
-        /* 1. Check locally changed object */
-        const locallyChangedObject = await this.changesCache.getItem<object>(`${changesObjectCacheKey}/${path}`);
+        const stateCacheKey = `${stateObjectCacheKey}/${path}`;
+        const stateObject = await this.stateCache.getItem<object>(stateCacheKey);
 
-        // If there is one, return it now.
-        if (!!locallyChangedObject) {
-            return Objects.clone(locallyChangedObject); // Cloning to loose references.
+        const changesCacheKey = `${changesObjectCacheKey}/${path}`;
+        const changesObject = await this.changesCache.getItem<object>(changesCacheKey);
+
+        /* 1. Check if there is an object in CHANGES */
+        // If there is one, return it right away from STATE (which might be slightly different from CHANGES).
+        if (changesObject !== null && changesObject !== undefined) {
+            return Objects.clone(stateObject); // Cloning to loose references.
         }
 
-        /* 2. Check if object marked as deleted. */
-        if (locallyChangedObject === null) {
+        /* 2. Check if object marked as deleted in CHANGES. */
+        if (changesObject === null) {
             /*
                Note: "null" (not undefined) in changesObject specifically means that this object
                has been deleted locally (but not yet saved to underlying storage). Hence, no need to check
@@ -191,20 +186,17 @@ export class OfflineObjectStorage implements IObjectStorage {
             return undefined;
         }
 
-        /* 3. Check if object exists locally. If yes, return it (without querying remote). */
-        const stateCacheKey = `${stateObjectCacheKey}/${path}`;
-        let locallyCachedObject = await this.stateCache.getItem<object>(stateCacheKey);
-
-        if (locallyCachedObject) {
-            return Objects.clone(locallyCachedObject); // Cloning to loose references.
+        /* 3. Check if object cached locally (STATE). If yes, return it (without querying REMOTE). */
+        if (stateObject) {
+            return Objects.clone(stateObject); // Cloning to loose references.
         }
 
-        /* 4. If no loally changed of cached object, query remote. If returned, cache locally. */
+        /* 4. If no locally changed (CHANGES) or cached (STATE) object, try querying REMOTE. If found, cache it locally. */
         const remoteObjectStorageResult = await this.remoteObjectStorage.getObject<T>(path);
 
-        if (!!remoteObjectStorageResult) { // Adding to local cache.
-            locallyCachedObject = Objects.clone(remoteObjectStorageResult);
-            await this.stateCache.setItem(stateCacheKey, locallyCachedObject);
+        if (remoteObjectStorageResult !== undefined) {
+            const fetchedObject = Objects.clone(remoteObjectStorageResult); // Cloning to loose references.
+            await this.stateCache.setItem(stateCacheKey, fetchedObject); // Adding to local cache (STATE).
         }
 
         return remoteObjectStorageResult;
@@ -310,135 +302,18 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
     }
 
-    private async searchLocalChanges<T>(path: string, query?: Query<T>): Promise<Page<T>> {
-        const changesObject = await this.changesCache.getItem<object>(changesObjectCacheKey) || {};
-        const searchObj = Objects.getObjectAt(path, Objects.clone(changesObject));
-
-        if (!searchObj) {
-            return {
-                value: [],
-                takeNext: null
-            };
-        }
-
-        let collection = Object.values(searchObj).filter(x => !!x); // skip deleted objects
-
-        if (query) {
-            if (query.filters.length > 0) {
-                collection = collection.filter(x => {
-                    let meetsCriteria = true;
-
-                    for (const filter of query.filters) {
-                        let left = Objects.getObjectAt<any>(filter.left, x);
-                        let right = filter.right;
-
-                        if (!!right && left === undefined) {
-                            meetsCriteria = false;
-                            continue;
-                        }
-
-                        if (typeof filter.right === "boolean") {
-                            if (filter.operator !== Operator.equals) {
-                                console.warn("Boolean query operator can be only equals");
-                                meetsCriteria = false;
-                                return;
-                            }
-
-                            if (((left === undefined || left === false) && filter.right === true) ||
-                                ((filter.right === undefined || filter.right === false) && left === true)) {
-                                meetsCriteria = false;
-                            }
-                            continue;
-                        }
-
-                        if (!left) {
-                            meetsCriteria = false;
-                            continue;
-                        }
-
-                        const operator = filter.operator;
-
-                        if (typeof left === "string") {
-                            left = left.toUpperCase();
-                        }
-
-                        if (typeof right === "string") {
-                            right = right.toUpperCase();
-                        }
-
-                        switch (operator) {
-                            case Operator.notEmpty:
-                                if (typeof left === "string") {
-                                    meetsCriteria = !left;
-                                    break;
-                                }
-                                if (Array.isArray(left)) {
-                                    meetsCriteria = left.length > 0;
-                                }
-                                break;
-                            case Operator.contains:
-                                if (Array.isArray(left) && Array.isArray(right)) {
-                                    meetsCriteria = right.filter(value => left.includes(value))?.length > 0;
-                                    break;
-                                }
-
-                                if (left && !left.includes(right)) {
-                                    meetsCriteria = false;
-                                }
-                                break;
-
-                            case Operator.equals:
-                                if (left !== right) {
-                                    meetsCriteria = false;
-                                }
-                                break;
-
-                            default:
-                                throw new Error("Cannot translate operator into Firebase Realtime Database query.");
-                        }
-                    }
-
-                    return meetsCriteria;
-                });
-            }
-
-            if (query.orderingBy) {
-                const property = query.orderingBy;
-
-                collection = collection.sort((x, y) => {
-                    const a = Objects.getObjectAt<any>(property, x);
-                    const b = Objects.getObjectAt<any>(property, y);
-                    const modifier = query.orderDirection === OrderDirection.accending ? 1 : -1;
-
-                    if (a > b) {
-                        return modifier;
-                    }
-
-                    if (a < b) {
-                        return -modifier;
-                    }
-
-                    return 0;
-                });
-            }
-        }
-
-        return {
-            value: collection,
-            takeNext: null
-        };
-    }
-
     private async searchLocalState<T>(path: string, query?: Query<T>): Promise<Page<T>> {
-        const stateObject = await this.stateCache.getItem<object>(stateObjectCacheKey);
-        const searchObj = Objects.getObjectAt(path, Objects.clone(stateObject));
+        const stateCacheKey = `${stateObjectCacheKey}/${path}`;
+        const stateObject = await this.stateCache.getItem<object>(stateCacheKey);
 
-        if (!searchObj) {
+        if (!stateObject) {
             return {
                 value: [],
                 takeNext: null
             };
         }
+
+        const searchObj = Objects.clone(stateObject);
 
         let collection = Object.values(searchObj).filter(x => !!x); // skip deleted objects
 
@@ -552,6 +427,42 @@ export class OfflineObjectStorage implements IObjectStorage {
         const remoteQuery = query.copy();
         const pageOfRemoteSearchResults = await this.remoteObjectStorage.searchObjects<T>(path, remoteQuery);
 
+        const remoteSearchResults = pageOfRemoteSearchResults.value;
+
+        /* Remove locally deleted objects from remote search results */
+        const changesCacheKey = `${changesObjectCacheKey}/${path}`;
+        const changesObject = await this.changesCache.getItem<object>(changesCacheKey);
+
+        if (changesObject) {
+            Object.keys(changesObject)
+                .forEach(key => {
+                    const index = remoteSearchResults.findIndex(x => x["key"] === `${path}/${key}`);
+
+                    if (index >= 0 && changesObject[key] === null) {
+                        remoteSearchResults.splice(index, 1);
+                    }
+                });
+        }
+
+        /* Find locally added/changed objects */
+        const localStateSearchResults = await this.searchLocalState(path, query);
+
+        /* Merge local changes search results with remote search results */
+        const locallyAddedObjects = [];
+
+        for (const localStateSearchResultItem of localStateSearchResults.value) {
+            const searchResultItemIndex = remoteSearchResults.findIndex(r => r["key"] === localStateSearchResultItem["key"]);
+
+            if (searchResultItemIndex !== -1) {
+                remoteSearchResults[searchResultItemIndex] = localStateSearchResultItem;
+            }
+            else {
+                locallyAddedObjects.push(localStateSearchResultItem);
+            }
+        }
+
+        pageOfRemoteSearchResults.value = locallyAddedObjects.concat(remoteSearchResults);
+
         return pageOfRemoteSearchResults;
     }
 
@@ -590,41 +501,6 @@ export class OfflineObjectStorage implements IObjectStorage {
             default:
                 throw new Error(`Caching strategy "${this.cachingStrategy}" not yet supported.`);
         }
-
-        const remoteSearchResults = resultPage.value;
-
-        /* Remove locally deleted objects from remote search results */
-        const changesAt = await this.changesCache.getItem<object>(`${changesObjectCacheKey}/${path}`);
-
-        if (changesAt) {
-            Object.keys(changesAt)
-                .forEach(key => {
-                    const index = remoteSearchResults.findIndex(x => x["key"] === `${path}/${key}`);
-
-                    if (index >= 0 && changesAt[key] === null) {
-                        remoteSearchResults.splice(index, 1);
-                    }
-                });
-        }
-
-        /* Find locally added/changed objects */
-        const localChangesSearchResults = await this.searchLocalChanges(path, query);
-
-        /* Merge local changes search results with remote search results */
-        const added = [];
-
-        for (const searchResultItem of localChangesSearchResults.value) {
-            const searchResultItemIndex = remoteSearchResults.findIndex(r => r["key"] === searchResultItem["key"]);
-
-            if (searchResultItemIndex !== -1) {
-                remoteSearchResults[searchResultItemIndex] = searchResultItem;
-            }
-            else {
-                added.push(searchResultItem);
-            }
-        }
-
-        resultPage.value = added.concat(remoteSearchResults);
 
         return resultPage;
     }

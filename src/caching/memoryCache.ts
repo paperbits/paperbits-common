@@ -12,12 +12,12 @@ export class MemoryCache implements ILocalCache {
         return Object.keys(this.cacheObject);
     }
 
-    public async setItem(key: string, value: any): Promise<void> {
-        Objects.setValue(key, this.cacheObject, value);
+    public async setItem(path: string, value: any): Promise<void> {
+        Objects.setValue(path, this.cacheObject, value);
     }
 
-    public async getItem<T>(key: string): Promise<T> {
-        const item = Objects.getObjectAt(key, this.cacheObject);
+    public async getItem<T>(path: string): Promise<T> {
+        const item = Objects.getObjectAt(path, this.cacheObject);
 
         if (item === undefined) {
             return undefined;
@@ -30,8 +30,8 @@ export class MemoryCache implements ILocalCache {
         return Objects.clone<T>(item);
     }
 
-    public async removeItem(key: string): Promise<void> {
-        Objects.setValue(key, this.cacheObject, undefined);
+    public async removeItem(path: string): Promise<void> {
+        Objects.setValue(path, this.cacheObject, undefined);
     }
 
     public async clear(): Promise<void> {
