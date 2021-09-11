@@ -19,8 +19,12 @@ export class MemoryCache implements ILocalCache {
     public async getItem<T>(key: string): Promise<T> {
         const item = Objects.getObjectAt(key, this.cacheObject);
 
-        if (!item) {
+        if (item === undefined) {
             return undefined;
+        }
+
+        if (item === null) {
+            return null;
         }
 
         return Objects.clone<T>(item);
