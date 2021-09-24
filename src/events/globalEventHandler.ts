@@ -1,5 +1,5 @@
 import { EventManager, Events } from "../events";
-import { Keys } from "../keyboard";
+import { KeyCodes } from "../keyboard";
 
 export class GlobalEventHandler {
     private readonly documents: Document[];
@@ -78,26 +78,26 @@ export class GlobalEventHandler {
     public onKeyDown(event: KeyboardEvent): void {
         this.eventManager.dispatchEvent("onKeyDown", event);
 
-        if (event.ctrlKey && event.keyCode === Keys.S) {
+        if (event.ctrlKey && event.keyCode === KeyCodes.S) {
             event.preventDefault();
             this.onCtrlS();
         }
 
-        if (event.ctrlKey && event.keyCode === Keys.O) {
+        if (event.ctrlKey && event.keyCode === KeyCodes.O) {
             event.preventDefault();
             this.onCtrlO();
         }
 
-        if (event.ctrlKey && event.keyCode === Keys.P) {
+        if (event.ctrlKey && event.keyCode === KeyCodes.P) {
             event.preventDefault();
             this.onCtrlP();
         }
 
-        if (event.keyCode === Keys.Delete) {
+        if (event.keyCode === KeyCodes.Delete) {
             this.onDelete();
         }
 
-        if (event.keyCode === Keys.Esc) {
+        if (event.keyCode === KeyCodes.Esc) {
             event.preventDefault();
             this.onEscape();
         }

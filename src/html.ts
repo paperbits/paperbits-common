@@ -49,7 +49,9 @@ export enum AriaAttributes {
 export enum Attributes {
     Href = "href",
     Target = "target",
-    Download = "download"
+    Download = "download",
+    TabIndex = "tabindex",
+    Role = "role"
 }
 
 export enum DataAttributes {
