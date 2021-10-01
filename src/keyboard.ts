@@ -18,5 +18,7 @@ export enum Keys {
     ArrowRight = "ArrowRight",
     ArrowDown = "ArrowDown",
     Enter = "Enter",
-    Space = "Space"
+    Space = "Space",
+    Tab = "Tab",
+    Escape = "Escape"
 }
