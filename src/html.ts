@@ -60,3 +60,8 @@ export enum DataAttributes {
     Target = "data-target",
     Dismiss = "data-dismiss"
 }
+
+export enum AriaRoles {
+    Listbox = "listbox",
+    Option = "option"
+}
