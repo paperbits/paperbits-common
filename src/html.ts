@@ -51,7 +51,8 @@ export enum Attributes {
     Target = "target",
     Download = "download",
     TabIndex = "tabindex",
-    Role = "role"
+    Role = "role",
+    Rel = "rel"
 }
 
 export enum DataAttributes {
@@ -64,4 +65,24 @@ export enum DataAttributes {
 export enum AriaRoles {
     Listbox = "listbox",
     Option = "option"
+}
+
+/**
+ * Hyperlink relationship between a linked resource and the current page.
+ */
+export enum HyperlinkRels {
+    /**
+     * Instructs the browser not to set `window.opener` property when opening a new window.
+     */
+    NoOpener = "noopener",
+
+    /**
+     * Instructs the browser not to send `Referrer` HTTP header when opening navigating to linked page.
+     */
+    NoReferrer = "noreferrer",
+    
+    /**
+     * Indicates that the linked resource is not endorsed by the author.
+     */
+    NoFollow = "nofollow"
 }
