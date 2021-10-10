@@ -1,5 +1,6 @@
 import * as mime from "mime";
-import { MediaVariantContract } from "./mediaVariantContract";
+import { MediaContract, MediaVariantContract } from "./";
+
 
 export async function getVideoThumbnailAsDataUrlFromUrl(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -80,4 +81,26 @@ export function getPermalinkForMediaVariant(originalPermalink: string, variant: 
     }
 
     return `${originalPermalink}@${variant.width}x${variant.height}${extension}`;
+}
+
+export function getSmallestMediaVariant(mediaContract: MediaContract): MediaVariantContract {
+    if (!mediaContract.variants) {
+        return null;
+    }
+
+    const reducer = (smallest: MediaVariantContract, current: MediaVariantContract) => smallest.width <= current.width ? smallest : current;
+    const smallestMediaVariant = mediaContract.variants.reduce(reducer);
+
+    return smallestMediaVariant;
+}
+
+export function getThumbnailUrl(mediaContract: MediaContract): string {
+    if (!mediaContract.variants) {
+        return mediaContract.downloadUrl;
+    }
+
+    const reducer = (smallest: MediaVariantContract, current: MediaVariantContract) => smallest.width <= current.width ? smallest : current;
+    const smallestMediaVariant = mediaContract.variants.reduce(reducer);
+
+    return smallestMediaVariant.downloadUrl;
 }

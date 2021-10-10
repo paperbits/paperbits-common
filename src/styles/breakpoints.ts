@@ -26,6 +26,11 @@ export interface Breakpoints<T = any> {
      * Extra large.
      */
     xl?: T;
+
+    /**
+     * Extra-extra large.
+     */
+    xxl?: T;
 }
 
 export const BreakpointValues = {
@@ -33,5 +38,6 @@ export const BreakpointValues = {
     sm: 576,
     md: 768,
     lg: 992,
-    xl: 1200
+    xl: 1200,
+    xxl: 1400
 };
