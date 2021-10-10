@@ -1,3 +1,4 @@
+import * as MediaUtils from "./mediaUtils";
 import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { MediaContract } from ".";
@@ -26,7 +27,13 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
                 return null;
             }
 
-            return media.permalink;
+            if (media.variants) { // Currently this case is possible only with CDN and image optimization services.
+                const biggestVariant = MediaUtils.getBiggestMediaVariant(media);
+                return biggestVariant.downloadUrl;
+            }
+            else {
+                return media.permalink;
+            }
         }
         catch (error) {
             console.warn(`Could not fetch permalink by key ${mediaKey}.`);
@@ -110,5 +117,4 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         return hyperlinkModel;
     }
-
 }

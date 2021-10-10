@@ -1,3 +1,4 @@
+import * as MediaUtils from "./mediaUtils";
 import { IMediaService } from "./IMediaService";
 import { HyperlinkModel, IPermalinkResolver } from "../permalinks";
 import { IBlobStorage } from "../persistence";
@@ -30,6 +31,11 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         let mediaUrl = null;
 
+        if (media.variants) { // Currently this case is possible only with CDN and image optimization services.
+            const biggestVariant = MediaUtils.getBiggestMediaVariant(media);
+            return biggestVariant.downloadUrl;
+        }
+
         if (media.blobKey) {
             mediaUrl = await this.blobStorage.getDownloadUrl(media.blobKey);
         }
@@ -44,7 +50,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         return mediaUrl;
     }
-    
+
     private async getHyperlink(mediaContract: MediaContract, hyperlinkContract?: HyperlinkContract): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = mediaContract.key;

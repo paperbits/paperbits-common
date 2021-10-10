@@ -94,6 +94,17 @@ export function getSmallestMediaVariant(mediaContract: MediaContract): MediaVari
     return smallestMediaVariant;
 }
 
+export function getBiggestMediaVariant(mediaContract: MediaContract): MediaVariantContract {
+    if (!mediaContract.variants) {
+        return null;
+    }
+
+    const reducer = (biggest: MediaVariantContract, current: MediaVariantContract) => biggest.width > current.width ? biggest : current;
+    const biggetsMediaVariant = mediaContract.variants.reduce(reducer);
+
+    return biggetsMediaVariant;
+}
+
 export function getThumbnailUrl(mediaContract: MediaContract): string {
     if (!mediaContract.variants) {
         return mediaContract.downloadUrl;
