@@ -1,15 +1,9 @@
 export enum KeyCodes {
-    Tab = 9,
-    Enter = 13,
-    Esc = 27,
-    Space = 32,
-    Delete = 46,
-    Alt = 18,
-    O = 79,
-    P = 80,
-    S = 83,
-    Y = 89,
-    Z = 90
+    O = "KeyO",
+    P = "KeyP",
+    S = "KeyS",
+    Y = "KeyY",
+    Z = "KeyZ"
 }
 
 export enum Keys {
@@ -23,6 +17,7 @@ export enum Keys {
     Escape = "Escape",
     Home = "Home",
     End = "End",
+    Delete = "Delete",
     PageUp = "PageUp",
     PageDown = "PageDown"
 }
