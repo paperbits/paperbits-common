@@ -1,4 +1,5 @@
 export enum Events {
+    ContentUpdate = "onContentChange",
     ViewportChange = "onViewportChange",
     MouseUp = "mouseup",
     MouseDown = "mousedown",
