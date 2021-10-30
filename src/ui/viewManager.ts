@@ -252,7 +252,7 @@ export interface ViewManager {
     /**
      * Resumes contextual commands.
      */
-    resumeContextualEditors(): void;
+    resumeContextualCommands(): void;
 
     /**
      * Clears widget selection.

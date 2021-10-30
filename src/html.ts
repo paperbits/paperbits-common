@@ -1,3 +1,5 @@
+import * as Arrays from "./arrays";
+
 /**
  * Returns closest element that satisfies the predicate, going from child to parent.
  * @param node {Node} Node from which the search starts.
@@ -12,6 +14,30 @@ export function closest(node: Node, predicate: (node: Node) => boolean): Node {
         node = node.parentNode;
     }
     while (node);
+}
+
+/**
+ * Returns first element that satisfies the predicate, going from parent to children.
+ * @param node {Node} Node from which the search starts.
+ * @param predicate {(node: Node) => boolean} Search predicate
+ * @returns 
+ */
+export function findFirst(node: Node, predicate: (node: Node) => boolean): Node {
+    if (predicate(node)) {
+        return node;
+    }
+
+    const childNodes = Arrays.coerce<Node>(node.childNodes);
+
+    for (const childNode of childNodes) {
+        const childNodeMeetingCriteria = findFirst(childNode, predicate);
+
+        if (childNodeMeetingCriteria) {
+            return childNodeMeetingCriteria;
+        }
+    }
+
+    return null;
 }
 
 export enum AriaAttributes {
@@ -80,7 +106,7 @@ export enum HyperlinkRels {
      * Instructs the browser not to send `Referrer` HTTP header when opening navigating to linked page.
      */
     NoReferrer = "noreferrer",
-    
+
     /**
      * Indicates that the linked resource is not endorsed by the author.
      */
