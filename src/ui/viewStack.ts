@@ -8,7 +8,7 @@ export class ViewStack {
     constructor(private readonly eventManager: EventManager) {
         this.stack = [];
         this.eventManager.addEventListener("onPointerDown", this.onPointerDown.bind(this));
-        this.eventManager.addEventListener("onEscape", this.onEscape.bind(this));
+        this.eventManager.addEventListener("onEscape", this.popView.bind(this));
     }
 
     private onPointerDown(event: MouseEvent): void {
@@ -38,27 +38,46 @@ export class ViewStack {
         }
     }
 
-    private onEscape(): void {
-        const topView = this.stack.pop();
-
-        if (topView) {
-            topView.close();
-
-            if (topView.returnFocusTo) {
-                topView.returnFocusTo.focus();
-            }
-        }
-        else {
-            this.eventManager.dispatchEvent("onTopLevelEscape");
-        }
-    }
-
     public pushView(view: View): void {
         this.stack.push(view);
     }
 
+    public popView(): void {
+        const view = this.stack.pop();
+
+        if (!view) {
+            this.eventManager.dispatchEvent("onTopLevelEscape");
+            return;
+        }
+
+        view.close();
+
+        if (view.returnFocusTo) {
+            view.returnFocusTo.focus();
+        }
+    }
+
     public removeView(view: View): void {
-        this.stack.remove(view);
+        if (!this.stack.includes(view)) {
+            return;
+        }
+
+        let topView: View;
+
+        do {
+            topView = this.stack.pop();
+            topView.close();
+        }
+        while (!topView || topView !== view);
+
+        if (!topView) {
+            this.eventManager.dispatchEvent("onTopLevelEscape");
+            return;
+        }
+
+        if (topView.returnFocusTo) {
+            view.returnFocusTo.focus();
+        }
     }
 
     public getViews(): View[] {
