@@ -240,9 +240,14 @@ export interface ViewManager {
     getHost(): IComponent;
 
     /**
-     * Returns the document where the content component being hosted.
+     * Returns the document hosting the content component.
      */
     getHostDocument(): Document;
+
+    /**
+     * Returns the document hosting the designer.
+     */
+    getDesignerDocument(): Document;
 
     /**
      * Temporarily disables contextual commands.
