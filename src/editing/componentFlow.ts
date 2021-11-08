@@ -12,7 +12,12 @@ export enum ComponentFlow {
     /**
      * Doesn't apply any flows.
      */
-    None = "none",
+    Placeholder = "placeholder",
+
+    /**
+     * Doesn't apply any flows.
+     */
+    Contents = "contents",
 
     /**
      * @deprecated

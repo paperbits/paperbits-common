@@ -11,7 +11,7 @@ import { IBlockService } from "../blocks";
 
 const popupsPath = "popups";
 const documentsPath = "files";
-const templateBlockKey = "blocks/new-popup-template";
+const defaultTemplateBlockKey = "blocks/new-popup-template";
 
 export class PopupService implements IPopupService {
     constructor(
@@ -117,7 +117,7 @@ export class PopupService implements IPopupService {
         await Promise.all([deletePopupPromise]);
     }
 
-    public async createPopup(title: string, description?: string): Promise<PopupContract> {
+    public async createPopup(title: string, description: string = null, templateBlockKey: string = defaultTemplateBlockKey): Promise<PopupContract> {
         const locale = await this.localeService.getDefaultLocaleCode();
         const identifier = Utils.guid();
         const popupKey = `${popupsPath}/${identifier}`;
