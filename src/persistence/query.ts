@@ -49,7 +49,7 @@ export class Query<T> {
 
     public copy<T>(): Query<T> {
         const query = new Query<T>();
-        query.filters = this.filters;
+        query.filters = this.filters.map(f => { return { ...f } });
         query.selecting = this.selecting;
         query.orderingBy = this.orderingBy;
         query.orderDirection = this.orderDirection;
