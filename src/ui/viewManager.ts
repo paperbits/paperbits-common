@@ -232,7 +232,7 @@ export interface ViewManager {
      * Sets content host component.
      * @param component {IComponent} Component.
      */
-    setHost(component: IComponent): void;
+    setHost(component: IComponent, canGoBack?: boolean): void;
 
     /**
      * Returns current content host component.
