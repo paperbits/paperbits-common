@@ -73,7 +73,7 @@ export function base64ToArrayBuffer(base64: string): Uint8Array {
     return uint8Array;
 }
 
-export function readFileAsByteArray(file: File): Promise<Uint8Array> {
+export function readFileAsByteArray(file: Blob): Promise<Uint8Array> {
     return new Promise<Uint8Array>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = event => resolve((<any>event.target).result);
