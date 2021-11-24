@@ -294,7 +294,7 @@ export class PageService implements IPageService {
             pageMetadata = localizedPageContract.locales[defaultLocale];
         }
 
-        let pageContent;
+        let pageContent: Contract;
 
         if (pageMetadata.contentKey) {
             pageContent = await this.objectStorage.getObject<Contract>(pageMetadata.contentKey);

@@ -141,14 +141,14 @@ export class PopupService implements IPopupService {
         template["key"] = contentKey; // rewriting own key
         await this.objectStorage.addObject<Contract>(contentKey, template);
 
-        const popupContent: PopupContract = {
+        const popupContract: PopupContract = {
             key: popupKey,
             title: title,
             description: description,
             contentKey: contentKey
         };
 
-        return popupContent;
+        return popupContract;
     }
 
     public async updatePopup(popup: PopupContract): Promise<void> {
@@ -225,6 +225,8 @@ export class PopupService implements IPopupService {
             popupMetadata.contentKey = `${documentsPath}/${identifier}`;
             await this.objectStorage.updateObject(popupKey, popupMetadata);
         }
+
+        content["key"] = popupMetadata.contentKey;
 
         await this.objectStorage.updateObject(popupMetadata.contentKey, content);
     }
