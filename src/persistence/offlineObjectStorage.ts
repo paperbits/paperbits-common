@@ -76,8 +76,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Writng changes */
             compensationOfChanges = Objects.setValueWithCompensation(path, changesObject, dataObjectClone);
 
-            Objects.cleanupObject(stateObject, true);
-            Objects.cleanupObject(changesObject, false);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
+            Objects.cleanupObject(changesObject);
 
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
@@ -93,8 +93,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Undoing changes */
             Objects.setValueWithCompensation(path, changesObject, compensationOfChanges);
 
-            Objects.cleanupObject(stateObject, true);
-            Objects.cleanupObject(changesObject, false);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
+            Objects.cleanupObject(changesObject);
 
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
@@ -132,7 +132,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Writng changes */
             compensationOfChanges = Objects.setValueWithCompensation(path, changesObject, dataObjectClone2);
 
-            Objects.cleanupObject(stateObject, true);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
             Objects.cleanupObject(changesObject);
 
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
@@ -149,7 +149,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Undoing changes */
             Objects.setValueWithCompensation(path, changesObject, compensationOfChanges);
 
-            Objects.cleanupObject(stateObject, true);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
             Objects.cleanupObject(changesObject);
 
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
@@ -220,8 +220,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Writng changes */
             compensationOfChanges = Objects.setValueWithCompensation(path, changesObject, null);
 
-            Objects.cleanupObject(stateObject, true);
-            Objects.cleanupObject(changesObject, false);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
+            Objects.cleanupObject(changesObject);
 
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
@@ -237,8 +237,8 @@ export class OfflineObjectStorage implements IObjectStorage {
             /* Undoinf changes */
             Objects.setValueWithCompensation(path, changesObject, compensationOfChanges);
 
-            Objects.cleanupObject(stateObject, true);
-            Objects.cleanupObject(changesObject, false);
+            Objects.cleanupObject(stateObject, { removeNulls: true });
+            Objects.cleanupObject(changesObject);
 
             await this.changesCache.setItem(changesObjectCacheKey, changesObject);
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
@@ -528,6 +528,10 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     public async saveChanges(): Promise<void> {
         const changesObject = await this.changesCache.getItem<object>(changesObjectCacheKey) || {};
+
+        console.log(JSON.stringify(changesObject));
+
+        return;
 
         const entities = Object.keys(changesObject);
 

@@ -120,15 +120,13 @@ describe("Offline object storage", async () => {
         expect(stateObject.address.streetNumber).equal(2000);
         expect(changesObject, "When no changes has been made yet, changesObject should be empty").equals(undefined);
 
-
         // 1. Update operation
         await obs.updateObject("address/streetNumber", null);
         changesObject = await changesCache.getItem(changesObjectCacheKey);
         stateObject = await stateCache.getItem(stateObjectCacheKey);
 
-        expect(changesObject.address.streetNumber).equal(null);
+        expect(changesObject.address.streetNumber).equal(null, "Changes object must preserve all the nulls (without collapsing them)");
         expect(stateObject.address.streetNumber).equal(undefined);
-
 
         // 2. Undo operation
         await obs.undo();

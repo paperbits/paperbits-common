@@ -90,40 +90,68 @@ export function setStructure(path: string, target: object, delimiter: string = "
     return segmentObject;
 }
 
+export interface CleanupOptions {
+    /**
+     * If the node property value is null, the property gets removed from the node.
+     */
+    removeNulls?: boolean;
+
+    /**
+     * If all child properties of the node are null, the node itself becomes null.
+     */
+    collapseNulls?: boolean;
+
+    /**
+     * If the node property is an empty string, the property gets removed from the node.
+     */
+    removeEmptyString?: boolean;
+}
+
 /**
- * Removes all properties with undefined value from object.
+ * Removes all properties with `undefined` value from object.
  * @param source {object} An object that needs to be cleaned.
- * @param includingNulls {boolean} Indicates if properties with "null" values will also be removed from source object.
- * @param includingEmptyString {boolean} Indicates if properties with empty string values will also be removed from source object.
  */
-export function cleanupObject(source: object, includingNulls: boolean = false, includingEmptyString: boolean = false): void {
-    if (source instanceof Object) {
-        Object.keys(source).forEach(key => {
-            const child = source[key];
+export function cleanupObject(source: object, options?: CleanupOptions): void {
+    if (options?.removeNulls && options?.collapseNulls) {
+        throw new Error(`Cannot remove and collapse nulls at the same time.`);
+    }
 
-            if (Array.isArray(child)) {
-                child.forEach(x => cleanupObject(x, includingNulls, includingEmptyString));
+    if (!(source instanceof Object)) {
+        return;
+    }
 
-                if (child.length === 0) {
-                    source[key] = null;
+    Object.keys(source).forEach(key => {
+        const childNode = source[key];
 
-                    if (includingNulls) {
-                        delete source[key];
-                    }
-                }
-            }
-            else if (child instanceof Object) {
-                cleanupObject(child, includingNulls, includingEmptyString);
+        if (Array.isArray(childNode)) {
+            childNode.forEach(x => cleanupObject(x, options));
 
-                if (Object.keys(child).length === 0) {
+            if (childNode.length === 0) {
+                source[key] = null;
+
+                if (options?.removeNulls) {
                     delete source[key];
                 }
             }
-            else if (child === undefined || (includingNulls && child === null) || (includingEmptyString && child === "")) {
+        }
+        else if (childNode instanceof Object) {
+            cleanupObject(childNode, options);
+
+            if (Object.keys(childNode).length === 0) {
                 delete source[key];
             }
-        });
-    }
+            else if (options?.collapseNulls) {
+                const hasNonNullProps = Object.values(childNode).some(x => x !== null);
+
+                if (!hasNonNullProps) { // collapse empty nodes
+                    source[key] = null;
+                }
+            }
+        }
+        else if (childNode === undefined || (options?.removeNulls && childNode === null) || (options?.removeEmptyString && childNode === "")) {
+            delete source[key];
+        }
+    });
 }
 
 

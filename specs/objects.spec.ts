@@ -41,7 +41,7 @@ describe("Objects", async () => {
         expect(originalSnapshot).equal(finalSnapshot);
     });
 
-    it("Merge deep. Arrays.", async () => {
+    it("Can merge deep arrays.", async () => {
         const target = {
             sections: [{
                 rows: [{
@@ -73,7 +73,7 @@ describe("Objects", async () => {
         Objects.mergeDeep(target, targetDelta);
     });
 
-    it("Merge deep. Can merge at objects at any level.", async () => {
+    it("Can merge deep. Can merge at objects at any level.", async () => {
         const target1 = { parent: { child: { property1: "value1", property2: "value2" } } };
         const source1 = { property2: null };
         Objects.mergeDeepAt("parent/child", target1, source1, false);
@@ -85,8 +85,7 @@ describe("Objects", async () => {
         expect(target2.parent.child.property2).equal(undefined);
     });
 
-
-    it("Set value at specific path.", () => {
+    it("Can set value at specific path.", () => {
         const target: any = { address: { street: "South Eads" } };
         const compensation1: any = Objects.setValueWithCompensation("address/streetNumber", target, 2000);
         const compensation2: any = Objects.setValueWithCompensation("address/street", target, "S Eads");
@@ -96,31 +95,68 @@ describe("Objects", async () => {
         expect(compensation2).equals("South Eads");
     });
 
-    it("Generate changeset.", () => {
-        const object1: any = {
+    it("Can generate changeset.", () => {
+        const original: any = {
             firstName: "John",
             address1: { street: "South Eads" },
             address2: { street: "South Eads" },
             address3: { street: "South Eads" },
         };
 
-        const object2: any = {
+        const changes: any = {
             address1: {
                 streetNumber: 10
             },
             address3: { street: null }
         };
 
-        const actualResult = Objects.generateChangeset(object1, object2, true);
+        const actualResult = Objects.generateChangeset(original, changes, true);
 
         const expectedResult: any = {
+            address1: { streetNumber: 10, street: null },
+            address3: null,
             firstName: null,
-            address1: { street: null, streetNumber: 10 },
-            address2: null,
-            address3: null
+            address2: null
         };
 
-        console.log(JSON.stringify(actualResult));
-        console.log(JSON.stringify(expectedResult));
+        const serializedActual = JSON.stringify(actualResult);
+        const serializedExpected = JSON.stringify(expectedResult);
+
+        console.log(serializedActual);
+        console.log(serializedExpected);
+
+        assert.equal(serializedActual, serializedExpected);
+    });
+
+    it("Can cleanup object without removing nulls but collapsing nul objects.", () => {
+        const original: any = {
+            firstName: "John",
+            address1: { street: null },
+            address2: undefined
+        };
+
+        Objects.cleanupObject(original, { collapseNulls: true });
+
+        const actual = JSON.stringify(original);
+        const expected = `{"firstName":"John","address1":null}`;
+
+        console.log(actual);
+        assert.equal(actual, expected);
+    });
+
+    it("Can cleanup object including nulls.", () => {
+        const original1: any = {
+            firstName: "John",
+            address1: { street: null },
+            address2: undefined
+        };
+
+        Objects.cleanupObject(original1, { removeNulls: true }); // Cleanup including nulls.
+
+        const actual = JSON.stringify(original1);
+        const expected = `{"firstName":"John"}`;
+
+        console.log(actual);
+        assert.equal(actual, expected);
     });
 });
