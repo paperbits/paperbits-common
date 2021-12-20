@@ -528,11 +528,6 @@ export class OfflineObjectStorage implements IObjectStorage {
 
     public async saveChanges(): Promise<void> {
         const changesObject = await this.changesCache.getItem<object>(changesObjectCacheKey) || {};
-
-        console.log(JSON.stringify(changesObject));
-
-        return;
-
         const entities = Object.keys(changesObject);
 
         if (entities.length === 0) {
