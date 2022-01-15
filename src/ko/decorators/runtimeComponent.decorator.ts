@@ -20,7 +20,7 @@ export function RuntimeComponent(config: any): (target: Function) => void {
 
                     ko.applyBindingsToNode(element, {
                         component: {
-                            name: config.selector,
+                            name: config.componentName || config.selector,
                             viewModel: target,
                             params: paramsObservable
                         }
