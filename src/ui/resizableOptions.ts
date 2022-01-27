@@ -1,6 +1,6 @@
 export interface ResizableOptions {
     /**
-     * Allowed values: "none", "vertically", "horizontally".
+     * Allowed values: "none", "vertically", "horizontally", "left", "top".
      */
     directions: string;
 
