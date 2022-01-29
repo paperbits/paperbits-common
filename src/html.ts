@@ -82,10 +82,30 @@ export enum Attributes {
 }
 
 export enum DataAttributes {
+    /**
+     * Indicates type of togglable. Allowed values: `popup`,`dropdown`,`collapsible`.
+     */
     Toggle = "data-toggle",
+
+    /**
+     * Indicates how the togglable gets triggered. Allowed values: `click`,`hover`,`focus`,`keydown`.
+     */
     TriggerEvent = "data-trigger-event",
+
+    /**
+     * 
+     */
     Target = "data-target",
-    Dismiss = "data-dismiss"
+
+    /**
+     * 
+     */
+    Dismiss = "data-dismiss",
+
+    /**
+     * Indicates togglables auto-closing behavior. Allowed values: `true`,`inside`,`outside`,`false.`
+     */
+    AutoClose = "data-auto-close"
 }
 
 export enum AriaRoles {
