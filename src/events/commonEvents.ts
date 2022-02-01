@@ -11,7 +11,16 @@ export enum Events {
     KeyUp = "keyup",
     KeyDown = "keydown",
     Focus = "focus",
-    Blur = "blur"
+    Blur = "blur",
+    DragEnter = "dragenter",
+    DragStart = "dragstart",
+    DragOver = "dragover",
+    DragLeave = "dragleave",
+    Drop = "drop",
+    DragEnd = "dragend",
+    Paste = "paste",
+    Error = "error",
+    UnhandledRejection = "unhandledrejection"
 }
 
 export enum MouseButton {

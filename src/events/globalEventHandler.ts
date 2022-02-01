@@ -28,8 +28,6 @@ export class GlobalEventHandler {
         this.addDragEndListener = this.addDragEndListener.bind(this);
         this.addDragLeaveListener = this.addDragLeaveListener.bind(this);
         this.addDragLeaveScreenListener = this.addDragLeaveScreenListener.bind(this);
-        this.addKeyDownListener = this.addKeyDownListener.bind(this);
-        this.addKeyUpListener = this.addKeyUpListener.bind(this);
         this.documents = [];
     }
 
@@ -42,18 +40,18 @@ export class GlobalEventHandler {
 
         doc.addEventListener(Events.KeyDown, this.onKeyDown, true);
         doc.addEventListener(Events.KeyUp, this.onKeyUp, true);
-        doc.addEventListener("dragenter", this.onDragEnter, true);
-        doc.addEventListener("dragstart", this.onDragStart, true);
-        doc.addEventListener("dragover", this.onDragOver, true);
-        doc.addEventListener("dragleave", this.onDragLeave.bind(this));
-        doc.addEventListener("drop", this.onDragDrop, true);
-        doc.addEventListener("dragend", this.onDragEnd, true);
-        doc.addEventListener("paste", this.onPaste, true);
+        doc.addEventListener(Events.DragEnter, this.onDragEnter, true);
+        doc.addEventListener(Events.DragStart, this.onDragStart, true);
+        doc.addEventListener(Events.DragOver, this.onDragOver, true);
+        doc.addEventListener(Events.DragLeave, this.onDragLeave.bind(this));
+        doc.addEventListener(Events.Drop, this.onDragDrop, true);
+        doc.addEventListener(Events.DragEnd, this.onDragEnd, true);
+        doc.addEventListener(Events.Paste, this.onPaste, true);
         doc.addEventListener(Events.MouseMove, this.onPointerMove, true);
         doc.addEventListener(Events.MouseDown, this.onPointerDown, true);
         doc.addEventListener(Events.MouseUp, this.onPointerUp, true);
-        doc.defaultView.window.addEventListener("error", this.onError, true);
-        doc.defaultView.window.addEventListener("unhandledrejection", this.onUnhandledRejection, true);
+        doc.defaultView.window.addEventListener(Events.Error, this.onError, true);
+        doc.defaultView.window.addEventListener(Events.UnhandledRejection, this.onUnhandledRejection, true);
     }
 
     public removeDocument(doc: Document): void {
@@ -61,18 +59,18 @@ export class GlobalEventHandler {
 
         doc.removeEventListener(Events.KeyDown, this.onKeyDown, true);
         doc.removeEventListener(Events.KeyUp, this.onKeyUp, true);
-        doc.removeEventListener("dragenter", this.onDragEnter, true);
-        doc.removeEventListener("dragstart", this.onDragStart, true);
-        doc.removeEventListener("dragover", this.onDragOver, true);
-        doc.removeEventListener("dragleave", this.onDragLeave.bind(this));
-        doc.removeEventListener("drop", this.onDragDrop, true);
-        doc.removeEventListener("dragend", this.onDragEnd, true);
-        doc.removeEventListener("paste", this.onPaste, true);
+        doc.removeEventListener(Events.DragEnter, this.onDragEnter, true);
+        doc.removeEventListener(Events.DragStart, this.onDragStart, true);
+        doc.removeEventListener(Events.DragOver, this.onDragOver, true);
+        doc.removeEventListener(Events.DragLeave, this.onDragLeave.bind(this));
+        doc.removeEventListener(Events.Drop, this.onDragDrop, true);
+        doc.removeEventListener(Events.DragEnd, this.onDragEnd, true);
+        doc.removeEventListener(Events.Paste, this.onPaste, true);
         doc.removeEventListener(Events.MouseMove, this.onPointerMove, true);
         doc.removeEventListener(Events.MouseDown, this.onPointerDown, true);
         doc.removeEventListener(Events.MouseUp, this.onPointerUp, true);
-        doc.defaultView.window.removeEventListener("error", this.onError, true);
-        doc.defaultView.window.removeEventListener("unhandledrejection", this.onUnhandledRejection, true);
+        doc.defaultView.window.removeEventListener(Events.Error, this.onError, true);
+        doc.defaultView.window.removeEventListener(Events.UnhandledRejection, this.onUnhandledRejection, true);
     }
 
     public onKeyDown(event: KeyboardEvent): void {
@@ -215,17 +213,5 @@ export class GlobalEventHandler {
 
     public addPasteListener(callback: (args?: any) => void): void {
         this.eventManager.addEventListener("onPaste", callback);
-    }
-
-    public addPointerMoveEventListener(callback: (args?: any) => void): void {
-        this.eventManager.addEventListener("onPointerMove", callback);
-    }
-
-    public addKeyDownListener(callback: (args?: any) => void): void {
-        this.eventManager.addEventListener("onKeyDown", callback);
-    }
-
-    public addKeyUpListener(callback: (args?: any) => void): void {
-        this.eventManager.addEventListener("onKeyUp", callback);
     }
 }

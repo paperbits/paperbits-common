@@ -375,3 +375,7 @@ export function ensureLeadingSlash(url: string = ""): string {
 export function ensureTrailingSlash(url: string = ""): string {
     return url.endsWith("/") ? url : `${url}/`;
 }
+
+export function isNumber(candidate: unknown): boolean {
+    return !isNaN(<number>candidate);
+}   
