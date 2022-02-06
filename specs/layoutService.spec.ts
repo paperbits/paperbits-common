@@ -3,7 +3,6 @@ import { LayoutService, LayoutContract } from "../src/layouts";
 import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockLocaleService } from "./mocks/mockLocaleService";
 import { Contract } from "../src";
-import { copySync } from "fs-extra";
 import { Operator, Query } from "../src/persistence";
 
 describe("Layout service", async () => {
