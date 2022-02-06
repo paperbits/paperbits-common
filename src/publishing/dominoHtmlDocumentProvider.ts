@@ -1,11 +1,13 @@
-import * as domino from "domino";
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
+import { JSDOM } from "jsdom";
 
 declare var global: any;
 
-export class DominoHtmlDocumentProvider implements HtmlDocumentProvider {
+export class JsDomHtmlDocumentProvider implements HtmlDocumentProvider {
     public createDocument(html?: string): Document {
-        const window = domino.createWindow(html);
+        const jsdom = new JSDOM(html, { runScripts: "outside-only" });
+        const window = jsdom.window;
+        
         global.window = window;
         global.document = window.document;
         global.navigator = window.navigator;

@@ -1,6 +1,5 @@
 ﻿import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
-import * as deepmerge from "deepmerge";
 import { Query } from "./persistence";
 
 
@@ -163,10 +162,6 @@ export function replace(path: string, target: object, value: any, delimiter: str
         parent[segment] = value;
     }
     return target;
-}
-
-export function assign(target, source) {
-    Object.assign(target, deepmerge(target, source));
 }
 
 export function findNodesRecursively(predicate: (x: object) => boolean, source: object): object[] {

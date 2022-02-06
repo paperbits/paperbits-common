@@ -28,7 +28,7 @@ export class HtmlPagePublisher {
         document.head.appendChild(element);
     }
 
-    private appendFaviconLink(permalink: string): void {
+    private appendFaviconLink(document: Document, permalink: string): void {
         const faviconLinkElement = document.createElement("link");
         faviconLinkElement.setAttribute("rel", "shortcut icon");
         faviconLinkElement.setAttribute("href", permalink);
@@ -41,7 +41,7 @@ export class HtmlPagePublisher {
             document.title = page.title;
 
             if (page.faviconPermalink) {
-                this.appendFaviconLink(page.faviconPermalink);
+                this.appendFaviconLink(document, page.faviconPermalink);
             }
 
             if (page.description) {
