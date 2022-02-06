@@ -1,5 +1,5 @@
 ﻿import { PopupMetadata } from "./popupMetadata";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 
 
 /**

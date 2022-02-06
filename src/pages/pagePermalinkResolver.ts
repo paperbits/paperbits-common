@@ -1,5 +1,5 @@
 import { IPageService, PageContract } from ".";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 import { Contract } from "../contract";
 import { HyperlinkContract } from "../editing";
 import { ILocaleService } from "../localization";

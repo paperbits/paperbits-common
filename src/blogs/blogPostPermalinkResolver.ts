@@ -2,7 +2,7 @@ import { IBlogService, BlogPostContract } from ".";
 import { Contract } from "../contract";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel, IPermalinkResolver } from "../permalinks";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 
 const blogPostsPath = "blogPosts/";
 

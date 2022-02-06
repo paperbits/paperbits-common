@@ -2,7 +2,7 @@ import * as MediaUtils from "./mediaUtils";
 import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { MediaContract } from ".";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 import { HyperlinkContract } from "../editing";
 
 export class MediaPermalinkResolver implements IPermalinkResolver {

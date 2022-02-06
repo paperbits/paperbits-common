@@ -1,4 +1,4 @@
-﻿import { Bag } from "../";
+﻿import { Bag } from "..";
 
 /**
  * ContentItem metadata.

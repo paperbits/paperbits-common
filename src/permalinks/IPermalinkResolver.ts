@@ -1,7 +1,7 @@
 import { Contract } from "..";
 import { HyperlinkContract } from "../editing/hyperlinkContract";
 import { HyperlinkModel } from "./hyperlinkModel";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 
 export interface IPermalinkResolver {
     /**

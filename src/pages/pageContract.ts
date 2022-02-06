@@ -1,5 +1,5 @@
 ﻿import { PageMetadata } from "./pageMetadata";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 
 /**
  * Page metadata.

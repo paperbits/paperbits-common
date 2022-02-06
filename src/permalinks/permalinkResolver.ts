@@ -2,7 +2,7 @@ import { IPermalinkResolver } from "./";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 import { Contract } from "..";
-import { ContentItemContract } from "../contentItems";
+import { ContentItemContract } from "../contentModel";
 
 export class PermalinkResolver implements IPermalinkResolver {
     constructor(private readonly permalinkResolvers: IPermalinkResolver[]) { }
