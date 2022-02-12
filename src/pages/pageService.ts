@@ -160,7 +160,10 @@ export class PageService implements IPageService {
             const localizedPageContract = await this.objectStorage.getObject<PageLocalizedContract>(page.key);
 
             if (localizedPageContract.locales) {
-                const contentKeys = Object.values(localizedPageContract.locales).map(x => x.contentKey);
+                const contentKeys = Object
+                    .values(localizedPageContract.locales)
+                    .map(locale => locale.contentKey)
+                    .filter(locale => !!locale);
 
                 for (const contentKey of contentKeys) {
                     await this.objectStorage.deleteObject(contentKey);
