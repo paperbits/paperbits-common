@@ -443,4 +443,56 @@ describe("Layout service", async () => {
         assert.isTrue(layoutContracts.value.length === 1, "Must return only 1 layout.");
         assert.isTrue(layoutContracts.value[0].title === "Блог", "Layout metadata is in invalid locale.");
     });
+
+    it("Correctly duplicates layout with locales.", async () => {
+        const initialData = {
+            layouts: {
+                layout1: {
+                    key: "layouts/layout1",
+                    locales: {
+                        "en-us": {
+                            title: "Blog",
+                            permalinkTemplate: "/blog",
+                            contentKey: "files/en-us-content",
+                        },
+                        "ru-ru": {
+                            title: "Блог",
+                            permalinkTemplate: "/ru-ru/blog",
+                            contentKey: "files/ru-ru-content",
+                        }
+                    }
+                }
+            },
+            files: {
+                "en-us-content": {
+                    key: "files/en-us-content",
+                    type: "en-us-content"
+                },
+                "ru-ru-content": {
+                    key: "files/ru-ru-content",
+                    type: "ru-ru-content"
+                }
+            }
+        };
+
+        const objectStorage = new MockObjectStorage(initialData);
+        const localeService = new MockLocaleService();
+        localeService.setCurrentLocale("en-us");
+
+        const layoutService = new LayoutService(objectStorage, localeService);
+        await layoutService.copyLayout("layouts/layout1");
+
+        const copiedLayoutsEnUs = await layoutService.search(Query.from<LayoutContract>().where("title", Operator.contains, "copy"), "en-us");
+        const copiedLayoutEnUs = copiedLayoutsEnUs.value[0];
+
+        expect(copiedLayoutEnUs.key).not.equals("layouts/layout1", "Key of the copied layout should not match the key of original layout.");
+        expect(copiedLayoutEnUs.contentKey).not.equals("en-us-content");
+        expect(copiedLayoutEnUs.title).equals("Blog (copy)");
+
+        const copiedLayoutsRuRu = await layoutService.search(Query.from<LayoutContract>().where("title", Operator.contains, "copy"), "ru-ru");
+        const copiedLayoutRuRu = copiedLayoutsRuRu.value[0];
+
+        expect(copiedLayoutRuRu.contentKey).not.equals("ru-ru-content");
+        expect(copiedLayoutRuRu.title).equals("Блог (copy)");
+    });
 });

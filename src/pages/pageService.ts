@@ -1,4 +1,5 @@
 ﻿import * as Utils from "../utils";
+import * as Objects from "../objects";
 import * as Constants from "../constants";
 import { PageContract, PageMetadata, PageLocalizedContract, IPageService } from ".";
 import { IObjectStorage, Operator, Query, Page } from "../persistence";
@@ -39,6 +40,21 @@ export class PageService implements IPageService {
         targetMetadata.socialShareData = sourceMetadata.socialShareData;
 
         return targetMetadata;
+    }
+
+    private syncLocalePermalinks(defaultLocaleCode: string, page: PageLocalizedContract): void {
+        const defaultLocale = page.locales[defaultLocaleCode];
+
+        if (!defaultLocale) {
+            throw new Error(`Page contract doesn't contain the default locale.`);
+        }
+
+        Object.keys(page.locales).forEach(locale => {
+            if (locale === defaultLocaleCode) {
+                return; // skipping update for default locale
+            }
+            page.locales[locale].permalink = defaultLocale.permalink;
+        });
     }
 
     private localizedContractToContract(defaultLocale: string, currentLocale: string, requestedLocale: string, localizedPageContract: PageLocalizedContract): PageContract {
@@ -215,46 +231,45 @@ export class PageService implements IPageService {
     }
 
     public async copyPage(key: string): Promise<PageContract> {
-        const originalPage = await this.getPageByKey(key);
-        const originalPageContent = await this.getPageContent(key);
-
-        const locale = await this.localeService.getDefaultLocaleCode();
+        const originalPage = await this.objectStorage.getObject<PageLocalizedContract>(key);
         const identifier = Utils.guid();
-        const pageKey = `${this.pagesPath}/${identifier}`;
-        const contentKey = `${documentsPath}/${identifier}`;
-        const permalink = `${originalPage.permalink}_copy`;
-        const title = `${originalPage.title} copy`;
-        const description = originalPage.description;
-        const keywords = originalPage.keywords;
+        const targetKey = `${this.pagesPath}/${identifier}`;
 
-        const localizedPage: PageLocalizedContract = {
-            key: pageKey,
-            locales: {
-                [locale]: {
-                    title: title,
-                    description: description,
-                    keywords: keywords,
-                    permalink: permalink,
-                    contentKey: contentKey
-                }
-            }
+        const targetPage: PageLocalizedContract = {
+            key: targetKey,
+            locales: {}
         };
 
-        await this.objectStorage.addObject<PageLocalizedContract>(pageKey, localizedPage);
+        const sourceLocales = Object.keys(originalPage.locales);
 
-        originalPageContent["key"] = contentKey; // rewriting own key
-        await this.objectStorage.addObject<Contract>(contentKey, originalPageContent);
+        for (const locale of sourceLocales) {
+            const sourceMetadata = originalPage.locales[locale];
+            const sourceContentKey = sourceMetadata.contentKey;
+            const sourcePageContent = await this.objectStorage.getObject<Contract>(sourceContentKey);
 
-        const pageContent: PageContract = {
-            key: pageKey,
-            title: title,
-            description: description,
-            keywords: keywords,
-            permalink: permalink,
-            contentKey: contentKey
-        };
+            const targetIdentifier = Utils.guid();
+            const targetContentKey = `${documentsPath}/${targetIdentifier}`;
 
-        return pageContent;
+            const targetMetadata: PageMetadata = {
+                title: sourceMetadata.title + " (copy)",
+                description: sourceMetadata.description,
+                keywords: sourceMetadata.keywords,
+                contentKey: targetContentKey,
+                permalink: sourceMetadata.permalink + "-copy",
+                jsonLd: sourceMetadata.jsonLd,
+                socialShareData: sourceMetadata.socialShareData
+            };
+
+            targetPage.locales[locale] = targetMetadata;
+            const targetPageContent = Objects.clone<Contract>(sourcePageContent);
+            targetPageContent["key"] = targetContentKey;
+
+            await this.objectStorage.addObject<Contract>(targetContentKey, targetPageContent);
+        }
+
+        await this.objectStorage.addObject<PageLocalizedContract>(targetKey, targetPage);
+
+        return this.getPageByKey(targetKey);
     }
 
     public async updatePage(page: PageContract, requestedLocale?: string): Promise<void> {
@@ -275,6 +290,9 @@ export class PageService implements IPageService {
         const existingLocaleMetadata = pageContract.locales[requestedLocale] || <PageMetadata>{};
 
         pageContract.locales[requestedLocale] = this.copyMetadata(page, existingLocaleMetadata);
+
+        const defaultLocale = await this.localeService.getDefaultLocaleCode();
+        this.syncLocalePermalinks(defaultLocale, pageContract);
 
         await this.objectStorage.updateObject<PageLocalizedContract>(page.key, pageContract);
     }

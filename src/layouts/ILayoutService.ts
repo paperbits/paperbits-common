@@ -59,4 +59,10 @@ export interface ILayoutService {
      * @param document {Contract} Contract describing content of the layout.
      */
     updateLayoutContent(key: string, document: Contract, locale?: string): Promise<void>;
+
+    /**
+     * Makes a copy of specified layout.
+     * @param key {string} Key of the original layout.
+     */
+    copyLayout(key: string): Promise<LayoutContract>;
 }

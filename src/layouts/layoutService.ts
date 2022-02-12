@@ -1,4 +1,5 @@
 ﻿import * as _ from "lodash";
+import * as Objects from "../objects";
 import * as Utils from "../utils";
 import * as Constants from "../constants";
 import { LayoutContract } from "../layouts/layoutContract";
@@ -9,6 +10,17 @@ import { layoutTemplate } from "./layoutTemplate";
 import { ILocaleService } from "../localization";
 
 const documentsPath = "files";
+
+export interface PermalinkMatchToken {
+    index: number;
+    name: string;
+    value?: string;
+}
+
+export interface PermalinkMatchResult {
+    match: boolean;
+    tokens: PermalinkMatchToken[];
+}
 
 export class LayoutService implements ILayoutService {
     protected layoutsPath: string = "layouts";
@@ -107,7 +119,7 @@ export class LayoutService implements ILayoutService {
 
         }
         catch (error) {
-            throw new Error(`Unable to search pages: ${error.stack || error.message}`);
+            throw new Error(`Unable to search layouts: ${error.stack || error.message}`);
         }
     }
 
@@ -242,7 +254,16 @@ export class LayoutService implements ILayoutService {
         return result.sort(compare).map(x => x.pattern);
     }
 
-    private matchPermalink(permalink: string, template: string, locale?: string): any {
+    private matchPermalink(permalink: string, template: string, locale?: string): PermalinkMatchResult {
+        if (!template) {
+            console.warn(`A layout with empty permalink template will be skipped.`);
+
+            return {
+                match: false,
+                tokens: []
+            };
+        }
+
         if (locale) {
             const localePrefix = `/${locale}/`;
 
@@ -251,8 +272,7 @@ export class LayoutService implements ILayoutService {
             }
         }
 
-        const tokens: { index: number, name: string, value?: string }[] = [];
-
+        const tokens: PermalinkMatchToken[] = [];
         const permalinkSegments: string[] = permalink.split("/");
         const templateSegments: string[] = template.split("/");
 
@@ -315,7 +335,8 @@ export class LayoutService implements ILayoutService {
 
         if (layouts && layouts.length) {
             let permalinkTemplates = layouts
-                .map(x => x.locales[defaultLocale]?.permalinkTemplate); // We use permalinkTemplate from default locale only (for now).
+                .map(x => x.locales[defaultLocale]?.permalinkTemplate) // We use permalinkTemplate from default locale only (for now).
+                .filter(permalinkTemplate => !!permalinkTemplate);
 
             permalinkTemplates = this.sort(permalinkTemplates);
 
@@ -410,5 +431,44 @@ export class LayoutService implements ILayoutService {
         }
 
         await this.objectStorage.updateObject(layoutMetadata.contentKey, content);
+    }
+
+    public async copyLayout(key: string): Promise<LayoutContract> {
+        const originalLayout = await this.objectStorage.getObject<LayoutLocalizedContract>(key);
+        const identifier = Utils.guid();
+        const targetKey = `${this.layoutsPath}/${identifier}`;
+
+        const targetLayout: LayoutLocalizedContract = {
+            key: targetKey,
+            locales: {}
+        };
+
+        const sourceLocales = Object.keys(originalLayout.locales);
+
+        for (const locale of sourceLocales) {
+            const sourceMetadata = originalLayout.locales[locale];
+            const sourceContentKey = sourceMetadata.contentKey;
+            const sourceLayoutContent = await this.objectStorage.getObject<Contract>(sourceContentKey);
+
+            const targetIdentifier = Utils.guid();
+            const targetContentKey = `${documentsPath}/${targetIdentifier}`;
+
+            const targetMetadata: LayoutMetadata = {
+                title: sourceMetadata.title + " (copy)",
+                description: sourceMetadata.description,
+                contentKey: targetContentKey,
+                permalinkTemplate: null
+            };
+
+            targetLayout.locales[locale] = targetMetadata;
+            const targetLayoutContent = Objects.clone<Contract>(sourceLayoutContent);
+            targetLayoutContent["key"] = targetContentKey;
+
+            await this.objectStorage.addObject<Contract>(targetContentKey, targetLayoutContent);
+        }
+
+        await this.objectStorage.addObject<LayoutLocalizedContract>(targetKey, targetLayout);
+
+        return this.getLayoutByKey(targetKey);
     }
 }

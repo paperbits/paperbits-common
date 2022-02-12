@@ -1,10 +1,12 @@
+import * as Objects from "../src/objects";
 import { assert, expect } from "chai";
-import { PageService, PageContract } from "../src/pages";
+import { PageService, PageContract, PageMetadata, PageLocalizedContract } from "../src/pages";
 import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockBlockService } from "./mocks/mockBlockService";
 import { MockLocaleService } from "./mocks/mockLocaleService";
 import { Contract } from "../src";
-import { Operator, Query } from "../src/persistence";
+import { Operator, Page, Query } from "../src/persistence";
+
 
 describe("Page service", async () => {
     it("Can create page metadata in specified locale when metadata doesn't exists.", async () => {
@@ -141,12 +143,27 @@ describe("Page service", async () => {
                 page1: {
                     key: "pages/page1",
                     locales: {
+                        "en-us": {
+                            title: "About",
+                            permalink: "/about",
+                            contentKey: "files/en-us-content",
+                        },
                         "ru-ru": {
                             title: "О нас",
                             permalink: "/ru-ru/about",
-                            contentKey: "files/ru-ru-content"
+                            contentKey: "files/ru-ru-content",
                         }
                     }
+                }
+            },
+            files: {
+                "en-us-content": {
+                    key: "files/en-us-content",
+                    type: "en-us-content"
+                },
+                "ru-ru-content": {
+                    key: "files/ru-ru-content",
+                    type: "ru-ru-content"
                 }
             }
         };
@@ -433,5 +450,106 @@ describe("Page service", async () => {
         const pageOfSearchResults = await localizedService.search(query, "ru-ru");
         assert.isTrue(pageOfSearchResults.value.length === 1, "Must return only 1 page.");
         assert.isTrue(pageOfSearchResults.value[0].title === "О нас", "Page metadata is in invalid locale.");
+
+    });
+
+    it("Syncs permalinks in locales with default locale.", async () => {
+        const initialData = {
+            pages: {
+                page1: {
+                    key: "pages/page1",
+                    locales: {
+                        "en-us": {
+                            title: "About",
+                            permalink: "/about"
+                        },
+                        "ru-ru": {
+                            title: "О нас",
+                            permalink: "/ru-ru/about"
+                        }
+                    }
+                }
+            }
+        };
+
+        const objectStorage = new MockObjectStorage(initialData);
+        const blockService = new MockBlockService();
+        const localeService = new MockLocaleService();
+        localeService.setCurrentLocale("en-us");
+
+        const pageService = new PageService(objectStorage, blockService, localeService);
+
+        const pageContract: PageContract = {
+            key: "pages/page1",
+            title: "About",
+            permalink: "/updates-about-permalink"
+        };
+
+        await pageService.updatePage(pageContract);
+
+        const resultStorageState = objectStorage.getData();
+        const metadataEnUs = Objects.getObjectAt<PageMetadata>("pages/page1/locales/en-us", resultStorageState);
+        const metadataRuRu = Objects.getObjectAt<PageMetadata>("pages/page1/locales/ru-ru", resultStorageState);
+
+        expect(metadataEnUs.permalink).equals("/updates-about-permalink");
+        expect(metadataRuRu.permalink).equals("ru-ru/updates-about-permalink");
+    });
+
+    it("Correctly duplicates page with locales.", async () => {
+        const initialData = {
+            pages: {
+                page1: {
+                    key: "pages/page1",
+                    locales: {
+                        "en-us": {
+                            title: "About",
+                            permalink: "/about",
+                            contentKey: "files/en-us-content",
+                        },
+                        "ru-ru": {
+                            title: "О нас",
+                            permalink: "/ru-ru/about",
+                            contentKey: "files/ru-ru-content",
+                        }
+                    }
+                }
+            },
+            files: {
+                "en-us-content": {
+                    key: "files/en-us-content",
+                    type: "en-us-content"
+                },
+                "ru-ru-content": {
+                    key: "files/ru-ru-content",
+                    type: "ru-ru-content"
+                }
+            }
+        };
+
+        const objectStorage = new MockObjectStorage(initialData);
+        const blockService = new MockBlockService();
+        const localeService = new MockLocaleService();
+        localeService.setCurrentLocale("en-us");
+
+        const pageService = new PageService(objectStorage, blockService, localeService);
+        await pageService.copyPage("pages/page1");
+
+        const resultStorageState = objectStorage.getData();
+        console.log(JSON.stringify(resultStorageState, null, 4));
+
+        const copiedPagesEnUs = await pageService.search(Query.from<PageContract>().where("title", Operator.contains, "copy"), "en-us");
+        const copiedPageEnUs = copiedPagesEnUs.value[0];
+
+        expect(copiedPageEnUs.key).not.equals("pages/page1", "Key of the copied page should not match the key of original page.");
+        expect(copiedPageEnUs.contentKey).not.equals("en-us-content");
+        expect(copiedPageEnUs.permalink).equals("/about-copy");
+        expect(copiedPageEnUs.title).equals("About (copy)");
+
+        const copiedPagesRuRu = await pageService.search(Query.from<PageContract>().where("title", Operator.contains, "copy"), "ru-ru");
+        const copiedPageRuRu = copiedPagesRuRu.value[0];
+
+        expect(copiedPageRuRu.contentKey).not.equals("ru-ru-content");
+        expect(copiedPageRuRu.permalink).equals("/ru-ru/about-copy");
+        expect(copiedPageRuRu.title).equals("О нас (copy)");
     });
 });
