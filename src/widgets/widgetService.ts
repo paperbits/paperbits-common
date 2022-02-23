@@ -26,4 +26,12 @@ export class WidgetService implements IWidgetService {
     public getWidgetHandler(type: any): IWidgetHandler {
         return this.widgetHandlers.find(x => x instanceof type);
     }
+
+    public registerWidgetHandler(handler: IWidgetHandler): void {
+        if (!handler) {
+            throw new Error(`Parameter "handler" not specified.`);
+        }
+
+        this.widgetHandlers.push(handler);
+    }
 }
