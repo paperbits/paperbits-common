@@ -35,6 +35,8 @@ export class GridHelper {
         }
 
         const gridItem: GridItem = {
+            name: widgetBinding.name,
+            displayName: widgetBinding.displayName,
             element: element,
             binding: widgetBinding,
             getParent: () => GridHelper.getParentGridItem(gridItem),
@@ -47,6 +49,10 @@ export class GridHelper {
         return gridItem;
     }
 
+    /**
+     * Returns stack of grid items and its acestors.
+     * @param element Starting element.
+     */
     public static getWidgetStack(element: HTMLElement): GridItem[] {
         const elements = this.getSelfAndParentElements(element);
         let lastAdded = null;
