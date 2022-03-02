@@ -1,21 +1,32 @@
+import { PluginBag } from "./pluginBagContract";
+import { Bag } from "../bag";
+
+/**
+ * Style definition serves as a template for creating managed style structure.
+ */
 export interface StyleDefinition {
     /**
-     * e.g. `Button`.
+     * Style display name, e.g. `Button`.
      */
     displayName: string;
 
     /**
-     * e.g. `hove`, `active`.
+     * e.g. `hover`, `active`.
      */
-    states: string[];
+    states?: string[];
 
     /**
-     * 
+     * Child component style definitions.
      */
-    components: StyleDefinition;
+    components?: Bag<StyleDefinition>;
 
     /**
-     * e.g. `margin`, `padding`.
+     * Plugins the Style editor allowed to use, e.g. `margin`, `padding`.
      */
     plugins: string[];
+
+    /**
+     * Default styles.
+     */
+    defaults?: PluginBag;
 }
