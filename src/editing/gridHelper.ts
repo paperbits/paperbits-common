@@ -31,6 +31,21 @@ export class GridHelper {
         return bindings;
     }
 
+    public static getParentWidgetBindings(element: HTMLElement): IWidgetBinding<any, any>[] {
+        const bindings = [];
+        const parentViewModels = GridHelper.getParentViewModels(element);
+
+        parentViewModels.forEach(x => {
+            const binding = x["widgetBinding"];
+
+            if (binding) {
+                bindings.push(binding);
+            }
+        });
+
+        return bindings;
+    }
+
     private static getParentViewModels(element: HTMLElement): any[] {
         const context = ko.contextFor(element);
 

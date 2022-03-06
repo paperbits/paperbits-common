@@ -40,6 +40,17 @@ export function findFirst(node: Node, predicate: (node: Node) => boolean): Node 
     return null;
 }
 
+export function selfAndParents(element: HTMLElement): HTMLElement[] {
+    const stack = [];
+
+    while (element) {
+        stack.push(element);
+        element = element.parentElement;
+    }
+
+    return stack;
+}
+
 export enum AriaAttributes {
     /**
      * Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed.
