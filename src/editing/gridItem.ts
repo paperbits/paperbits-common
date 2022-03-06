@@ -1,5 +1,5 @@
 import { IWidgetBinding } from ".";
-import { IContextCommandSet } from "../ui";
+import { IContextCommand, IContextCommandSet } from "../ui";
 
 export interface GridItem {
     name?: string;
@@ -11,5 +11,6 @@ export interface GridItem {
     getChildren?(): GridItem[];
     getNextSibling?: () => GridItem;
     getPrevSibling?: () => GridItem;
-    getContextCommands?: (half: string) => IContextCommandSet;
+    getContextCommands?: (half?: string) => IContextCommandSet;
+    isStylable?: boolean;
 }

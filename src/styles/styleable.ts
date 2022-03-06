@@ -1,7 +1,8 @@
 import { PrimitiveContract } from ".";
 
 export interface Styleable {
-    style: PrimitiveContract;
+    key?: string;
+    style?: PrimitiveContract;
     toggleBackground?: () => void;
     applyChanges?: () => void;
 }
