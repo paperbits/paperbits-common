@@ -3,10 +3,7 @@ import { IWidgetHandler } from "../editing/IWidgetHandler";
 import { IWidgetOrder } from "../editing/IWidgetOrder";
 
 export class WidgetService implements IWidgetService {
-    constructor(private readonly widgetHandlers: IWidgetHandler[]) {
-        // rebinding...
-        this.getWidgetOrders = this.getWidgetOrders.bind(this);
-    }
+    constructor(private readonly widgetHandlers: IWidgetHandler[]) { }
 
     public async getWidgetOrders(): Promise<IWidgetOrder[]> {
         const widgetOrders = new Array<IWidgetOrder>();
@@ -24,6 +21,10 @@ export class WidgetService implements IWidgetService {
     }
 
     public getWidgetHandler(type: any): IWidgetHandler {
+        if (!type) {
+            throw new Error(`Parameter "type" not specified.`);
+        }
+
         return this.widgetHandlers.find(x => x instanceof type);
     }
 

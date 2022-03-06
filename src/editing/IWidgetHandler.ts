@@ -1,4 +1,6 @@
-﻿import { IWidgetOrder, WidgetContext } from "../editing";
+﻿import { Bag } from "../bag";
+import { IWidgetOrder, WidgetContext } from "../editing";
+import { StyleDefinition } from "../styles";
 import { IContextCommandSet } from "../ui";
 import { DragSession } from "../ui/draggables";
 
@@ -14,4 +16,5 @@ export interface IWidgetHandler {
     canAccept?(dragSession: DragSession): boolean;
     onDragOver?(dragSession: DragSession): void;
     onDragDrop?(dragSession: DragSession): void;
+    getStyleDefinitions?(): Bag<StyleDefinition>;
 }

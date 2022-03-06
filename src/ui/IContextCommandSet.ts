@@ -6,6 +6,7 @@ export interface IContextCommandSet {
     hoverCommands?: IContextCommand[];
     selectCommands?: IContextCommand[];
     deleteCommand?: IContextCommand;
+    defaultCommand?: IContextCommand;
 }
 
 export interface IContextCommand {

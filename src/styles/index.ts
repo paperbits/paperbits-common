@@ -19,3 +19,4 @@ export * from "./primitiveContract";
 export * from "./componentBagContract";
 export * from "./localStyles";
 export * from "./stateBagContract";
+export * from "./styleDefinition";
