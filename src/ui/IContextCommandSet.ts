@@ -11,6 +11,7 @@ export interface IContextCommandSet {
 
 export interface IContextCommand {
     name?: string;
+    displayName?: string;
     callback?: () => void;
     component?: IComponent;
     tooltip?: string;
