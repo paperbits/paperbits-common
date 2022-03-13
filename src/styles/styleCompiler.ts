@@ -31,7 +31,7 @@ export interface StyleCompiler {
      * Converts style contract into style model.
      * @param contract {VariationContract} Style contract.
      */
-    getStyleModelAsync(contract: LocalStyles, styleManager?: StyleManager): Promise<StyleModel>;
+    getStyleModelAsync(contract: LocalStyles, styleManager?: StyleManager, widgetHandlerClass?: any): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
@@ -66,4 +66,6 @@ export interface StyleCompiler {
     setStyles(styles: any): void;
 
     getIconFontStylesCss(): Promise<string>;
+
+    backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void;
 }
