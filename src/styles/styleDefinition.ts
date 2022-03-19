@@ -59,7 +59,10 @@ export interface ComponentStyleDefinition {
      */
     defaults?: LocalStyles;
 
-    baseStyleKey?: string;
+    /**
+     * Key of a global component style to use a base, i.e. `components/button`.
+     */
+    baseComponentKey?: string;
 }
 
 
