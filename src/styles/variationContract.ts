@@ -11,7 +11,7 @@ export interface VariationContract extends PluginBag {
     /**
      * Style display name.
      */
-    displayName: string;
+    displayName?: string;
 
     /**
      * Style category, e.g. "appearance".
