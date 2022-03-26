@@ -18,6 +18,7 @@ export interface IContextCommand {
     position?: string;
     iconClass?: string;
     color?: string;
+    controlType?: string;
 
     /**
      * Temporary hack for keeping selected element.

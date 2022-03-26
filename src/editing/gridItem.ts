@@ -13,4 +13,5 @@ export interface GridItem {
     getPrevSibling?: () => GridItem;
     getContextCommands?: (half?: string) => IContextCommandSet;
     isStylable?: boolean;
+    select(scrollIntoView?: boolean): void;
 }

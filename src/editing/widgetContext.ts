@@ -1,4 +1,5 @@
 import { WidgetModel } from "../widgets";
+import { GridItem } from "./gridItem";
 import { IWidgetBinding } from "./IWidgetBinding";
 
 
@@ -40,4 +41,9 @@ export interface WidgetContext {
      * Switches widget selection to parent widget.
      */
     switchToParent: () => void;
+
+    /**
+     * Associated grid item.
+     */
+    gridItem: GridItem;
 }
