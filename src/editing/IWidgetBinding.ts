@@ -28,6 +28,11 @@ export interface IWidgetBinding<TModel, TViewModel> {
     editorResize?: string;
 
     /**
+     * Indicates that scroll is required on overflow. Default: `true`.
+     */
+    editorScroll?: boolean;
+
+    /**
      * Propagates changes from widget model to widget view model.
      */
     applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;

@@ -42,4 +42,9 @@ export interface View {
      * @param element {HTMLElement} HTML element being checked.
      */
     hitTest?(element: HTMLElement): boolean;
+
+    /**
+     * Indicates that scroll is required on overflow. Default: `true`.
+     */
+    scrollable?: boolean;
 }
