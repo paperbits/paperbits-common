@@ -14,3 +14,4 @@ export * from "./ICommand";
 export * from "./quadrant";
 export * from "./toast";
 export * from "./activeElement";
+export * from "./icons";
