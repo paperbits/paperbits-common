@@ -63,6 +63,11 @@ export interface ComponentStyleDefinition {
      * Key of a global component style to use a base, i.e. `components/button`.
      */
     baseComponentKey?: string;
+
+    /**
+     * CSS class name, e.g. `button-primary`.
+     */
+    className?: string;
 }
 
 
