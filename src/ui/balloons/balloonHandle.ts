@@ -1,3 +1,6 @@
+import { BalloonActivationMethod } from "./balloonActivationOptions";
+import { BalloonState } from "./balloonState";
+
 export interface BalloonHandle {
     /**
      * Opens the balloon.
@@ -19,4 +22,8 @@ export interface BalloonHandle {
      * Triggers the balloon position recalculation.
      */
     updatePosition: () => void;
+
+    activateOn: BalloonActivationMethod;
+
+    balloonState: BalloonState;
 }
