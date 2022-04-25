@@ -133,4 +133,14 @@ export class BlockService implements IBlockService {
         const content = await this.objectStorage.getObject(storedBlock.contentKey);
         return Objects.clone(content);
     }
+
+    public async importSnippet(key: string, snippet: Object): Promise<void> {
+        const existingSnippet = await this.objectStorage.getObject(key);
+
+        if (existingSnippet) {
+            console.info(`Snippet ${key} already imported.`);
+        }
+        
+        await this.objectStorage.addObject(key, snippet);
+    }
 }

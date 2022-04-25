@@ -42,4 +42,6 @@ export interface IBlockService {
      * @param blockKey {string} Block key.
      */
     getBlockContent?(blockKey: string): Promise<Contract>;
+
+    importSnippet?(key: string, snippet: Object): Promise<void>;
 }

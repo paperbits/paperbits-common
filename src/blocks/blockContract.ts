@@ -28,4 +28,9 @@ export interface BlockContract extends Contract {
      * Category of the block, e.g. Footers, Pricing, etc.
      */
     category?: string;
+
+    /**
+     * A collection of keys for dependencies required to be imported for this block.
+     */
+    imports?: string[];
 }
