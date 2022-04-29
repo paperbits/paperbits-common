@@ -1,4 +1,5 @@
-﻿import { Quadrant } from "./ui";
+﻿import * as h2p from "html2plaintext";
+import { Quadrant } from "./ui";
 import { Breakpoints } from ".";
 import { Query } from "./persistence";
 
@@ -373,4 +374,9 @@ export function ensureTrailingSlash(url: string = ""): string {
 
 export function isNumber(candidate: unknown): boolean {
     return !isNaN(<number>candidate);
-}   
+}
+
+export function stripHtml(html: string): string {
+    html = html.replaceAll("</h1>", "</h1>.");
+    return h2p(html);
+}

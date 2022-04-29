@@ -1,5 +1,5 @@
 import * as lunr from "lunr";
-import * as h2p from "html2plaintext";
+import { stripHtml } from "../utils";
 import { SearchableDocument } from "./searchableDocument";
 
 export class SearchIndexBuilder {
@@ -26,7 +26,7 @@ export class SearchIndexBuilder {
 
     public appendHtml(permalink: string, title: string, description: string, html: string): void {
         try {
-            this.append(permalink, title, description, h2p(html));
+            this.append(permalink, title, description, stripHtml(html));
         }
         catch (error) {
             throw new Error(`Unable to index content for ${permalink}: ${error.stack || error.message}`);
