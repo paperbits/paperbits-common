@@ -1,4 +1,4 @@
-import { BalloonActivationOptions } from "./balloonActivationOptions";
+import { BalloonActivationMethod } from "./balloonActivationMethod";
 import { BalloonHandle } from "./balloonHandle";
 import { IComponent, ITemplate } from "..";
 
@@ -52,7 +52,7 @@ export interface BalloonOptions {
     /**
      * Event that triggers balloon opening.
      */
-    activateOn: BalloonActivationOptions;
+    activateOn: BalloonActivationMethod;
 
     /**
      * Function that checks if balloon is disabled.
