@@ -1,4 +1,4 @@
-import { BalloonActivationMethod } from "./balloonActivationOptions";
+import { BalloonActivationMethod } from "./balloonActivationMethod";
 import { BalloonHandle } from "./balloonHandle";
 import { IComponent, ITemplate } from "..";
 

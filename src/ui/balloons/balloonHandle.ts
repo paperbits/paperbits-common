@@ -1,4 +1,4 @@
-import { BalloonActivationMethod } from "./balloonActivationOptions";
+import { BalloonActivationMethod } from "./balloonActivationMethod";
 import { BalloonState } from "./balloonState";
 
 export interface BalloonHandle {
