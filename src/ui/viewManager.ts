@@ -250,6 +250,11 @@ export interface ViewManager {
     getDesignerDocument(): Document;
 
     /**
+     * Returns currently active layer name, e.g. `page` or `layout`.
+     */
+    getActiveLayer(): string;
+
+    /**
      * Temporarily disables contextual commands.
      */
     pauseContextualCommands(): void;
