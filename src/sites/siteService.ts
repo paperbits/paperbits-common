@@ -1,5 +1,7 @@
-﻿import { IObjectStorage } from "../persistence";
+﻿import * as Objects from "../objects";
+import { IObjectStorage } from "../persistence";
 import { ISiteService } from "../sites";
+
 
 const settingsPath = "settings";
 
@@ -16,6 +18,19 @@ export class SiteService implements ISiteService {
             throw new Error(`Parameter "settings" not specified.`);
         }
 
+        await this.objectStorage.updateObject(`${settingsPath}`, settings);
+    }
+
+    public async getSetting<T>(key: string): Promise<T> {
+        const settings = await this.objectStorage.getObject<Object>(settingsPath);
+        const setting = Objects.getObjectAt<T>(key, settings);
+
+        return setting;
+    }
+
+    public async setSetting<T>(key: string, setting: T): Promise<void> {
+        const settings = await this.objectStorage.getObject<Object>(settingsPath);
+        Objects.setValue(key, settings, setting);
         await this.objectStorage.updateObject(`${settingsPath}`, settings);
     }
 }

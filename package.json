@@ -15,6 +15,7 @@
         "url": "https://github.com/paperbits/paperbits-common/issues"
     },
     "dependencies": {
+        "@googlemaps/js-api-loader": "^1.13.2",
         "html-minifier-terser": "^5.1.1",
         "html2plaintext": "^2.1.2",
         "inversify": "^5.0.1",

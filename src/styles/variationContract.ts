@@ -19,7 +19,7 @@ export interface VariationContract extends PluginBag {
     category?: string;
 
     /**
-     * @deprecated. Allowed states, i.e. ["hover", "active"].
+     * Allowed states, i.e. ["hover", "active"].
      */
     allowedStates?: string[];
 
