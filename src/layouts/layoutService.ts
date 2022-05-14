@@ -8,6 +8,7 @@ import { ILayoutService, LayoutMetadata, LayoutLocalizedContract } from "./";
 import { Contract } from "..";
 import { layoutTemplate } from "./layoutTemplate";
 import { ILocaleService } from "../localization";
+import { Logger } from "../logging";
 
 const documentsPath = "files";
 
@@ -27,7 +28,8 @@ export class LayoutService implements ILayoutService {
 
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly localeService: ILocaleService
+        private readonly localeService: ILocaleService,
+        private readonly logger: Logger
     ) { }
 
     /**
@@ -139,6 +141,8 @@ export class LayoutService implements ILayoutService {
         }
 
         await this.objectStorage.deleteObject(layout.key);
+
+        this.logger.trackEvent("LayoutDeleted", { key: layout.key });
     }
 
     public async createLayout(title: string, description: string, permalinkTemplate: string): Promise<LayoutContract> {
@@ -161,6 +165,8 @@ export class LayoutService implements ILayoutService {
 
         await this.objectStorage.addObject<LayoutLocalizedContract>(layoutKey, localizedLayout);
         await this.objectStorage.addObject<Contract>(contentKey, layoutTemplate);
+
+        this.logger.trackEvent("LayoutAdded", { key: layoutKey, contentKey: contentKey });
 
         const layoutContent: LayoutContract = {
             key: layoutKey,
@@ -465,6 +471,8 @@ export class LayoutService implements ILayoutService {
             targetLayoutContent["key"] = targetContentKey;
 
             await this.objectStorage.addObject<Contract>(targetContentKey, targetLayoutContent);
+
+            this.logger.trackEvent("LayoutCopied", { key: targetKey, sourceLayoutKey: key });
         }
 
         await this.objectStorage.addObject<LayoutLocalizedContract>(targetKey, targetLayout);

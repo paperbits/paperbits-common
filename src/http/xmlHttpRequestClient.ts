@@ -2,11 +2,10 @@
 import { HttpHeader } from "./httpHeader";
 import { HttpClient, HttpRequest } from "../http";
 import { HttpResponse } from "./httpResponse";
-import { Logger } from "../logging";
 
 
 export class XmlHttpRequestClient implements HttpClient {
-    constructor(private readonly logger: Logger) {
+    constructor() {
         this.send = this.send.bind(this);
     }
 
@@ -64,10 +63,10 @@ export class XmlHttpRequestClient implements HttpClient {
                 }
 
                 if (xhr.status === 0) {
-                    this.logger.trackEvent("HttpRequest", {
-                        method: request.method,
-                        url: request.url
-                    });
+                    // this.logger.trackEvent("HttpRequest", {
+                    //     method: request.method,
+                    //     url: request.url
+                    // });
 
                     reject({
                         message: `Could not complete the request. Please try again later.`,
@@ -84,12 +83,12 @@ export class XmlHttpRequestClient implements HttpClient {
                 response.headers = this.parseHeaderString(xhr.getAllResponseHeaders());
                 response.body = new Uint8Array(xhr.response);
 
-                this.logger.trackEvent("HttpRequest", {
-                    requestMethod: request.method,
-                    requestUrl: request.url,
-                    responseStatus: response.statusCode?.toString(),
-                    responseStatusText: response.statusText
-                });
+                // this.logger.trackEvent("HttpRequest", {
+                //     requestMethod: request.method,
+                //     requestUrl: request.url,
+                //     responseStatus: response.statusCode?.toString(),
+                //     responseStatusText: response.statusText
+                // });
 
                 resolve(response);
             };

@@ -6,6 +6,7 @@ import { IObjectStorage, Operator, Query, Page } from "../persistence";
 import { IBlockService } from "../blocks";
 import { Contract } from "../contract";
 import { ILocaleService } from "../localization";
+import { Logger } from "../logging";
 
 const documentsPath = "files";
 const templateBlockKey = "blocks/new-page-template";
@@ -16,7 +17,8 @@ export class PageService implements IPageService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly blockService: IBlockService,
-        private readonly localeService: ILocaleService
+        private readonly localeService: ILocaleService,
+        private readonly logger: Logger
     ) {
     }
 
@@ -187,6 +189,8 @@ export class PageService implements IPageService {
             }
 
             await this.objectStorage.deleteObject(page.key);
+
+            this.logger.trackEvent("PageDeleted", { key: page.key });
         }
         catch (error) {
             throw new Error(`Unable to delete page ${page.title}: ${error.stack || error.message}`);
@@ -217,6 +221,8 @@ export class PageService implements IPageService {
         const template = await this.blockService.getBlockContent(templateBlockKey);
         template["key"] = contentKey; // rewriting own key
         await this.objectStorage.addObject<Contract>(contentKey, template);
+
+        this.logger.trackEvent("PageAdded", { key: pageKey, contentKey: contentKey });
 
         const pageContent: PageContract = {
             key: pageKey,
@@ -265,6 +271,8 @@ export class PageService implements IPageService {
             targetPageContent["key"] = targetContentKey;
 
             await this.objectStorage.addObject<Contract>(targetContentKey, targetPageContent);
+
+            this.logger.trackEvent("PageCopied", { key: targetKey, sourcePageKey: key });
         }
 
         await this.objectStorage.addObject<PageLocalizedContract>(targetKey, targetPage);
