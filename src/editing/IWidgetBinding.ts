@@ -38,9 +38,14 @@ export interface IWidgetBinding<TModel, TViewModel> {
     applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;
 
     /**
-     * Indicates whethere the widget should appear editable in the designer.
+     * Indicates whethere the widget should appear uneditable in the designer.
      */
-    readonly: boolean;
+    readonly?: boolean;
+
+    /**
+     * Name of the layer the widget resides in.
+     */
+    layer: string;
 
     /**
      * Determines how component flows on the page. Possible values: "inline" or "block".
@@ -55,7 +60,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Widget handler used by the designer.
      */
-    handler?: any;
+    handler: any;
 
     /**
      * Callback invoked when the widget view model gets created.

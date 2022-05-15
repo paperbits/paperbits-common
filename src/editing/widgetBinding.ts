@@ -35,9 +35,14 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public displayName: string;
 
     /**
-     * Indicates whethere the widget should appear editable in the designer.
+     * Indicates whethere the widget should appear uneditable in the designer.
      */
     public readonly: boolean;
+
+    /**
+     * Name of the layer the widget resides in.
+     */
+    public layer: string;
 
     /**
      * Indicates whether the widget can be moved in the designer.
@@ -48,6 +53,11 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      * Registration name (tag name) of editor component.
      */
     public editor: string;
+
+    /**
+     * Widget handler used by the designer.
+     */
+    public handler: any;
 
     /**
      * Determines how component flows on the page. Possible values: "inline" or "block".

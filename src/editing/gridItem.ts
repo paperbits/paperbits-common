@@ -14,6 +14,5 @@ export interface GridItem {
     getContextCommands?: (half?: string) => IContextCommandSet;
     isStylable?: boolean;
     select(scrollIntoView?: boolean): void;
-    readonly: boolean;
     editor: string;
 }
