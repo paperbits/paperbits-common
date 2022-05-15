@@ -56,6 +56,7 @@ export class Hinter {
                 title: "Edit layout",
                 iconClass: "paperbits-icon paperbits-edit-72",
                 action: async () => {
+                    this.viewManager.setActiveLayer("layout");
                     this.viewManager.setHost({ name: "layout-host", params: { layoutKey: layoutContract.key } }, true);
                     this.viewManager.removeToast(toast);
                 }
