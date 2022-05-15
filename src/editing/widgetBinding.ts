@@ -57,7 +57,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Widget handler used by the designer.
      */
-    public handler: any;
+    public handler?: any;
 
     /**
      * Determines how component flows on the page. Possible values: "inline" or "block".

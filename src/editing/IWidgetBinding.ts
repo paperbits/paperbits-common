@@ -60,7 +60,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Widget handler used by the designer.
      */
-    handler: any;
+    handler?: any;
 
     /**
      * Callback invoked when the widget view model gets created.
