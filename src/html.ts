@@ -47,7 +47,7 @@ export function parents(element: HTMLElement): HTMLElement[] {
         return stack.slice(1);
     }
 
-    return null;
+    return [];
 }
 
 export function selfAndParents(element: HTMLElement): HTMLElement[] {
