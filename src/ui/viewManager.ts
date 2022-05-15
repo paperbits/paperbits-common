@@ -255,6 +255,12 @@ export interface ViewManager {
     getActiveLayer(): string;
 
     /**
+     * Sets active layer.
+     * @param layerName {string} Name of the layer.
+     */
+    setActiveLayer(layerName: string): void;
+
+    /**
      * Temporarily disables contextual commands.
      */
     pauseContextualCommands(): void;

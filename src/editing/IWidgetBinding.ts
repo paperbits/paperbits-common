@@ -38,9 +38,14 @@ export interface IWidgetBinding<TModel, TViewModel> {
     applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;
 
     /**
-     * Indicates whethere the widget should appear editable in the designer.
+     * Indicates if the widget gets ignored by the designer.
      */
-    readonly: boolean;
+    readonly?: boolean;
+
+    /**
+     * Name of the layer the widget resides in.
+     */
+    layer: string;
 
     /**
      * Determines how component flows on the page. Possible values: "inline" or "block".
@@ -68,7 +73,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     onDispose?: () => void;
 
     /**
-     * Indicates whether the widget can be moved in the designer.
+     * Indicates if the widget can be moved in the designer.
      */
     draggable: boolean;
 }
