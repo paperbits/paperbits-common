@@ -40,6 +40,16 @@ export function findFirst(node: Node, predicate: (node: Node) => boolean): Node 
     return null;
 }
 
+export function parents(element: HTMLElement): HTMLElement[] {
+    const stack = selfAndParents(element);
+
+    if (stack.length > 1) {
+        return stack.slice(1);
+    }
+
+    return null;
+}
+
 export function selfAndParents(element: HTMLElement): HTMLElement[] {
     const stack = [];
 
