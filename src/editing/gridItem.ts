@@ -7,8 +7,8 @@ export interface GridItem {
     element: HTMLElement;
     binding?: IWidgetBinding<any, any>;
     getSiblings?(): GridItem[];
-    getParent?(): GridItem;
-    getChildren?(): GridItem[];
+    getParent?(layerName?: string): GridItem;
+    getChildren?(layerName?: string): GridItem[];
     getNextSibling?: () => GridItem;
     getPrevSibling?: () => GridItem;
     getContextCommands?: (half?: string) => IContextCommandSet;
