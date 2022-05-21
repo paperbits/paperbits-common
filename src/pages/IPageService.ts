@@ -68,5 +68,5 @@ export interface IPageService {
      * @param content {Contract} Contract describing content of the page.
      * @param locale {string} Locale, e.g. `en-us`. If provided, operation updates content in specified locale.
      */
-    updatePageContent(pageKey: string, content: Contract, locale?: string): Promise<void>;
+    updatePageContent(pageKey: string, content: Contract, locale?: string, changeDescription?: string): Promise<void>;
 }

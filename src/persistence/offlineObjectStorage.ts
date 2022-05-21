@@ -8,6 +8,7 @@ import { ILocalCache, CachingStrategy } from "../caching";
 interface HistoryRecord {
     do: () => Promise<void>;
     undo: () => Promise<void>;
+    stateDescription?: string;
 }
 
 const changesObjectCacheKey: string = "changesObject";
@@ -56,7 +57,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.middlewares.push(middleware);
     }
 
-    public async addObject(path: string, dataObject: Object): Promise<void> {
+    public async addObject(path: string, dataObject: Object, changeDescription: string): Promise<void> {
         if (!path) {
             throw new Error("Could not add object: Key is undefined.");
         }
@@ -100,14 +101,14 @@ export class OfflineObjectStorage implements IObjectStorage {
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
-        await this.do(doCommand, undoCommand);
+        await this.do(doCommand, undoCommand, changeDescription);
     }
 
     public patchObject<T>(path: string, dataObject: T): Promise<void> {
         throw new Error("Not implemented");
     }
 
-    public async updateObject<T>(path: string, dataObject: T): Promise<void> {
+    public async updateObject<T>(path: string, dataObject: T, changeDescription: string): Promise<void> {
         if (!path) {
             throw new Error(`Parameter "path" not specified.`);
         }
@@ -156,7 +157,7 @@ export class OfflineObjectStorage implements IObjectStorage {
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
-        await this.do(doCommand, undoCommand);
+        await this.do(doCommand, undoCommand, changeDescription);
     }
 
     public async getObject<T>(path: string): Promise<T> {
@@ -202,7 +203,7 @@ export class OfflineObjectStorage implements IObjectStorage {
         return remoteObjectStorageResult;
     }
 
-    public async deleteObject(path: string): Promise<void> {
+    public async deleteObject(path: string, changeDescription: string): Promise<void> {
         if (!path) {
             throw new Error(`Parameter "path" not specified.`);
         }
@@ -244,11 +245,11 @@ export class OfflineObjectStorage implements IObjectStorage {
             await this.stateCache.setItem(stateObjectCacheKey, stateObject);
         };
 
-        await this.do(doCommand, undoCommand);
+        await this.do(doCommand, undoCommand, changeDescription);
     }
 
-    private async do(doCommand: () => Promise<void>, undoCommand: () => Promise<void>): Promise<void> {
-        const record = { do: doCommand, undo: undoCommand };
+    private async do(doCommand: () => Promise<void>, undoCommand: () => Promise<void>, changeDescription: string): Promise<void> {
+        const record: HistoryRecord = { do: doCommand, undo: undoCommand, stateDescription: changeDescription };
         await record.do();
 
         this.past.push(record);
@@ -503,6 +504,24 @@ export class OfflineObjectStorage implements IObjectStorage {
         }
 
         return resultPage;
+    }
+
+    public getPrevStateDescription(): string {
+        if (this.past.length === 0) {
+            return undefined;
+        }
+
+        const pastState = this.past[this.past.length - 1];
+        return pastState.stateDescription;
+    }
+
+    public getNextStateDescription(): string {
+        if (this.future.length === 0) {
+            return undefined;
+        }
+
+        const futureState = this.future[this.future.length - 1];
+        return futureState.stateDescription;
     }
 
     public async hasUnsavedChanges(): Promise<boolean> {

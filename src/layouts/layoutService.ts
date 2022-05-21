@@ -396,7 +396,7 @@ export class LayoutService implements ILayoutService {
         return layoutContent;
     }
 
-    public async updateLayoutContent(layoutKey: string, content: Contract, requestedLocale?: string): Promise<void> {
+    public async updateLayoutContent(layoutKey: string, content: Contract, requestedLocale?: string, changeDescription?: string): Promise<void> {
         if (!layoutKey) {
             throw new Error(`Parameter "layoutKey" not specified.`);
         }
@@ -436,7 +436,7 @@ export class LayoutService implements ILayoutService {
             await this.objectStorage.updateObject(layoutKey, layoutMetadata);
         }
 
-        await this.objectStorage.updateObject(layoutMetadata.contentKey, content);
+        await this.objectStorage.updateObject(layoutMetadata.contentKey, content, changeDescription);
     }
 
     public async copyLayout(key: string): Promise<LayoutContract> {

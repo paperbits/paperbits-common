@@ -11,7 +11,7 @@ export interface IObjectStorage {
      * @param key string Object key.
      * @param dataObject T Object.
      */
-    addObject<T>(key: string, dataObject: T): Promise<void>;
+    addObject<T>(key: string, dataObject: T, changeDescription?: string): Promise<void>;
 
     /**
      * Retrieves an object from storage by specified key.
@@ -24,7 +24,7 @@ export interface IObjectStorage {
      * Deletes an object with specfied key in stoage.
      * @param key string Object key.
      */
-    deleteObject(key: string): Promise<void>;
+    deleteObject(key: string, changeDescription?: string): Promise<void>;
 
     /**
      * Updates an object with specified key in storage.
@@ -32,7 +32,7 @@ export interface IObjectStorage {
      * @param key string Object key.
      * @param dataObject {T} Object.
      */
-    updateObject<T>(key: string, dataObject: T): Promise<void>;
+    updateObject<T>(key: string, dataObject: T, changeDescription?: string): Promise<void>;
 
     /**
      * Returns objects matching search criteria.

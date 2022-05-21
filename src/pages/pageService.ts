@@ -336,7 +336,7 @@ export class PageService implements IPageService {
         return pageContent;
     }
 
-    public async updatePageContent(pageKey: string, content: Contract, requestedLocale?: string): Promise<void> {
+    public async updatePageContent(pageKey: string, content: Contract, requestedLocale?: string, changeDescription?: string): Promise<void> {
         if (!pageKey) {
             throw new Error(`Parameter "pageKey" not specified.`);
         }
@@ -376,6 +376,6 @@ export class PageService implements IPageService {
             await this.objectStorage.updateObject(pageKey, pageMetadata);
         }
 
-        await this.objectStorage.updateObject(pageMetadata.contentKey, content);
+        await this.objectStorage.updateObject(pageMetadata.contentKey, content, changeDescription);
     }
 }
