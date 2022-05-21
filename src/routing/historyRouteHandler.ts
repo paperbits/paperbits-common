@@ -1,9 +1,13 @@
 import { Router, Route } from ".";
+import { Logger } from "../logging";
 
 export class HistoryRouteHandler {
     private internalPushState: (data: any, title: string, url: string) => void;
 
-    constructor(private readonly router: Router) {
+    constructor(
+        private readonly router: Router,
+        private readonly logger: Logger
+    ) {
         this.internalPushState = history.pushState;
         history.pushState = this.externalPushState.bind(this);
         this.onRouteChange = this.onRouteChange.bind(this);
@@ -28,6 +32,11 @@ export class HistoryRouteHandler {
      * Handles internal route change event.
      */
     private onRouteChange(route: Route): void {
-        this.internalPushState.call(history, route, route.title, route.url);
+        try {
+            this.internalPushState.call(history, route, route.title, route.url);
+        }
+        catch (error) {
+            this.logger.trackError(error);
+        }
     }
 }

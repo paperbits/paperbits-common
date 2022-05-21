@@ -6,3 +6,4 @@ export * from "./keyboard";
 export * from "./utils";
 export * from "./objects";
 export * from "./bootstrap";
+export * from "./regexps";
