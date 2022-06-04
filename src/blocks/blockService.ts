@@ -139,8 +139,19 @@ export class BlockService implements IBlockService {
 
         if (existingSnippet) {
             console.info(`Snippet ${key} already imported.`);
+            return;
         }
-        
-        await this.objectStorage.addObject(key, snippet);
+
+        if (key.startsWith("styles")) {
+            const stylesObject = await this.objectStorage.getObject<Object>("styles");
+            const segments = key.split("/");
+            const path = segments.slice(1).join("/");
+
+            Objects.setValue(path, stylesObject, snippet);
+            await this.objectStorage.updateObject("styles", stylesObject);
+        }
+        else {
+            await this.objectStorage.addObject(key, snippet);
+        }
     }
 }
