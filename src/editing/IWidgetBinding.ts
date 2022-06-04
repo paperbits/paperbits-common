@@ -5,7 +5,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Name of a widget.
      */
-    name: string;
+    name?: string;
 
     /**
      * Widget display name.
@@ -56,6 +56,11 @@ export interface IWidgetBinding<TModel, TViewModel> {
      * List of features exposed by the container (given this widget has a container).
      */
     provides?: string[];
+
+    /**
+     * List of features required for this widget.
+     */
+    requires?: string[];
 
     /**
      * Widget handler used by the designer.
