@@ -11,22 +11,22 @@ export interface IUrlService {
     search(query: Query<UrlContract>): Promise<Page<UrlContract>>;
 
     /**
-     * Returns a url by specified key;
+     * Returns a URL by specified key;
      */
     getUrlByKey(key: string, locale?: string): Promise<UrlContract>;
 
     /**
-     * Deletes a specified url from storage.
+     * Deletes a specified URL from storage.
      */
     deleteUrl(url: UrlContract): Promise<void>;
 
     /**
-     * Creates new url in storage and returns a contract of it.
+     * Creates new URL in storage and returns a contract of it.
      */
     createUrl(permalink: string, title: string, description?: string): Promise<UrlContract>;
 
     /**
-     * Updates a url.
+     * Updates a URL.
      */
     updateUrl(url: UrlContract): Promise<void>;
 }
