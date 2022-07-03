@@ -110,7 +110,7 @@ export class WidgetRegistry {
             eventManager.dispatchEvent("onContentUpdate");
         };
         binding.onCreate = async (viewModelInstance) => {
-            await viewModelBinder.modelToViewModel(model, viewModelInstance, bindingContext);
+            await viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
         };
         binding.onDispose = async () => {
             if (model.styles?.instance) {
