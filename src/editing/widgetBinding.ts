@@ -12,7 +12,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Widget view model class.
      */
-    public viewModelClass: new (...args: any[]) => TViewModel;
+    public componentBinderArgs: unknown;
 
     /**
      * Instance of the view model associated with the widget.
@@ -78,4 +78,13 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      * Callback invoked when the widget view model gets displosed.
      */
     public onDispose?: (viewModel?: TViewModel) => void;
+
+    /**
+     * @deprecated Need to get rid of this property.
+     */
+    public wrapped: boolean;
+
+    constructor() {
+        this.wrapped = true;
+    }
 }

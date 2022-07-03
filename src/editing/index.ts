@@ -18,3 +18,4 @@ export * from "./selectionState";
 export * from "./gridItem";
 export * from "./widgetBinding";
 export * from "./componentFlow";
+export * from "./componentBinder";
