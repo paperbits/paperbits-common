@@ -1,6 +1,5 @@
 import { Bag } from "../bag";
-import { IWidgetOrder, IWidgetHandler, WidgetContext, WidgetBinding, ComponentFlow } from "./";
-import { ComponentBinder } from "@paperbits/common/editing/componentBinder";
+import { WidgetBinding, ComponentFlow } from "./";
 import { ViewModelBinder } from "../widgets";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
@@ -40,16 +39,11 @@ export interface WidgetDesignerDefinition {
     draggable: boolean;
 }
 
-
-
 export class WidgetRegistry {
     private widgetEntries: Bag<WidgetDefinition> = {};
     private widgetDesignerEntries: Bag<WidgetDesignerDefinition> = {};
-    private readonly eventManager: EventManager;
 
-    constructor(private readonly injector: IInjector) {
-
-    }
+    constructor(private readonly injector: IInjector) { }
 
     public register(widgetName: string, widgetDefinition: WidgetDefinition, widgetDesignerDefinition?: WidgetDesignerDefinition): void {
         this.widgetEntries[widgetName] = widgetDefinition;
@@ -103,6 +97,7 @@ export class WidgetRegistry {
         if (widgetDesignerDefinition) {
             binding.displayName = widgetDesignerDefinition.displayName;
             binding.editor = widgetDesignerDefinition.editorComponent;
+            binding.handler = widgetDesignerDefinition.handlerComponent
             binding.draggable = widgetDesignerDefinition.draggable;
         }
 
