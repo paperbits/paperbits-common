@@ -2,7 +2,7 @@ import { Bag } from "../bag";
 import { IWidgetOrder, IWidgetHandler, WidgetContext, WidgetBinding, ComponentFlow } from "./";
 import { ComponentBinder } from "@paperbits/common/editing/componentBinder";
 import { ViewModelBinder } from "../widgets";
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
 
 
@@ -97,6 +97,7 @@ export class WidgetRegistry {
         // widget definition
         binding.name = widgetDefinition.name;
         binding.flow = widgetDefinition.flow;
+        binding.wrapped = binding.flow !== ComponentFlow.Contents;
 
         // widget designer definition
         if (widgetDesignerDefinition) {
@@ -107,11 +108,11 @@ export class WidgetRegistry {
 
         binding.applyChanges = async () => {
             await viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
-            eventManager.dispatchEvent("onContentUpdate");
+            eventManager.dispatchEvent(Events.ContentUpdate);
         };
-        binding.onCreate = async (viewModelInstance) => {
-            await viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
-        };
+
+        binding.onCreate = () => viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
+
         binding.onDispose = async () => {
             if (model.styles?.instance) {
                 bindingContext.styleManager.removeStyleSheet(model.styles.instance.key);
