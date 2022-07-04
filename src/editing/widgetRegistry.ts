@@ -1,6 +1,5 @@
 import { Bag } from "../bag";
-import { WidgetBinding, ComponentFlow } from "./";
-import { ViewModelBinder } from "../widgets";
+import { WidgetBinding, ComponentFlow, IWidgetOrder, IWidgetHandler } from "./";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
 
@@ -35,7 +34,8 @@ export interface WidgetDesignerDefinition {
     editorComponent: string | any; // class
     handlerComponent: string | any; // class
     iconClass: string; // "widget-icon widget-icon-button";
-    requires: [];
+    category?: string;
+    requires?: string[];
     draggable: boolean;
 }
 
@@ -67,16 +67,12 @@ export class WidgetRegistry {
         return values.find(x => model instanceof x.modelClass);
     }
 
-    public getWidgetDesignerDefinition(widgetName: string): WidgetDesignerDefinition {
-        return this.widgetDesignerEntries[widgetName];
-    }
-
-    public getWidgetViewModelBinder(widgetName: string): ViewModelBinder<any, any> {
-        return {};
+    public getWidgetDesignerDefinitions(): WidgetDesignerDefinition[] {
+        return Object.values(this.widgetDesignerEntries);
     }
 
     public async createWidgetBinding<TModel, TViewModel>(widgetDefinition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
-        const widgetDesignerDefinition = this.getWidgetDesignerDefinition(widgetDefinition.name);
+        const widgetDesignerDefinition = this.widgetDesignerEntries[widgetDefinition.name];
         const viewModelBinder = this.injector.resolveClass<any>(widgetDefinition.viewModelBinder);
 
         const binding = new WidgetBinding<TModel, TViewModel>();
