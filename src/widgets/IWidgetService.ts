@@ -1,4 +1,7 @@
-﻿import { IWidgetOrder, IWidgetHandler } from "../editing";
+﻿import { Bag } from "../bag";
+import { IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding } from "../editing";
+import { WidgetDefinition, WidgetEditorDefinition } from "../editing";
+
 
 export interface IWidgetService {
     /**
@@ -7,14 +10,41 @@ export interface IWidgetService {
     getWidgetOrders(): Promise<IWidgetOrder[]>;
 
     /**
-     * Returns widget handler of the specified type.
-     * @param type 
+     * Returns the handler for specified widget binding.
      */
-    getWidgetHandler(type: IWidgetHandler): IWidgetHandler;
+    getWidgetHandler(widgetBinding: IWidgetBinding<any,any>): IWidgetHandler;
 
     /**
-     * Registers specified widget handler.
+     * 
+     * @param widgetName 
+     * @param widgetDefinition 
+     */
+    registerWidget(widgetName: string, definition: WidgetDefinition): void;
+
+    /**
+     * 
+     * @param widgetName 
+     */
+    unregisterWidget(widgetName: string): void;
+
+    /**
+     * 
+     * @param widgetName 
      * @param handler 
      */
-    registerWidgetHandler(handler: IWidgetHandler): void;
+    registerWidgetEditor(widgetName: string, definition: WidgetEditorDefinition): void;
+
+    /**
+     * 
+     * @param model 
+     */
+    getWidgetHandlerForModel(model: any): WidgetDefinition
+
+    /**
+     * 
+     * @param widgetDefinition 
+     * @param model 
+     * @param bindingContext 
+     */
+    createWidgetBinding<TModel, TViewModel>(widgetDefinition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
 }

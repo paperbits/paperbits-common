@@ -7,12 +7,12 @@ export interface IWidgetOrder {
     /**
      * Name of a widget created by this widget order.
      */
-    name: string;
+    name?: string;
 
     /**
      * Display name of the widget created by this widget order.
      */
-    displayName: string;
+    displayName?: string;
 
     /**
      * Category of the widget.
@@ -37,10 +37,10 @@ export interface IWidgetOrder {
     /**
      * Widget model factory method. Invoked when widget gets added to the content.
      */
-    createModel(): Promise<any>;
+    createModel?(): Promise<any>;
 
     /**
      * List of features required for this widget.
      */
-    requires: string[];
+    requires?: string[];
 }
