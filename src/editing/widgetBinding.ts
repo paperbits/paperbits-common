@@ -47,7 +47,12 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Indicates if the widget can be moved in the designer.
      */
-    public draggable: boolean;
+    public draggable?: boolean;
+
+    /**
+     * Indicates if the widget can be selected in the designer.
+     */
+     public selectable?: boolean;
 
     /**
      * Registration name (tag name) of editor component.

@@ -36,6 +36,12 @@ export interface IWidgetService {
 
     /**
      * 
+     * @param widgetName 
+     */
+    unregisterWidgetEditor(widgetName: string): void;
+
+    /**
+     * 
      * @param model 
      */
     getWidgetHandlerForModel(model: any): WidgetDefinition

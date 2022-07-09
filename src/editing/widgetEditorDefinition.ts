@@ -42,10 +42,10 @@ export interface WidgetEditorDefinition {
     /**
      * Indicates that the widget can be selected in the content editor.
      */
-    selectable?: boolean;
+    selectable?: boolean; 
 
     /**
      * Indicates that the widget can be dragged in the content editor.
      */
-    draggable: boolean;
+    draggable?: boolean;
 }

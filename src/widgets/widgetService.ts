@@ -1,6 +1,6 @@
 ﻿import { Button } from "@paperbits/core/button/ko/button";
 import { Bag } from "../bag";
-import { ComponentFlow, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
+import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
 import { IWidgetService } from "../widgets";
@@ -45,7 +45,7 @@ export class WidgetService implements IWidgetService {
                 category: definition.category,
                 iconClass: definition.iconClass,
                 iconUrl: definition.iconUrl,
-                requires: definition.requires,
+                requires: definition.requires || [],
                 createModel: handler.getWidgetModel
             };
 
@@ -101,6 +101,16 @@ export class WidgetService implements IWidgetService {
         return widgetHandler;
     }
 
+    public getModelBinder<TModel>(widgetName: string): IModelBinder<TModel> {
+        const widgetDefinition = this.widgetEntries[widgetName];
+
+        if (!widgetDefinition) {
+            return null;
+        }
+
+        return this.injector.resolveClass(widgetDefinition.modelBinder);
+    }
+
     public async getWidgetModel<TModel>(widgetName: string): Promise<TModel> {
         const handler = this.getWidgetHandlerByWidgetName(widgetName);
         const widgetModel = await handler.getWidgetModel<TModel>();
@@ -125,6 +135,10 @@ export class WidgetService implements IWidgetService {
         this.widgetEditorEntries[widgetName] = definition;
     }
 
+    public unregisterWidgetEditor(widgetName: string): void {
+        delete this.widgetEditorEntries[widgetName];
+    }
+
     public unregisterWidgetHandler(widgetName: string): void {
         delete this.widgetEditorEntries[widgetName];
     }
@@ -135,7 +149,7 @@ export class WidgetService implements IWidgetService {
     }
 
     public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
-        const widgetName = Object.keys(this.widgetEntries).find(key => this.widgetEntries[key]);
+        const widgetName = Object.keys(this.widgetEntries).find(key => this.widgetEntries[key] === definition);
 
         if (!widgetName) {
             return null;
@@ -163,6 +177,7 @@ export class WidgetService implements IWidgetService {
             widgetBinding.displayName = editorDefinition.displayName;
             widgetBinding.editor = editorDefinition.editorComponent;
             widgetBinding.draggable = editorDefinition.draggable;
+            widgetBinding.selectable = editorDefinition.selectable;
         }
 
         widgetBinding.applyChanges = async () => {

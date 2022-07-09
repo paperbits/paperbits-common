@@ -38,11 +38,6 @@ export interface IWidgetBinding<TModel, TViewModel> {
     applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;
 
     /**
-     * Indicates if the widget gets ignored by the designer.
-     */
-    readonly?: boolean;
-
-    /**
      * Name of the layer the widget resides in.
      */
     layer: string;
@@ -80,5 +75,15 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Indicates if the widget can be moved in the designer.
      */
-    draggable: boolean;
+    draggable?: boolean;
+
+    /**
+     * Indicates if the widget can be selected in the designer.
+     */
+    selectable?: boolean;
+
+    /**
+     * Indicates if the widget gets ignored by the designer.
+     */
+    readonly?: boolean;
 }
