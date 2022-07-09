@@ -1,5 +1,5 @@
 ﻿import { Bag } from "../bag";
-import { IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding } from "../editing";
+import { IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding } from "../editing";
 import { WidgetDefinition, WidgetEditorDefinition } from "../editing";
 
 
@@ -41,10 +41,16 @@ export interface IWidgetService {
     unregisterWidgetEditor(widgetName: string): void;
 
     /**
-     * 
-     * @param model 
+     * Returns widget handler that can work with the specified widget model.
+     * @param model Instance of the widget model.
      */
-    getWidgetHandlerForModel(model: any): WidgetDefinition
+    getWidgetHandlerForModel<TModel>(model: TModel): WidgetDefinition
+
+    /**
+     * 
+     * @param widgetName 
+     */
+    getModelBinder<TModel>(widgetName: string): IModelBinder<TModel>;
 
     /**
      * 
@@ -52,5 +58,5 @@ export interface IWidgetService {
      * @param model 
      * @param bindingContext 
      */
-    createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
+    createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
 }

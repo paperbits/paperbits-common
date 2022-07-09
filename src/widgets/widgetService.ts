@@ -1,5 +1,4 @@
-﻿import { Button } from "@paperbits/core/button/ko/button";
-import { Bag } from "../bag";
+﻿import { Bag } from "../bag";
 import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
@@ -143,12 +142,12 @@ export class WidgetService implements IWidgetService {
         delete this.widgetEditorEntries[widgetName];
     }
 
-    public getWidgetHandlerForModel(model: any): WidgetDefinition {
+    public getWidgetHandlerForModel<TModel>(model: TModel): WidgetDefinition {
         const values = Object.values(this.widgetEntries);
         return values.find(x => model instanceof x.modelClass);
     }
 
-    public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
+    public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
         const widgetName = Object.keys(this.widgetEntries).find(key => this.widgetEntries[key] === definition);
 
         if (!widgetName) {
@@ -188,8 +187,8 @@ export class WidgetService implements IWidgetService {
         widgetBinding.onCreate = () => viewModelBinder.modelToViewModel(model, widgetBinding.viewModel, bindingContext);
 
         widgetBinding.onDispose = () => {
-            if (model.styles?.instance) {
-                bindingContext.styleManager.removeStyleSheet(model.styles.instance.key);
+            if (model["styles"]?.instance) {
+                bindingContext.styleManager.removeStyleSheet(model["styles"].instance.key);
             }
         };
 
