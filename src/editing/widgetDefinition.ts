@@ -1,7 +1,6 @@
 import { ComponentFlow } from "./componentFlow";
 
 export interface WidgetDefinition {
-    name: string;
     modelClass: any;
     componentFlow: ComponentFlow;
     componentBinder: string; // ComponentBinder; // instead of "framework" property

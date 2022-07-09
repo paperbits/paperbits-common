@@ -1,9 +1,19 @@
-
 export interface WidgetEditorDefinition {
+    /**
+     * 
+     */
     displayName: string; // Widget display name
-    editorComponent: string | any; // class
-    handlerComponent: string | any; // class
-    
+
+    /**
+     * 
+     */
+    editorComponent: Function;
+
+    /**
+     * 
+     */
+    handlerComponent: Function;
+
     /**
      * Widget icon. Used in "Add widget" dialog.
      */

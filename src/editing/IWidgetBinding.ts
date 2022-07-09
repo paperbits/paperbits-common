@@ -20,7 +20,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Registration name (tag name) of editor component.
      */
-    editor?: string;
+    editor?: string | Function;
 
     /**
      * Editor window resizing options, e.g. `vertically horizontally`.

@@ -83,5 +83,5 @@ export interface IInjector {
     /**
      * Resolves specified dependecy by constructor.
      */
-    resolveClass<TImplementationType>(constructorFunc: new (...args: any[]) => TImplementationType): TImplementationType;
+    resolveClass<TImplementationType>(constructorFunc: Function): TImplementationType;
 }

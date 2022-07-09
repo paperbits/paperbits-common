@@ -12,7 +12,7 @@ export interface IWidgetService {
     /**
      * Returns the handler for specified widget binding.
      */
-    getWidgetHandler(widgetBinding: IWidgetBinding<any,any>): IWidgetHandler;
+    getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler;
 
     /**
      * 
@@ -46,5 +46,5 @@ export interface IWidgetService {
      * @param model 
      * @param bindingContext 
      */
-    createWidgetBinding<TModel, TViewModel>(widgetDefinition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
+    createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
 }

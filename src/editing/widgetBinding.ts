@@ -52,12 +52,12 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Registration name (tag name) of editor component.
      */
-    public editor: string;
+    public editor: string | Function;
 
     /**
      * Widget handler used by the designer.
      */
-    public handler?: any;
+    public handler?: Function;
 
     /**
      * Determines how component flows on the page. Possible values: "inline" or "block".

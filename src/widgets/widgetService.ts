@@ -37,7 +37,7 @@ export class WidgetService implements IWidgetService {
 
         const orders = widgetNames.map(widgetName => {
             const definition = this.widgetEditorEntries[widgetName];
-            const handler: IWidgetHandler = this.injector.resolveClass(definition.handlerComponent);
+            const handler: IWidgetHandler = this.injector.resolveClass(<Function>definition.handlerComponent);
 
             const order: IWidgetOrder = {
                 name: widgetName,
@@ -81,7 +81,7 @@ export class WidgetService implements IWidgetService {
             return null;
         }
 
-        const widgetHandler = this.injector.resolveClass(editorDefintion.handlerComponent);
+        const widgetHandler = this.injector.resolveClass(<Function>editorDefintion.handlerComponent);
         return widgetHandler;
     }
 
@@ -134,43 +134,50 @@ export class WidgetService implements IWidgetService {
         return values.find(x => model instanceof x.modelClass);
     }
 
-    public async createWidgetBinding<TModel, TViewModel>(widgetDefinition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
-        const widgetHanlder = this.widgetEditorEntries[widgetDefinition.name];
+    public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: any, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
+        const widgetName = Object.keys(this.widgetEntries).find(key => this.widgetEntries[key]);
+
+        if (!widgetName) {
+            return null;
+        }
+
+        const widgetDefinition = this.widgetEntries[widgetName];
+        const editorDefinition = this.widgetEditorEntries[widgetName];
         const viewModelBinder = this.injector.resolveClass<any>(widgetDefinition.viewModelBinder);
 
-        const binding = new WidgetBinding<TModel, TViewModel>();
+        const widgetBinding = new WidgetBinding<TModel, TViewModel>();
         const eventManager = this.injector.resolve<EventManager>("eventManager");
 
         // common
-        binding.framework = widgetDefinition.componentBinder; // TODO: replace string with class
-        binding.componentBinderArgs = widgetDefinition.componentBinderArguments; // componentBinderArgs parameters. i.e. for React it can be any of this: https://react-tutorial.app/app.html?id=338;
-        binding.model = model;
-        binding.layer = bindingContext.layer;
+        widgetBinding.framework = widgetDefinition.componentBinder; // TODO: replace string with class
+        widgetBinding.componentBinderArgs = widgetDefinition.componentBinderArguments; // componentBinderArgs parameters. i.e. for React it can be any of this: https://react-tutorial.app/app.html?id=338;
+        widgetBinding.model = model;
+        widgetBinding.layer = bindingContext.layer;
 
         // widget definition
-        binding.name = widgetDefinition.name;
-        binding.flow = widgetDefinition.componentFlow;
-        binding.wrapped = binding.flow !== ComponentFlow.Contents;
+        widgetBinding.name = widgetName;
+        widgetBinding.flow = widgetDefinition.componentFlow;
+        widgetBinding.wrapped = widgetBinding.flow !== ComponentFlow.Contents;
 
-        if (widgetHanlder) {
-            binding.displayName = widgetHanlder.displayName;
-            binding.editor = widgetHanlder.editorComponent;
-            binding.draggable = widgetHanlder.draggable;
+        if (editorDefinition) {
+            widgetBinding.displayName = editorDefinition.displayName;
+            widgetBinding.editor = editorDefinition.editorComponent;
+            widgetBinding.draggable = editorDefinition.draggable;
         }
 
-        binding.applyChanges = async () => {
-            await viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
+        widgetBinding.applyChanges = async () => {
+            await viewModelBinder.modelToViewModel(model, widgetBinding.viewModel, bindingContext);
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 
-        binding.onCreate = () => viewModelBinder.modelToViewModel(model, binding.viewModel, bindingContext);
+        widgetBinding.onCreate = () => viewModelBinder.modelToViewModel(model, widgetBinding.viewModel, bindingContext);
 
-        binding.onDispose = () => {
+        widgetBinding.onDispose = () => {
             if (model.styles?.instance) {
                 bindingContext.styleManager.removeStyleSheet(model.styles.instance.key);
             }
         };
 
-        return binding;
+        return widgetBinding;
     }
 }
