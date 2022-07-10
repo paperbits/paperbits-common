@@ -184,7 +184,13 @@ export class WidgetService implements IWidgetService {
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 
-        widgetBinding.onCreate = () => viewModelBinder.modelToViewModel(model, widgetBinding.viewModel, bindingContext);
+        /**
+         * PROBLEM: After ViewModel gets creted in KoComponentBinder, the first initialization is not awaited, so "style" property is alway empty
+         * during publishing (because the scope gets recyled fast, it works in design-time because widget scope doesn't get recycled until page is recycled)
+         * 
+         */
+
+        widgetBinding.onCreate = async () => await viewModelBinder.modelToViewModel(model, widgetBinding.viewModel, bindingContext);
 
         widgetBinding.onDispose = () => {
             if (model["styles"]?.instance) {
