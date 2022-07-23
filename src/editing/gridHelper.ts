@@ -57,6 +57,9 @@ export class GridHelper {
 
         let current = context.$data;
 
+        // console.log(element.tagName);
+        // console.log(context);
+
         context.$parents.forEach(viewModel => {
             if (viewModel && viewModel !== current) {
                 viewModels.push(viewModel);

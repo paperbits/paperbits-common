@@ -25,6 +25,9 @@ export function identifier(): string {
     return result;
 }
 
+/**
+ * Returns randomly generated CSS class name.
+ */
 export function randomClassName(): string {
     let result = "";
     const possible = "abcdefghijklmnopqrstuvwxyz";

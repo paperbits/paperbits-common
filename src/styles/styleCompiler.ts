@@ -67,5 +67,11 @@ export interface StyleCompiler {
 
     getIconFontStylesCss(): Promise<string>;
 
+    /**
+     * Returns icon CSS class name for specified icon key.
+     * @param iconKey Icon key.
+     */
+    getIconClassName(iconKey: string): string;
+
     backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void;
 }

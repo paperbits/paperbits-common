@@ -2,7 +2,8 @@
 import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
-import { IWidgetService } from "../widgets";
+import { StyleManager } from "../styles";
+import { IWidgetService, ViewModelBinder } from "../widgets";
 
 
 const defaultWidgetIconClass = "widget-icon widget-icon-component";
@@ -156,7 +157,7 @@ export class WidgetService implements IWidgetService {
 
         const widgetDefinition = this.widgetEntries[widgetName];
         const editorDefinition = this.widgetEditorEntries[widgetName];
-        const viewModelBinder = this.injector.resolveClass<any>(widgetDefinition.viewModelBinder);
+        const viewModelBinder = this.injector.resolveClass<ViewModelBinder<TModel, TViewModel>>(widgetDefinition.viewModelBinder);
 
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
         const eventManager = this.injector.resolve<EventManager>("eventManager");
@@ -179,21 +180,33 @@ export class WidgetService implements IWidgetService {
             widgetBinding.selectable = editorDefinition.selectable;
         }
 
-        const state = {};
+        const widgetState = {};
+        const styleManager: StyleManager = bindingContext?.styleManager;
 
         widgetBinding.applyChanges = async () => {
-            await viewModelBinder.modelToState(model, state);
-            viewModelBinder["stateToIntance"](state, widgetBinding.viewModel, bindingContext);
+            await viewModelBinder.modelToState(model, widgetState, bindingContext);
+
+            if (bindingContext?.styleManager && widgetState["styles"]?.styleSheet) {
+                bindingContext.styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
+            }
+
+            viewModelBinder.stateToIntance<any, any>(widgetState, widgetBinding.viewModel);
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 
-        await viewModelBinder.modelToState(model, state, bindingContext);
+        await viewModelBinder.modelToState(model, widgetState, bindingContext);
 
-        widgetBinding.onCreate = (instance) => viewModelBinder.stateToIntance(state, instance)
+        widgetBinding.onCreate = (instance) => {
+            if (styleManager && widgetState["styles"]?.styleSheet) {
+                styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
+            }
+
+            viewModelBinder.stateToIntance(widgetState, instance);
+        }
 
         widgetBinding.onDispose = () => {
-            if (model["styles"]?.instance) {
-                bindingContext.styleManager.removeStyleSheet(model["styles"].instance.key);
+            if (widgetState["styles"]?.styleSheet) {
+                styleManager.removeStyleSheet(widgetState["styles"]?.styleSheet);
             }
         };
 
