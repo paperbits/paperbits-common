@@ -14,6 +14,8 @@ export interface IWidgetService {
      */
     getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler;
 
+    getModelBinderForModel<TModel>(model: unknown): IModelBinder<TModel>;
+
     /**
      * 
      * @param widgetName 
@@ -44,7 +46,7 @@ export interface IWidgetService {
      * Returns widget handler that can work with the specified widget model.
      * @param model Instance of the widget model.
      */
-    getWidgetHandlerForModel<TModel>(model: TModel): WidgetDefinition
+    getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition
 
     /**
      * 

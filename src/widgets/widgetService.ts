@@ -94,7 +94,6 @@ export class WidgetService implements IWidgetService {
         const widgetHandler = this.widgetHandlers.find(x => x instanceof handlerType);
 
         if (!widgetHandler) {
-            debugger;
             throw new Error(`No widget handlers of type "${handlerType.name}" registered. Use "registerWidgetHandler" method in IWidgetService to register it.`);
         }
 
@@ -143,9 +142,20 @@ export class WidgetService implements IWidgetService {
         delete this.widgetEditorEntries[widgetName];
     }
 
-    public getWidgetHandlerForModel<TModel>(model: TModel): WidgetDefinition {
+    public getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition {
         const values = Object.values(this.widgetEntries);
         return values.find(x => model instanceof x.modelClass);
+    }
+
+    public getModelBinderForModel<TModel>(model: TModel): IModelBinder<TModel> {
+        const values = Object.values(this.widgetEntries);
+        const definition = values.find(x => model instanceof x.modelClass);
+
+        if (!definition) {
+            return null;
+        }
+
+        return this.injector.resolveClass(definition.modelBinder);
     }
 
     public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
