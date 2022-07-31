@@ -1,3 +1,6 @@
+/**
+ * Determines how component flows on the page, e.g. `inline` or `block`.
+ */
 export enum ComponentFlow {
     /**
      * The component resides along with other inline components in the same line, if there is available space.

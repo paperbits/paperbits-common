@@ -14,25 +14,23 @@ export interface IWidgetService {
      */
     getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler;
 
-    getModelBinderForModel<TModel>(model: unknown): IModelBinder<TModel>;
-
     /**
-     * 
-     * @param widgetName 
-     * @param widgetDefinition 
+     * Adds widget definition to the regsitry.
+     * @param widgetName Name of the widget, e.g. `button`.
+     * @param widgetDefinition Widget defintion.
      */
     registerWidget(widgetName: string, definition: WidgetDefinition): void;
 
     /**
-     * 
+     * Removes specified widget definition from the registry.
      * @param widgetName 
      */
     unregisterWidget(widgetName: string): void;
 
     /**
-     * 
-     * @param widgetName 
-     * @param handler 
+     * Adds widget editor definition to the registry.
+     * @param widgetName Name of the widget, e.g. `button`.
+     * @param definition Widget editor definition.
      */
     registerWidgetEditor(widgetName: string, definition: WidgetEditorDefinition): void;
 
@@ -53,6 +51,12 @@ export interface IWidgetService {
      * @param widgetName 
      */
     getModelBinder<TModel>(widgetName: string): IModelBinder<TModel>;
+
+    /**
+     * 
+     * @param model 
+     */
+    getModelBinderForModel<TModel>(model: unknown): IModelBinder<TModel>;
 
     /**
      * 

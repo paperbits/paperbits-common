@@ -1,4 +1,4 @@
-import { IWidgetBinding } from "../editing";
+import { ComponentBinder, IWidgetBinding } from "../editing";
 
 /**
  * Widget binding used to connect widget model to its view model instance.
@@ -8,6 +8,11 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      * Name of the UI framework the widget is implemented with, e.g. `react`, `angular`, `vue`, `knockout`.
      */
     public framework: string;
+
+    /**
+     * Component binder.
+     */
+    public componentBinder: ComponentBinder;
 
     /**
      * Widget view model class.

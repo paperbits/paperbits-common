@@ -1,4 +1,5 @@
-﻿import { Bag } from "../bag";
+﻿import { KnockoutComponentBinder } from "@paperbits/core/ko/knockoutComponentBinder";
+import { Bag } from "../bag";
 import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
@@ -37,6 +38,11 @@ export class WidgetService implements IWidgetService {
 
         const orders = widgetNames.map(widgetName => {
             const definition = this.widgetEditorEntries[widgetName];
+
+            if (definition.selectable === false) {
+                return; // skip adding non-selectable widget to "Add widget" dialog
+            }
+
             const handler: IWidgetHandler = this.injector.resolveClass(<Function>definition.handlerComponent);
 
             const order: IWidgetOrder = {
@@ -118,6 +124,18 @@ export class WidgetService implements IWidgetService {
     }
 
     public registerWidget(widgetName: string, widgetDefinition: WidgetDefinition): void {
+        if (!widgetName) {
+            throw new Error(`Parameter "widgetName" not specified.`)
+        }
+
+        if (!widgetDefinition) {
+            throw new Error(`Parameter "widgetDefinition" not specified.`)
+        }
+
+        if (!widgetDefinition.componentFlow) {
+            widgetDefinition.componentFlow = ComponentFlow.Contents;
+        }
+
         this.widgetEntries[widgetName] = widgetDefinition;
     }
 
@@ -129,6 +147,18 @@ export class WidgetService implements IWidgetService {
     public registerWidgetEditor(widgetName: string, definition: WidgetEditorDefinition): void {
         if (!this.widgetEntries[widgetName]) {
             throw new Error(`Widget "${widgetName}" is not registered.`);
+        }
+
+        if (definition.requires === undefined) {
+            definition.requires = [];
+        }
+
+        if (definition.draggable === undefined) {
+            definition.draggable = true;
+        }
+
+        if (definition.selectable === undefined) {
+            definition.selectable = true;
         }
 
         this.widgetEditorEntries[widgetName] = definition;
@@ -144,12 +174,12 @@ export class WidgetService implements IWidgetService {
 
     public getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition {
         const values = Object.values(this.widgetEntries);
-        return values.find(x => model instanceof x.modelClass);
+        return values.find(x => model instanceof x.modelDefinition);
     }
 
     public getModelBinderForModel<TModel>(model: TModel): IModelBinder<TModel> {
         const values = Object.values(this.widgetEntries);
-        const definition = values.find(x => model instanceof x.modelClass);
+        const definition = values.find(x => model instanceof x.modelDefinition);
 
         if (!definition) {
             return null;
@@ -173,8 +203,8 @@ export class WidgetService implements IWidgetService {
         const eventManager = this.injector.resolve<EventManager>("eventManager");
 
         // common
-        widgetBinding.framework = widgetDefinition.componentBinder; // TODO: replace string with class
-        widgetBinding.componentBinderArgs = widgetDefinition.componentBinderArguments; // componentBinderArgs parameters. i.e. for React it can be any of this: https://react-tutorial.app/app.html?id=338;
+        widgetBinding.componentBinder = this.injector.resolveClass(widgetDefinition.componentBinder);
+        widgetBinding.componentBinderArgs = widgetDefinition.componentDefinition;
         widgetBinding.model = model;
         widgetBinding.layer = bindingContext.layer;
 
@@ -185,7 +215,7 @@ export class WidgetService implements IWidgetService {
 
         if (editorDefinition) {
             widgetBinding.displayName = editorDefinition.displayName;
-            widgetBinding.editor = editorDefinition.editorComponent;
+            widgetBinding.editor = editorDefinition.componentDefinition;
             widgetBinding.draggable = editorDefinition.draggable;
             widgetBinding.selectable = editorDefinition.selectable;
         }

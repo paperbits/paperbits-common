@@ -1,25 +1,42 @@
 import { ComponentFlow } from "./componentFlow";
 
+/**
+ * Widget definition.
+ */
 export interface WidgetDefinition {
-    modelClass: any;
-    componentFlow: ComponentFlow;
-    componentBinder: string; // ComponentBinder; // instead of "framework" property
+    /**
+     * Component flow determines how component flows on the page, e.g. `inline` or `block`.
+     */
+    componentFlow?: ComponentFlow;
 
     /**
-     * This should specify what's needed in order to create view model instance,
-     * ```ts
-     *  const component = Reflect.getMetadata("paperbits-vue-component", binding.viewModelClass).component;
-        const container = document.createElement("div");
-        element.appendChild(container);
-        const viewModelInstance = new component().$mount(container);
-     * ```
-     * or
-     * ```ts
-       const reactElement = React.createElement(binding.viewModelClass, {});
-       const viewModelInstance = ReactDOM.render(reactElement, element);
-     * ```
+     * Component definition describes the component view model. Depending on the UI framework, it can be
+     * shaped differently. For example, in React it's a class that extends `React.Component`. In Vue
+     * it is an object describing the component with composition API or declaration options.
      */
-    componentBinderArguments: any;
-    modelBinder: any;
-    viewModelBinder: any;
+    componentDefinition: any;
+
+    /**
+     * Component binder is a UI framework-specific utility that helps to create an instance of the component
+     * and attach it to an HTML element. For example, ReactComponentBinder used to handle React components,
+     * or KnockoutComponentBinder handles Knockout components.
+     */
+    componentBinder: Function;
+
+    /**
+     * Model binder is a utility for conversions between widget contract (the entity stored in the database)
+     * and model (the entity used by the Paperbits framework as widget configuration).
+     */
+    modelBinder: Function;
+
+    /**
+     * Model definition is the entity used by the Paperbits framework as a widget configuration.
+     */
+    modelDefinition: any;
+
+    /**
+     * This is a UI framework-specific utility that translates the widget model into its view model (described
+     * by the component definition).
+     */
+    viewModelBinder: Function;
 }

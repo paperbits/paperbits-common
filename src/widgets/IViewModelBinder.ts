@@ -2,7 +2,8 @@ import { Bag } from "../bag";
 import { IWidgetBinding } from "../editing";
 
 /**
- * This is a UI framework specific entity that knows how to create View model out of model.
+ * This is a UI framework-specific utility that translates the widget model into
+ * its view model (described by the component definition).
  */
 export interface ViewModelBinder<TModel, TViewModel> {
     /**
