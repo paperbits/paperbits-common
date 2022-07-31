@@ -133,7 +133,7 @@ export class WidgetService implements IWidgetService {
         }
 
         if (!widgetDefinition.componentFlow) {
-            widgetDefinition.componentFlow = ComponentFlow.Contents;
+            widgetDefinition.componentFlow = ComponentFlow.None;
         }
 
         this.widgetEntries[widgetName] = widgetDefinition;
@@ -202,17 +202,22 @@ export class WidgetService implements IWidgetService {
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
         const eventManager = this.injector.resolve<EventManager>("eventManager");
 
-        // common
+        // 1. Common
         widgetBinding.componentBinder = this.injector.resolveClass(widgetDefinition.componentBinder);
-        widgetBinding.componentBinderArgs = widgetDefinition.componentDefinition;
+        widgetBinding.componentDefinition = widgetDefinition.componentDefinition;
         widgetBinding.model = model;
         widgetBinding.layer = bindingContext.layer;
 
-        // widget definition
+        // 2. Widget definition
         widgetBinding.name = widgetName;
-        widgetBinding.flow = widgetDefinition.componentFlow;
-        widgetBinding.wrapped = widgetBinding.flow !== ComponentFlow.Contents;
+        widgetBinding.wrapper = widgetDefinition.componentFlow;
 
+        if (widgetDefinition.componentBinder === KnockoutComponentBinder) {
+            // Knockout doesn't replace
+            widgetBinding.wrapped = widgetBinding.wrapper !== ComponentFlow.None;
+        }
+
+        // 3. Widget editor definition
         if (editorDefinition) {
             widgetBinding.displayName = editorDefinition.displayName;
             widgetBinding.editor = editorDefinition.componentDefinition;
@@ -225,6 +230,9 @@ export class WidgetService implements IWidgetService {
         const widgetState = {};
         const styleManager: StyleManager = bindingContext?.styleManager;
 
+        await viewModelBinder.modelToState(model, widgetState, bindingContext);
+
+        // 4. Binding events
         widgetBinding.applyChanges = async () => {
             await viewModelBinder.modelToState(model, widgetState, bindingContext);
 
@@ -235,8 +243,6 @@ export class WidgetService implements IWidgetService {
             viewModelBinder.stateToIntance<any, any>(widgetState, widgetBinding.viewModel);
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
-
-        await viewModelBinder.modelToState(model, widgetState, bindingContext);
 
         widgetBinding.onCreate = (instance) => {
             if (styleManager && widgetState["styles"]?.styleSheet) {

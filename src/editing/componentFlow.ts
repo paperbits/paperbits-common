@@ -20,7 +20,7 @@ export enum ComponentFlow {
     /**
      * Doesn't apply any flows.
      */
-    Contents = "contents",
+    None = "contents",
 
     /**
      * @deprecated

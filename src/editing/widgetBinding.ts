@@ -1,4 +1,4 @@
-import { ComponentBinder, IWidgetBinding } from "../editing";
+import { ComponentBinder, ComponentFlow, IWidgetBinding } from "../editing";
 
 /**
  * Widget binding used to connect widget model to its view model instance.
@@ -17,7 +17,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Widget view model class.
      */
-    public componentBinderArgs: unknown;
+    public componentDefinition: unknown;
 
     /**
      * Instance of the view model associated with the widget.
@@ -80,9 +80,10 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public handler?: Function;
 
     /**
-     * Determines how component flows on the page. Possible values: "inline" or "block".
+     * Indicates if a component element needs to be wrapped into another DIV element (some frameworks, like Knockout,
+     * do not replace a root element when initializing a component, and hence, may need a wrapper).
      */
-    public flow?: string;
+    public wrapper?: ComponentFlow;
 
     /**
      * Propagates changes from widget model to widget view model.
