@@ -14,7 +14,7 @@ export class GridHelper {
         if (context.$data) {
             const widgetBinding = context.$data instanceof WidgetBinding
                 ? context.$data // new
-                : context.$data.widgetBinding; // legacy 
+                : context.$data.widgetBinding; // legacy
 
             bindings.push(widgetBinding);
         }
@@ -57,9 +57,6 @@ export class GridHelper {
 
         let current = context.$data;
 
-        // console.log(element.tagName);
-        // console.log(context);
-
         context.$parents.forEach(viewModel => {
             if (viewModel && viewModel !== current) {
                 viewModels.push(viewModel);
@@ -73,12 +70,17 @@ export class GridHelper {
     public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
         const viewModels = this.getParentViewModels(element);
 
-        if (viewModels.length === 0) {
+        if (viewModels.length < 2) {
             return null;
         }
 
-        const parentViewModel = viewModels[0];
-        return parentViewModel["widgetBinding"];
+        const data = viewModels[1]; // first parent
+
+        const widgetBinding = data instanceof WidgetBinding
+            ? data // new model
+            : data.widgetBinding; // legacy model
+
+        return widgetBinding;
     }
 
     public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
