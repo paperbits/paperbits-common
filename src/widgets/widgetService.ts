@@ -218,6 +218,8 @@ export class WidgetService implements IWidgetService {
             widgetBinding.editor = editorDefinition.componentDefinition;
             widgetBinding.draggable = editorDefinition.draggable;
             widgetBinding.selectable = editorDefinition.selectable;
+            widgetBinding.editorScrolling = editorDefinition.editorScrolling;
+            widgetBinding.editorResizing = editorDefinition.editorResizing
         }
 
         const widgetState = {};

@@ -13,11 +13,6 @@ export interface View {
     component?: IComponent;
 
     /**
-     * Allowed values: `vertically`, `horizontally`.
-     */
-    resize?: string | ResizableOptions;
-
-    /**
      * Help text.
      */
     helpText?: string;
@@ -46,5 +41,10 @@ export interface View {
     /**
      * Indicates that scroll is required on overflow. Default: `true`.
      */
-    scrollable?: boolean;
+    scrolling?: boolean;
+
+    /**
+     * Allowed values: `vertically`, `horizontally`.
+     */
+     resizing?: string | ResizableOptions;
 }

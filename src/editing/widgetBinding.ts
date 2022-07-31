@@ -65,6 +65,16 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public editor: string | Function;
 
     /**
+     * Editor window resizing options, e.g. `vertically horizontally`.
+     */
+     editorResizing?: boolean | string;
+
+     /**
+      * Indicates that scroll is required on overflow. Default: `true`.
+      */
+     editorScrolling?: boolean | string;
+
+    /**
      * Widget handler used by the designer.
      */
     public handler?: Function;

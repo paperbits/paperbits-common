@@ -1,5 +1,5 @@
 import { IWidgetBinding } from ".";
-import { IContextCommand, IContextCommandSet } from "../ui";
+import { IContextCommandSet } from "../ui";
 
 export interface GridItem {
     name?: string;
@@ -14,5 +14,5 @@ export interface GridItem {
     getContextCommands?: (half?: string) => IContextCommandSet;
     isStylable?: boolean;
     select(scrollIntoView?: boolean): void;
-    editor: string;
+    editor: string | Function;
 }

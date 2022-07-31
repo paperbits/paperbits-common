@@ -1,6 +1,6 @@
 export interface WidgetEditorDefinition {
     /**
-     * 
+     * Name of the widget as it appears in "Add widget" dialog and in the visual designer.
      */
     displayName: string; // Widget display name
 
@@ -58,4 +58,8 @@ export interface WidgetEditorDefinition {
      * is a part of the Table widget, but it cannot not be dragged around. Default: `true`.
      */
     draggable?: boolean;
+
+    editorResizing?: boolean | string;
+
+    editorScrolling?: boolean | string;
 }
