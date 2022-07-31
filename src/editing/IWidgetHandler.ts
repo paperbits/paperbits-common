@@ -5,9 +5,9 @@ import { DragSession } from "../ui/draggables";
 
 
 /**
- * Handlers give the editor required context to manipulate the widget. For example,
+ * The widget handler gives the editor required context to manipulate the widget model. For example,
  * it describes how the widget gets created, how it responds to drag'n'drop events,
- * what contextual commands is supports, etc.
+ * what contextual commands it supports, etc.
  */
 export interface IWidgetHandler {
     /**

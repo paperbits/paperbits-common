@@ -1,36 +1,46 @@
+/**
+ * Widget editor definition.
+ */
 export interface WidgetEditorDefinition {
     /**
-     * Name of the widget as it appears in "Add widget" dialog and in the visual designer.
+     * Name of the widget as it appears in the "Add widget" dialog and in the visual designer.
      */
     displayName: string; // Widget display name
 
     /**
-     * 
+     * Component definition describes the component view model. Depending on the UI framework, it can be
+     * shaped differently. For example, in React it's a class that extends `React.Component`. In Vue
+     * it is an object describing the component with composition API or declaration options.
      */
-    componentDefinition: any;
+     componentDefinition: any;
+
+     /**
+      * Component binder is a UI framework-specific utility that helps to create an instance of the component
+      * and attach it to an HTML element. For example, ReactComponentBinder used to handle React components,
+      * or KnockoutComponentBinder handles Knockout components.
+      */
+     componentBinder: Function;
 
     /**
-     * 
-     */
-    componentBinder: Function;
-
-    /**
-     * 
+     * A widget handler gives the editor required context to manipulate the widget model. For example,
+     * it describes how the widget gets created, what contextual commands it supports, etc.
      */
     handlerComponent: Function;
 
     /**
-     * Widget icon CSS class, e.g. `widget-icon widget-icon-button`. Used in "Add widget" dialog.
+     * A CSS class name, e.g. `widget-icon widget-icon-button`. Used to display widget icon in
+     * the "Add widget" dialog.
      */
     iconClass?: string; 
 
     /**
-     * Widget icon URL. Used in "Add widget" dialog.
+     * A URL of the image, e.g. `https://images.com/icon.png`. Used to display widget icon in the
+     * "Add widget" dialog.
      */
     iconUrl?: string;
 
     /**
-     * Widget category, e.g. `Forms`. Used in "Add widget" dialog.
+     * Widget category, e.g. `Forms`. Used for grouping in "Add widget" dialog.
      */
     category?: string;
 
@@ -59,7 +69,13 @@ export interface WidgetEditorDefinition {
      */
     draggable?: boolean;
 
+    /**
+     * Specifies editor view resizing options. Default: `true`.
+     */
     editorResizing?: boolean | string;
 
+    /**
+     * Specifies editor view scrolling options. Default: `true`.
+     */
     editorScrolling?: boolean | string;
 }
