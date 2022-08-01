@@ -53,12 +53,21 @@ export class GridHelper {
             return [];
         }
 
+        const parentViewModels = context.$parents;
         const viewModels = [];
 
         let current = context.$data;
 
-        context.$parents.forEach(viewModel => {
+        parentViewModels.forEach(viewModel => {
             if (viewModel && viewModel !== current) {
+                if (viewModel instanceof WidgetBinding) {
+                    /**
+                     * Hack to fix and issue. Need to figure out why widget binding is
+                     * in the stack of view models.
+                     */
+                    return; 
+                }
+
                 viewModels.push(viewModel);
                 current = viewModel;
             }
@@ -68,19 +77,15 @@ export class GridHelper {
     }
 
     public static getParentWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
-        const viewModels = this.getParentViewModels(element);
+        const parentViewModels = this.getParentViewModels(element);
 
-        if (viewModels.length < 2) {
+        if (parentViewModels.length < 1) {
             return null;
         }
 
-        const data = viewModels[1]; // first parent
+        const parentViewModel = parentViewModels[0]; // first parent view model
 
-        const widgetBinding = data instanceof WidgetBinding
-            ? data // new model
-            : data.widgetBinding; // legacy model
-
-        return widgetBinding;
+        return parentViewModel["widgetBinding"];
     }
 
     public static getWidgetBinding(element: HTMLElement): IWidgetBinding<any, any> {
