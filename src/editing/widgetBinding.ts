@@ -80,7 +80,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public handler?: Function;
 
     /**
-     * Indicates if a component element needs to be wrapped into another DIV element (some frameworks, like Knockout,
+     * Indicates if a component element needs to be wrapped into another DIV element. Certain frameworks (like Knockout)
      * do not replace a root element when initializing a component, and hence, may need a wrapper).
      */
     public wrapper?: ComponentFlow;

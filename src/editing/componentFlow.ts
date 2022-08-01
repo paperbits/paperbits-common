@@ -1,5 +1,6 @@
 /**
- * Determines how component flows on the page, e.g. `inline` or `block`.
+ * Defines the wrapper for component element. Certain frameworks (like Knockout) do not replace a root element
+ * when initializing a component, and hence, may need a wrapper.
  */
 export enum ComponentFlow {
     /**

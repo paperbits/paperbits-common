@@ -5,11 +5,6 @@ import { ComponentFlow } from "./componentFlow";
  */
 export interface WidgetDefinition {
     /**
-     * Component flow determines how component flows on the page, e.g. `inline` or `block`.
-     */
-    componentFlow?: ComponentFlow;
-
-    /**
      * Component definition describes the component view model. Depending on the UI framework, it can be
      * shaped differently. For example, in React it's a class that extends `React.Component`. In Vue
      * it is an object describing the component with composition API or declaration options.
@@ -39,4 +34,10 @@ export interface WidgetDefinition {
      * by the component definition).
      */
     viewModelBinder: Function;
+
+    /**
+     * Defines the wrapper for component element. Certain frameworks (like Knockout) do not replace a root element
+     * when initializing a component, and hence, may need a wrapper. Default: `None`.
+     */
+    componentFlow?: ComponentFlow;
 }

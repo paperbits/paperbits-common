@@ -2,7 +2,9 @@
 import { IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding } from "../editing";
 import { WidgetDefinition, WidgetEditorDefinition } from "../editing";
 
-
+/**
+ * Widget service.
+ */
 export interface IWidgetService {
     /**
      * Returns the orders of registered widgets.
@@ -35,8 +37,8 @@ export interface IWidgetService {
     registerWidgetEditor(widgetName: string, definition: WidgetEditorDefinition): void;
 
     /**
-     * 
-     * @param widgetName 
+     * Removes specified widget from registry.
+     * @param widgetName Name of the widget.
      */
     unregisterWidgetEditor(widgetName: string): void;
 
@@ -47,22 +49,22 @@ export interface IWidgetService {
     getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition
 
     /**
-     * 
-     * @param widgetName 
+     * Returns model binder for specified widget.
+     * @param widgetName Name of the widget.
      */
     getModelBinder<TModel>(widgetName: string): IModelBinder<TModel>;
 
     /**
-     * 
-     * @param model 
+     * Returns model binder for instance of the widget model.
+     * @param model Instance of the widget model.
      */
     getModelBinderForModel<TModel>(model: unknown): IModelBinder<TModel>;
 
     /**
-     * 
-     * @param widgetDefinition 
-     * @param model 
-     * @param bindingContext 
+     * Creates a binding for specified widget definition.
+     * @param widgetDefinition Widget definition.
+     * @param model Instance of the widget model.
+     * @param bindingContext Binding context.
      */
     createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
 }
