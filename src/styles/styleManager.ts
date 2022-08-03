@@ -26,9 +26,9 @@ export class StyleManager {
         return Object.values(this.styleSheets);
     }
 
-    public removeStyleSheet(key: string): void {
+    public removeStyleSheet(styleSheet: StyleSheet): void {
         if (this.eventManager) {
-            this.eventManager.dispatchEvent("onStyleRemove", key);
+            this.eventManager.dispatchEvent("onStyleRemove", styleSheet.key);
         }
     }
 

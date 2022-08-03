@@ -1,4 +1,4 @@
-import { IWidgetBinding } from "../editing";
+import { ComponentBinder, ComponentFlow, IWidgetBinding } from "../editing";
 
 /**
  * Widget binding used to connect widget model to its view model instance.
@@ -10,9 +10,14 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public framework: string;
 
     /**
+     * Component binder.
+     */
+    public componentBinder: ComponentBinder;
+
+    /**
      * Widget view model class.
      */
-    public viewModelClass: new (...args: any[]) => TViewModel;
+    public componentDefinition: unknown;
 
     /**
      * Instance of the view model associated with the widget.
@@ -47,22 +52,38 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Indicates if the widget can be moved in the designer.
      */
-    public draggable: boolean;
+    public draggable?: boolean;
+
+    /**
+     * Indicates if the widget can be selected in the designer.
+     */
+     public selectable?: boolean;
 
     /**
      * Registration name (tag name) of editor component.
      */
-    public editor: string;
+    public editor: string | Function;
+
+    /**
+     * Editor window resizing options, e.g. `vertically horizontally`.
+     */
+     editorResizing?: boolean | string;
+
+     /**
+      * Indicates that scroll is required on overflow. Default: `true`.
+      */
+     editorScrolling?: boolean | string;
 
     /**
      * Widget handler used by the designer.
      */
-    public handler?: any;
+    public handler?: Function;
 
     /**
-     * Determines how component flows on the page. Possible values: "inline" or "block".
+     * Indicates if a component element needs to be wrapped into another DIV element. Certain frameworks (like Knockout)
+     * do not replace a root element when initializing a component, and hence, may need a wrapper).
      */
-    public flow?: string;
+    public wrapper?: ComponentFlow;
 
     /**
      * Propagates changes from widget model to widget view model.
@@ -78,4 +99,13 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      * Callback invoked when the widget view model gets displosed.
      */
     public onDispose?: (viewModel?: TViewModel) => void;
+
+    /**
+     * @deprecated Need to get rid of this property.
+     */
+    public wrapped: boolean;
+
+    constructor() {
+        this.wrapped = true;
+    }
 }

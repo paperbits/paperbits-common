@@ -5,42 +5,37 @@
  */
 export interface IWidgetOrder {
     /**
-     * Name of a widget created by this widget order.
+     * Name of the widget, e.g. `form`.
      */
-    name: string;
+    name?: string;
 
     /**
-     * Display name of the widget created by this widget order.
+     * Display name of the widget, e.g. `Form`.
      */
-    displayName: string;
+    displayName?: string;
 
     /**
-     * Category of the widget.
+     * Category of the widget, e.g. `Forms`.
      */
     category?: string;
 
     /**
-     * Icon CSS class.
+     * Icon CSS class (alternative to `iconUrl` option), e.g. `widget-icon widget-icon-form`.
      */
     iconClass?: string;
 
     /**
-     * Icon URL.
+     * Icon URL (alternative to `iconClass` option), e.g. `https://cdn.paperbits.io`.
      */
     iconUrl?: string;
 
     /**
-     * Widget factory method.
-     */
-    createWidget?(): IWidgetFactoryResult<any, any>;
-
-    /**
      * Widget model factory method. Invoked when widget gets added to the content.
      */
-    createModel(): Promise<any>;
+    createModel?<TModel>(): Promise<TModel>;
 
     /**
      * List of features required for this widget.
      */
-    requires: string[];
+    requires?: string[];
 }

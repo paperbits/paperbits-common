@@ -20,27 +20,22 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Registration name (tag name) of editor component.
      */
-    editor?: string;
+    editor?: string | Function;
 
     /**
      * Editor window resizing options, e.g. `vertically horizontally`.
      */
-    editorResize?: string;
+    editorResizing?: boolean | string;
 
     /**
      * Indicates that scroll is required on overflow. Default: `true`.
      */
-    editorScroll?: boolean;
+    editorScrolling?: boolean | string;
 
     /**
      * Propagates changes from widget model to widget view model.
      */
     applyChanges?: (model?: TModel, viewModel?: TViewModel) => void;
-
-    /**
-     * Indicates if the widget gets ignored by the designer.
-     */
-    readonly?: boolean;
 
     /**
      * Name of the layer the widget resides in.
@@ -80,5 +75,15 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Indicates if the widget can be moved in the designer.
      */
-    draggable: boolean;
+    draggable?: boolean;
+
+    /**
+     * Indicates if the widget can be selected in the designer.
+     */
+    selectable?: boolean;
+
+    /**
+     * Indicates if the widget gets ignored by the designer.
+     */
+    readonly?: boolean;
 }
