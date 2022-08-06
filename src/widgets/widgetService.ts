@@ -77,6 +77,10 @@ export class WidgetService implements IWidgetService {
             return widgetHandler;
         }
 
+        if (!widgetBinding.handler) {
+            return null;
+        }
+
         return this.getWidgetHandlerByType(widgetBinding.handler);
     }
 

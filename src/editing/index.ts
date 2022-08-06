@@ -21,3 +21,4 @@ export * from "./widgetBinding";
 export * from "./widgetContext";
 export * from "./widgetDefinition";
 export * from "./widgetEditorDefinition";
+export * from "./containerModelBinder";
