@@ -65,7 +65,7 @@ export class GridHelper {
                      * Hack to fix and issue. Need to figure out why widget binding is
                      * in the stack of view models.
                      */
-                    return; 
+                    return;
                 }
 
                 viewModels.push(viewModel);
@@ -102,5 +102,26 @@ export class GridHelper {
     public static getModel(element: HTMLElement): any {
         const widgetBinding = GridHelper.getWidgetBinding(element);
         return widgetBinding?.model || null;
+    }
+
+    public static getClosestParentBinding(element: HTMLElement): IWidgetBinding<any, any> {
+        do {
+            const context = ko.contextFor(element);
+
+            if (context?.$data) {
+                const widgetBinding = context.$data instanceof WidgetBinding
+                    ? context.$data // new
+                    : context.$data.widgetBinding; // legacy
+
+                if (widgetBinding) {
+                    return widgetBinding;
+                }
+            }
+
+            element = element.parentElement;
+        }
+        while (element)
+
+        return null;
     }
 }
