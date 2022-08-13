@@ -28,7 +28,7 @@ export interface ViewModelBinder<TModel, TViewModel> {
     createWidgetBinding?<TViewModel>(model: TModel, bindingContext?: Bag<any>): Promise<IWidgetBinding<TModel, TViewModel>>;
 
     /**
-     * Translates the widget state to its instance during rendering. This operartion should not contain asynchronous operations
+     * Translates the widget state to its instance during rendering. This operation should not contain asynchronous operations
      * because of server-side rendering requirements applied, i.e. at publishing time.
      * @param state {TState} Widget state object.
      * @param componentInstance {TInstance} Instance of the widget component.
