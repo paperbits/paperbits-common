@@ -7,38 +7,39 @@ import { IWidgetBinding } from "../editing";
  */
 export interface ViewModelBinder<TModel, TViewModel> {
     /**
-     * Returns true if this view model binder can create view model out of model.
+     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
      * @param model This is data created by digesting config from contract. 
      */
     canHandleModel?(model: TModel): boolean;
 
     /**
-     * @deprecated
-     * Creates view model out of model.
+     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
      * @param model TModel This is data created by digesting config from contract.
      * @param existingViewModel If view model already exists, the binder will update it.
+     * @param bindingContext {Bag<any>} Binding context, which carries additional information passed from the root component.
      */
     modelToViewModel?(model: TModel, existingViewModel?: TViewModel, bindingContext?: Bag<any>): Promise<TViewModel>;
 
     /**
-     * Creates widget binding.
+     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
      * @param model {TModel} This is data created by digesting config from contract.
      * @param bindingContext {Bag<any>} Additional data passed from the top-level binding.
      */
     createWidgetBinding?<TViewModel>(model: TModel, bindingContext?: Bag<any>): Promise<IWidgetBinding<TModel, TViewModel>>;
 
     /**
-     * AAA
-     * @param state 
-     * @param componentInstance 
+     * Translates the widget state to its instance during rendering. This operartion should not contain asynchronous operations
+     * because of server-side rendering requirements applied, i.e. at publishing time.
+     * @param state {TState} Widget state object.
+     * @param componentInstance {TInstance} Instance of the widget component.
      */
     stateToIntance?<TState, TInstance>(state: TState, componentInstance: TInstance): void;
 
     /**
-     * BBB
-     * @param model 
-     * @param state 
-     * @param bindingContext 
+     * Converts the widget model into the widget state object used later on during component rendering.
+     * @param model {TModel} Instance of widget model.
+     * @param state {TState} Widget state object.
+     * @param bindingContext {Bag<any>} Binding context, which carries additional information passed from the root component.
      */
     modelToState?<TState>(model: TModel, state: TState, bindingContext?: Bag<any>): Promise<void>;
 }
