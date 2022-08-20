@@ -43,7 +43,7 @@ export class WidgetService implements IWidgetService {
                 return; // skip adding non-selectable widget to "Add widget" dialog
             }
 
-            const handler: IWidgetHandler = this.injector.resolveClass(<Function>definition.handlerComponent);
+            const handler: IWidgetHandler = this.getWidgetHandlerByWidgetName(widgetName);
 
             const order: IWidgetOrder = {
                 name: widgetName,
@@ -84,6 +84,26 @@ export class WidgetService implements IWidgetService {
         return this.getWidgetHandlerByType(widgetBinding.handler);
     }
 
+    private resolveComponent<TComponent>(component: TComponent | Function | string): TComponent {
+        let componentInstance: TComponent;
+
+        if (typeof component === "string") {
+            componentInstance = this.injector.resolve(component);
+        }
+        else if (typeof component === "function") {
+            componentInstance = this.injector.resolveClass(component);
+        }
+        else {
+            componentInstance = <TComponent>component;
+        }
+
+        return componentInstance;
+    }
+
+    private getWidgetHandlerByDefinition(editorDefintion: WidgetEditorDefinition): IWidgetHandler {
+        return this.resolveComponent<IWidgetHandler>(editorDefintion.handlerComponent);
+    }
+
     private getWidgetHandlerByWidgetName(widgetName: string): IWidgetHandler {
         const editorDefintion = this.widgetEditorEntries[widgetName];
 
@@ -91,10 +111,12 @@ export class WidgetService implements IWidgetService {
             return null;
         }
 
-        const widgetHandler = this.injector.resolveClass(<Function>editorDefintion.handlerComponent);
-        return widgetHandler;
+        return this.getWidgetHandlerByDefinition(editorDefintion);
     }
 
+    /**
+     * @deprected Used to resolve handlers in legacy model.
+     */
     private getWidgetHandlerByType(handlerType: any): IWidgetHandler {
         if (!handlerType) {
             throw new Error(`Parameter "handlerType" not specified.`);
@@ -117,7 +139,7 @@ export class WidgetService implements IWidgetService {
             return null;
         }
 
-        return this.injector.resolveClass(widgetDefinition.modelBinder);
+        return this.resolveComponent<IModelBinder<TModel>>(widgetDefinition.modelBinder);
     }
 
     public async getWidgetModel<TModel>(widgetName: string): Promise<TModel> {
@@ -172,10 +194,6 @@ export class WidgetService implements IWidgetService {
         delete this.widgetEditorEntries[widgetName];
     }
 
-    public unregisterWidgetHandler(widgetName: string): void {
-        delete this.widgetEditorEntries[widgetName];
-    }
-
     public getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition {
         const values = Object.values(this.widgetEntries);
         return values.find(x => model instanceof x.modelDefinition);
@@ -189,7 +207,7 @@ export class WidgetService implements IWidgetService {
             return null;
         }
 
-        return this.injector.resolveClass(definition.modelBinder);
+        return this.resolveComponent<IModelBinder<TModel>>(definition.modelBinder);
     }
 
     public async createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>> {
@@ -201,7 +219,7 @@ export class WidgetService implements IWidgetService {
 
         const widgetDefinition = this.widgetEntries[widgetName];
         const editorDefinition = this.widgetEditorEntries[widgetName];
-        const viewModelBinder = this.injector.resolveClass<ViewModelBinder<TModel, TViewModel>>(widgetDefinition.viewModelBinder);
+        const viewModelBinder = this.resolveComponent<ViewModelBinder<TModel, TViewModel>>(widgetDefinition.viewModelBinder);
 
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
         const eventManager = this.injector.resolve<EventManager>("eventManager");
