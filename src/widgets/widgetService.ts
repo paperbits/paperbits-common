@@ -115,7 +115,7 @@ export class WidgetService implements IWidgetService {
     }
 
     /**
-     * @deprected Used to resolve handlers in legacy model.
+     * @deprecated Used to resolve handlers in legacy model.
      */
     private getWidgetHandlerByType(handlerType: any): IWidgetHandler {
         if (!handlerType) {
