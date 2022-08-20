@@ -22,7 +22,7 @@ export interface WidgetDefinition {
      * Model binder is a utility for conversions between widget contract (the entity stored in the database)
      * and model (the entity used by the Paperbits framework as widget configuration).
      */
-    modelBinder: Function;
+    modelBinder: Function | string;
 
     /**
      * Model definition is the entity used by the Paperbits framework as a widget configuration.
@@ -33,7 +33,7 @@ export interface WidgetDefinition {
      * This is a UI framework-specific utility that translates the widget model into its view model (described
      * by the component definition).
      */
-    viewModelBinder: Function;
+    viewModelBinder: Function | string;
 
     /**
      * Defines the wrapper for component element. Certain frameworks (like Knockout) do not replace a root element
