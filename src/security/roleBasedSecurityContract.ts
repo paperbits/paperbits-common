@@ -1,3 +1,3 @@
 export class RoleBasedSecurityContract {
-    roles: string;
+    roles: string[];
 }
