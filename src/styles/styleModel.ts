@@ -4,14 +4,20 @@ import { StyleSheet, StyleManager } from "./";
  * Style definition.
  */
 export class StyleModel {
-    classNames: string;
-    
-    styleSheet: StyleSheet;
+    /**
+     * CSS class names.
+     */
+    public classNames: string;
+
+    /**
+     * Parent stylesheet where the widget styles reside.
+     */
+    public styleSheet: StyleSheet;
 
     /**
      * @deprecated.
      */
-    styleManager?: StyleManager;
+    public styleManager?: StyleManager;
 
     public toString(): string {
         return this.classNames;
