@@ -122,8 +122,12 @@ export class WidgetService implements IWidgetService {
             throw new Error(`Parameter "handlerType" not specified.`);
         }
 
-        // legacy logic
-        const widgetHandler = this.widgetHandlers.find(x => x instanceof handlerType);
+        let widgetHandler;
+        if(typeof handlerType === "string") {
+            widgetHandler = this.injector.resolve(handlerType);
+        } else {
+            widgetHandler = this.widgetHandlers.find(x => x instanceof handlerType);
+        }
 
         if (!widgetHandler) {
             throw new Error(`No widget handlers of type "${handlerType.name}" registered. Use "registerWidgetHandler" method in IWidgetService to register it.`);
