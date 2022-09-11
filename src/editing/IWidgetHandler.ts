@@ -6,8 +6,8 @@ import { DragSession } from "../ui/draggables";
 
 /**
  * The widget handler gives the editor required context to manipulate the widget model. For example,
- * it describes how the widget gets created, how it responds to drag'n'drop events,
- * what contextual commands it supports, etc.
+ * it describes how the widget gets created, how it responds to drag'n'drop events, what contextual
+ * commands it supports, etc.
  */
 export interface IWidgetHandler {
     /**
@@ -16,36 +16,37 @@ export interface IWidgetHandler {
     getWidgetModel?<TModel>(): Promise<TModel>;
 
     /**
-     * 
-     * @param context 
+     * Returns set of commands used in the designer context menu,
+     * @param context Widget context in the designer.
      */
     getContextCommands?(context: WidgetContext): IContextCommandSet;
 
     /**
-     * 
-     * @param dragSession 
+     * Inicates if the dragged object can be dropped on the widget.
+     * @param dragSession Drag session.
      */
     canAccept?(dragSession: DragSession): boolean;
 
     /**
-     * 
-     * @param dragSession 
+     * Event firing when user hovers the dragged object over the widget.
+     * @param dragSession Drag session.
      */
     onDragOver?(dragSession: DragSession): void;
 
     /**
-     * 
-     * @param dragSession 
+     * Event firing when user drops the dragged object on the widget.
+     * @param dragSession Drag session.
      */
     onDragDrop?(dragSession: DragSession): void;
 
     /**
-     * 
+     * Returns widget style definitions.
      */
     getStyleDefinitions?(): StyleDefinition;
 
     /**
-     * @deprecated Please use `registerWidgetEditor` method and move widget model creation logic from `getWidgetOrder` to `getWidgetModel`.
+     * @deprecated Please use `registerWidgetEditor` method and move widget model creation logic
+     * from `getWidgetOrder` to `getWidgetModel`.
      */
     getWidgetOrder?(): Promise<IWidgetOrder>;
 }
