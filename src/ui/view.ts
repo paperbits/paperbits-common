@@ -1,3 +1,4 @@
+import { ComponentBinder } from "../editing";
 import { IComponent } from "./IComponent";
 import { ResizableOptions } from "./resizableOptions";
 
@@ -11,6 +12,18 @@ export interface View {
      * Definition of a UI component behind this view.
      */
     component?: IComponent;
+
+    /**
+     * Component binder.
+     */
+    componentBinder?: ComponentBinder;
+
+    /**
+     * Component definition.
+     */
+    componentDefinition?: unknown;
+
+    componentParams?: unknown;
 
     /**
      * Help text.
@@ -46,5 +59,5 @@ export interface View {
     /**
      * Allowed values: `vertically`, `horizontally`.
      */
-     resizing?: string | ResizableOptions;
+    resizing?: string | ResizableOptions;
 }

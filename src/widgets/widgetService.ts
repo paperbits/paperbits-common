@@ -235,7 +235,7 @@ export class WidgetService implements IWidgetService {
         widgetBinding.wrapper = widgetDefinition.componentFlow;
 
         if (widgetDefinition.componentBinder === KnockoutComponentBinder) {
-            // Knockout doesn't replace
+            // Knockout doesn't replace top-level node
             widgetBinding.wrapped = widgetBinding.wrapper !== ComponentFlow.None;
         }
 
@@ -243,6 +243,9 @@ export class WidgetService implements IWidgetService {
         if (editorDefinition) {
             widgetBinding.displayName = editorDefinition.displayName;
             widgetBinding.editor = editorDefinition.componentDefinition;
+            //  widgetBinding.editorComponentBinder = editorDefinition.componentBinder;
+            widgetBinding.editorComponentBinder = this.injector.resolveClass(<any>editorDefinition.componentBinder);
+
             widgetBinding.draggable = editorDefinition.draggable;
             widgetBinding.selectable = editorDefinition.selectable;
             widgetBinding.editorScrolling = editorDefinition.editorScrolling;
@@ -266,12 +269,18 @@ export class WidgetService implements IWidgetService {
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 
-        widgetBinding.onCreate = (instance) => {
+        widgetBinding.onCreate = (componentInstance: TViewModel): void => {
+            if (!componentInstance) {
+                throw new Error(`Parameter "instance" not specified.`)
+            }
+
             if (styleManager && widgetState["styles"]?.styleSheet) {
                 styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
-            viewModelBinder.stateToIntance(widgetState, instance);
+            console.log(componentInstance);
+
+            viewModelBinder.stateToIntance(widgetState, componentInstance);
         }
 
         widgetBinding.onDispose = () => {

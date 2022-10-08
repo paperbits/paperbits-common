@@ -65,7 +65,7 @@ export interface IWidgetBinding<TModel, TViewModel> {
     /**
      * Callback invoked when the widget view model gets created.
      */
-    onCreate?: () => void;
+    onCreate?: (instance: any) => void;
 
     /**
      * Callback invoked when the widget view model gets displosed.

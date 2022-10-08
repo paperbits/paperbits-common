@@ -60,9 +60,14 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      public selectable?: boolean;
 
     /**
-     * Registration name (tag name) of editor component.
+     * Editor component registration.
      */
     public editor: string | Function;
+
+    /**
+     * Editor component binder.
+     */
+    public editorComponentBinder?: string | Function | ComponentBinder;
 
     /**
      * Editor window resizing options, e.g. `vertically horizontally`.
@@ -96,7 +101,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     public onCreate?: (viewModel?: TViewModel) => void;
 
     /**
-     * Callback invoked when the widget view model gets displosed.
+     * Callback invoked when the widget view model gets disposed.
      */
     public onDispose?: (viewModel?: TViewModel) => void;
 
