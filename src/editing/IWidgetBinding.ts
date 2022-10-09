@@ -1,3 +1,5 @@
+import { ComponentBinder } from "./componentBinder";
+
 /**
  * Structure that binds widget view model to widget HTML element.
  */
@@ -21,6 +23,11 @@ export interface IWidgetBinding<TModel, TViewModel> {
      * Registration name (tag name) of editor component.
      */
     editor?: string | Function;
+
+    /**
+     * Editor component binder.
+     */
+    editorComponentBinder?: ComponentBinder;
 
     /**
      * Editor window resizing options, e.g. `vertically horizontally`.

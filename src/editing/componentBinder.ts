@@ -5,7 +5,7 @@ export interface ComponentBinder {
      * @param componentDefinition - A component definition specific to used UI-framework.
      * @param componentParams - Parameters used for component instantiation.
      */
-    bind(element: Element, componentDefinition: any, componentParams?: unknown): Promise<any>;
+    bind(element: Element, componentDefinition: unknown, componentParams?: unknown): Promise<any>;
 
     /**
      * Detached the component from HTML element.

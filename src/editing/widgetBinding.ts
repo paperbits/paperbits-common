@@ -57,7 +57,7 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Indicates if the widget can be selected in the designer.
      */
-     public selectable?: boolean;
+    public selectable?: boolean;
 
     /**
      * Editor component registration.
@@ -67,17 +67,17 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
     /**
      * Editor component binder.
      */
-    public editorComponentBinder?: string | Function | ComponentBinder;
+    public editorComponentBinder?: ComponentBinder;
 
     /**
      * Editor window resizing options, e.g. `vertically horizontally`.
      */
-     editorResizing?: boolean | string;
+    editorResizing?: boolean | string;
 
-     /**
-      * Indicates that scroll is required on overflow. Default: `true`.
-      */
-     editorScrolling?: boolean | string;
+    /**
+     * Indicates that scroll is required on overflow. Default: `true`.
+     */
+    editorScrolling?: boolean | string;
 
     /**
      * Widget handler used by the designer.

@@ -278,8 +278,6 @@ export class WidgetService implements IWidgetService {
                 styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
-            console.log(componentInstance);
-
             viewModelBinder.stateToIntance(widgetState, componentInstance);
         }
 

@@ -1,8 +1,12 @@
-import { ComponentBinder } from "../editing";
 import { IComponent } from "./IComponent";
 import { ResizableOptions } from "./resizableOptions";
 
 export interface View {
+    /**
+     * View name, e.g. `picture-editor`.
+     */
+    name?: string;
+
     /**
      * View heading, e.g. "Picture editor".
      */
@@ -12,18 +16,6 @@ export interface View {
      * Definition of a UI component behind this view.
      */
     component?: IComponent;
-
-    /**
-     * Component binder.
-     */
-    componentBinder?: ComponentBinder;
-
-    /**
-     * Component definition.
-     */
-    componentDefinition?: unknown;
-
-    componentParams?: unknown;
 
     /**
      * Help text.
