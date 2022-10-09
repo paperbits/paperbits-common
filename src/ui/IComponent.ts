@@ -1,4 +1,6 @@
-﻿/**
+﻿import { ComponentBinder } from "../editing";
+
+/**
  * Definition of a UI component.
  */
 export interface IComponent {
@@ -16,4 +18,8 @@ export interface IComponent {
      * A lifecycle hook fired after the component mounted.
      */
     oncreate?: (viewModel?: any, element?: HTMLElement) => void;
+
+    binder?: ComponentBinder;
+
+    definition?: unknown;
 }

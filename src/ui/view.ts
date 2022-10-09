@@ -3,6 +3,11 @@ import { ResizableOptions } from "./resizableOptions";
 
 export interface View {
     /**
+     * View name, e.g. `picture-editor`.
+     */
+    name?: string;
+
+    /**
      * View heading, e.g. "Picture editor".
      */
     heading?: string;
@@ -46,5 +51,5 @@ export interface View {
     /**
      * Allowed values: `vertically`, `horizontally`.
      */
-     resizing?: string | ResizableOptions;
+    resizing?: string | ResizableOptions;
 }

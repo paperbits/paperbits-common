@@ -54,7 +54,7 @@ export class DragManager {
 
     private onPointerMove(event: MouseEvent): void {
         if (this.viewManager.mode == ViewManagerMode.preview) {
-            return ;
+            return;
         }
         if (!this.isDragged) {
             return;
@@ -132,8 +132,10 @@ export class DragManager {
 
         // Fixating the sizes
         if (source.configuration.sticky) {
-            this.dragged.style.width = this.dragged.clientWidth + "px";
-            this.dragged.style.height = this.dragged.clientHeight + "px";
+            const rect = this.dragged.getBoundingClientRect();
+
+            this.dragged.style.width = rect.width + "px";
+            this.dragged.style.height = rect.height + "px";
         }
 
         if (source.configuration.ondragstart) {
@@ -158,7 +160,7 @@ export class DragManager {
 
     private cancelDragging(): void {
         if (this.viewManager.mode == ViewManagerMode.preview) {
-            return ;
+            return;
         }
         this.target = null;
         this.completeDragging();
@@ -209,7 +211,7 @@ export class DragManager {
 
     private onPointerUp(event: MouseEvent): void {
         if (this.viewManager.mode == ViewManagerMode.preview) {
-            return ;
+            return;
         }
         clearTimeout(this.startDraggingTimeout);
 
@@ -230,7 +232,7 @@ export class DragManager {
 
     public onPointerDown(source: DragSource): void {
         if (this.viewManager.mode == ViewManagerMode.preview) {
-            return ;
+            return;
         }
         if (source.configuration.sticky) {
             clearTimeout(this.startDraggingTimeout);

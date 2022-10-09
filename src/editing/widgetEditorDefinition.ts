@@ -11,11 +11,11 @@ export interface WidgetEditorDefinition {
     displayName: string; // Widget display name
 
     /**
-     * Component definition describes the component view model. Depending on the UI framework, it can be
-     * shaped differently. For example, in React it's a class that extends `React.Component`. In Vue
-     * it is an object describing the component with composition API or declaration options.
+     * Component definition is a class or object that is used to create a component instance. Depending on the
+     * UI framework, it can be shaped differently. For example, in React it's a class that extends `React.Component`.
+     * In Vue it is an object describing the component with composition API or declaration options.
      */
-    componentDefinition: any;
+    componentDefinition: unknown;
 
     /**
      * Component binder is a UI framework-specific utility that helps to create an instance of the component
