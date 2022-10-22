@@ -8,25 +8,26 @@ import { Contract } from "../contract";
 export interface IModelBinder<TModel> {
     /**
      * @deprecated Determines if specified contract can be converted into model by this model binder.
-     * @param contract - Contract.
+     * @param contract - Widget data contract.
      */
     canHandleContract?(contract: Contract): boolean;
 
     /**
-     * @deprecated Determines if specified model can be converted into contract by this model binder.
-     * @param model - Model.
+     * Determines if specified model can be converted into contract by this model binder. If this operation id
+     * not defined in the model binder, the model gets compared to `modelDefinition` value of the widget definition.
+     * @param model - An instance of the widget model.
      */
-    canHandleModel?(model: TModel): boolean;
+    canHandleModel?(model: TModel, widgetName?: string): boolean;
 
     /**
      * Converts a model to a contract.
-     * @param model - Model.
+     * @param model - An instance of the widget model.
      */
     modelToContract(model: TModel): any;
 
     /**
      * Converts contract to model.
-     * @param contract - Contract.
+     * @param contract - Widget data contract.
      * @param bindingContext - Binding context.
      */
     contractToModel(contract: any, bindingContext?: Bag<any>): Promise<any>;

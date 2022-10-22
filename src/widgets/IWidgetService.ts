@@ -43,7 +43,7 @@ export interface IWidgetService {
     unregisterWidgetEditor(widgetName: string): void;
 
     /**
-     * Returns widget handler that can work with the specified widget model.
+     * Returns widget definition for specified widget model.
      * @param model Instance of the widget model.
      */
     getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition

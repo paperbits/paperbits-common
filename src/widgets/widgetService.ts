@@ -195,8 +195,20 @@ export class WidgetService implements IWidgetService {
     }
 
     public getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition {
-        const values = Object.values(this.widgetEntries);
-        return values.find(x => model instanceof x.modelDefinition);
+        const widgetNames = Object.keys(this.widgetEntries);
+
+        const widgetName = widgetNames.find(widgetName => {
+            const definition = this.widgetEntries[widgetName];
+            const binder = this.getModelBinder(widgetName)
+
+            if (!!binder.canHandleModel) {
+                return binder?.canHandleModel(model, widgetName)
+            }
+
+            return model instanceof definition.modelDefinition
+        });
+
+        return this.widgetEntries[widgetName];
     }
 
     public getModelBinderForModel<TModel>(model: TModel): IModelBinder<TModel> {
