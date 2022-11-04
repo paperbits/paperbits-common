@@ -9,6 +9,10 @@ export class ContainerModelBinder {
     ) { }
 
     public async getChildModels(nodes: Contract[] = [], bindingContext: any): Promise<any[]> {
+        if (!nodes) {
+            return [];
+        }
+
         const modelPromises = nodes.map((contract: Contract) => {
             let modelBinder = this.widgetService.getModelBinder(contract.type);
 
