@@ -1,9 +1,13 @@
+import { ISettingsProvider } from "../configuration";
 import { ISiteService, SiteSettingsContract } from "../sites";
 
 export class SitemapBuilder {
     private readonly permalinks: string[];
 
-    constructor(private readonly siteService: ISiteService) {
+    constructor(
+        private readonly settingsProvider: ISettingsProvider,
+        private readonly siteService: ISiteService
+    ) {
         this.permalinks = [];
     }
 
@@ -13,11 +17,15 @@ export class SitemapBuilder {
 
     public async buildSitemap(): Promise<string> {
         try {
-            const settings = await this.siteService.getSettings<any>();
-            const siteSettings: SiteSettingsContract = settings.site;
-            const hostname = siteSettings?.hostname;
-            const baseUrl = hostname ? `https://${hostname}` : "";
+            let hostname = await this.settingsProvider.getSetting("hostname");
 
+            if (!hostname) {
+                const settings = await this.siteService.getSettings<any>();
+                const siteSettings: SiteSettingsContract = settings.site;
+                hostname = siteSettings?.hostname;
+            }
+
+            const baseUrl = hostname ? `https://${hostname}` : "";
             const now = new Date();
             const dateTimeISO = now.toISOString();
             const urls = this.permalinks.map(permalink =>
