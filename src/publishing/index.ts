@@ -8,5 +8,5 @@ export * from "./sitemapBuilder";
 export * from "./socialShareDataHtmlPagePublisherPlugin";
 export * from "./openGraphHtmlPagePublisherPlugin";
 export * from "./linkedDataHtmlPagePublisherPlugin";
-export * from "./dominoHtmlDocumentProvider";
+export * from "./jsdomHtmlDocumentProvider";
 export * from "./htmlPagePublisherPlugin";
