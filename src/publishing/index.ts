@@ -9,4 +9,5 @@ export * from "./socialShareDataHtmlPagePublisherPlugin";
 export * from "./openGraphHtmlPagePublisherPlugin";
 export * from "./linkedDataHtmlPagePublisherPlugin";
 export * from "./dominoHtmlDocumentProvider";
+export * from "./happydomHtmlDocumentProvider";
 export * from "./htmlPagePublisherPlugin";
