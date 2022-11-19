@@ -80,6 +80,8 @@ export class HtmlPagePublisher {
             }
 
             const htmlContent = "<!DOCTYPE html>" + document.documentElement.outerHTML;
+            document.defaultView.window.close();
+            
             const optimizedHtmlContent = await this.htmlPageOptimizer.optimize(htmlContent);
 
             return optimizedHtmlContent;

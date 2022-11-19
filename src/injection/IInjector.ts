@@ -66,6 +66,8 @@ export interface IInjector {
      */
     bindToCollection<T>(collectionName: string, component: any, componentName?: string): void;
 
+    bindToCollectionAsSingletone(collectionName: string, component: any, componentName?: string): void ;
+
     /**
      * Binds an instance of a component (or any other entity that doesn't require inversion of control resolution) to a collection.
      * @param collectionName {string} Name of the collection, e.g. myCollection.
