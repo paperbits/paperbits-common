@@ -36,7 +36,9 @@ export class WidgetService implements IWidgetService {
     public async getWidgetOrders(): Promise<IWidgetOrder[]> {
         const widgetNames = Object.keys(this.widgetEditorEntries);
 
-        const orders = widgetNames.map(widgetName => {
+        const orders = [];
+
+        widgetNames.forEach(widgetName => {
             const definition = this.widgetEditorEntries[widgetName];
 
             if (definition.selectable === false) {
@@ -59,7 +61,7 @@ export class WidgetService implements IWidgetService {
                 order.iconClass = defaultWidgetIconClass;
             }
 
-            return order;
+            orders.push(order);
         });
 
         let legacyOrders = await this.getWidgetOrdersLegacy();
