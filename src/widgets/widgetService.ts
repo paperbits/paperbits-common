@@ -233,6 +233,14 @@ export class WidgetService implements IWidgetService {
         const editorDefinition = this.widgetEditorEntries[widgetName];
         const viewModelBinder = this.resolveComponent<ViewModelBinder<TModel, TViewModel>>(widgetDefinition.viewModelBinder);
 
+        if (!viewModelBinder.modelToState) {
+            throw new Error(`View model binder doesn't have "modelToState" method defined.`);
+        }
+
+        if (!viewModelBinder.stateToIntance) {
+            throw new Error(`View model binder doesn't have "stateToIntance" method defined.`);
+        }
+
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
         const eventManager = this.injector.resolve<EventManager>("eventManager");
 
