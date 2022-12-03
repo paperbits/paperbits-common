@@ -44,4 +44,14 @@ export interface IBlockService {
     getBlockContent?(blockKey: string): Promise<Contract>;
 
     importSnippet?(key: string, snippet: Object): Promise<void>;
+
+    /**
+     * Returns pre-defined block snippets.
+     */
+    getPredefinedBlockSnippets(): Promise<Object>;
+
+    /**
+     * Returns pre-defined grid snippets.
+     */
+    getPredefinedGridSnippets(): Promise<Object>;
 }

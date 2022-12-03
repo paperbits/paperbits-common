@@ -6,49 +6,89 @@ import { IBlockService } from "./IBlockService";
 import { Contract } from "../contract";
 import { BlockContract } from "./blockContract";
 import { HttpClient } from "../http";
-import { Bag } from "../bag";
+import { ISettingsProvider } from "../configuration";
+import { Logger } from "../logging";
 
 const blockPath = "blocks";
 const documentsPath = "files";
 
 export class BlockService implements IBlockService {
-    private preDefinedBlocksCache: Object;
+    private predefinedBlockSnippetsCache: Object;
+    private predefinedGridSnippetsCache: Object;
 
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly httpClient: HttpClient
+        private readonly settingsProvider: ISettingsProvider,
+        private readonly httpClient: HttpClient,
+        private readonly logger: Logger
     ) { }
 
-    private async getPredefinedBlocks(): Promise<Object> {
-        if (this.preDefinedBlocksCache) {
-            return this.preDefinedBlocksCache;
+    public async getPredefinedBlockSnippets(): Promise<Object> {
+        if (this.predefinedBlockSnippetsCache) {
+            return this.predefinedBlockSnippetsCache;
         }
+
+        const blockSnippetsUrl = await this.settingsProvider.getSetting<string>(Constants.blockSnippetsLibraryUrlSettingName)
+            || Constants.blockSnippetsLibraryUrl;
 
         try {
             const response = await this.httpClient.send({
-                url: Constants.blockSnippetsLibraryUrl,
+                url: blockSnippetsUrl,
                 method: "GET"
             });
 
-            this.preDefinedBlocksCache = response.toObject();
+            if (response.statusCode !== 200) {
+                this.logger.trackEvent("BlockService", { message: `Unable to load block snippets from "${blockSnippetsUrl}",` });
+            }
 
-            return this.preDefinedBlocksCache;
+            this.predefinedBlockSnippetsCache = response.toObject();
+
+            return this.predefinedBlockSnippetsCache;
         }
         catch (error) {
-            console.warn(`Unable to load pre-defined blocks. ${error.stack}`);
-            this.preDefinedBlocksCache = {};
+            this.logger.trackEvent("BlockService", { message: `Unable to load pre-defined block snippets. ${error.stack}` });
         }
+
+        return this.predefinedBlockSnippetsCache;
+    }
+
+    public async getPredefinedGridSnippets(): Promise<Object> {
+        if (this.predefinedGridSnippetsCache) {
+            return this.predefinedGridSnippetsCache;
+        }
+
+        const girdSnippetsUrl = await this.settingsProvider.getSetting<string>(Constants.gridSnippetsLibraryUrlSettingName)
+            || Constants.gridSnippetsLibraryUrl;
+
+        try {
+            const response = await this.httpClient.send({
+                url: girdSnippetsUrl,
+                method: "GET"
+            });
+
+            if (response.statusCode !== 200) {
+                this.logger.trackEvent("BlockService", { message: `Unable to load grid snippets from "${girdSnippetsUrl}".` });
+                return null;
+            }
+
+            this.predefinedGridSnippetsCache = response.toObject();
+        }
+        catch (error) {
+            this.logger.trackEvent("BlockService", { message: `Unable to load pre-defined block snippets. ${error.stack}` });
+        }
+
+        return this.predefinedGridSnippetsCache;
     }
 
     private async getPreDefinedBlockByKey(key: string): Promise<Contract> {
-        const predefinedBlocks = await this.getPredefinedBlocks();
+        const predefinedBlocks = await this.getPredefinedBlockSnippets();
         const block = Objects.getObjectAt<BlockContract>(key, predefinedBlocks);
 
         if (!block?.key) {
             return null;
         }
 
-        const blockContent = Objects.getObjectAt<Contract>(block.contentKey, this.preDefinedBlocksCache);
+        const blockContent = Objects.getObjectAt<Contract>(block.contentKey, this.predefinedBlockSnippetsCache);
 
         return blockContent;
     }
