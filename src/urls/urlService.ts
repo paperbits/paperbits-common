@@ -2,7 +2,6 @@
 import { UrlContract } from "../urls/urlContract";
 import { IUrlService } from "../urls/IUrlService";
 import { IObjectStorage, Query, Page } from "../persistence";
-import * as _ from "lodash";
 
 const urlsPath = "urls";
 

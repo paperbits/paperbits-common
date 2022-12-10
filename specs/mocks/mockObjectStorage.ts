@@ -7,7 +7,6 @@
  */
 
 
-import * as _ from "lodash";
 import * as Objects from "../../src/objects";
 import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../../src/persistence";
 
@@ -39,7 +38,7 @@ export class MockObjectStorage implements IObjectStorage {
             this.storageDataObject[mainNode] = dataObject;
         }
         else {
-            if (!_.has(this.storageDataObject, mainNode)) {
+            if (!this.storageDataObject.hasOwnProperty(mainNode)) {
                 this.storageDataObject[mainNode] = {};
             }
             this.storageDataObject[mainNode][pathParts[1]] = dataObject;
@@ -55,7 +54,7 @@ export class MockObjectStorage implements IObjectStorage {
         //             this.storageDataObject[mainNode] = obj;
         //         }
         //         else {
-        //             if (!_.has(this.storageDataObject, mainNode)) {
+        //             if (!this.storageDataObject.hasOwnProperty(mainNode)) {
         //                 this.storageDataObject[mainNode] = {};
         //             }
         //             this.storageDataObject[mainNode][pathParts[1]] = obj;

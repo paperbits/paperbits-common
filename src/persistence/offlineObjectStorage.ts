@@ -1,5 +1,4 @@
 import * as Objects from "../objects";
-import * as _ from "lodash";
 import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
 import { EventManager } from "../events";
