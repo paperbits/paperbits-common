@@ -1,4 +1,6 @@
-﻿export interface SiteSettingsContract {
+﻿import { OpenGraph } from "../publishing/openGraph";
+
+export interface SiteSettingsContract {
     /**
      * Website title.
      */
@@ -19,17 +21,18 @@
      */
     hostname?: string;
 
+    /**
+     * Favicon image source key.
+     */
     faviconSourceKey?: string;
 
-    author?: string;
     /**
-     * Facebook Open Graph settings.
+     * Website author.
      */
-    ogSiteName?: string;
+    author?: string;
 
-    ogUrl?: string;
-
-    ogType?: "website" | "article" | "blog";
-
-    ogImageSourceKey?: string;
+    /**
+     * Open Graph settings.
+     */
+    openGraphSettings?: OpenGraph;
 }

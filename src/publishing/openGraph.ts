@@ -23,7 +23,7 @@ export interface OpenGraph {
     /**
      * og:type
      */
-    type: string;
+    type: OpenGraphType;
 
     /**
      * og:title
@@ -46,4 +46,10 @@ export interface OpenGraph {
     url?: string;
 
     image?: OpenGraphImage;
+}
+
+export enum OpenGraphType {
+    website = "website",
+    article = "article",
+    blog = "blog"
 }
