@@ -20,22 +20,7 @@ export enum Events {
     DragEnd = "dragend",
     Paste = "paste",
     Error = "error",
-    UnhandledRejection = "unhandledrejection"
-}
-
-export enum MouseButton {
-    /**
-     * Main button, usually the left button or the un-initialized state.
-     */
-    Main = 0,
-
-    /**
-     * Auxiliary button, usually the wheel button or the middle button (if present).
-     */
-    Auxiliary = 1,
-
-    /**
-     * Secondary button, usually the right button.
-     */
-    Secondary = 2
+    UnhandledRejection = "unhandledrejection",
+    Undo = "onUndo",
+    Redo = "onRedo"
 }

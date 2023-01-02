@@ -1,7 +1,7 @@
 import * as Objects from "../objects";
 import { IObjectStorage, Query, Operator, OrderDirection, Page } from "../persistence";
 import { IObjectStorageMiddleware } from "./IObjectStorageMiddleware";
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 import { ILocalCache, CachingStrategy } from "../caching";
 
 interface HistoryRecord {
@@ -35,8 +35,8 @@ export class OfflineObjectStorage implements IObjectStorage {
         this.future = [];
 
         if (eventManager) {
-            this.eventManager.addEventListener("onUndo", () => this.undo());
-            this.eventManager.addEventListener("onRedo", () => this.redo());
+            this.eventManager.addEventListener(Events.Undo, () => this.undo());
+            this.eventManager.addEventListener(Events.Redo, () => this.redo());
         }
     }
 

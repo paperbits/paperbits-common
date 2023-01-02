@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import { OfflineObjectStorage } from "../persistence";
 import { ToolButton } from "../ui";
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 
 
 const defaultTooltip = `<h1>Redo</h1><p>Redo last undone action.</p><div class="subtle">(Ctrl+Y)</div>`;
@@ -34,6 +34,6 @@ export class RedoToolButton implements ToolButton {
         }
     }
     public onActivate(): void {
-        this.eventManager.dispatchEvent("onRedo");
+        this.eventManager.dispatchEvent(Events.Redo);
     }
 }

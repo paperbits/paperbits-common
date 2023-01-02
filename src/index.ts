@@ -8,3 +8,4 @@ export * from "./objects";
 export * from "./bootstrap";
 export * from "./regexps";
 export * from "./mimeTypes";
+export * from "./mouse";
