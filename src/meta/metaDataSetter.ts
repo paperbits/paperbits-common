@@ -1,11 +1,13 @@
+import { MimeTypes } from "../mimeTypes";
+
 export class MetaDataSetter {
-    public static iconContentType: string = "image/x-icon";
+    public static iconContentType: string = MimeTypes.imageIcon;
 
     public static setFavIcon(iconUrl: string): void {
         if (!iconUrl) {
             return;
         }
-        
+
         const link = <HTMLLinkElement>document.querySelector("link[rel*='icon']");
 
         if (link) {

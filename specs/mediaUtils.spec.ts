@@ -1,3 +1,4 @@
+import { MimeTypes } from "@paperbits/common";
 import { expect } from "chai";
 import { MediaVariantContract } from "../src/media";
 import * as MediaUtils from "../src/media/mediaUtils";
@@ -7,7 +8,7 @@ describe("Media utils", async () => {
         const variantWithMimeType: MediaVariantContract = {
             width: 200,
             height: 150,
-            mimeType: "image/png"
+            mimeType: MimeTypes.imagePng
         };
 
         const variantWithoutMimeType: MediaVariantContract = {

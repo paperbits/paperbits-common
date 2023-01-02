@@ -19,7 +19,6 @@ export interface HtmlPage {
     socialShareData?: SocialShareData;
     faviconPermalink?: string;
     styleReferences: string[];
-    content: Contract;
     template: string;
     bindingContext?: Bag<any>;
 }
