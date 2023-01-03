@@ -99,7 +99,8 @@ export enum Attributes {
     Download = "download",
     TabIndex = "tabindex",
     Role = "role",
-    Rel = "rel"
+    Rel = "rel",
+    ContentEditable = "contentEditable"
 }
 
 export enum DataAttributes {
