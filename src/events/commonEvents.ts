@@ -22,5 +22,7 @@ export enum Events {
     Error = "error",
     UnhandledRejection = "unhandledrejection",
     Undo = "onUndo",
-    Redo = "onRedo"
+    Redo = "onRedo",
+    PopupRequest = "onPopupRequest",
+    PopupRepositionRequest = "onPopupRepositionRequest"
 }

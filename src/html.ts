@@ -40,6 +40,10 @@ export function findFirst(node: Node, predicate: (node: Node) => boolean): Node 
     return null;
 }
 
+/**
+ * Returns a stack of ancestors of specified starting element.
+ * @param element - Starting element.
+ */
 export function parents(element: HTMLElement): HTMLElement[] {
     const stack = selfAndParents(element);
 
@@ -50,6 +54,10 @@ export function parents(element: HTMLElement): HTMLElement[] {
     return [];
 }
 
+/**
+ * Returns a stack of ancestor elements and the specified starting element itself.
+ * @param element - Starting element.
+ */
 export function selfAndParents(element: HTMLElement): HTMLElement[] {
     const stack = [];
 
@@ -60,6 +68,23 @@ export function selfAndParents(element: HTMLElement): HTMLElement[] {
 
     return stack;
 }
+
+/**
+ * Determines if the element is actually visible, regardless of it's presence in the document.
+ * @param element - An element being checked.
+ */
+export function isVisible(element: HTMLElement): boolean {
+    const box = element.getBoundingClientRect();
+    return box.width > 0 && box.height > 0;
+};
+
+/**
+ * Returns a collection of focusable element hosted by specified element.
+ * @param element - Host element.
+ */
+export function getFocusableElements(element: HTMLElement): HTMLElement[] {
+    return Arrays.coerce<HTMLElement>(element.querySelectorAll("*")).filter(x => x.tabIndex >= 0 && isVisible(x));
+};
 
 export enum AriaAttributes {
     /**
