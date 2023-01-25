@@ -25,7 +25,7 @@ export class BlockService implements IBlockService {
 
     public async getPredefinedBlockSnippets(): Promise<Object> {
         if (this.predefinedBlockSnippetsCache) {
-            return this.predefinedBlockSnippetsCache;
+            return Objects.clone(this.predefinedBlockSnippetsCache);
         }
 
         const blockSnippetsUrl = await this.settingsProvider.getSetting<string>(Constants.blockSnippetsLibraryUrlSettingName)
@@ -42,19 +42,17 @@ export class BlockService implements IBlockService {
             }
 
             this.predefinedBlockSnippetsCache = response.toObject();
-
-            return this.predefinedBlockSnippetsCache;
         }
         catch (error) {
             this.logger.trackEvent("BlockService", { message: `Unable to load pre-defined block snippets. ${error.stack}` });
         }
 
-        return this.predefinedBlockSnippetsCache;
+        return Objects.clone(this.predefinedBlockSnippetsCache);
     }
 
     public async getPredefinedGridSnippets(): Promise<Object> {
         if (this.predefinedGridSnippetsCache) {
-            return this.predefinedGridSnippetsCache;
+            return Objects.clone(this.predefinedGridSnippetsCache);
         }
 
         const girdSnippetsUrl = await this.settingsProvider.getSetting<string>(Constants.gridSnippetsLibraryUrlSettingName)
@@ -77,7 +75,7 @@ export class BlockService implements IBlockService {
             this.logger.trackEvent("BlockService", { message: `Unable to load pre-defined block snippets. ${error.stack}` });
         }
 
-        return this.predefinedGridSnippetsCache;
+        return Objects.clone(this.predefinedGridSnippetsCache);
     }
 
     private async getPreDefinedBlockByKey(key: string): Promise<Contract> {
