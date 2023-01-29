@@ -1,4 +1,5 @@
 import { Router, Route } from ".";
+import { Events } from "../events";
 import { Logger } from "../logging";
 
 export class HistoryRouteHandler {
@@ -13,7 +14,7 @@ export class HistoryRouteHandler {
         this.onRouteChange = this.onRouteChange.bind(this);
         router.addRouteChangeListener(this.onRouteChange);
         router.addHistoryUpdateListener(this.onRouteChange);
-        window.addEventListener("popstate", this.onPopState.bind(this));
+        window.addEventListener(Events.PopState, this.onPopState.bind(this));
     }
 
     private onPopState(event: PopStateEvent): void {

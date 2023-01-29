@@ -1,8 +1,9 @@
+import { Events } from "../events";
 import { Route, Router } from "./";
 
 export class LocationRouteHandler {
     constructor(private readonly router: Router) {
-        window.addEventListener("popstate", this.onPopState.bind(this));
+        window.addEventListener(Events.PopState, this.onPopState.bind(this));
         router.addRouteChangeListener(this.onRouteChange);
     }
 
