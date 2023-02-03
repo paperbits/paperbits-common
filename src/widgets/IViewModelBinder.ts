@@ -29,7 +29,7 @@ export interface ViewModelBinder<TModel, TViewModel> {
 
     /**
      * Translates the widget state to its instance during rendering. This operation should not contain asynchronous operations
-     * because of server-side rendering requirements applied, i.e. at publishing time.
+     * due to server-side rendering requirements applied at the publishing time.
      * @param state {TState} Widget state object.
      * @param componentInstance {TInstance} Instance of the widget component.
      */

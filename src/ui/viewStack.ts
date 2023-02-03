@@ -38,10 +38,16 @@ export class ViewStack {
         }
     }
 
+    /**
+     * Pushes the view to the top of the stack.
+     */
     public pushView(view: View): void {
         this.stack.push(view);
     }
 
+    /**
+     * Removes the top view from the stack.
+     */
     public popView(): void {
         const view = this.stack.pop();
 
@@ -57,6 +63,10 @@ export class ViewStack {
         }
     }
 
+    /**
+     * Removes specified view and all its children from the stack.
+     * @param view - A view to be removed.
+     */
     public removeView(view: View): void {
         if (!this.stack.includes(view)) {
             return;
@@ -80,10 +90,16 @@ export class ViewStack {
         }
     }
 
+    /**
+     * Returns all views in the stack.
+     */
     public getViews(): View[] {
         return [...this.stack]; // clone array
     }
 
+    /**
+     * Clears the view stack.
+     */
     public clear(): void {
         this.stack.forEach(view => view.close());
         this.stack = [];
