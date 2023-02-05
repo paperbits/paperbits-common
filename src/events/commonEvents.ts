@@ -23,6 +23,7 @@ export enum Events {
     Paste = "paste",
     PopState = "popstate",
     Error = "error",
+    Wheel = "wheel",
     UnhandledRejection = "unhandledrejection",
     Undo = "onUndo",
     Redo = "onRedo",
