@@ -19,5 +19,6 @@ export enum Keys {
     End = "End",
     Delete = "Delete",
     PageUp = "PageUp",
-    PageDown = "PageDown"
+    PageDown = "PageDown",
+    F9 = "F9"
 }
