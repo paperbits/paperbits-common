@@ -24,7 +24,7 @@ export class DragSource {
     }
 
     private onPointerDown(event: MouseEvent): void {
-        if (event.buttons !== 1 || event["handled"]) {
+        if (event.ctrlKey || event.buttons !== 1 || event["handled"]) {
             return;
         }
 
