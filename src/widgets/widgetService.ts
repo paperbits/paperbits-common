@@ -1,4 +1,4 @@
-﻿import { KnockoutComponentBinder } from "@paperbits/core/ko/knockoutComponentBinder";
+﻿import { KnockoutComponentBinder } from "../ko/knockoutComponentBinder";
 import { Bag } from "../bag";
 import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
