@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { ComponentBinder } from "../editing";
+import { ComponentBinder } from "../components";
 
 
 export class KnockoutComponentBinder implements ComponentBinder {

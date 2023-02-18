@@ -1,4 +1,4 @@
-import { ComponentBinder } from "./componentBinder";
+import { ComponentBinder } from "../components";
 import { IWidgetHandler } from "./IWidgetHandler";
 
 /**

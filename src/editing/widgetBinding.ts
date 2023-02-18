@@ -1,4 +1,5 @@
-import { ComponentBinder, ComponentFlow, IWidgetBinding } from "../editing";
+import { ComponentBinder, ComponentFlow } from "../components";
+import { IWidgetBinding } from "../editing";
 
 /**
  * Widget binding used to connect widget model to its view model instance.

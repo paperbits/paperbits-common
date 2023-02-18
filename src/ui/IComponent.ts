@@ -1,4 +1,4 @@
-﻿import { ComponentBinder } from "../editing";
+﻿import { ComponentBinder } from "../components";
 
 /**
  * Definition of a UI component.

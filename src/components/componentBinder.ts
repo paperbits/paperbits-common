@@ -1,3 +1,6 @@
+/**
+ * A utility that controls the binding of a specific UI framework component to HTML element.
+ */
 export interface ComponentBinder {
     /**
      * Instantiates a component and attach it the HTML element.

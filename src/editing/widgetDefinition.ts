@@ -1,4 +1,4 @@
-import { ComponentFlow } from "./componentFlow";
+import { ComponentFlow } from "../components/componentFlow";
 
 /**
  * Widget definition.

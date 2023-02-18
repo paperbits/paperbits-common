@@ -1,4 +1,4 @@
-import { ComponentBinder } from "./componentBinder";
+import { ComponentBinder } from "../components";
 
 /**
  * Structure that binds widget view model to widget HTML element.

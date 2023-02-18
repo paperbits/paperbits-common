@@ -1,6 +1,5 @@
 export * from "./box";
-export * from "./componentBinder";
-export * from "./componentFlow";
+export * from "../components/componentFlow";
 export * from "./gridHelper";
 export * from "./gridItem";
 export * from "./htmlEditorEvents";
