@@ -13,7 +13,7 @@ export interface IModelBinder<TModel> {
     canHandleContract?(contract: Contract): boolean;
 
     /**
-     * Determines if specified model can be converted into contract by this model binder. If this operation id
+     * @deprecated Determines if specified model can be converted into contract by this model binder. If this operation id
      * not defined in the model binder, the model gets compared to `modelDefinition` value of the widget definition.
      * @param model - An instance of the widget model.
      */
@@ -23,12 +23,12 @@ export interface IModelBinder<TModel> {
      * Converts a model to a contract.
      * @param model - An instance of the widget model.
      */
-    modelToContract(model: TModel): any;
+    modelToContract(model: TModel): Contract;
 
     /**
      * Converts contract to model.
      * @param contract - Widget data contract.
      * @param bindingContext - Binding context.
      */
-    contractToModel(contract: any, bindingContext?: Bag<any>): Promise<any>;
+    contractToModel<TModel>(contract: any, bindingContext?: Bag<any>): Promise<TModel>;
 }

@@ -5,7 +5,7 @@ import { SecurityModelBinder } from "./securityModelBinder";
 
 
 export class RoleBasedSecurityModelBinder implements SecurityModelBinder<RoleBasedSecurityContract, RoleBasedSecurityModel> {
-    public contractToModel(contract: RoleBasedSecurityContract): RoleBasedSecurityModel {
+    public async contractToModel(contract: RoleBasedSecurityContract): Promise<RoleBasedSecurityModel> {
         const model = new RoleBasedSecurityModel();
         model.roles = contract.roles;
         return model;

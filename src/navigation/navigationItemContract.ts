@@ -1,7 +1,9 @@
-﻿/**
+﻿import { Contract } from "../contract";
+
+/**
  * Data structure describing a navigation items, e.g. menus.
  */
-export interface NavigationItemContract {
+export interface NavigationItemContract extends Contract {
     /**
      * Own key.
      */

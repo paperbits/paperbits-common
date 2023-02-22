@@ -2,7 +2,7 @@ export interface Contract {
     /**
      * Type of widget, e.g. "button".
      */
-    type: string;
+    type?: string;
 
     /**
      * Child nodes of the widget.
