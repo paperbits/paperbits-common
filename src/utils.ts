@@ -49,7 +49,7 @@ export function downloadFile(url: string): Promise<Uint8Array> {
     });
 }
 
-export function arrayBufferToBase64(buffer: Uint8Array): string {
+export function arrayBufferToBase64(buffer: ArrayBuffer): string {
     if (Buffer) {
         return Buffer.from(buffer).toString("base64");
     }

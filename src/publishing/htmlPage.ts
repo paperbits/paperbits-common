@@ -1,9 +1,9 @@
 import { OpenGraph } from "./openGraph";
 import { PageLinkedData } from "./pageLinkedData";
-import { Contract } from "../contract";
 import { Bag } from "..";
 import { SocialShareData } from "../pages/socialShareData";
 import { LocaleModel } from "../localization";
+import { SourceLink } from "./sourceLink";
 
 export interface HtmlPage {
     title: string;
@@ -18,7 +18,7 @@ export interface HtmlPage {
     linkedData?: PageLinkedData;
     socialShareData?: SocialShareData;
     faviconPermalink?: string;
-    styleReferences: string[];
+    styleReferences: SourceLink[];
     template: string;
     bindingContext?: Bag<any>;
 }

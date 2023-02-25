@@ -2,6 +2,7 @@ import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
 import { HtmlPageOptimizer } from "./htmlPageOptimizer";
 import { HtmlPagePublisherPlugin } from "./htmlPagePublisherPlugin";
+import { SourceLink } from "./sourceLink";
 
 
 export class HtmlPagePublisher {
@@ -19,9 +20,14 @@ export class HtmlPagePublisher {
         document.head.appendChild(element);
     }
 
-    private appendStyleLink(document: Document, styleSheetUrl: string): void {
+    private appendStyleLink(document: Document, stylesheetLink: SourceLink): void {
         const element: HTMLStyleElement = document.createElement("link");
-        element.setAttribute("href", styleSheetUrl);
+        element.setAttribute("href", stylesheetLink.src);
+
+        if (stylesheetLink.integrity) {
+            element.setAttribute("integrity", stylesheetLink.integrity);
+        }
+
         element.setAttribute("rel", "stylesheet");
         element.setAttribute("type", "text/css");
 
@@ -81,7 +87,7 @@ export class HtmlPagePublisher {
 
             const htmlContent = "<!DOCTYPE html>" + document.documentElement.outerHTML;
             document.defaultView.window.close();
-            
+
             const optimizedHtmlContent = await this.htmlPageOptimizer.optimize(htmlContent);
 
             return optimizedHtmlContent;

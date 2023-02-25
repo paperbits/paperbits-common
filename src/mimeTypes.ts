@@ -1,5 +1,4 @@
 export enum MimeTypes {
-    textHtml = "text/html",
     imagePng = "image/png",
     imageSvg = "image/svg+xml",
     imageJpeg = "image/jpeg",
@@ -12,4 +11,6 @@ export enum MimeTypes {
     videoWmv = "video/x-ms-wmv",
     videoFlv = "video/x-flv",
     videoWebm = "video/webm",
+    textHtml = "text/html",
+    textCss = "text/css"
 }

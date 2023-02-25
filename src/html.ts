@@ -125,6 +125,8 @@ export enum Attributes {
     TabIndex = "tabindex",
     Role = "role",
     Rel = "rel",
+    Type = "type",
+    Integrity = "integrity",
     ContentEditable = "contentEditable"
 }
 
