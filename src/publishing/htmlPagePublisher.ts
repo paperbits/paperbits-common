@@ -1,3 +1,5 @@
+import { MimeTypes } from "@paperbits/common";
+import { Attributes } from "@paperbits/common/html";
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
 import { HtmlPageOptimizer } from "./htmlPageOptimizer";
@@ -22,22 +24,22 @@ export class HtmlPagePublisher {
 
     private appendStyleLink(document: Document, stylesheetLink: SourceLink): void {
         const element: HTMLStyleElement = document.createElement("link");
-        element.setAttribute("href", stylesheetLink.src);
+        element.setAttribute(Attributes.Href, stylesheetLink.src);
 
         if (stylesheetLink.integrity) {
-            element.setAttribute("integrity", stylesheetLink.integrity);
+            element.setAttribute(Attributes.Integrity, stylesheetLink.integrity);
         }
 
-        element.setAttribute("rel", "stylesheet");
-        element.setAttribute("type", "text/css");
+        element.setAttribute(Attributes.Rel, "stylesheet");
+        element.setAttribute(Attributes.Type, MimeTypes.textCss);
 
         document.head.appendChild(element);
     }
 
     private appendFaviconLink(document: Document, permalink: string): void {
         const faviconLinkElement = document.createElement("link");
-        faviconLinkElement.setAttribute("rel", "shortcut icon");
-        faviconLinkElement.setAttribute("href", permalink);
+        faviconLinkElement.setAttribute(Attributes.Rel, "shortcut icon");
+        faviconLinkElement.setAttribute(Attributes.Href, permalink);
         document.head.insertAdjacentElement("afterbegin", faviconLinkElement);
     }
 
