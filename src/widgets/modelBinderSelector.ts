@@ -1,20 +1,20 @@
 import { IModelBinder } from "./../editing";
 import { Contract } from "./../contract";
-import { PlaceholderModel } from "./placeholder";
+import { ContentPartModel } from "./contentPart";
 
-export class PlaceholderModelBinder implements IModelBinder<PlaceholderModel> {
+export class ContentPartModelBinder implements IModelBinder<ContentPartModel> {
     constructor(public readonly message?: string) { }
 
-    public async contractToModel(contract: Contract): Promise<PlaceholderModel> {
-        return new PlaceholderModel(`Could not find model binder for widget type "${contract.type}".`);
+    public async contractToModel(contract: Contract): Promise<ContentPartModel> {
+        return new ContentPartModel(`Could not find model binder for widget type "${contract.type}".`);
     }
 
-    public modelToContract(model: PlaceholderModel): Contract {
-        return { type: "placeholder" };
+    public modelToContract(model: ContentPartModel): Contract {
+        return { type: "contentPart" };
     }
 
     public canHandleModel(model: Object): boolean {
-        return model instanceof PlaceholderModel;
+        return model instanceof ContentPartModel;
     }
 
     public canHandleContract(contract: Contract): boolean {
@@ -29,7 +29,7 @@ export class ModelBinderSelector {
         const modelBinder = this.modelBinders.find(x => x && x.canHandleContract ? x.canHandleContract(contract) : false);
 
         if (!modelBinder) {
-            return <any>(new PlaceholderModelBinder());
+            return <any>(new ContentPartModelBinder());
         }
 
         return modelBinder;
@@ -39,7 +39,7 @@ export class ModelBinderSelector {
         const modelBinder = this.modelBinders.find(x => x.canHandleModel(model));
 
         if (!modelBinder) {
-            return new PlaceholderModelBinder();
+            return new ContentPartModelBinder();
         }
 
         return modelBinder;
