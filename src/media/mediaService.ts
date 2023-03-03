@@ -2,12 +2,14 @@
 import * as Constants from "./constants";
 import { IObjectStorage, IBlobStorage, Query, Operator, Page } from "../persistence";
 import { IMediaService, MediaContract } from "./";
+import { Logger } from "../logging";
 
 
 export class MediaService implements IMediaService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly blobStorage: IBlobStorage
+        private readonly blobStorage: IBlobStorage,
+        private readonly logger: Logger
     ) { }
 
     public async getMediaByPermalink(permalink: string): Promise<MediaContract> {
@@ -105,6 +107,8 @@ export class MediaService implements IMediaService {
         try {
             await this.objectStorage.deleteObject(media.key);
             await this.blobStorage.deleteBlob(media.blobKey);
+
+            this.logger.trackEvent("MediaDeleted", { key: media.key });
         }
         catch (error) {
             // TODO: Do proper handling.
@@ -147,6 +151,9 @@ export class MediaService implements IMediaService {
     private async uploadContent(content: Uint8Array, media: MediaContract): Promise<MediaContract> {
         await this.blobStorage.uploadBlob(media.blobKey, content, media.mimeType);
         await this.objectStorage.updateObject(media.key, media);
+
+        this.logger.trackEvent("MediaAdded", { key: media.key });
+
         return media;
     }
 

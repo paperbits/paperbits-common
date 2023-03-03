@@ -2,20 +2,20 @@
 import { UrlContract } from "../urls/urlContract";
 import { IUrlService } from "../urls/IUrlService";
 import { IObjectStorage, Query, Page } from "../persistence";
+import { Logger } from "../logging";
 
 const urlsPath = "urls";
 
 export class UrlService implements IUrlService {
-    private readonly objectStorage: IObjectStorage;
-
-    constructor(objectStorage: IObjectStorage) {
-        this.objectStorage = objectStorage;
-    }
+    constructor(
+        private readonly objectStorage: IObjectStorage,
+        private readonly logger: Logger
+    ) { }
 
     public async getUrlByKey(key: string): Promise<UrlContract> {
         return await this.objectStorage.getObject<UrlContract>(key);
     }
-    
+
     private convertPage(pageOfUrls: Page<UrlContract>): Page<UrlContract> {
         const resultPage: Page<UrlContract> = {
             value: pageOfUrls.value,
@@ -40,7 +40,7 @@ export class UrlService implements IUrlService {
         try {
             const pageOfResults = await this.objectStorage.searchObjects<UrlContract>(urlsPath, query);
             return this.convertPage(pageOfResults);
-          
+
         }
         catch (error) {
             throw new Error(`Unable to search url: ${error.stack || error.message}`);
@@ -50,6 +50,8 @@ export class UrlService implements IUrlService {
     public async deleteUrl(url: UrlContract): Promise<void> {
         const deleteUrlPromise = this.objectStorage.deleteObject(url.key);
         await Promise.all([deleteUrlPromise]);
+
+        this.logger.trackEvent("UrlDeleted", { key: url.key });
     }
 
     public async createUrl(permalink: string, title: string, description?: string): Promise<UrlContract> {
@@ -63,6 +65,8 @@ export class UrlService implements IUrlService {
         };
 
         await this.objectStorage.addObject(key, contract);
+
+        this.logger.trackEvent("UrlAdded", { key: key });
 
         return contract;
     }
