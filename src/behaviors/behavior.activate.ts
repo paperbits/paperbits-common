@@ -2,20 +2,24 @@ import { BehaviorHandle } from "./behavior";
 import { Events } from "../events";
 import { Keys } from "../keyboard";
 
+export interface ActivateBehaviorOptions {
+    data: unknown;
+    onActivate: (data: unknown) => void;
+}
 
 
 export class ActivateBehavior {
-    public static attach(element: HTMLElement, config: any): BehaviorHandle {
+    public static attach(element: HTMLElement, config: ActivateBehaviorOptions): BehaviorHandle {
         const onActivate = config.onActivate;
-        const data  = config.data;
+        const data = config.data;
 
         if (!onActivate) {
             console.warn(`Callback function for binding handler "activate" in undefined.`);
-            return null;
+            const handle: BehaviorHandle = { detach: () => { } };
+            return handle;
         }
 
-       
-        const callback = onActivate; //.bind(viewModel);
+        const callback = onActivate;
 
         const onClick = (event: MouseEvent): void => {
             event.preventDefault();

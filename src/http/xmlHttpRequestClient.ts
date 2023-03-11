@@ -44,8 +44,6 @@ export class XmlHttpRequestClient implements HttpClient {
             request.headers = [];
         }
 
-
-
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
@@ -63,16 +61,11 @@ export class XmlHttpRequestClient implements HttpClient {
                 }
 
                 if (xhr.status === 0) {
-                    // this.logger.trackEvent("HttpRequest", {
-                    //     method: request.method,
-                    //     url: request.url
-                    // });
-
                     reject({
                         message: `Could not complete the request. Please try again later.`,
                         code: "RequestError",
-                        requestedUrl: request.url,
-                        details: []
+                        requestMethod: request.method,
+                        requestedUrl: request.url
                     });
                     return;
                 }
