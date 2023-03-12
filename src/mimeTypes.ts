@@ -12,5 +12,6 @@ export enum MimeTypes {
     videoFlv = "video/x-flv",
     videoWebm = "video/webm",
     textHtml = "text/html",
-    textCss = "text/css"
+    textCss = "text/css",
+    textJs = "text/javascript"
 }

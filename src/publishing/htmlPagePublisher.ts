@@ -14,6 +14,15 @@ export class HtmlPagePublisher {
         private readonly htmlPageOptimizer: HtmlPageOptimizer
     ) { }
 
+    private scaffoldPageDocument(document: Document): void {
+        const charsetMetaElement: HTMLMetaElement = document.createElement("meta");
+        charsetMetaElement.setAttribute("charset", "utf-8");
+
+        this.appendMetaTag(document, "viewport", "width=device-width,minimum-scale=1,initial-scale=1");
+        this.appendStyleLink(document, { src: "/styles/theme.css" });
+        this.appendScriptLink(document, { src: "/scripts/theme.js" });
+    }
+
     private appendMetaTag(document: Document, name: string, content: string): void {
         const element: HTMLMetaElement = document.createElement("meta");
         element.setAttribute("name", name);
@@ -36,6 +45,19 @@ export class HtmlPagePublisher {
         document.head.appendChild(element);
     }
 
+    private appendScriptLink(document: Document, scriptLink: SourceLink): void {
+        const element: HTMLScriptElement = document.createElement("script");
+        element.setAttribute(Attributes.Src, scriptLink.src);
+
+        if (scriptLink.integrity) {
+            element.setAttribute(Attributes.Integrity, scriptLink.integrity);
+        }
+
+        element.setAttribute(Attributes.Type, MimeTypes.textJs);
+
+        document.head.appendChild(element);
+    }
+
     private appendFaviconLink(document: Document, permalink: string): void {
         const faviconLinkElement = document.createElement("link");
         faviconLinkElement.setAttribute(Attributes.Rel, "shortcut icon");
@@ -45,7 +67,9 @@ export class HtmlPagePublisher {
 
     public async renderHtml(page: HtmlPage, overridePlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
         try {
-            const document = this.htmlDocumentProvider.createDocument(page.template);
+            const document = this.htmlDocumentProvider.createDocument();
+            this.scaffoldPageDocument(document);
+
             document.title = page.title;
 
             if (page.faviconPermalink) {

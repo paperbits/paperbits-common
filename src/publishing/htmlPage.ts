@@ -19,6 +19,5 @@ export interface HtmlPage {
     socialShareData?: SocialShareData;
     faviconPermalink?: string;
     styleReferences: SourceLink[];
-    template: string;
     bindingContext?: Bag<any>;
 }

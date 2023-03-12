@@ -120,6 +120,7 @@ export enum AriaAttributes {
 
 export enum Attributes {
     Href = "href",
+    Src = "src",
     Target = "target",
     Download = "download",
     TabIndex = "tabindex",
