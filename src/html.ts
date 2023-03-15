@@ -128,7 +128,9 @@ export enum Attributes {
     Rel = "rel",
     Type = "type",
     Integrity = "integrity",
-    ContentEditable = "contentEditable"
+    ContentEditable = "contentEditable",
+    Language = "lang",
+    Direction = "dir"
 }
 
 export enum DataAttributes {

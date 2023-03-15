@@ -89,11 +89,14 @@ export class HtmlPagePublisher {
             }
 
             if (page.locale) {
-                document.documentElement.setAttribute("lang", page.locale.code.split("-")[0]);
+                document.documentElement.setAttribute(Attributes.Language, page.locale.code.split("-")[0]);
 
                 if (page.locale.direction) {
-                    document.documentElement.setAttribute("dir", page.locale.direction);
+                    document.documentElement.setAttribute(Attributes.Direction, page.locale.direction);
                 }
+            }
+            else {
+                document.documentElement.setAttribute(Attributes.Language, "en"); // TODO: quick hack
             }
 
             page.styleReferences.forEach(reference => {
