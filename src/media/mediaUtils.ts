@@ -106,7 +106,7 @@ export function getBiggestMediaVariant(mediaContract: MediaContract): MediaVaria
 }
 
 export function getThumbnailUrl(mediaContract: MediaContract): string {
-    if (!mediaContract.variants) {
+    if (!mediaContract.variants || mediaContract.variants.length === 0) {
         return mediaContract.downloadUrl;
     }
 

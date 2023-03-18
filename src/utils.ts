@@ -383,3 +383,12 @@ export function stripHtml(html: string): string {
     html = html.replaceAll("</h1>", "</h1>.");
     return h2p(html);
 }
+
+/**
+ * Trucncates specified string value adding ellipsis at the end.
+ * @param value - String value.
+ * @param length - Cut-off length.
+ */
+export function truncate(value: string, length: number = 100): string {
+    return value.length > length ? `${value.substring(0, length)}...` : value;
+}
