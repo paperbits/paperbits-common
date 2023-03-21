@@ -26,7 +26,7 @@ export class MockObjectStorage implements IObjectStorage {
         return this.storageDataObject;
     }
 
-    public async addObject(path: string, dataObject: Object): Promise<void> {
+    public async addObject<T>(path: string, dataObject: T, changeDescription?: string | undefined): Promise<void> {
         if (!path) {
             throw new Error(`Parameter "path" not specified.`);
         }
@@ -43,24 +43,6 @@ export class MockObjectStorage implements IObjectStorage {
             }
             this.storageDataObject[mainNode][pathParts[1]] = dataObject;
         }
-
-        // else {
-        //     Object.keys(dataObject).forEach(prop => {
-        //         const obj = dataObject[prop];
-        //         const pathParts = prop.split(this.splitter);
-        //         const mainNode = pathParts[0];
-
-        //         if (pathParts.length === 1 || (pathParts.length === 2 && !pathParts[1])) {
-        //             this.storageDataObject[mainNode] = obj;
-        //         }
-        //         else {
-        //             if (!this.storageDataObject.hasOwnProperty(mainNode)) {
-        //                 this.storageDataObject[mainNode] = {};
-        //             }
-        //             this.storageDataObject[mainNode][pathParts[1]] = obj;
-        //         }
-        //     });
-        // }
     }
 
     public async getObject<T>(path: string): Promise<T> {

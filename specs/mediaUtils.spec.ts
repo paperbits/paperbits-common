@@ -1,4 +1,4 @@
-import { MimeTypes } from "@paperbits/common";
+import { MimeTypes } from "../src/mimeTypes";
 import { expect } from "chai";
 import { MediaVariantContract } from "../src/media";
 import * as MediaUtils from "../src/media/mediaUtils";
