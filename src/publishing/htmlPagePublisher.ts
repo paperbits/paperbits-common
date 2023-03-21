@@ -17,6 +17,7 @@ export class HtmlPagePublisher {
     private scaffoldPageDocument(document: Document): void {
         const charsetMetaElement: HTMLMetaElement = document.createElement("meta");
         charsetMetaElement.setAttribute("charset", "utf-8");
+        document.head.appendChild(charsetMetaElement);
 
         this.appendMetaTag(document, "viewport", "width=device-width,minimum-scale=1,initial-scale=1");
         this.appendStyleLink(document, { src: "/styles/theme.css" });
