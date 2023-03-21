@@ -4,6 +4,7 @@ import { MockObjectStorage } from "./mocks/mockObjectStorage";
 import { MockLocaleService } from "./mocks/mockLocaleService";
 import { Contract } from "../src";
 import { Operator, Query } from "../src/persistence";
+import { ConsoleLogger } from "../src/logging";
 
 describe("Layout service", async () => {
     it("Can create layout metadata in specified locale when metadata doesn't exists.", async () => {
@@ -25,7 +26,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContract: LayoutContract = {
             key: "layouts/layout1",
@@ -60,7 +61,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         const content: Contract = { type: "ru-ru-content" };
 
         await localizedService.updateLayoutContent("layouts/layout1", content);
@@ -89,7 +90,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         const content: Contract = { type: "ru-ru-content" };
 
         await localizedService.updateLayoutContent("layouts/layout1", content);
@@ -121,7 +122,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         const content: Contract = { type: "ru-ru-content" };
 
         await localizedService.updateLayoutContent("layouts/layout1", content);
@@ -150,7 +151,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContract: LayoutContract = {
             key: "layouts/layout1",
@@ -190,7 +191,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         const content: Contract = { type: "updated-ru-ru-content" };
 
         await localizedService.updateLayoutContent("layouts/layout1", content);
@@ -219,7 +220,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const layoutService = new LayoutService(objectStorage, localeService);
+        const layoutService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContract1 = await layoutService.getLayoutByKey("layouts/layout1");
         assert.isTrue(layoutContract1.title === "Blog", "Layout metadata is in invalid locale.");
@@ -268,7 +269,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const layoutService = new LayoutService(objectStorage, localeService);
+        const layoutService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContract = await layoutService.getLayoutByKey("layouts/layout2");
         assert.isTrue(layoutContract.title === "Блог", "Layout metadata is in invalid locale.");
@@ -314,7 +315,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContent = await localizedService.getLayoutContent("layouts/layout1");
         assert.isTrue(layoutContent.nodes[0].type === "ru-ru-content", "Layout content is in invalid locale.");
@@ -350,7 +351,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("ru-ru");
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         const layoutContent = await localizedService.getLayoutContent("layouts/layout1");
         assert.isTrue(layoutContent.nodes[0].type === "en-us-content", "Layout content is in invalid locale.");
@@ -360,7 +361,7 @@ describe("Layout service", async () => {
         const initialData = {};
         const objectStorage = new MockObjectStorage(initialData);
         const localeService = new MockLocaleService();
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         await localizedService.createLayout("Blog", "Default layout for blog posts.", "/blog/*");
 
@@ -393,7 +394,7 @@ describe("Layout service", async () => {
         };
         const objectStorage = new MockObjectStorage(initialData);
         const localeService = new MockLocaleService();
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
 
         await localizedService.deleteLayout({ key: "layouts/layout1", title: "Blog" });
 
@@ -436,7 +437,7 @@ describe("Layout service", async () => {
         const objectStorage = new MockObjectStorage(initialData);
         const localeService = new MockLocaleService();
 
-        const localizedService = new LayoutService(objectStorage, localeService);
+        const localizedService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         const query = Query.from<LayoutContract>().where("title", Operator.contains, "");
 
         const layoutContracts = await localizedService.search(query, "ru-ru");
@@ -479,7 +480,7 @@ describe("Layout service", async () => {
         const localeService = new MockLocaleService();
         localeService.setCurrentLocale("en-us");
 
-        const layoutService = new LayoutService(objectStorage, localeService);
+        const layoutService = new LayoutService(objectStorage, localeService, new ConsoleLogger());
         await layoutService.copyLayout("layouts/layout1");
 
         const copiedLayoutsEnUs = await layoutService.search(Query.from<LayoutContract>().where("title", Operator.contains, "copy"), "en-us");
