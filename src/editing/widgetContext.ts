@@ -43,6 +43,16 @@ export interface WidgetContext {
     switchToParent: () => void;
 
     /**
+     * Opens editor for selected widget.
+     */
+    openWidgetEditor: () => void;
+
+    /**
+     * Deletes selected widget.
+     */
+    deleteWidget: () => void;
+
+    /**
      * Associated grid item.
      */
     gridItem: GridItem;
