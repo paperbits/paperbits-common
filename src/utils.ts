@@ -392,3 +392,8 @@ export function stripHtml(html: string): string {
 export function truncate(value: string, length: number = 100): string {
     return value.length > length ? `${value.substring(0, length)}...` : value;
 }
+
+export function debounce(func: () => Promise<void>): () => Promise<void> {
+    let promise: Promise<void>;
+    return () => promise ? promise : promise = func();
+}

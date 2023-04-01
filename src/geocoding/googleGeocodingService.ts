@@ -16,6 +16,7 @@ export class GoogleGeocodingService implements GeocodingService {
         }
 
         this.initPromise = this.loadGoogleApi();
+        return this.initPromise;
     }
 
     private async loadGoogleApi(): Promise<void> {

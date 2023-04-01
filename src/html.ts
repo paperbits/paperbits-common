@@ -130,7 +130,8 @@ export enum Attributes {
     Integrity = "integrity",
     ContentEditable = "contentEditable",
     Language = "lang",
-    Direction = "dir"
+    Direction = "dir",
+    Charset = "charset"
 }
 
 export enum DataAttributes {

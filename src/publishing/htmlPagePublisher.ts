@@ -1,5 +1,7 @@
+import * as Utils from "@paperbits/common";
 import { MimeTypes } from "@paperbits/common";
 import { Attributes } from "@paperbits/common/html";
+import { ISettingsProvider } from "../configuration";
 import { HtmlDocumentProvider } from "./htmlDocumentProvider";
 import { HtmlPage } from "./htmlPage";
 import { HtmlPageOptimizer } from "./htmlPageOptimizer";
@@ -8,15 +10,24 @@ import { SourceLink } from "./sourceLink";
 
 
 export class HtmlPagePublisher {
+    private subresourceIntegrityEnabled: boolean;
+
     constructor(
         private readonly htmlDocumentProvider: HtmlDocumentProvider,
         private readonly htmlPagePublisherPlugins: HtmlPagePublisherPlugin[],
-        private readonly htmlPageOptimizer: HtmlPageOptimizer
+        private readonly htmlPageOptimizer: HtmlPageOptimizer,
+        private readonly settingsProvider: ISettingsProvider
     ) { }
+
+    private initialize = Utils.debounce(this.loadSettings.bind(this));
+
+    private async loadSettings(): Promise<void> {
+        this.subresourceIntegrityEnabled = !!await this.settingsProvider.getSetting<boolean>("features/subresourceIntegrity");
+    }
 
     private scaffoldPageDocument(document: Document): void {
         const charsetMetaElement: HTMLMetaElement = document.createElement("meta");
-        charsetMetaElement.setAttribute("charset", "utf-8");
+        charsetMetaElement.setAttribute(Attributes.Charset, "utf-8");
         document.head.appendChild(charsetMetaElement);
 
         this.appendMetaTag(document, "viewport", "width=device-width,minimum-scale=1,initial-scale=1");
@@ -36,7 +47,7 @@ export class HtmlPagePublisher {
         const element: HTMLStyleElement = document.createElement("link");
         element.setAttribute(Attributes.Href, stylesheetLink.src);
 
-        if (stylesheetLink.integrity) {
+        if (this.subresourceIntegrityEnabled && stylesheetLink.integrity) {
             element.setAttribute(Attributes.Integrity, stylesheetLink.integrity);
         }
 
@@ -50,7 +61,7 @@ export class HtmlPagePublisher {
         const element: HTMLScriptElement = document.createElement("script");
         element.setAttribute(Attributes.Src, scriptLink.src);
 
-        if (scriptLink.integrity) {
+        if (this.subresourceIntegrityEnabled && scriptLink.integrity) {
             element.setAttribute(Attributes.Integrity, scriptLink.integrity);
         }
 
@@ -68,6 +79,8 @@ export class HtmlPagePublisher {
 
     public async renderHtml(page: HtmlPage, overridePlugins?: HtmlPagePublisherPlugin[]): Promise<string> {
         try {
+            await this.initialize();
+
             const document = this.htmlDocumentProvider.createDocument();
             this.scaffoldPageDocument(document);
 
