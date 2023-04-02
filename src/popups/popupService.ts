@@ -151,8 +151,26 @@ export class PopupService implements IPopupService {
         return popupContract;
     }
 
-    public async updatePopup(popup: PopupContract): Promise<void> {
-        await this.objectStorage.updateObject<PopupContract>(popup.key, popup);
+    public async updatePopup(popup: PopupContract, requestedLocale?: string): Promise<void> {
+        if (!popup) {
+            throw new Error(`Parameter "popup" not specified.`);
+        }
+
+        if (!requestedLocale) {
+            requestedLocale = await this.localeService.getCurrentLocaleCode();
+        }
+
+        const popupContract = await this.objectStorage.getObject<PopupLocalizedContract>(popup.key);
+
+        if (!popupContract) {
+            throw new Error(`Could not update popup. Popup with key "${popup.key}" doesn't exist.`);
+        }
+
+        const existingLocaleMetadata = popupContract.locales[requestedLocale] || <PopupMetadata>{};
+
+        popupContract.locales[requestedLocale] = this.copyMetadata(popup, existingLocaleMetadata);
+
+        await this.objectStorage.updateObject<PopupLocalizedContract>(popup.key, popupContract);
     }
 
     public async getPopupContent(popupKey: string, requestedLocale?: string): Promise<Contract> {

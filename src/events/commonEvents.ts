@@ -28,5 +28,6 @@ export enum Events {
     Undo = "onUndo",
     Redo = "onRedo",
     PopupRequest = "onPopupRequest",
-    PopupRepositionRequest = "onPopupRepositionRequest"
+    PopupRepositionRequest = "onPopupRepositionRequest",
+    PopupCreated = "onPopupCreated"
 }
