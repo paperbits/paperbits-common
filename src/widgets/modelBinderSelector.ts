@@ -1,6 +1,8 @@
 import { IModelBinder } from "./../editing";
 import { Contract } from "./../contract";
 import { ContentPartModel } from "./contentPart";
+import { Logger } from "../logging";
+import { WidgetModel } from "./widgetModel";
 
 export class ContentPartModelBinder implements IModelBinder<ContentPartModel> {
     constructor(public readonly message?: string) { }
@@ -23,7 +25,10 @@ export class ContentPartModelBinder implements IModelBinder<ContentPartModel> {
 }
 
 export class ModelBinderSelector {
-    constructor(private modelBinders: IModelBinder<any>[]) { }
+    constructor(
+        private modelBinders: IModelBinder<any>[],
+        private logger: Logger
+    ) { }
 
     public getModelBinderByContract<TModel>(contract: Contract): IModelBinder<TModel> {
         const modelBinder = this.modelBinders.find(x => x && x.canHandleContract ? x.canHandleContract(contract) : false);
@@ -35,10 +40,11 @@ export class ModelBinderSelector {
         return modelBinder;
     }
 
-    public getModelBinderByModel(model: Object): IModelBinder<any> {
+    public getModelBinderByModel(model: WidgetModel): IModelBinder<any> {
         const modelBinder = this.modelBinders.find(x => x.canHandleModel(model));
 
         if (!modelBinder) {
+            this.logger.trackEvent("ModelBinderNotFound");
             return new ContentPartModelBinder();
         }
 
