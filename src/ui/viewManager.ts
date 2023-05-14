@@ -2,6 +2,7 @@
 import { DragSession } from "./draggables";
 import { IWidgetBinding } from "../editing";
 import { RoleModel } from "../user";
+import { PointerPosition } from "./pointerPosition";
 
 
 export enum ViewManagerMode {
@@ -274,4 +275,9 @@ export interface ViewManager {
      * Clears widget selection.
      */
     clearSelection(): void;
+
+    /**
+     * Returns current pointer position.
+     */
+    getPointerPosition(): PointerPosition;
 }

@@ -29,5 +29,6 @@ export enum Events {
     Redo = "onRedo",
     PopupRequest = "onPopupRequest",
     PopupRepositionRequest = "onPopupRepositionRequest",
-    PopupCreated = "onPopupCreated"
+    PopupCreated = "onPopupCreated",
+    VirtualDragEnd = "virtualDragEnd"
 }

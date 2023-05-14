@@ -8,7 +8,7 @@ export let formattableStates = ["bold", "italic", "underlined", "highlighted", "
 export interface IHtmlEditor {
     attachToElement(element: HTMLElement): void;
     detachFromElement(): void;
-    enable(): void;
+    enable(activeElement?: HTMLElement): void;
     disable(): void;
     getSelectionState(): SelectionState;
     toggleBold(): void;

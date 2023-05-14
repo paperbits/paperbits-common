@@ -13,7 +13,7 @@ export class SavingHandler {
             }
 
             await offlineObjectStorage.saveChanges();
-            viewManager.notifySuccess("Changes saved", "All changes saved successfully.");
+            viewManager.notifySuccess("Changes saved", "All changes have been saved successfully.");
         });
     }
 }

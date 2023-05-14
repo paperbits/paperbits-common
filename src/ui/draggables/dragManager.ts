@@ -1,6 +1,6 @@
 ﻿import * as Utils from "../../utils";
 import { DragSource, DragTarget, DragSourceConfig, DragTargetConfig } from "../../ui/draggables";
-import { EventManager } from "../../events";
+import { EventManager, Events } from "../../events";
 import { ViewManager, ViewManagerMode } from "../viewManager";
 import { Box } from "../../editing/box";
 
@@ -191,7 +191,7 @@ export class DragManager {
 
         if (this.source.configuration.ondragend) {
             this.source.configuration.ondragend(this.source.configuration.sourceData, this.source.element);
-            this.eventManager.dispatchEvent("virtualDragEnd");
+            this.eventManager.dispatchEvent(Events.VirtualDragEnd);
         }
 
         if (this.source.configuration.sticky) {
