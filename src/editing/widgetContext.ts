@@ -43,6 +43,11 @@ export interface WidgetContext {
     switchToParent: () => void;
 
     /**
+     * Switches widget selection to child widget.* 
+     */
+    switchToChild: () => void;
+
+    /**
      * Opens editor for selected widget.
      */
     openWidgetEditor: () => void;

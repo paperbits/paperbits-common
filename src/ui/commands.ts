@@ -1,17 +1,27 @@
 import { WidgetContext } from "../editing";
-import { IComponent } from "./IComponent";
 import { IContextCommand } from "./IContextCommandSet";
 
 export const defaultCommandColor = "#607d8b";
 export const switchToParentCommandLabel = `Switch to parent<div class="subtle">(Page up)</div>`;
+export const switchToChildCommandLabel = `Switch to child<div class="subtle">(Page down)</div>`;
 
 export function switchToParentCommand(context: WidgetContext): IContextCommand {
     return {
         controlType: "toolbox-button",
         tooltip: switchToParentCommandLabel,
-        iconClass: "paperbits-icon paperbits-enlarge-vertical",
+        iconClass: "paperbits-icon paperbits-arrow-up",
         position: "top right",
         callback: () => context.switchToParent()
+    };
+}
+
+export function switchToChildCommand(context: WidgetContext): IContextCommand {
+    return {
+        controlType: "toolbox-button",
+        tooltip: switchToChildCommandLabel,
+        iconClass: "paperbits-icon paperbits-arrow-down",
+        position: "top right",
+        callback: () => context.switchToChild()
     };
 }
 
