@@ -35,7 +35,7 @@ export class CacheObjectStorage {
         throw new Error("Not supported.");
     }
 
-    public updateObject<T>(key: string, dataObject: T): Promise<void> {
-        throw new Error("Not supported.");
+    public async updateObject<T>(key: string, dataObject: T): Promise<void> {
+        await this.underlyingStorage.updateObject(key, dataObject);
     }
 }

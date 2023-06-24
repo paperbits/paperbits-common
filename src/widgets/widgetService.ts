@@ -3,7 +3,7 @@ import { Bag } from "../bag";
 import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
-import { StyleManager } from "../styles";
+import { StyleCompiler, StyleManager } from "../styles";
 import { IWidgetService, ViewModelBinder } from "../widgets";
 
 
@@ -239,8 +239,8 @@ export class WidgetService implements IWidgetService {
             throw new Error(`View model binder doesn't have "modelToState" method defined.`);
         }
 
-        if (!viewModelBinder.stateToIntance) {
-            throw new Error(`View model binder doesn't have "stateToIntance" method defined.`);
+        if (!viewModelBinder.stateToInstance) {
+            throw new Error(`View model binder doesn't have "stateToInstance" method defined.`);
         }
 
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
@@ -270,6 +270,16 @@ export class WidgetService implements IWidgetService {
             widgetBinding.selectable = editorDefinition.selectable;
             widgetBinding.editorScrolling = editorDefinition.editorScrolling;
             widgetBinding.editorResizing = editorDefinition.editorResizing
+
+            if (model["styles"] && !model["styles"]["instance"]) {
+                const handler = this.getWidgetHandlerByDefinition(editorDefinition)
+
+                if (handler.getStyleDefinitions) {
+                    const styleCompiler = this.injector.resolve<StyleCompiler>("styleCompiler");
+                    const styleDefinition = handler.getStyleDefinitions();
+                    styleCompiler.backfillLocalStyles(model["styles"], styleDefinition);
+                }
+            }
         }
 
         const widgetState = {};
@@ -285,7 +295,7 @@ export class WidgetService implements IWidgetService {
                 bindingContext.styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
-            viewModelBinder.stateToIntance<any, any>(widgetState, widgetBinding.viewModel);
+            viewModelBinder.stateToInstance<any, any>(widgetState, widgetBinding.viewModel);
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 
@@ -298,7 +308,7 @@ export class WidgetService implements IWidgetService {
                 styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
-            viewModelBinder.stateToIntance(widgetState, componentInstance);
+            viewModelBinder.stateToInstance(widgetState, componentInstance);
         }
 
         widgetBinding.onDispose = () => {

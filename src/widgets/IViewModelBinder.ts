@@ -7,13 +7,13 @@ import { IWidgetBinding } from "../editing";
  */
 export interface ViewModelBinder<TModel, TViewModel> {
     /**
-     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
+     * @deprecated Please use `modelToState` and `stateToInstance` methods instead.
      * @param model This is data created by digesting config from contract. 
      */
     canHandleModel?(model: TModel): boolean;
 
     /**
-     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
+     * @deprecated Please use `modelToState` and `stateToInstance` methods instead.
      * @param model TModel This is data created by digesting config from contract.
      * @param existingViewModel If view model already exists, the binder will update it.
      * @param bindingContext {Bag<any>} Binding context, which carries additional information passed from the root component.
@@ -21,7 +21,7 @@ export interface ViewModelBinder<TModel, TViewModel> {
     modelToViewModel?(model: TModel, existingViewModel?: TViewModel, bindingContext?: Bag<any>): Promise<TViewModel>;
 
     /**
-     * @deprecated Please use `modelToState` and `stateToIntance` methods instead.
+     * @deprecated Please use `modelToState` and `stateToInstance` methods instead.
      * @param model {TModel} This is data created by digesting config from contract.
      * @param bindingContext {Bag<any>} Additional data passed from the top-level binding.
      */
@@ -33,7 +33,7 @@ export interface ViewModelBinder<TModel, TViewModel> {
      * @param state {TState} Widget state object.
      * @param componentInstance {TInstance} Instance of the widget component.
      */
-    stateToIntance?<TState, TInstance>(state: TState, componentInstance: TInstance): void;
+    stateToInstance?<TState, TInstance>(state: TState, componentInstance: TInstance): void;
 
     /**
      * Converts the widget model into the widget state object used later on during component rendering.

@@ -2,7 +2,7 @@ import { StateBagContract } from "./stateBagContract";
 import { LocalStyles } from "./localStyles";
 import { VariationContract } from "./variationContract";
 import { StyleModel } from "./styleModel";
-import { Style, StyleSheet, StyleManager } from "./";
+import { Style, StyleSheet, StyleManager, StyleDefinition } from "./";
 
 
 /**
@@ -31,7 +31,7 @@ export interface StyleCompiler {
      * Converts style contract into style model.
      * @param contract {VariationContract} Style contract.
      */
-    getStyleModelAsync(contract: LocalStyles, styleManager?: StyleManager, widgetHandlerClass?: any): Promise<StyleModel>;
+    getStyleModelAsync(contract: LocalStyles, styleManager?: StyleManager): Promise<StyleModel>;
 
     /**
      * Converts variation style contract into style.
@@ -73,5 +73,5 @@ export interface StyleCompiler {
      */
     getIconClassName(iconKey: string): string;
 
-    backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void;
+    backfillLocalStyles(localStyles: LocalStyles, styleDefinition: StyleDefinition): void;
 }
