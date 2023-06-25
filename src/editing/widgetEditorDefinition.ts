@@ -15,14 +15,14 @@ export interface WidgetEditorDefinition {
      * UI framework, it can be shaped differently. For example, in React it's a class that extends `React.Component`.
      * In Vue it is an object describing the component with composition API or declaration options.
      */
-    componentDefinition: unknown;
+    componentDefinition?: unknown;
 
     /**
      * Component binder is a UI framework-specific utility that helps to create an instance of the component
      * and attach it to an HTML element. For example, ReactComponentBinder used to handle React components,
      * or KnockoutComponentBinder handles Knockout components.
      */
-    componentBinder: ComponentBinder | Function | string;
+    componentBinder?: ComponentBinder | Function | string;
 
     /**
      * A widget handler gives the editor required context to manipulate the widget model. For example,

@@ -264,12 +264,15 @@ export class WidgetService implements IWidgetService {
         // 3. Widget editor definition
         if (editorDefinition) {
             widgetBinding.displayName = editorDefinition.displayName;
-            widgetBinding.editor = <any>editorDefinition.componentDefinition;
-            widgetBinding.editorComponentBinder = this.injector.resolveClass(<any>editorDefinition.componentBinder);
-            widgetBinding.draggable = editorDefinition.draggable;
             widgetBinding.selectable = editorDefinition.selectable;
-            widgetBinding.editorScrolling = editorDefinition.editorScrolling;
-            widgetBinding.editorResizing = editorDefinition.editorResizing
+            widgetBinding.draggable = editorDefinition.draggable;
+
+            if (editorDefinition.componentDefinition) {
+                widgetBinding.editor = <any>editorDefinition.componentDefinition;
+                widgetBinding.editorComponentBinder = this.injector.resolveClass(<any>editorDefinition.componentBinder);
+                widgetBinding.editorScrolling = editorDefinition.editorScrolling;
+                widgetBinding.editorResizing = editorDefinition.editorResizing
+            }
 
             if (model["styles"] && !model["styles"]["instance"]) {
                 const handler = this.getWidgetHandlerByDefinition(editorDefinition)
