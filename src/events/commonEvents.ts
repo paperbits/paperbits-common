@@ -2,6 +2,7 @@ export enum Events {
     ContentUpdate = "onContentChange",
     ViewportChange = "onViewportChange",
     StyleChange = "onStyleChange",
+    StyleRemove = "onStyleRemove",
     MouseUp = "mouseup",
     MouseDown = "mousedown",
     MouseEnter = "mouseenter",

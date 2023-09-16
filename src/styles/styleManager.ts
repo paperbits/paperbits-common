@@ -1,6 +1,6 @@
 import { Bag } from "..";
 import { StyleSheet } from "../styles";
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 
 
 export class StyleManager {
@@ -14,7 +14,7 @@ export class StyleManager {
         this.styleSheets[styleSheet.key] = styleSheet;
 
         if (this.eventManager) {
-            this.eventManager.dispatchEvent("onStyleChange", styleSheet);
+            this.eventManager.dispatchEvent(Events.StyleChange, styleSheet);
         }
     }
 
@@ -28,7 +28,7 @@ export class StyleManager {
 
     public removeStyleSheet(styleSheet: StyleSheet): void {
         if (this.eventManager) {
-            this.eventManager.dispatchEvent("onStyleRemove", styleSheet.key);
+            this.eventManager.dispatchEvent(Events.StyleRemove, styleSheet.key);
         }
     }
 
