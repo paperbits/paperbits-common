@@ -236,11 +236,11 @@ export class WidgetService implements IWidgetService {
         const viewModelBinder = this.resolveComponent<ViewModelBinder<TModel, TViewModel>>(widgetDefinition.viewModelBinder);
 
         if (!viewModelBinder.modelToState) {
-            throw new Error(`View model binder doesn't have "modelToState" method defined.`);
+            throw new Error(`View model binder "${viewModelBinder.constructor.name}" doesn't have "modelToState" method defined.`);
         }
 
         if (!viewModelBinder.stateToInstance) {
-            throw new Error(`View model binder doesn't have "stateToInstance" method defined.`);
+            throw new Error(`View model binder "${viewModelBinder.constructor.name}" doesn't have "stateToInstance" method defined.`);
         }
 
         const widgetBinding = new WidgetBinding<TModel, TViewModel>();
