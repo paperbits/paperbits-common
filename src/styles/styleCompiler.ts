@@ -56,7 +56,7 @@ export interface StyleCompiler {
     /**
      * Returns theme style sheet;
      */
-    getStyleSheet(): Promise<StyleSheet>;
+    getStyleSheet(topBreakpoint?: string): Promise<StyleSheet>;
 
     /**
      * Returns compiled theme style sheet.
