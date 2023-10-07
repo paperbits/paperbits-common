@@ -311,6 +311,8 @@ export class WidgetService implements IWidgetService {
                 styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
+            componentInstance["widgetBinding"] = widgetBinding;
+
             viewModelBinder.stateToInstance(widgetState, componentInstance);
         }
 
