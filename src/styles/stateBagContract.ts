@@ -1,4 +1,3 @@
 import { PluginBag } from "./pluginBagContract";
 
-export interface StateBagContract extends PluginBag {
-}
+export interface StateBagContract extends PluginBag { }
