@@ -33,6 +33,11 @@ export interface View {
     close?(): void;
 
     /**
+     * Close event delegate.
+     */
+    onClose?(): void;
+
+    /**
      * Reference to an element that should receive focus when this view gets closed.
      */
     returnFocusTo?: HTMLElement;

@@ -1,4 +1,5 @@
 import * as Array from "@paperbits/common";
+import * as ko from "knockout";
 import { Keys } from "@paperbits/common";
 import { Events } from "@paperbits/common/events";
 import { AriaAttributes, AriaRoles, Attributes } from "@paperbits/common/html";
