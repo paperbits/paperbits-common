@@ -2,7 +2,6 @@ export * from "./breakpoints";
 export * from "./fontFace";
 export * from "./IStyleGroup";
 export * from "./IStyleSnippetService";
-export * from "./styleable";
 export * from "./styleCompiler";
 export * from "./pluginBagContract";
 export * from "./styleHandler";

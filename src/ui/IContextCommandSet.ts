@@ -12,7 +12,7 @@ export interface IContextCommandSet {
 
 export interface IContextCommand {
     name?: string;
-    displayName?: string;
+    displayName?: string | Function;
     callback?: () => void;
     component?: IComponent;
     tooltip?: string;
