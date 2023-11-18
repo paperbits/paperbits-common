@@ -2,7 +2,7 @@ import { Contract } from "@paperbits/common";
 import { WidgetModel, ModelBinderSelector, IWidgetService } from "@paperbits/common/widgets";
 
 
-export class ContainerModelBinder {
+export class CollectionModelBinder {
     constructor(
         protected readonly widgetService: IWidgetService,
         protected readonly modelBinderSelector: ModelBinderSelector
@@ -16,7 +16,7 @@ export class ContainerModelBinder {
         const modelPromises = nodes.map((contract: Contract) => {
             let modelBinder = this.widgetService.getModelBinder(contract.type);
 
-            if (!modelBinder) {
+            if (!modelBinder) { // switch to legacy model
                 modelBinder = this.modelBinderSelector.getModelBinderByContract<any>(contract);
             }
 

@@ -1,6 +1,4 @@
 export * from "./box";
-export * from "../components/componentBinder";
-export * from "../components/componentFlow";
 export * from "./gridHelper";
 export * from "./gridItem";
 export * from "./htmlEditorEvents";
@@ -21,4 +19,4 @@ export * from "./widgetBinding";
 export * from "./widgetContext";
 export * from "./widgetDefinition";
 export * from "./widgetEditorDefinition";
-export * from "./containerModelBinder";
+export * from "./collectionModelBinder";

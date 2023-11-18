@@ -1,10 +1,11 @@
 ﻿import { KnockoutComponentBinder } from "../ko/knockoutComponentBinder";
 import { Bag } from "../bag";
-import { ComponentFlow, IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
+import { IModelBinder, IWidgetBinding, IWidgetHandler, IWidgetOrder, WidgetBinding, WidgetDefinition, WidgetEditorDefinition } from "../editing";
 import { EventManager, Events } from "../events";
 import { IInjector } from "../injection";
 import { StyleCompiler, StyleManager } from "../styles";
 import { IWidgetService, ViewModelBinder } from "../widgets";
+import { ComponentFlow } from "../components";
 
 
 const defaultWidgetIconClass = "widget-icon widget-icon-component";
