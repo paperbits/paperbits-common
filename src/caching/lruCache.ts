@@ -3,6 +3,7 @@
 interface ICacheItem<T> {
     key: string;
     value: T;
+    ttl?: number;
     next: ICacheItem<T>;
     prev: ICacheItem<T>;
 }
@@ -17,8 +18,9 @@ export class LruCache<T> {
 
     constructor(
         private maxSize: number = 10000,
-        private onEvict?: (key: string, value: T) => void) {
-    }
+        private onEvict?: (key: string, value: T) => void,
+        private ttl?: number // time to live in seconds
+    ) { }
 
     /**
      * Returns cached item with specified key.
@@ -28,6 +30,11 @@ export class LruCache<T> {
         const item: ICacheItem<T> = this.nodeMap[key];
 
         if (!item) {
+            return null;
+        }
+
+        if (item.ttl != undefined && new Date().getTime() > item.ttl) {
+            this.remove(item);
             return null;
         }
 
@@ -43,13 +50,15 @@ export class LruCache<T> {
      */
     public setItem(key: string, value: T): void {
         const item: ICacheItem<T> = this.nodeMap[key];
+        const ttl = this.ttl ? new Date().getTime() + (this.ttl * 1000) : undefined;
 
         if (item) {
             item.value = value;
+            item.ttl = ttl;
             this.pop(item);
         }
         else {
-            this.insert(key, value);
+            this.insert(key, value, ttl);
         }
     }
 
@@ -130,7 +139,7 @@ export class LruCache<T> {
         this.head = item;
     }
 
-    private insert(key: string, value: T): void {
+    private insert(key: string, value: T, ttl?: number): void {
         if (Object.keys(this.nodeMap).length === this.maxSize) {
             const tail = this.tail;
             this.remove(tail);
@@ -144,6 +153,7 @@ export class LruCache<T> {
             this.head = <ICacheItem<T>>{
                 key: key,
                 value: value,
+                ttl,
                 prev: null,
                 next: null
             };
@@ -153,6 +163,7 @@ export class LruCache<T> {
             this.head = <ICacheItem<T>>{
                 key: key,
                 value: value,
+                ttl,
                 prev: null,
                 next: this.head
             };
