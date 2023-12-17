@@ -6,7 +6,7 @@ import { IWidgetOrder } from "../editing/IWidgetOrder";
 export interface IContentDescriptor {
     title: string;
     description: string;
-    getWidgetOrder?(): Promise<IWidgetOrder>;
+    getWidgetOrder?(): Promise<IWidgetOrder<unknown>>;
     getPreviewUrl?(): Promise<string>;
     getThumbnailUrl?(): Promise<string>;
     iconUrl?: string;

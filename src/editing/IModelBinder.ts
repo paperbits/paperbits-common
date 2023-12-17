@@ -30,5 +30,5 @@ export interface IModelBinder<TModel> {
      * @param contract - Widget data contract.
      * @param bindingContext - Binding context.
      */
-    contractToModel<TModel>(contract: any, bindingContext?: Bag<any>): Promise<TModel>;
+    contractToModel(contract: any, bindingContext?: Bag<any>): Promise<TModel>;
 }

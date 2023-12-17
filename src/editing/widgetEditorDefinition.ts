@@ -28,7 +28,7 @@ export interface WidgetEditorDefinition {
      * A widget handler gives the editor required context to manipulate the widget model. For example,
      * it describes how the widget gets created, what contextual commands it supports, etc.
      */
-    handlerComponent: IWidgetHandler | Function | string;
+    handlerComponent: IWidgetHandler<unknown> | Function | string;
 
     /**
      * A CSS class name, e.g. `widget-icon widget-icon-button`. Used to display widget icon in

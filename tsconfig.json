@@ -7,7 +7,6 @@
         ],
         "module": "commonjs",
         "moduleResolution": "node",
-        "noStrictGenericChecks": true,
         "removeComments": true,
         "noLib": false,
         "skipLibCheck": true,

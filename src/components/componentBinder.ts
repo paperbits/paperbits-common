@@ -8,11 +8,11 @@ export interface ComponentBinder {
      * @param componentDefinition - A component definition specific to used UI-framework.
      * @param componentParams - Parameters used for component instantiation.
      */
-    bind<TInstance>(element: Element, componentDefinition: unknown, componentParams?: unknown): Promise<TInstance>;
+    bind(element: Element, componentDefinition: unknown, componentParams?: unknown): Promise<unknown>;
 
     /**
      * Detached the component from HTML element.
      * @param element - HTML element that hosts the component. 
      */
-    unbind?(element: Element): Promise<any>;
+    unbind?(element: Element): Promise<void>;
 }

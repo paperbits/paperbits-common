@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export function OnDestroyed(name?: string): PropertyDecorator {
+export function OnDestroyed(name?: string): MethodDecorator {
     return function (target: any, propertyKey: string) {
         let props: string[] = Reflect.getMetadata("ondestroyed", target.constructor);
 

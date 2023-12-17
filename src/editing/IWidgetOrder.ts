@@ -1,9 +1,7 @@
-﻿import { IWidgetFactoryResult } from "../editing";
-
-/**
+﻿/**
  * Structure exposing methods to create HTML element or a model for particular widget.
  */
-export interface IWidgetOrder {
+export interface IWidgetOrder<TModel> {
     /**
      * Name of the widget, e.g. `form`.
      */
@@ -32,7 +30,7 @@ export interface IWidgetOrder {
     /**
      * Widget model factory method. Invoked when widget gets added to the content.
      */
-    createModel?<TModel>(): Promise<TModel>;
+    createModel(): Promise<TModel>;
 
     /**
      * List of features required for this widget.

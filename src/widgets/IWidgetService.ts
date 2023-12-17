@@ -9,12 +9,12 @@ export interface IWidgetService {
     /**
      * Returns the orders of registered widgets.
      */
-    getWidgetOrders(): Promise<IWidgetOrder[]>;
+    getWidgetOrders(): Promise<IWidgetOrder<unknown>[]>;
 
     /**
      * Returns the handler for specified widget binding.
      */
-    getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler;
+    getWidgetHandler(widgetBinding: IWidgetBinding<unknown, unknown>): IWidgetHandler<unknown>;
 
     /**
      * Adds widget definition to the regsitry.
@@ -46,19 +46,19 @@ export interface IWidgetService {
      * Returns widget definition for specified widget model.
      * @param model Instance of the widget model.
      */
-    getWidgetDefinitionForModel<TModel>(model: TModel): WidgetDefinition
+    getWidgetDefinitionForModel(model: unknown): WidgetDefinition
 
     /**
      * Returns model binder for specified widget.
      * @param widgetName Name of the widget.
      */
-    getModelBinder<TModel>(widgetName: string): IModelBinder<TModel>;
+    getModelBinder(widgetName: string): IModelBinder<unknown>;
 
     /**
      * Returns model binder for instance of the widget model.
      * @param model Instance of the widget model.
      */
-    getModelBinderForModel<TModel>(model: unknown): IModelBinder<TModel>;
+    getModelBinderForModel(model: unknown): IModelBinder<unknown>;
 
     /**
      * Creates a binding for specified widget definition.
@@ -66,5 +66,5 @@ export interface IWidgetService {
      * @param model Instance of the widget model.
      * @param bindingContext Binding context.
      */
-    createWidgetBinding<TModel, TViewModel>(definition: WidgetDefinition, model: TModel, bindingContext: Bag<any>): Promise<WidgetBinding<TModel, TViewModel>>
+    createWidgetBinding(definition: WidgetDefinition, model: unknown, bindingContext: Bag<unknown>): Promise<WidgetBinding<unknown, unknown>>
 }

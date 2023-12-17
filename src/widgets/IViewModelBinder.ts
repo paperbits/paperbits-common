@@ -33,7 +33,7 @@ export interface ViewModelBinder<TModel, TViewModel> {
      * @param state {TState} Widget state object.
      * @param componentInstance {TInstance} Instance of the widget component.
      */
-    stateToInstance?<TState, TInstance>(state: TState, componentInstance: TInstance): void;
+    stateToInstance?(state: unknown, componentInstance: unknown): void;
 
     /**
      * Converts the widget model into the widget state object used later on during component rendering.
@@ -41,5 +41,5 @@ export interface ViewModelBinder<TModel, TViewModel> {
      * @param state {TState} Widget state object.
      * @param bindingContext {Bag<any>} Binding context, which carries additional information passed from the root component.
      */
-    modelToState?<TState>(model: TModel, state: TState, bindingContext?: Bag<any>): Promise<void>;
+    modelToState?(model: TModel, state: unknown, bindingContext?: Bag<any>): Promise<void>;
 }

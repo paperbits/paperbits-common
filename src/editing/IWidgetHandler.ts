@@ -9,11 +9,11 @@ import { DragSession } from "../ui/draggables";
  * it describes how the widget gets created, how it responds to drag'n'drop events, what contextual
  * commands it supports, etc.
  */
-export interface IWidgetHandler {
+export interface IWidgetHandler<TModel> {
     /**
      * Creates model of the widget when it's being added into content.
      */
-    getWidgetModel?<TModel>(): Promise<TModel>;
+    getWidgetModel?(): Promise<TModel>;
 
     /**
      * Returns set of commands used in the designer context menu,
@@ -48,5 +48,5 @@ export interface IWidgetHandler {
      * @deprecated Please use `registerWidgetEditor` method and move widget model creation logic
      * from `getWidgetOrder` to `getWidgetModel`.
      */
-    getWidgetOrder?(): Promise<IWidgetOrder>;
+    getWidgetOrder?(): Promise<IWidgetOrder<TModel>>;
 }

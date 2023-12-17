@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export function OnMounted(name?: string): PropertyDecorator {
+export function OnMounted(name?: string): MethodDecorator {
     return function (target: any, propertyKey: string): void {
         let props: string[] = Reflect.getMetadata("onmounted", target.constructor);
 

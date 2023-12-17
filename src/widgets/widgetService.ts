@@ -15,14 +15,14 @@ export class WidgetService implements IWidgetService {
     private widgetEditorEntries: Bag<WidgetEditorDefinition> = {};
 
     constructor(
-        private readonly widgetHandlers: IWidgetHandler[],
+        private readonly widgetHandlers: IWidgetHandler<unknown>[],
         private readonly injector: IInjector
     ) { }
 
-    private async getWidgetOrdersLegacy(): Promise<IWidgetOrder[]> {
-        const widgetOrders = new Array<IWidgetOrder>();
+    private async getWidgetOrdersLegacy(): Promise<IWidgetOrder<unknown>[]> {
+        const widgetOrders = new Array<IWidgetOrder<unknown>>();
 
-        const tasks = this.widgetHandlers.map(async (handler: IWidgetHandler) => {
+        const tasks = this.widgetHandlers.map(async (handler: IWidgetHandler<unknown>) => {
             if (handler.getWidgetOrder) {
                 const order = await handler.getWidgetOrder();
                 widgetOrders.push(order);
@@ -34,7 +34,7 @@ export class WidgetService implements IWidgetService {
         return widgetOrders;
     }
 
-    public async getWidgetOrders(): Promise<IWidgetOrder[]> {
+    public async getWidgetOrders(): Promise<IWidgetOrder<unknown>[]> {
         const widgetNames = Object.keys(this.widgetEditorEntries);
 
         const orders = [];
@@ -46,9 +46,9 @@ export class WidgetService implements IWidgetService {
                 return; // skip adding non-selectable widget to "Add widget" dialog
             }
 
-            const handler: IWidgetHandler = this.getWidgetHandlerByWidgetName(widgetName);
+            const handler: IWidgetHandler<unknown> = this.getWidgetHandlerByWidgetName(widgetName);
 
-            const order: IWidgetOrder = {
+            const order: IWidgetOrder<unknown> = {
                 name: widgetName,
                 displayName: definition.displayName,
                 category: definition.category,
@@ -73,7 +73,7 @@ export class WidgetService implements IWidgetService {
         return orders.concat(legacyOrders);
     }
 
-    public getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler {
+    public getWidgetHandler(widgetBinding: IWidgetBinding<any, any>): IWidgetHandler<unknown> {
         let widgetHandler = this.getWidgetHandlerByWidgetName(widgetBinding.name);
 
         if (widgetHandler) {
@@ -103,11 +103,11 @@ export class WidgetService implements IWidgetService {
         return componentInstance;
     }
 
-    private getWidgetHandlerByDefinition(editorDefintion: WidgetEditorDefinition): IWidgetHandler {
-        return this.resolveComponent<IWidgetHandler>(editorDefintion.handlerComponent);
+    private getWidgetHandlerByDefinition(editorDefintion: WidgetEditorDefinition): IWidgetHandler<unknown> {
+        return this.resolveComponent<IWidgetHandler<unknown>>(editorDefintion.handlerComponent);
     }
 
-    private getWidgetHandlerByWidgetName(widgetName: string): IWidgetHandler {
+    private getWidgetHandlerByWidgetName(widgetName: string): IWidgetHandler<unknown> {
         const editorDefintion = this.widgetEditorEntries[widgetName];
 
         if (!editorDefintion) {
@@ -120,7 +120,7 @@ export class WidgetService implements IWidgetService {
     /**
      * @deprecated Used to resolve handlers in legacy model.
      */
-    private getWidgetHandlerByType(handlerType: any): IWidgetHandler {
+    private getWidgetHandlerByType(handlerType: any): IWidgetHandler<unknown> {
         if (!handlerType) {
             throw new Error(`Parameter "handlerType" not specified.`);
         }
@@ -145,9 +145,9 @@ export class WidgetService implements IWidgetService {
         return this.resolveComponent<IModelBinder<TModel>>(widgetDefinition.modelBinder);
     }
 
-    public async getWidgetModel<TModel>(widgetName: string): Promise<TModel> {
+    public async getWidgetModel(widgetName: string): Promise<unknown> {
         const handler = this.getWidgetHandlerByWidgetName(widgetName);
-        const widgetModel = await handler.getWidgetModel<TModel>();
+        const widgetModel = await handler.getWidgetModel();
 
         return widgetModel;
     }
@@ -299,7 +299,7 @@ export class WidgetService implements IWidgetService {
                 bindingContext.styleManager.setStyleSheet(widgetState["styles"]?.styleSheet);
             }
 
-            viewModelBinder.stateToInstance<any, any>(widgetState, widgetBinding.viewModel);
+            viewModelBinder.stateToInstance(widgetState, widgetBinding.viewModel);
             eventManager.dispatchEvent(Events.ContentUpdate);
         };
 

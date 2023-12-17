@@ -36,7 +36,7 @@ export interface ComponentConfig {
 }
 
 export function Component(config: ComponentConfig): ClassDecorator {
-    return function (target): any {
+    return function (target): void {
         ko.components.unregister(config.selector);
 
         ko.components.register(config.selector, {
