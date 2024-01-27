@@ -40,4 +40,9 @@ export interface WidgetDefinition {
      * when initializing a component, and hence, may need a wrapper. Default: `None`.
      */
     componentFlow?: ComponentFlow;
+
+    /**
+     * Alternative widget name that might be useful to support backward compatibility.
+     */
+    alternativeNames?: string[];
 }

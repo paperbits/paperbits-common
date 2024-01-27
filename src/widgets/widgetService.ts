@@ -166,6 +166,12 @@ export class WidgetService implements IWidgetService {
         }
 
         this.widgetEntries[widgetName] = widgetDefinition;
+
+        if (widgetDefinition.alternativeNames) {
+            widgetDefinition.alternativeNames.forEach(widgetName => {
+                this.widgetEntries[widgetName] = widgetDefinition;
+            });
+        }
     }
 
     public unregisterWidget(widgetName: string): void {
