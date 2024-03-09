@@ -1,7 +1,7 @@
 import * as MediaUtils from "./mediaUtils";
 import { IMediaService } from "./IMediaService";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
-import { MediaContract } from ".";
+import { MediaContract } from "./mediaContract";
 import { ContentItemContract } from "../contentModel";
 import { HyperlinkContract } from "../editing";
 
@@ -55,7 +55,6 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         return hyperlinkModel;
     }
-
 
     public async getHyperlinkByTargetKey(targetKey: string): Promise<HyperlinkModel> {
         if (!targetKey) {

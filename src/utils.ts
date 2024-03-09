@@ -14,11 +14,11 @@ export function guid(): string {
         s4() + "-" + s4() + s4() + s4();
 }
 
-export function identifier(): string {
+export function identifier(length: number = 5): string {
     let result = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const possible = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < length; i++) {
         result += possible.charAt(Math.floor(Math.random() * possible.length));
     }
 
@@ -396,4 +396,11 @@ export function truncate(value: string, length: number = 100): string {
 export function debounce(func: () => Promise<void>): () => Promise<void> {
     let promise: Promise<void>;
     return () => promise ? promise : promise = func();
+}
+
+export function appendSuffixToFileName(fileName: string, suffix: string): string {
+    const extensionPosition = fileName.lastIndexOf(".");
+    const suffixedFileName = [fileName.slice(0, extensionPosition), `.${suffix}`, fileName.slice(extensionPosition)].join("");
+
+    return suffixedFileName
 }

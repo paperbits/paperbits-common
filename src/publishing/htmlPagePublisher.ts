@@ -11,6 +11,7 @@ import { SourceLink } from "./sourceLink";
 
 export class HtmlPagePublisher {
     private subresourceIntegrityEnabled: boolean;
+    private staticAssetSuffix: string;
 
     constructor(
         private readonly htmlDocumentProvider: HtmlDocumentProvider,
@@ -23,6 +24,7 @@ export class HtmlPagePublisher {
 
     private async loadSettings(): Promise<void> {
         this.subresourceIntegrityEnabled = !!await this.settingsProvider.getSetting<boolean>("features/subresourceIntegrity");
+        this.staticAssetSuffix = await this.settingsProvider.getSetting("staticAssetSuffix");
     }
 
     private scaffoldPageDocument(document: Document): void {
@@ -31,8 +33,8 @@ export class HtmlPagePublisher {
         document.head.appendChild(charsetMetaElement);
 
         this.appendMetaTag(document, "viewport", "width=device-width,minimum-scale=1,initial-scale=1");
-        this.appendStyleLink(document, { src: "/styles/theme.css" });
-        this.appendScriptLink(document, { src: "/scripts/theme.js" });
+        this.appendStyleLink(document, { src: `/styles/theme.${this.staticAssetSuffix}.css` });
+        this.appendScriptLink(document, { src: `/scripts/theme.${this.staticAssetSuffix}.js` });
     }
 
     private appendMetaTag(document: Document, name: string, content: string): void {
