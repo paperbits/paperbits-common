@@ -399,6 +399,10 @@ export function debounce(func: () => Promise<void>): () => Promise<void> {
 }
 
 export function appendSuffixToFileName(fileName: string, suffix: string): string {
+    if (!suffix) {
+        return fileName;
+    }
+
     const extensionPosition = fileName.lastIndexOf(".");
     const suffixedFileName = [fileName.slice(0, extensionPosition), `.${suffix}`, fileName.slice(extensionPosition)].join("");
 

@@ -33,8 +33,8 @@ export class HtmlPagePublisher {
         document.head.appendChild(charsetMetaElement);
 
         this.appendMetaTag(document, "viewport", "width=device-width,minimum-scale=1,initial-scale=1");
-        this.appendStyleLink(document, { src: `/styles/theme.${this.staticAssetSuffix}.css` });
-        this.appendScriptLink(document, { src: `/scripts/theme.${this.staticAssetSuffix}.js` });
+        this.appendStyleLink(document, { src: Utils.appendSuffixToFileName(`/styles/theme.css`, this.staticAssetSuffix) });
+        this.appendScriptLink(document, { src: Utils.appendSuffixToFileName(`/scripts/theme.js`, this.staticAssetSuffix) });
     }
 
     private appendMetaTag(document: Document, name: string, content: string): void {
