@@ -2,8 +2,9 @@ import * as lunr from "lunr";
 import { stripHtml } from "../utils";
 import { SearchableDocument } from "./searchableDocument";
 
+
 export class SearchIndexBuilder {
-    private documents: any[];
+    private documents: SearchableDocument[];
 
     constructor() {
         this.documents = [];
@@ -11,7 +12,7 @@ export class SearchIndexBuilder {
 
     private getIndexerConfigFunc(documents: SearchableDocument[]): lunr.ConfigFunction {
         return function (): void {
-            this.ref("permalink");
+            this.ref("ref");
             this.field("title");
             this.field("description");
             this.field("body");
@@ -20,28 +21,28 @@ export class SearchIndexBuilder {
         };
     }
 
-    public appendText(permalink: string, title: string, description: string, text: string): void {
-        this.append(permalink, title, description, text);
+    public appendText(ref: string, title: string, description: string, text: string): void {
+        this.append(ref, title, description, text);
     }
 
-    public appendHtml(permalink: string, title: string, description: string, html: string): void {
+    public appendHtml(ref: string, title: string, description: string, html: string): void {
         try {
-            this.append(permalink, title, description, stripHtml(html));
+            this.append(ref, title, description, stripHtml(html));
         }
         catch (error) {
-            throw new Error(`Unable to index content for ${permalink}: ${error.stack || error.message}`);
+            throw new Error(`Unable to index content for ${ref}: ${error.stack || error.message}`);
         }
     }
 
-    public append(permalink: string, title: string, description: string, content: string): void {
-        if (!permalink || !title || !content) {
+    public append(ref: string, title: string, summary: string, content: string): void {
+        if (!ref || !title || !content) {
             return; // skip indexing
         }
 
         this.documents.push({
-            permalink: permalink,
+            ref: ref,
             title: title,
-            description: description,
+            summary: summary,
             body: content
         });
     }

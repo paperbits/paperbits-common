@@ -3,7 +3,6 @@ export * from "./htmlPagePublisher";
 export * from "./htmlPageOptimizer";
 export * from "./htmlDocumentProvider";
 export * from "./htmlPage";
-export * from "./searchIndexBuilder";
 export * from "./sitemapBuilder";
 export * from "./socialShareDataHtmlPagePublisherPlugin";
 export * from "./openGraphHtmlPagePublisherPlugin";

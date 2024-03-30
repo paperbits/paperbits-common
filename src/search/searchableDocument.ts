@@ -5,7 +5,7 @@ export interface SearchableDocument {
     /**
      * Document location.
      */
-    permalink: string;
+    ref: string;
 
     /**
      * Document title, e.g. "About".
@@ -15,7 +15,7 @@ export interface SearchableDocument {
     /**
      * Document description.
      */
-    description: string;
+    summary: string;
 
     /**
      * Document content.
