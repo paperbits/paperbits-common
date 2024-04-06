@@ -43,6 +43,11 @@ export class StaticSearchService {
 
             for (const resultBuilder of this.searchResultBuilders) {
                 const result = await resultBuilder.getSearchResult(rawResult.ref, searchTerm);
+
+                if (!result) {
+                    continue;
+                }
+
                 results.push(result)
             }
         }

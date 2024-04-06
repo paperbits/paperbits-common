@@ -32,6 +32,12 @@ export interface IPopupService {
     updatePopup(popup: PopupContract): Promise<void>;
 
     /**
+     * Makes a copy of specified popup.
+     * @param key {string} Key of the original popup.
+     */
+    copyPopup(key: string): Promise<PopupContract>;
+
+    /**
      * Returns popup content by specified key.
      * @param popupKey {string} Unique popup identifier, e.g. `popups/1bbf57f8-8954-46bb-9c33-5b54643f9376`.
      * @param locale {string} Locale, e.g. `en-us`. If provided, operation returns content in specified locale.

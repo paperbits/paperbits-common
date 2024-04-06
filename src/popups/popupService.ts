@@ -1,5 +1,6 @@
 ﻿import * as Utils from "../utils";
 import * as Constants from "../constants";
+import * as Objects from "../objects";
 import { PopupContract } from "../popups/popupContract";
 import { IPopupService } from "../popups/IPopupService";
 import { IObjectStorage, Query, Page } from "../persistence";
@@ -8,6 +9,7 @@ import { ILocaleService } from "../localization";
 import { PopupMetadata } from "./popupMetadata";
 import { PopupLocalizedContract } from "./popupLocalizedContract";
 import { IBlockService } from "../blocks";
+import { Logger } from "../logging";
 
 const popupsPath = "popups";
 const documentsPath = "files";
@@ -17,7 +19,8 @@ export class PopupService implements IPopupService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly localeService: ILocaleService,
-        private readonly blockService: IBlockService
+        private readonly blockService: IBlockService,
+        private readonly logger: Logger
     ) { }
 
     public async getPopupByKey(key: string, requestedLocale?: string): Promise<PopupContract> {
@@ -149,6 +152,46 @@ export class PopupService implements IPopupService {
         };
 
         return popupContract;
+    }
+
+    public async copyPopup(key: string): Promise<PopupContract> {
+        const originalPage = await this.objectStorage.getObject<PopupLocalizedContract>(key);
+        const identifier = Utils.guid();
+        const targetKey = `${popupsPath}/${identifier}`;
+
+        const targetPage: PopupLocalizedContract = {
+            key: targetKey,
+            locales: {}
+        };
+
+        const sourceLocales = Object.keys(originalPage.locales);
+
+        for (const locale of sourceLocales) {
+            const sourceMetadata = originalPage.locales[locale];
+            const sourceContentKey = sourceMetadata.contentKey;
+            const sourcePageContent = await this.objectStorage.getObject<Contract>(sourceContentKey);
+
+            const targetIdentifier = Utils.guid();
+            const targetContentKey = `${documentsPath}/${targetIdentifier}`;
+
+            const targetMetadata: PopupMetadata = {
+                title: sourceMetadata.title + " (copy)",
+                description: sourceMetadata.description,
+                contentKey: targetContentKey
+            };
+
+            targetPage.locales[locale] = targetMetadata;
+            const targetPageContent = Objects.clone<Contract>(sourcePageContent);
+            targetPageContent["key"] = targetContentKey;
+
+            await this.objectStorage.addObject<Contract>(targetContentKey, targetPageContent);
+
+            this.logger.trackEvent("PopupCopied", { key: targetKey, sourcePageKey: key });
+        }
+
+        await this.objectStorage.addObject<PopupLocalizedContract>(targetKey, targetPage);
+
+        return this.getPopupByKey(targetKey);
     }
 
     public async updatePopup(popup: PopupContract, requestedLocale?: string): Promise<void> {
