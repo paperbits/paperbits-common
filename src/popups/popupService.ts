@@ -155,7 +155,7 @@ export class PopupService implements IPopupService {
     }
 
     public async copyPopup(key: string): Promise<PopupContract> {
-        const originalPage = await this.objectStorage.getObject<PopupLocalizedContract>(key);
+        const originalPopup = await this.objectStorage.getObject<PopupLocalizedContract>(key);
         const identifier = Utils.guid();
         const targetKey = `${popupsPath}/${identifier}`;
 
@@ -164,10 +164,10 @@ export class PopupService implements IPopupService {
             locales: {}
         };
 
-        const sourceLocales = Object.keys(originalPage.locales);
+        const sourceLocales = Object.keys(originalPopup.locales);
 
         for (const locale of sourceLocales) {
-            const sourceMetadata = originalPage.locales[locale];
+            const sourceMetadata = originalPopup.locales[locale];
             const sourceContentKey = sourceMetadata.contentKey;
             const sourcePageContent = await this.objectStorage.getObject<Contract>(sourceContentKey);
 
