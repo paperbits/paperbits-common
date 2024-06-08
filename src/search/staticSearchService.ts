@@ -34,9 +34,13 @@ export class StaticSearchService {
     }
 
     public async search(query: string): Promise<SearchResult[]> {
-        const searchRawResults = this.index.search(query).slice(0, 5);
-
         const results = [];
+
+        if (query.length < 2) {
+            return results;
+        }
+
+        const searchRawResults = this.index.search(query).slice(0, 5);
 
         for (const rawResult of searchRawResults) {
             const searchTerm = Object.keys(rawResult.matchData.metadata)[0];
