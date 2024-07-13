@@ -1,19 +1,19 @@
 import * as lunr from "lunr";
 import { SearchResult, SearchResultBuilder } from "@paperbits/common/search";
 import { HttpClient } from "@paperbits/common/http";
-import { WebPageSearchResultsBuilder } from "./webPageSearchResultsBuilder";
 
 
 export interface SearchService {
     search(query: string): Promise<SearchResult[]>;
+    registerSearchResultBuilder(builder: SearchResultBuilder): void;
 }
 
-export class StaticSearchService {
+export class StaticSearchService implements SearchService {
     private index: lunr.Index;
     private searchResultBuilders: SearchResultBuilder[];
 
     constructor(private readonly httpClient: HttpClient) {
-        this.searchResultBuilders = [new WebPageSearchResultsBuilder(httpClient)];
+        this.searchResultBuilders = [];
         this.loadIndex();
     }
 
@@ -36,7 +36,7 @@ export class StaticSearchService {
     public async search(query: string): Promise<SearchResult[]> {
         const results = [];
 
-        if (query.length < 2) {
+        if (!this.index || query.length < 2) {
             return results;
         }
 

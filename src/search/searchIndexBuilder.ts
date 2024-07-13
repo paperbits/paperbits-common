@@ -47,7 +47,7 @@ export class SearchIndexBuilder {
         });
     }
 
-    public buildIndex(): string {
+    public async buildIndex(): Promise<string> {
         try {
             const index = lunr(this.getIndexerConfigFunc(this.documents));
             return JSON.stringify(index);
