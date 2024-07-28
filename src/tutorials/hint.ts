@@ -11,4 +11,14 @@ export interface Hint {
      * HTML content.
      */
     content: string;
+
+    /**
+     * Optional override of the title of the hint.
+     */
+    title?: string;
+
+    /**
+     * Optional override of the close button text of the hint.
+     */
+    actionTitle?: string;
 }
