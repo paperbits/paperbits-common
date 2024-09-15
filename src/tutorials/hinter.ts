@@ -1,6 +1,6 @@
 import { ILayoutService } from "../layouts";
 import { Router } from "../routing";
-import { ViewManager } from "./../ui";
+import { ViewManager } from "../ui";
 import { EventManager } from "../events";
 import { ISettingsProvider } from "../configuration";
 import { Hint } from "./hint";
@@ -31,8 +31,8 @@ export class Hinter {
 
         this.activeHintKey = hint.key;
 
-        const toast = this.viewManager.addToast("Did you know?", hint.content, [{
-            title: "Got it",
+        const toast = this.viewManager.addToast(hint.title ?? "Did you know?", hint.content, [{
+            title: hint.actionTitle ?? "Got it",
             action: async () => {
                 await this.localSettings.setSetting(hintSettingName, true);
                 this.viewManager.removeToast(toast);
