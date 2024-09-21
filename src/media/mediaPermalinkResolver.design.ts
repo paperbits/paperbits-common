@@ -31,7 +31,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
 
         let mediaUrl = null;
 
-        if (media.variants) { // Currently this case is possible only with CDN and image optimization services.
+        if (media.variants?.length > 0) { // This case is possible only with CDN and image optimization services.
             const biggestVariant = MediaUtils.getBiggestMediaVariant(media);
             return biggestVariant.downloadUrl;
         }
