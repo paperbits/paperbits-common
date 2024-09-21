@@ -1,7 +1,7 @@
 import { ILayoutService } from "../layouts";
 import { Router } from "../routing";
 import { ViewManager } from "./../ui";
-import { EventManager } from "../events";
+import { EventManager, Events } from "../events";
 import { ISettingsProvider } from "../configuration";
 import { Hint } from "./hint";
 
@@ -18,7 +18,7 @@ export class Hinter {
     ) {
         this.noHints = false;
         this.eventManager.addEventListener("displayInactiveLayoutHint", this.showInactiveLayoutHint.bind(this));
-        this.eventManager.addEventListener("displayHint", this.displayHint.bind(this));
+        this.eventManager.addEventListener(Events.HintRequest, this.displayHint.bind(this));
     }
 
     private async displayHint(hint: Hint): Promise<void> {

@@ -3,6 +3,7 @@ import * as Constants from "./constants";
 import { IObjectStorage, IBlobStorage, Query, Operator, Page } from "../persistence";
 import { IMediaService, MediaContract } from "./";
 import { Logger } from "../logging";
+import { UserError } from "../errors";
 
 
 export class MediaService implements IMediaService {

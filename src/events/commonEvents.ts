@@ -32,5 +32,6 @@ export enum Events {
     PopupRequest = "onPopupRequest",
     PopupRepositionRequest = "onPopupRepositionRequest",
     PopupCreated = "onPopupCreated",
-    VirtualDragEnd = "virtualDragEnd"
+    VirtualDragEnd = "virtualDragEnd",
+    HintRequest = "onHintRequest",
 }
