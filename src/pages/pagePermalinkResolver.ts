@@ -71,11 +71,7 @@ export class PagePermalinkResolver implements IPermalinkResolver {
         let hyperlinkModel: HyperlinkModel;
 
         if (hyperlinkContract.targetKey) {
-            const pageContract = await this.pageService.getPageByKey(hyperlinkContract.targetKey, locale);
-
-            if (pageContract) {
-                return this.getHyperlink(pageContract, hyperlinkContract);
-            }
+            return await this.getHyperlinkByTargetKey(hyperlinkContract.targetKey, locale);
         }
 
         hyperlinkModel = new HyperlinkModel();
