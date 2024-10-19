@@ -18,6 +18,7 @@ export interface IContextCommand {
     tooltip?: string;
     position?: string;
     iconClass?: string;
+    iconOnly?: boolean;
     color?: string;
     controlType: string;
 

@@ -8,8 +8,10 @@ export const switchToChildCommandLabel = `Switch to child<div class="subtle">(Pa
 export function switchToParentCommand(context: WidgetContext): IContextCommand {
     return {
         controlType: "toolbox-button",
+        displayName: "Switch to parent",
         tooltip: switchToParentCommandLabel,
         iconClass: "paperbits-icon paperbits-arrow-up",
+        iconOnly: true,
         position: "top right",
         callback: () => context.switchToParent()
     };
@@ -18,8 +20,10 @@ export function switchToParentCommand(context: WidgetContext): IContextCommand {
 export function switchToChildCommand(context: WidgetContext): IContextCommand {
     return {
         controlType: "toolbox-button",
+        displayName: "Switch to child",
         tooltip: switchToChildCommandLabel,
         iconClass: "paperbits-icon paperbits-arrow-down",
+        iconOnly: true,
         position: "top right",
         callback: () => context.switchToChild()
     };
