@@ -5,6 +5,7 @@ import { MediaContract } from "./mediaContract";
 import { ContentItemContract } from "../contentModel";
 import { HyperlinkContract } from "../editing";
 
+
 export class MediaPermalinkResolver implements IPermalinkResolver {
     protected mediaPath: string = "uploads/";
 
@@ -27,7 +28,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
                 return null;
             }
 
-            if (media.variants) { // Currently this case is possible only with CDN and image optimization services.
+            if (media.variants?.length > 0) { // Currently this case is possible only with CDN and image optimization services.
                 const biggestVariant = MediaUtils.getBiggestMediaVariant(media);
                 return biggestVariant.downloadUrl;
             }
@@ -36,7 +37,7 @@ export class MediaPermalinkResolver implements IPermalinkResolver {
             }
         }
         catch (error) {
-            console.warn(`Could not fetch permalink by key ${mediaKey}.`);
+            console.warn(`Could not fetch permalink by key ${mediaKey}. Error: ${error.message}`);
             return null;
         }
     }
