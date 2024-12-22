@@ -1,6 +1,89 @@
 import * as Objects from "../src/objects";
 import { assert, expect } from "chai";
 
+const body = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to YourSpecs</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        h2 {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        .cta strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to YourSpecs!</h1>
+        <p>Hi {{firstName}},</p>
+        <p>Welcome to YourSpecs! We're thrilled to have you join our community of developers and empower you to showcase your APIs with beautiful, interactive documentation.</p>
+        <p>You've successfully created your tenant. This is your dedicated space to craft stunning API documentation that informs and engages your users.</p>
+
+        <h2>Get started</h2>
+        <p>Head over to <a href="https://dashboard.yourspecs.online/">dashboard</a> and log in using the method you chose during signup.
+
+        <p><strong>Next steps:</strong></p>
+        <ul>
+            <li>Create your first website from available templates.</li>
+            <li>Invite your friends to collaborate.</li>
+            <li>See your current plan and billing history.</li>
+        </ul>
+
+        <h2>Explore powerful features:</h2>
+        <ul>
+            <li><strong>Seamless import:</strong> Effortlessly import your OpenAPI (Swagger), Postman Collections, or other API specifications to get started quickly.</li>
+            <li><strong>Tailored design:</strong> Forge a unique look and feel for your documentation with custom themes, logos, and branding to perfectly match your company's identity.</li>
+            <li><strong>Interactive explorer:</strong> Allow developers to test your API directly from the documentation with easy-to-follow examples and code snippets.</li>
+            <li><strong>Powerful search:</strong> Make it a breeze for users to find the information they need with intuitive search functionality.</li>
+        </ul>
+
+        <h2>Need assistance? We're here!</h2>
+        <p>Our dedicated support team is always ready to assist you. If you encounter any problems or have questions, feel free to reach out to us via email at <a href="mailto:support@yourspecs.online">support@yourspecs.online</a>.</p>
+
+        <p>We can't wait to see the amazing api documentation you create with YourSpecs!</p>
+
+        <p>Sincerely,<br/>The YourSpecs team</p>
+    </div>
+</body>
+</html>`;
+
 
 function removeFromArray(array, item) {
     const copy = Array.from(array);
