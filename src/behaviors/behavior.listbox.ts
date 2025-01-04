@@ -2,7 +2,7 @@ import * as Array from "@paperbits/common";
 import * as ko from "knockout";
 import { Keys } from "@paperbits/common";
 import { Events } from "@paperbits/common/events";
-import { AriaAttributes, AriaRoles, Attributes } from "@paperbits/common/html";
+import { AriaAttributes, AriaRoles, Attributes } from "../html";
 import { BehaviorHandle } from "./behavior";
 
 const selectedClassName = "selected";

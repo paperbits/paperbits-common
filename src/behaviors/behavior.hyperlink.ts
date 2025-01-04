@@ -1,6 +1,6 @@
 
-import { HyperlinkModel, HyperlinkTarget } from "@paperbits/common/permalinks";
-import { Attributes, DataAttributes, HyperlinkRels } from "@paperbits/common/html";
+import { HyperlinkModel, HyperlinkTarget } from "../permalinks";
+import { Attributes, DataAttributes, HyperlinkRels } from "../html";
 
 export class HyperlinkBehavior {
     public attach(element: HTMLElement, hyperlink: HyperlinkModel): void {

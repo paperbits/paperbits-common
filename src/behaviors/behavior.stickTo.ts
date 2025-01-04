@@ -1,7 +1,7 @@
 
-import { ViewManager, ViewManagerMode } from "@paperbits/common/ui";
-import { Events } from "@paperbits/common/events";
-import { BehaviorHandle } from "@paperbits/common/behaviors/behavior";
+import { ViewManager, ViewManagerMode } from "../ui";
+import { Events } from "../events";
+import { BehaviorHandle } from "./behavior";
 
 export enum StickToPlacement {
     border = "border",
@@ -103,6 +103,8 @@ export class StickToBehavior {
 
             element.style.top = frameRect.top + coordY + "px";
 
+
+
             if (anchors.includes("left")) {
                 element.style.left = frameRect.left + targetRect.left + offsetX + "px";
             }
@@ -130,6 +132,17 @@ export class StickToBehavior {
                 const targetParentRect = config.target.parentElement.getBoundingClientRect();
                 element.style.top = targetParentRect.top - Math.floor(element.clientHeight / 2) + "px";
             }
+
+            setTimeout(() => {
+                const elementRect = element.getBoundingClientRect();
+
+                console.log(elementRect);
+
+                if (elementRect.left < 0) {
+                    element.style.left = "0px";
+                    element.style.right = null
+                }
+            }, 10);
         };
 
         updatePosition();
