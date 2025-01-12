@@ -136,8 +136,6 @@ export class StickToBehavior {
             setTimeout(() => {
                 const elementRect = element.getBoundingClientRect();
 
-                console.log(elementRect);
-
                 if (elementRect.left < 0) {
                     element.style.left = "0px";
                     element.style.right = null
