@@ -185,3 +185,15 @@ export enum HyperlinkRels {
      */
     NoFollow = "nofollow"
 }
+
+export enum NavigationTarget {
+    /**
+     * Opens the linked document in a new window or tab.
+     */
+    Blank = "_blank",
+
+    /**
+     * Opens the linked document in the same frame as it was clicked.
+     */
+    Self = "_self",
+}

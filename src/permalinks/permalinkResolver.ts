@@ -3,6 +3,7 @@ import { HyperlinkContract } from "../editing";
 import { HyperlinkModel } from "./hyperlinkModel";
 import { Contract } from "..";
 import { ContentItemContract } from "../contentModel";
+import { NavigationTarget } from "../html";
 
 export class PermalinkResolver implements IPermalinkResolver {
     constructor(private readonly permalinkResolvers: IPermalinkResolver[]) { }
@@ -110,7 +111,7 @@ export class PermalinkResolver implements IPermalinkResolver {
     public getEmptyHyperlink(): HyperlinkModel {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.title = "Unset link";
-        hyperlinkModel.target = "_self";
+        hyperlinkModel.target = NavigationTarget.Self;
         hyperlinkModel.targetKey = null;
         hyperlinkModel.href = "#";
         hyperlinkModel.anchor = null;

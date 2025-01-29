@@ -3,6 +3,7 @@ import { Contract } from "../contract";
 import { HyperlinkContract } from "../editing";
 import { HyperlinkModel, IPermalinkResolver } from "../permalinks";
 import { ContentItemContract } from "../contentModel";
+import { NavigationTarget } from "../html";
 
 const blogPostsPath = "blogPosts/";
 
@@ -31,7 +32,7 @@ export class BlogPostPermalinkResolver implements IPermalinkResolver {
         return contentItem.permalink;
     }
 
-    private async getHyperlink(blogPostContract: BlogPostContract, target: string = "_self"): Promise<HyperlinkModel> {
+    private async getHyperlink(blogPostContract: BlogPostContract, target: string = NavigationTarget.Self): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = blogPostContract.key;
         hyperlinkModel.href = blogPostContract.permalink;

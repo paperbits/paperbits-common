@@ -1,6 +1,7 @@
 import { HyperlinkContract } from "../editing";
 import { IPermalinkResolver, HyperlinkModel } from "../permalinks";
 import { IUrlService, UrlContract } from ".";
+import { NavigationTarget } from "../html";
 
 
 export class UrlPermalinkResolver implements IPermalinkResolver {
@@ -34,7 +35,7 @@ export class UrlPermalinkResolver implements IPermalinkResolver {
         }
     }
 
-    private async getHyperlink(urlContract: UrlContract, target: string = "_self"): Promise<HyperlinkModel> {
+    private async getHyperlink(urlContract: UrlContract, target: string = NavigationTarget.Self): Promise<HyperlinkModel> {
         const hyperlinkModel = new HyperlinkModel();
         hyperlinkModel.targetKey = urlContract.key;
         hyperlinkModel.href = urlContract.permalink;

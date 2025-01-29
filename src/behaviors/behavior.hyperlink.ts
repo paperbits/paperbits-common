@@ -1,6 +1,6 @@
 
 import { HyperlinkModel, HyperlinkTarget } from "../permalinks";
-import { Attributes, DataAttributes, HyperlinkRels } from "../html";
+import { Attributes, DataAttributes, HyperlinkRels, NavigationTarget } from "../html";
 
 export class HyperlinkBehavior {
     public attach(element: HTMLElement, hyperlink: HyperlinkModel): void {
@@ -29,7 +29,7 @@ export class HyperlinkBehavior {
                 default:
                     toggleType = element.getAttribute("data-toggle");
                     href = `${hyperlink.href}${hyperlink.anchor ? "#" + hyperlink.anchor : ""}`;
-                    targetWindow = hyperlink.target;
+                    targetWindow = hyperlink.target || NavigationTarget.Self;
 
                     if (hyperlink.targetKey?.startsWith("urls/")) {
                         rels = [HyperlinkRels.NoOpener, HyperlinkRels.NoReferrer].join(" ");
