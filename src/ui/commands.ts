@@ -46,7 +46,7 @@ export function openHelpArticleCommand(context: WidgetContext, articleKey: strin
         iconClass: "paperbits-icon paperbits-c-question",
         position: "top right",
         callback: () => {
-            // 
+            context.openHelpCenter(articleKey);
         }
     }
 }

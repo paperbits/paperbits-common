@@ -135,6 +135,11 @@ export function cleanupObject(source: object, options?: CleanupOptions): void {
             }
         }
         else if (childNode instanceof Object) {
+            if (childNode === source) {
+                console.log(`Ciruclar reference: `, source);
+                throw new Error(`Ciruclar reference detected. See the message above.`);
+            }
+
             cleanupObject(childNode, options);
 
             if (Object.keys(childNode).length === 0) {

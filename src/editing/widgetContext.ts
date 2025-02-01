@@ -53,6 +53,11 @@ export interface WidgetContext {
     openWidgetEditor: () => void;
 
     /**
+     * Opens help center with specified article key.
+     */
+    openHelpCenter: (articleKey: string) => void;
+
+    /**
      * Deletes selected widget.
      */
     deleteWidget: () => void;

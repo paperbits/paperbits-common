@@ -18,9 +18,16 @@ export interface View {
     component?: IComponent;
 
     /**
+     * Help heading.
+     */
+    helpHeading?: string;
+
+    /**
      * Help text.
      */
     helpText?: string;
+
+    helpArticle?: string;
 
     /**
      * Host element.
