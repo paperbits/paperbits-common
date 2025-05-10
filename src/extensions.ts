@@ -7,10 +7,6 @@ interface Array<T> {
     remove(item: T): void;
 }
 
-String.prototype.replaceAll = function (search: string, replacement: string): string {
-    return this.split(search).join(replacement);
-};
-
 Array.prototype.remove = function <T>(item: T): void {
     const index = this.indexOf(item);
 
