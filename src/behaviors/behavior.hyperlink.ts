@@ -1,9 +1,9 @@
-
 import { HyperlinkModel, HyperlinkTarget } from "../permalinks";
 import { Attributes, DataAttributes, HyperlinkRels, NavigationTarget } from "../html";
+import { BehaviorHandle } from "./behavior";
 
 export class HyperlinkBehavior {
-    public attach(element: HTMLElement, hyperlink: HyperlinkModel): void {
+    public static attach(element: HTMLElement, hyperlink: HyperlinkModel): BehaviorHandle {
         let href = "#";
         let toggleType = null;
         let triggerEvent = null;
@@ -54,5 +54,10 @@ export class HyperlinkBehavior {
                 element.removeAttribute(key);
             }
         }
+
+        // Return a BehaviorHandle with a no-op dispose method as there's no specific cleanup needed for hyperlinks
+        return {
+            detach: () => { /* No operation */ }
+        };
     }
 }

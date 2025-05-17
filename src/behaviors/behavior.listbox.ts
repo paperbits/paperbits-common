@@ -1,5 +1,4 @@
 import * as Array from "@paperbits/common";
-import * as ko from "knockout";
 import { Keys } from "@paperbits/common";
 import { Events } from "@paperbits/common/events";
 import { AriaAttributes, AriaRoles, Attributes } from "../html";
@@ -12,7 +11,7 @@ const defaultTabIndex = "0";
 
 
 export interface ListboxOptions {
-    onSelect: (listItem: unknown) => void;
+    onSelect: (selectedElement: HTMLElement) => void; // Changed from unknown to HTMLElement
 }
 
 export class ListboxBehavior {
@@ -108,7 +107,8 @@ export class ListboxBehavior {
                     activeOptionElement.classList.add(selectedClassName);
 
                     if (config.onSelect) {
-                        config.onSelect(ko.dataFor(activeOptionElement));
+                        // config.onSelect(ko.dataFor(activeOptionElement)); // Removed ko.dataFor
+                        config.onSelect(activeOptionElement); // Pass the element itself
                     }
 
                     break;
@@ -160,7 +160,8 @@ export class ListboxBehavior {
                 event.preventDefault();
                 event.stopImmediatePropagation();
 
-                config.onSelect(ko.dataFor(optionElement));
+                // config.onSelect(ko.dataFor(optionElement)); // Removed ko.dataFor
+                config.onSelect(optionElement); // Pass the element itself
             }
         };
 
