@@ -1,4 +1,3 @@
-
 import { EventManager, Events } from "../events";
 import { BehaviorHandle } from "./behavior";
 
