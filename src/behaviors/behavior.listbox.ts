@@ -2,7 +2,8 @@ import * as Array from "@paperbits/common";
 import { Keys } from "@paperbits/common";
 import { Events } from "@paperbits/common/events";
 import { AriaAttributes, AriaRoles, Attributes } from "../html";
-import { BehaviorHandle } from "./behavior";
+import { Behavior, BehaviorHandle } from "./behavior";
+import { init } from "knockout.validation";
 
 const selectedClassName = "selected";
 const optionElementSelector = "[role=option]:not([disabled])";
@@ -14,19 +15,23 @@ export interface ListboxOptions {
     onSelect: (selectedElement: HTMLElement) => void; // Changed from unknown to HTMLElement
 }
 
-export class ListboxBehavior {
-    public static attach(listboxElement: HTMLElement, config: ListboxOptions): BehaviorHandle {
+export class ListboxBehavior implements Behavior<ListboxOptions> {
+    private cleanup: () => void;
+
+    constructor(private listboxElement: HTMLElement, private config: ListboxOptions) { }
+
+    public init(): void {
         let activeItemIndex: number;
 
-        if (listboxElement.getAttribute(Attributes.Role) !== AriaRoles.Listbox) {
+        if (this.listboxElement.getAttribute(Attributes.Role) !== AriaRoles.Listbox) {
             console.warn(`List and its child elements should have role="listbox" and role="option" attributes respectively.`);
             return;
         }
 
-        listboxElement.setAttribute(Attributes.TabIndex, defaultTabIndex);
+        this.listboxElement.setAttribute(Attributes.TabIndex, defaultTabIndex);
 
         const getOptionElements = (): HTMLElement[] => {
-            return Array.coerce<HTMLElement>(listboxElement.querySelectorAll(optionElementSelector));
+            return Array.coerce<HTMLElement>(this.listboxElement.querySelectorAll(optionElementSelector));
         };
 
         const getActiveOptionElement = (): HTMLElement => {
@@ -37,7 +42,7 @@ export class ListboxBehavior {
         };
 
         const getSelectedOptionElement = (): HTMLElement => {
-            const selectedOptionElement = <HTMLElement>listboxElement.querySelector(selectedOptionElementSelector);
+            const selectedOptionElement = <HTMLElement>this.listboxElement.querySelector(selectedOptionElementSelector);
             return selectedOptionElement;
         };
 
@@ -59,7 +64,7 @@ export class ListboxBehavior {
         const onKeyDown = (event: KeyboardEvent): void => {
             const eventTarget = <HTMLElement>event.target;
 
-            if (!listboxElement.contains(eventTarget) || !eventTarget.matches(optionElementSelector)) {
+            if (!this.listboxElement.contains(eventTarget) || !eventTarget.matches(optionElementSelector)) {
                 return;
             }
 
@@ -106,9 +111,9 @@ export class ListboxBehavior {
                     activeOptionElement.setAttribute(AriaAttributes.selected, "true");
                     activeOptionElement.classList.add(selectedClassName);
 
-                    if (config.onSelect) {
+                    if (this.config.onSelect) {
                         // config.onSelect(ko.dataFor(activeOptionElement)); // Removed ko.dataFor
-                        config.onSelect(activeOptionElement); // Pass the element itself
+                        this.config.onSelect(activeOptionElement); // Pass the element itself
                     }
 
                     break;
@@ -136,11 +141,11 @@ export class ListboxBehavior {
         const onGlobalFocusChange = (event: KeyboardEvent): void => {
             const eventTarget = <HTMLElement>event.target;
 
-            if (listboxElement.contains(eventTarget)) {
-                listboxElement.removeAttribute(Attributes.TabIndex);
+            if (this.listboxElement.contains(eventTarget)) {
+                this.listboxElement.removeAttribute(Attributes.TabIndex);
             }
             else {
-                listboxElement.setAttribute(Attributes.TabIndex, defaultTabIndex);
+                this.listboxElement.setAttribute(Attributes.TabIndex, defaultTabIndex);
             }
         };
 
@@ -152,33 +157,35 @@ export class ListboxBehavior {
                 return;
             }
 
-            const optionElements = Array.coerce<HTMLElement>(listboxElement.querySelectorAll(optionElementSelector));
+            const optionElements = Array.coerce<HTMLElement>(this.listboxElement.querySelectorAll(optionElementSelector));
             const activeItemIndex = optionElements.indexOf(optionElement);
             setActiveOption(activeItemIndex);
 
-            if (config.onSelect) {
+            if (this.config.onSelect) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
 
                 // config.onSelect(ko.dataFor(optionElement)); // Removed ko.dataFor
-                config.onSelect(optionElement); // Pass the element itself
+                this.config.onSelect(optionElement); // Pass the element itself
             }
         };
 
-        listboxElement.addEventListener(Events.MouseDown, onMouseDown, true);
-        listboxElement.addEventListener(Events.KeyDown, onKeyDown, true);
-        listboxElement.addEventListener(Events.Focus, onContainerElementFocus);
+        this.listboxElement.addEventListener(Events.MouseDown, onMouseDown, true);
+        this.listboxElement.addEventListener(Events.KeyDown, onKeyDown, true);
+        this.listboxElement.addEventListener(Events.Focus, onContainerElementFocus);
         document.addEventListener(Events.Focus, onGlobalFocusChange, true);
 
-        const handle: BehaviorHandle = {
-            detach: () => {
-                listboxElement.removeEventListener(Events.MouseDown, onMouseDown, true);
-                listboxElement.removeEventListener(Events.KeyDown, onKeyDown, true);
-                listboxElement.removeEventListener(Events.Focus, onContainerElementFocus);
-                document.removeEventListener(Events.Focus, onGlobalFocusChange, true);
-            }
-        }
+        this.cleanup = () => {
+            this.listboxElement.removeEventListener(Events.MouseDown, onMouseDown, true);
+            this.listboxElement.removeEventListener(Events.KeyDown, onKeyDown, true);
+            this.listboxElement.removeEventListener(Events.Focus, onContainerElementFocus);
+            document.removeEventListener(Events.Focus, onGlobalFocusChange, true);
+        };
+    }
 
-        return handle;
+    public dispose(): void {
+        if (this.cleanup) {
+            this.cleanup();
+        }
     }
 }
