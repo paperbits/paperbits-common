@@ -35,4 +35,5 @@ export enum Events {
     VirtualDragEnd = "virtualDragEnd",
     HintRequest = "onHintRequest",
     NotificationRequest = "onNotificationRequest",
+    UserRoleChanged = "onUserRoleChange",
 }
