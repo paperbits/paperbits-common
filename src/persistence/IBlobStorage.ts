@@ -2,7 +2,7 @@ export interface IBlobStorage {
     /**
      * Lists all blobs in storage.
      */
-    listBlobs?(): Promise<string[]>;
+    listBlobs?(blobKeyPrefix?: string): Promise<string[]>;
 
     /**
      * Uploads blob with specified key to storage.
@@ -10,7 +10,7 @@ export interface IBlobStorage {
      * @param content Content in form of byte array.
      * @param contentType Content type (MIME) of the content.
      */
-    uploadBlob(blobKey: string, content: Uint8Array, contentType?: string): Promise<void>;
+    uploadBlob?(blobKey: string, content: Uint8Array, contentType?: string): Promise<void>;
 
     /**
      * Downloads blob with specified key.
@@ -22,11 +22,11 @@ export interface IBlobStorage {
      * Returns download URL of uploaded blob.
      * @param blobKey Unique blob identifier.
      */
-    getDownloadUrl(blobKey: string): Promise<string>;
+    getDownloadUrl?(blobKey: string): Promise<string>;
 
     /**
      * Removes specified blob from memory.
      * @param blobKey Unique blob identifier.
      */
-    deleteBlob(blobKey: string): Promise<void>;
+    deleteBlob?(blobKey: string): Promise<void>;
 }
