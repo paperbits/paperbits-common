@@ -1,4 +1,5 @@
 import { IComponent } from "./IComponent";
+import { PositioningOptions } from "./positioningOptions";
 import { ResizableOptions } from "./resizableOptions";
 
 export interface View {
@@ -27,6 +28,9 @@ export interface View {
      */
     helpText?: string;
 
+    /**
+     * Help article URL. If specified, a help icon will be displayed in the view heading.
+     */ 
     helpArticle?: string;
 
     /**
@@ -64,4 +68,9 @@ export interface View {
      * Allowed values: `vertically`, `horizontally`.
      */
     resizing?: string | ResizableOptions;
+
+    /**
+     * Initial positioning of the view. If user moves the view, this value will be ignored.
+     */
+    positioning?: string | PositioningOptions;
 }
