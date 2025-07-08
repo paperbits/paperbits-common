@@ -20,6 +20,11 @@ export interface IWidgetBinding<TModel, TViewModel> {
     model?: TModel;
 
     /**
+     * Widget view model.
+     */
+    viewModel?: TViewModel;
+
+    /**
      * Registration name (tag name) of editor component.
      */
     editor?: string | Function;
