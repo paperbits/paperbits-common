@@ -307,6 +307,8 @@ export class WidgetService implements IWidgetService {
 
             viewModelBinder.stateToInstance(widgetState, widgetBinding.viewModel);
             eventManager.dispatchEvent(Events.ContentUpdate);
+
+            widgetBinding.notifyChanges();
         };
 
         widgetBinding.onCreate = (componentInstance: TViewModel): void => {

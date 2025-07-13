@@ -85,6 +85,12 @@ export interface IWidgetBinding<TModel, TViewModel> {
     onDispose?: () => void;
 
     /**
+     * Adds a listener that gets invoked when the widget model gets updated.
+     * @param listener Callback that gets invoked when the widget model gets updated.
+     */
+    addChangeListener?(listener: (model: TModel, viewModel: TViewModel) => void): void;
+
+    /**
      * Indicates if the widget can be moved in the designer.
      */
     draggable?: boolean;

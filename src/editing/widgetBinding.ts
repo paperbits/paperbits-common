@@ -111,7 +111,20 @@ export class WidgetBinding<TModel, TViewModel> implements IWidgetBinding<TModel,
      */
     public wrapped: boolean;
 
+    private readonly onChangeListeners: Array<(model: TModel, viewModel: TViewModel) => void> = [];
+
     constructor() {
         this.wrapped = true;
+        this.onChangeListeners = [];
+    }
+
+    public notifyChanges(): void {
+        this.onChangeListeners.forEach((listener) => {
+            listener(this.model, this.viewModel);
+        });
+    }
+
+    public addChangeListener(listener: (model: TModel, viewModel: TViewModel) => void): void {
+        this.onChangeListeners.push(listener);
     }
 }

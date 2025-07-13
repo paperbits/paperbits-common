@@ -63,7 +63,7 @@ export interface WidgetEditorDefinition {
      * For example, the "Table cell" widget is a part of the "Table" widget, but it cannot be added or
      * deleted separately. Default: `true`.
      */
-    selectable?: boolean;
+    selectable?: boolean; // rename to "standalone"?"
 
     /**
      * This option indicates if the widget needs to be draggable in the content editor. You may not
